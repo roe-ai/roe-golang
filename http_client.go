@@ -23,7 +23,6 @@ import (
 	"time"
 )
 
-
 type httpClient struct {
 	client    *http.Client
 	cfg       Config

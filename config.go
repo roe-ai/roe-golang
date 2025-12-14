@@ -315,7 +315,6 @@ func firstNonEmpty(values ...string) string {
 	return ""
 }
 
-
 func firstNonZeroDuration(values ...time.Duration) time.Duration {
 	for _, v := range values {
 		if v != 0 {
