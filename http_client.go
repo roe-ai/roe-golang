@@ -12,7 +12,9 @@ import (
 	"log"
 	"math"
 	mrand "math/rand"
+	"mime"
 	"mime/multipart"
+	"net"
 	"net/http"
 	"net/textproto"
 	"net/url"
@@ -20,6 +22,12 @@ import (
 	"strings"
 	"time"
 )
+
+func init() {
+	// Seed math/rand for Go versions < 1.20 where global rand is not auto-seeded.
+	// In Go 1.20+, this is a no-op since global rand is automatically seeded.
+	mrand.Seed(time.Now().UnixNano())
+}
 
 type httpClient struct {
 	client    *http.Client
@@ -316,10 +324,22 @@ func (c *httpClient) shouldRetry(resp *http.Response, err error, attempt int) bo
 		return false
 	}
 	if err != nil {
+		// Don't retry on context cancellation/timeout
 		if errors.Is(err, context.Canceled) || errors.Is(err, context.DeadlineExceeded) {
 			return false
 		}
-		return true
+		// Only retry on temporary network errors
+		var netErr net.Error
+		if errors.As(err, &netErr) && netErr.Timeout() {
+			return true
+		}
+		// Retry on connection errors (DNS, connection refused, etc.)
+		var opErr *net.OpError
+		if errors.As(err, &opErr) {
+			return true
+		}
+		// Don't retry other errors (permanent failures)
+		return false
 	}
 	if resp == nil {
 		return false
@@ -555,7 +575,12 @@ func (c *httpClient) postDynamicInputsWithContext(ctx context.Context, path stri
 		openedReaders = append(openedReaders, fileReader)
 
 		h := make(textproto.MIMEHeader)
-		h.Set("Content-Disposition", fmt.Sprintf(`form-data; name="%s"; filename="%s"`, f.FieldName, filename))
+		// Use mime.FormatMediaType to properly escape filename (handles quotes, newlines, etc.)
+		contentDisp := mime.FormatMediaType("form-data", map[string]string{
+			"name":     f.FieldName,
+			"filename": filename,
+		})
+		h.Set("Content-Disposition", contentDisp)
 		h.Set("Content-Type", mimeType)
 
 		part, err := writer.CreatePart(h)
@@ -571,9 +596,6 @@ func (c *httpClient) postDynamicInputsWithContext(ctx context.Context, path stri
 		}
 		fileReader.Close()
 	}
-	// Clear the slice since we closed readers individually on success
-	openedReaders = nil
-	_ = openedReaders // silence unused warning
 
 	if err := writer.Close(); err != nil {
 		return err
