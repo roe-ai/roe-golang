@@ -7,18 +7,18 @@ A Go SDK for the [Roe AI](https://www.roe-ai.com/) API.
 Install the latest version:
 
 ```bash
-go get github.com/roe-ai/roe-golanglang
+go get github.com/roe-ai/roe-golang
 ```
 
 Or pin to a specific version (e.g., v0.1.0):
 
 ```bash
-go get github.com/roe-ai/roe-golanglang@v0.1.0
+go get github.com/roe-ai/roe-golang@v0.1.0
 ```
 
 **Requirements:** Go 1.23+
 
-**Note:** `github.com/roe-ai/roe-golanglang/roe` is a deprecated compatibility shim. Prefer importing `github.com/roe-ai/roe-golanglang` directly.
+**Note:** `github.com/roe-ai/roe-golang/roe` is a deprecated compatibility shim. Prefer importing `github.com/roe-ai/roe-golang` directly.
 
 ## Quick Start
 
@@ -124,15 +124,6 @@ job, _ := client.Agents.Run("agent-id", 0, map[string]any{
 result, _ := job.Wait(0, 0)
 ```
 
-## Parity snapshot
-
-| Area | Go SDK status |
-| --- | --- |
-| Config/env parsing & proxies | ✅ (`ROE_*` envs, proxy + extra headers, request IDs) |
-| HTTP client | ✅ retries with backoff/jitter, request/response logging w/ redaction |
-| Error taxonomy | ✅ typed errors incl. rate limits + request IDs |
-| Batches/polling | ✅ order-preserving `WaitContext`, early failure surfacing |
-| File inputs | ✅ paths, readers/bytes, URLs, validation |
 
 ## Agent Examples
 
@@ -457,6 +448,7 @@ if err != nil {
 
 | Model | Value |
 |-------|-------|
+| GPT-5.2 | `gpt-5.2-2025-12-11` |
 | GPT-5.1 | `gpt-5.1-2025-11-13` |
 | GPT-5 | `gpt-5-2025-08-07` |
 | GPT-5 Mini | `gpt-5-mini-2025-08-07` |
@@ -466,6 +458,7 @@ if err != nil {
 | O3 | `o3-2025-04-16` |
 | O4 Mini | `o4-mini-2025-04-16` |
 | GPT-4o | `gpt-4o-2024-11-20` |
+| Grok 4 | `grok-4-0709` |
 | Claude Sonnet 4.5 | `claude-sonnet-4-5-20250929` |
 | Claude Sonnet 4 | `claude-sonnet-4-20250514` |
 | Claude 3.7 Sonnet | `claude-3-7-sonnet-20250219` |
