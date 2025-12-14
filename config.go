@@ -315,14 +315,6 @@ func firstNonEmpty(values ...string) string {
 	return ""
 }
 
-func firstNonZero(values ...int) int {
-	for _, v := range values {
-		if v != 0 {
-			return v
-		}
-	}
-	return 0
-}
 
 func firstNonZeroDuration(values ...time.Duration) time.Duration {
 	for _, v := range values {

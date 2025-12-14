@@ -23,11 +23,6 @@ import (
 	"time"
 )
 
-func init() {
-	// Seed math/rand for Go versions < 1.20 where global rand is not auto-seeded.
-	// In Go 1.20+, this is a no-op since global rand is automatically seeded.
-	mrand.Seed(time.Now().UnixNano())
-}
 
 type httpClient struct {
 	client    *http.Client
@@ -415,25 +410,13 @@ func (c *httpClient) getWithContext(ctx context.Context, path string, query map[
 	return json.Unmarshal(data, out)
 }
 
-func (c *httpClient) getBytes(path string, query map[string]string) ([]byte, error) {
-	return c.getBytesWithContext(context.Background(), path, query)
-}
-
 func (c *httpClient) getBytesWithContext(ctx context.Context, path string, query map[string]string) ([]byte, error) {
 	return c.doRequest(ctx, http.MethodGet, path, http.Header{}, nil, query)
-}
-
-func (c *httpClient) delete(path string, query map[string]string) error {
-	return c.deleteWithContext(context.Background(), path, query)
 }
 
 func (c *httpClient) deleteWithContext(ctx context.Context, path string, query map[string]string) error {
 	_, err := c.doRequest(ctx, http.MethodDelete, path, http.Header{}, nil, query)
 	return err
-}
-
-func (c *httpClient) postJSON(path string, payload any, query map[string]string, out any) error {
-	return c.postJSONWithContext(context.Background(), path, payload, query, out)
 }
 
 func (c *httpClient) postJSONWithContext(ctx context.Context, path string, payload any, query map[string]string, out any) error {
@@ -454,10 +437,6 @@ func (c *httpClient) postJSONWithContext(ctx context.Context, path string, paylo
 		return nil
 	}
 	return json.Unmarshal(data, out)
-}
-
-func (c *httpClient) putJSON(path string, payload any, query map[string]string, out any) error {
-	return c.putJSONWithContext(context.Background(), path, payload, query, out)
 }
 
 func (c *httpClient) putJSONWithContext(ctx context.Context, path string, payload any, query map[string]string, out any) error {
@@ -509,13 +488,13 @@ func (c *httpClient) postDynamicInputsWithContext(ctx context.Context, path stri
 					files = append(files, preparedFile{FieldName: key, File: *v})
 				}
 			}
-		case io.Reader:
-			files = append(files, preparedFile{FieldName: key, File: FileUpload{Reader: v, Filename: key}})
-		case []byte:
-			files = append(files, preparedFile{FieldName: key, File: FileUpload{Reader: bytes.NewReader(v), Filename: key}})
 		case *bytes.Buffer:
 			files = append(files, preparedFile{FieldName: key, File: FileUpload{Reader: bytes.NewReader(v.Bytes()), Filename: key}})
 		case *bytes.Reader:
+			files = append(files, preparedFile{FieldName: key, File: FileUpload{Reader: v, Filename: key}})
+		case []byte:
+			files = append(files, preparedFile{FieldName: key, File: FileUpload{Reader: bytes.NewReader(v), Filename: key}})
+		case io.Reader:
 			files = append(files, preparedFile{FieldName: key, File: FileUpload{Reader: v, Filename: key}})
 		case string:
 			switch {
