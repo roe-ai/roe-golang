@@ -30,9 +30,8 @@ type (
 
 	JobStatus = root.JobStatus
 
-	AgentDatum               = root.AgentDatum
-	PaginatedResponse[T any] = root.PaginatedResponse[T]
-	AgentJobStatus           = root.AgentJobStatus
+	AgentDatum     = root.AgentDatum
+	AgentJobStatus = root.AgentJobStatus
 	Reference                = root.Reference
 	AgentJobResult           = root.AgentJobResult
 	AgentJobStatusBatch      = root.AgentJobStatusBatch
