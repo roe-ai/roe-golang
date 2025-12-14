@@ -30,13 +30,13 @@ type (
 
 	JobStatus = root.JobStatus
 
-	AgentDatum     = root.AgentDatum
-	AgentJobStatus = root.AgentJobStatus
-	Reference                = root.Reference
-	AgentJobResult           = root.AgentJobResult
-	AgentJobStatusBatch      = root.AgentJobStatusBatch
-	AgentJobResultBatch      = root.AgentJobResultBatch
-	JobDataDeleteResponse    = root.JobDataDeleteResponse
+	AgentDatum            = root.AgentDatum
+	AgentJobStatus        = root.AgentJobStatus
+	Reference             = root.Reference
+	AgentJobResult        = root.AgentJobResult
+	AgentJobStatusBatch   = root.AgentJobStatusBatch
+	AgentJobResultBatch   = root.AgentJobResultBatch
+	JobDataDeleteResponse = root.JobDataDeleteResponse
 
 	// File uploads.
 	FileUpload = root.FileUpload
