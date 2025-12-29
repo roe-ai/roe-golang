@@ -1,15 +1,36 @@
 bin/
 build/
 dist/
+
+# Test artifacts
 coverage.out
 *.test
+*.prof
+
+# Binaries
 *.exe
+*.dll
+*.so
+*.dylib
+
+# Logs
 *.log
+
+# IDE
 .gocache/
 .DS_Store
-.env
-.env.*
 .vscode/
 .idea/
+
+# Environment
+.env
+.env.*
+
+# Dependencies
 vendor/
+
+# Temporary test directories
 tests/
+tmp/
+
+
