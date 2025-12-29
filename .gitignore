@@ -1,0 +1,15 @@
+bin/
+build/
+dist/
+coverage.out
+*.test
+*.exe
+*.log
+.gocache/
+.DS_Store
+.env
+.env.*
+.vscode/
+.idea/
+vendor/
+tests/
