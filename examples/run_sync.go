@@ -30,7 +30,7 @@ func main() {
 
 	outputs, err := client.Agents.RunSyncWithContext(ctx, "agent-uuid", map[string]any{
 		"text": "Sync execution",
-	})
+	}, nil)
 	if err != nil {
 		log.Fatalf("run sync: %v", err)
 	}

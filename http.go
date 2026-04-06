@@ -463,11 +463,17 @@ type preparedFile struct {
 	File      FileUpload
 }
 
-func (c *httpClient) postDynamicInputs(path string, inputs map[string]any, query map[string]string, out any) error {
-	return c.postDynamicInputsWithContext(context.Background(), path, inputs, query, out)
+func (c *httpClient) postDynamicInputs(path string, inputs map[string]any, query map[string]string, out any, metadata map[string]any) error {
+	return c.postDynamicInputsWithContext(context.Background(), path, inputs, query, out, metadata)
 }
 
-func (c *httpClient) postDynamicInputsWithContext(ctx context.Context, path string, inputs map[string]any, query map[string]string, out any) error {
+func (c *httpClient) postDynamicInputsWithContext(ctx context.Context, path string, inputs map[string]any, query map[string]string, out any, metadata map[string]any) error {
+	if metadata != nil {
+		if _, exists := inputs["metadata"]; exists {
+			return fmt.Errorf("inputs must not contain key \"metadata\" when metadata parameter is set")
+		}
+	}
+
 	form := url.Values{}
 	var files []preparedFile
 
@@ -511,6 +517,15 @@ func (c *httpClient) postDynamicInputsWithContext(ctx context.Context, path stri
 		default:
 			form.Set(key, fmt.Sprintf("%v", v))
 		}
+	}
+
+	// Serialize metadata as JSON string form field after inputs are processed.
+	if metadata != nil {
+		metaJSON, err := json.Marshal(metadata)
+		if err != nil {
+			return fmt.Errorf("marshal metadata: %w", err)
+		}
+		form.Set("metadata", string(metaJSON))
 	}
 
 	if len(files) == 0 {
