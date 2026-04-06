@@ -18,6 +18,8 @@ type (
 	AgentVersionsAPI   = root.AgentVersionsAPI
 	AgentJobsAPI       = root.AgentJobsAPI
 	ListVersionsParams = root.ListVersionsParams
+	PoliciesAPI        = root.PoliciesAPI
+	PolicyVersionsAPI  = root.PolicyVersionsAPI
 
 	// Models/results.
 	AgentInputDefinition = root.AgentInputDefinition
@@ -37,6 +39,8 @@ type (
 	AgentJobStatusBatch   = root.AgentJobStatusBatch
 	AgentJobResultBatch   = root.AgentJobResultBatch
 	JobDataDeleteResponse = root.JobDataDeleteResponse
+	Policy                = root.Policy
+	PolicyVersion         = root.PolicyVersion
 
 	// File uploads.
 	FileUpload = root.FileUpload

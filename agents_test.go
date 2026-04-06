@@ -157,7 +157,7 @@ func TestAgentsAPIRunManyWithContextStopsAfterCancel(t *testing.T) {
 		inputs[i] = map[string]any{"text": "hello"}
 	}
 
-	_, err = client.Agents.RunManyWithContext(ctx, "agent-id", inputs, 0)
+	_, err = client.Agents.RunManyWithContext(ctx, "agent-id", inputs, 0, nil)
 	if err == nil {
 		t.Fatalf("expected error")
 	}

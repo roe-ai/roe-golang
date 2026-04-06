@@ -463,13 +463,22 @@ type preparedFile struct {
 	File      FileUpload
 }
 
-func (c *httpClient) postDynamicInputs(path string, inputs map[string]any, query map[string]string, out any) error {
-	return c.postDynamicInputsWithContext(context.Background(), path, inputs, query, out)
+func (c *httpClient) postDynamicInputs(path string, inputs map[string]any, query map[string]string, out any, metadata map[string]any) error {
+	return c.postDynamicInputsWithContext(context.Background(), path, inputs, query, out, metadata)
 }
 
-func (c *httpClient) postDynamicInputsWithContext(ctx context.Context, path string, inputs map[string]any, query map[string]string, out any) error {
+func (c *httpClient) postDynamicInputsWithContext(ctx context.Context, path string, inputs map[string]any, query map[string]string, out any, metadata map[string]any) error {
 	form := url.Values{}
 	var files []preparedFile
+
+	// Serialize metadata as JSON string form field (matches Python SDK behavior).
+	if metadata != nil {
+		metaJSON, err := json.Marshal(metadata)
+		if err != nil {
+			return fmt.Errorf("marshal metadata: %w", err)
+		}
+		form.Set("metadata", string(metaJSON))
+	}
 
 	for key, val := range inputs {
 		switch v := val.(type) {

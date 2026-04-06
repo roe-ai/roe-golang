@@ -33,4 +33,8 @@ vendor/
 tests/
 tmp/
 
+# Test files with credentials (e2e/integration tests hit live APIs)
+e2e_test.go
+integration_test.go
+
 

@@ -29,7 +29,7 @@ func main() {
 
 	job, err := client.Agents.RunWithContext(ctx, "agent-uuid", 0, map[string]any{
 		"text": "Do work with timeout",
-	})
+	}, nil)
 	if err != nil {
 		log.Fatalf("run: %v", err)
 	}

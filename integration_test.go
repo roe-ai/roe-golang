@@ -31,7 +31,7 @@ var testConfig = struct {
 	SamplePDFs     []string
 	SampleURL      string
 }{
-	APIKey:         "7jmZWLJO.QvCXpF1v7IhXebQw4TLoW5YFtG89jDJo",
+	APIKey:         "cuzWPENb.wuvkVsyHu8l7w3NsyLy193DVYXySblIV",
 	OrganizationID: "abfad6df-ee35-4ab0-81ab-89214e9ed900",
 	BaseURL:        "https://api.test.roe-ai.com",
 	SamplePDFs: []string{
@@ -254,7 +254,7 @@ func TestDocInsightsAgent(t *testing.T) {
 	// Run async job
 	job, err := client.Agents.Run(agent.ID, 300, map[string]any{
 		"pdf_files": FileUpload{Path: pdfPath},
-	})
+	}, nil)
 	if err != nil {
 		results.RecordError("submit_doc_insights_job", err)
 		cleanupFile(pdfPath)
@@ -353,7 +353,7 @@ func TestWebInsightsAgent(t *testing.T) {
 	// Run with URL
 	job, err := client.Agents.Run(agent.ID, 300, map[string]any{
 		"url": testConfig.SampleURL,
-	})
+	}, nil)
 	if err != nil {
 		results.RecordError("submit_web_insights_job", err)
 		client.Agents.Delete(agent.ID)
@@ -452,7 +452,7 @@ func TestBatchOperations(t *testing.T) {
 		{"text": "One"},
 	}
 
-	batch, err := client.Agents.RunMany(agent.ID, batchInputs, 300)
+	batch, err := client.Agents.RunMany(agent.ID, batchInputs, 300, nil)
 	if err != nil {
 		results.RecordError("submit_batch_jobs", err)
 		client.Agents.Delete(agent.ID)
@@ -530,7 +530,7 @@ func TestSyncExecution(t *testing.T) {
 	results.Record("create_sync_agent", TestResult{"agent_id": agent.ID})
 
 	// Run synchronously
-	outputs, err := client.Agents.RunSync(agent.ID, map[string]any{"text": "Test input for sync"})
+	outputs, err := client.Agents.RunSync(agent.ID, map[string]any{"text": "Test input for sync"}, nil)
 	if err != nil {
 		results.RecordError("sync_execution", err)
 	} else {
@@ -630,7 +630,7 @@ func TestVersionManagement(t *testing.T) {
 		})
 
 		// Run specific version
-		job, err := client.Agents.RunVersion(agent.ID, v2.ID, 120, map[string]any{"text": "Test"})
+		job, err := client.Agents.RunVersion(agent.ID, v2.ID, 120, map[string]any{"text": "Test"}, nil)
 		if err != nil {
 			results.RecordError("run_specific_version", err)
 		} else {
@@ -695,7 +695,7 @@ func TestJobManagement(t *testing.T) {
 	}
 
 	// Submit job
-	job, err := client.Agents.Run(agent.ID, 120, map[string]any{"text": "Test for job management"})
+	job, err := client.Agents.Run(agent.ID, 120, map[string]any{"text": "Test for job management"}, nil)
 	if err != nil {
 		results.RecordError("submit_job", err)
 		client.Agents.Delete(agent.ID)
@@ -789,7 +789,7 @@ func TestMultiplePDFUploads(t *testing.T) {
 
 		job, err := client.Agents.Run(agent.ID, 300, map[string]any{
 			"pdf_files": FileUpload{Path: pdfPath},
-		})
+		}, nil)
 		if err != nil {
 			results.RecordError(fmt.Sprintf("pdf_upload_%d", i), err)
 			cleanupFile(pdfPath)

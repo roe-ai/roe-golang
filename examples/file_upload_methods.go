@@ -29,7 +29,7 @@ func main() {
 	// Path upload
 	if _, err := client.Agents.RunWithContext(ctx, "agent-uuid", 0, map[string]any{
 		"pdf_files": "/path/to/file.pdf",
-	}); err != nil {
+	}, nil); err != nil {
 		log.Printf("path upload: %v", err)
 	}
 
@@ -39,7 +39,7 @@ func main() {
 			Path:     "/path/to/file.pdf",
 			Filename: "resume.pdf",
 		},
-	}); err != nil {
+	}, nil); err != nil {
 		log.Printf("file upload: %v", err)
 	}
 
@@ -47,7 +47,7 @@ func main() {
 	reader := strings.NewReader("sample text")
 	if _, err := client.Agents.RunWithContext(ctx, "agent-uuid", 0, map[string]any{
 		"text": reader,
-	}); err != nil {
+	}, nil); err != nil {
 		log.Printf("reader upload: %v", err)
 	}
 }
