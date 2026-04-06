@@ -95,7 +95,9 @@ func TestPoliciesAPICreate(t *testing.T) {
 			t.Fatalf("expected POST, got %s", r.Method)
 		}
 		var body map[string]any
-		json.NewDecoder(r.Body).Decode(&body)
+		if err := json.NewDecoder(r.Body).Decode(&body); err != nil {
+			t.Fatalf("decode body: %v", err)
+		}
 		if body["name"] != "Test Policy" {
 			t.Fatalf("expected name=Test Policy, got %v", body["name"])
 		}
@@ -137,7 +139,9 @@ func TestPoliciesAPIUpdate(t *testing.T) {
 			t.Fatalf("expected PUT, got %s", r.Method)
 		}
 		var body map[string]any
-		json.NewDecoder(r.Body).Decode(&body)
+		if err := json.NewDecoder(r.Body).Decode(&body); err != nil {
+			t.Fatalf("decode body: %v", err)
+		}
 		if body["name"] != "Updated" {
 			t.Fatalf("expected name=Updated, got %v", body["name"])
 		}
@@ -341,7 +345,9 @@ func TestMetadataOnRun(t *testing.T) {
 		if r.Method != http.MethodPost {
 			t.Fatalf("expected POST, got %s", r.Method)
 		}
-		r.ParseForm()
+		if err := r.ParseForm(); err != nil {
+			t.Fatalf("parse form: %v", err)
+		}
 		metaVal := r.FormValue("metadata")
 		if metaVal == "" {
 			t.Fatalf("expected metadata form field to be set")
