@@ -32,7 +32,7 @@ func main() {
 		{"text": "Job 1"},
 		{"text": "Job 2"},
 		{"text": "Job 3"},
-	}, 0)
+	}, 0, nil)
 	if err != nil {
 		log.Fatalf("run many: %v", err)
 	}

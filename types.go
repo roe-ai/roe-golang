@@ -48,16 +48,16 @@ func (a *BaseAgent) setAgentsAPI(api *AgentsAPI) {
 }
 
 // Run executes the agent using its current version.
-func (a *BaseAgent) Run(inputs map[string]any) (*Job, error) {
-	return a.RunWithContext(context.Background(), inputs)
+func (a *BaseAgent) Run(inputs map[string]any, metadata map[string]any) (*Job, error) {
+	return a.RunWithContext(context.Background(), inputs, metadata)
 }
 
 // RunWithContext executes the agent using its current version with a caller-supplied context.
-func (a *BaseAgent) RunWithContext(ctx context.Context, inputs map[string]any) (*Job, error) {
+func (a *BaseAgent) RunWithContext(ctx context.Context, inputs map[string]any, metadata map[string]any) (*Job, error) {
 	if a.agentsAPI == nil {
 		return nil, fmt.Errorf("agents API not set; use client.Agents.Run instead")
 	}
-	return a.agentsAPI.RunWithContext(ctx, a.ID, 0, inputs)
+	return a.agentsAPI.RunWithContext(ctx, a.ID, 0, inputs, metadata)
 }
 
 // ListVersions lists versions of this agent.
@@ -118,16 +118,16 @@ func (v *AgentVersion) setAgentsAPI(api *AgentsAPI) {
 }
 
 // Run executes this version directly.
-func (v *AgentVersion) Run(inputs map[string]any) (*Job, error) {
-	return v.RunWithContext(context.Background(), inputs)
+func (v *AgentVersion) Run(inputs map[string]any, metadata map[string]any) (*Job, error) {
+	return v.RunWithContext(context.Background(), inputs, metadata)
 }
 
 // RunWithContext executes this version directly with a caller-supplied context.
-func (v *AgentVersion) RunWithContext(ctx context.Context, inputs map[string]any) (*Job, error) {
+func (v *AgentVersion) RunWithContext(ctx context.Context, inputs map[string]any, metadata map[string]any) (*Job, error) {
 	if v.agentsAPI == nil {
 		return nil, fmt.Errorf("agents API not set; use client.Agents.Run instead")
 	}
-	return v.agentsAPI.RunVersionWithContext(ctx, v.BaseAgent.ID, v.ID, 0, inputs)
+	return v.agentsAPI.RunVersionWithContext(ctx, v.BaseAgent.ID, v.ID, 0, inputs, metadata)
 }
 
 // JobStatus enum values.
@@ -279,4 +279,27 @@ type JobDataDeleteResponse struct {
 	FailedCount      int      `json:"failed_count"`
 	OutputsSanitized bool     `json:"outputs_sanitized"`
 	Errors           []string `json:"errors"`
+}
+
+// Policy represents a policy resource for agentic workflows.
+type Policy struct {
+	ID               string  `json:"id"`
+	Name             string  `json:"name"`
+	Description      string  `json:"description"`
+	OrganizationID   string  `json:"organization_id"`
+	CurrentVersionID *string `json:"current_version_id"`
+	CreatedAt        string  `json:"created_at"`
+	UpdatedAt        string  `json:"updated_at"`
+}
+
+// PolicyVersion represents a specific version of a policy.
+type PolicyVersion struct {
+	ID            string         `json:"id"`
+	VersionName   string         `json:"version_name"`
+	Content       map[string]any `json:"content"`
+	CreatedAt     string         `json:"created_at"`
+	UpdatedAt     string         `json:"updated_at"`
+	Policy        *Policy        `json:"policy,omitempty"`
+	CreatedBy     map[string]any `json:"created_by,omitempty"`
+	BaseVersionID *string        `json:"base_version_id,omitempty"`
 }

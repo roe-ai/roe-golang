@@ -82,7 +82,7 @@ func TestPostDynamicInputsWithFile(t *testing.T) {
 	err = client.postDynamicInputs("/upload", map[string]any{
 		"text":   "greeting",
 		"upload": FileUpload{Path: tmp.Name()},
-	}, nil, &out)
+	}, nil, &out, nil)
 	if err != nil {
 		t.Fatalf("upload failed: %v", err)
 	}
@@ -123,7 +123,7 @@ func TestPostDynamicInputsWithURLInput(t *testing.T) {
 	var out map[string]bool
 	err := client.postDynamicInputs("/upload", map[string]any{
 		"upload": FileUpload{URL: "https://example.com/file.pdf"},
-	}, nil, &out)
+	}, nil, &out, nil)
 	if err != nil {
 		t.Fatalf("request failed: %v", err)
 	}

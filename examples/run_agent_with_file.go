@@ -29,7 +29,7 @@ func main() {
 
 	job, err := client.Agents.RunWithContext(ctx, "agent-uuid", 0, map[string]any{
 		"document": "/path/to/file.pdf",
-	})
+	}, nil)
 	if err != nil {
 		log.Fatalf("run: %v", err)
 	}
