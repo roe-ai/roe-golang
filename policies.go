@@ -67,9 +67,10 @@ func (p *PoliciesAPI) Create(name string, content map[string]any, description st
 // CreateWithContext creates a new policy with a caller-supplied context.
 func (p *PoliciesAPI) CreateWithContext(ctx context.Context, name string, content map[string]any, description string, versionName string) (Policy, error) {
 	payload := map[string]any{
-		"name":        name,
-		"content":     content,
-		"description": description,
+		"name":            name,
+		"content":         content,
+		"description":     description,
+		"organization_id": p.cfg.OrganizationID,
 	}
 	if versionName != "" {
 		payload["version_name"] = versionName
@@ -142,7 +143,10 @@ func (v *PolicyVersionsAPI) ListWithContext(ctx context.Context, policyID string
 	var paginated struct {
 		Results []PolicyVersion `json:"results"`
 	}
-	if err := json.Unmarshal(raw, &paginated); err == nil && paginated.Results != nil {
+	if len(raw) > 0 && raw[0] == '{' {
+		if err := json.Unmarshal(raw, &paginated); err != nil {
+			return nil, fmt.Errorf("parse policy versions response: %w", err)
+		}
 		return paginated.Results, nil
 	}
 	// Fall back to raw array.
