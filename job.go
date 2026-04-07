@@ -70,7 +70,12 @@ func (j *Job) WaitContext(ctx context.Context, interval time.Duration, timeout t
 		if status.Status.IsTerminal() {
 			result, err := j.RetrieveResultWithContext(ctx)
 			if err != nil {
-				return AgentJobResult{}, err
+				// For failed/cancelled jobs, treat a missing result as non-fatal
+				if status.Status == JobFailure || status.Status == JobCancelled {
+					result = AgentJobResult{}
+				} else {
+					return AgentJobResult{}, err
+				}
 			}
 			result.Status = &status.Status
 			result.ErrorMessage = status.ErrorMessage
@@ -310,7 +315,8 @@ func convertBatchResult(res AgentJobResultBatch) (AgentJobResult, error) {
 		if !isFailed {
 			return AgentJobResult{}, fmt.Errorf("job %s not found or deleted", res.ID)
 		}
-		// Failed/cancelled jobs may lack agent identifiers
+		// Failed/cancelled jobs may lack agent identifiers.
+		// ErrorMessage is set by the caller from the status cache.
 		return AgentJobResult{Status: res.Status}, nil
 	}
 
