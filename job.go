@@ -304,7 +304,6 @@ func removeCompleted(pending []string, completed []string) []string {
 	return next
 }
 
-
 func convertBatchResult(res AgentJobResultBatch) (AgentJobResult, error) {
 	isFailed := res.Status != nil && (*res.Status == JobFailure || *res.Status == JobCancelled)
 	if res.AgentID == nil || res.AgentVersionID == nil {
