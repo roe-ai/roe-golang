@@ -214,6 +214,35 @@ type AgentJobResult struct {
 	InputTokens    *int         `json:"input_tokens"`
 	OutputTokens   *int         `json:"output_tokens"`
 	Outputs        []AgentDatum `json:"outputs"`
+	Status         *JobStatus   `json:"status,omitempty"`
+	ErrorMessage   *string      `json:"error_message,omitempty"`
+}
+
+// Succeeded returns true if the job status is SUCCESS or CACHED.
+// Note: Status is only populated by WaitContext; direct RetrieveResult calls leave it nil.
+func (r AgentJobResult) Succeeded() bool {
+	if r.Status == nil {
+		return false
+	}
+	return *r.Status == JobSuccess || *r.Status == JobCached
+}
+
+// Failed returns true if the job status is FAILURE or CANCELLED.
+// Note: Status is only populated by WaitContext; direct RetrieveResult calls leave it nil.
+func (r AgentJobResult) Failed() bool {
+	if r.Status == nil {
+		return false
+	}
+	return *r.Status == JobFailure || *r.Status == JobCancelled
+}
+
+// Cancelled returns true if the job status is CANCELLED.
+// Note: Status is only populated by WaitContext; direct RetrieveResult calls leave it nil.
+func (r AgentJobResult) Cancelled() bool {
+	if r.Status == nil {
+		return false
+	}
+	return *r.Status == JobCancelled
 }
 
 // GetReferences parses outputs for reference URLs.
@@ -256,6 +285,8 @@ type AgentJobStatusBatch struct {
 	Status        *JobStatus `json:"status"`
 	CreatedAt     any        `json:"created_at"`
 	LastUpdatedAt any        `json:"last_updated_at"`
+	Timestamp     *float64   `json:"timestamp"`
+	ErrorMessage  *string    `json:"error_message"`
 }
 
 // AgentJobResultBatch for batch results.

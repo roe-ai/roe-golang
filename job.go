@@ -70,11 +70,15 @@ func (j *Job) WaitContext(ctx context.Context, interval time.Duration, timeout t
 		if status.Status.IsTerminal() {
 			result, err := j.RetrieveResultWithContext(ctx)
 			if err != nil {
-				return AgentJobResult{}, err
+				// For failed/cancelled jobs, treat a missing result as non-fatal
+				if status.Status == JobFailure || status.Status == JobCancelled {
+					result = AgentJobResult{}
+				} else {
+					return AgentJobResult{}, err
+				}
 			}
-			if status.Status == JobFailure || status.Status == JobCancelled {
-				return result, fmt.Errorf("job %s ended with status %s", j.jobID, status.Status.String())
-			}
+			result.Status = &status.Status
+			result.ErrorMessage = status.ErrorMessage
 			return result, nil
 		}
 
@@ -128,7 +132,7 @@ type JobBatch struct {
 	agentsAPI *AgentsAPI
 	jobIDs    []string
 	timeout   time.Duration
-	statuses  map[string]JobStatus
+	statuses  map[string]AgentJobStatus
 	completed map[string]AgentJobResult
 }
 
@@ -141,7 +145,7 @@ func newJobBatch(api *AgentsAPI, jobIDs []string, timeoutSeconds int) *JobBatch 
 		agentsAPI: api,
 		jobIDs:    jobIDs,
 		timeout:   to,
-		statuses:  map[string]JobStatus{},
+		statuses:  map[string]AgentJobStatus{},
 		completed: map[string]AgentJobResult{},
 	}
 }
@@ -181,7 +185,6 @@ func (b *JobBatch) WaitContext(ctx context.Context, interval time.Duration, time
 	defer ticker.Stop()
 
 	pending := append([]string{}, b.jobIDs...)
-	failures := map[string]JobStatus{}
 
 	for len(pending) > 0 {
 		select {
@@ -198,7 +201,11 @@ func (b *JobBatch) WaitContext(ctx context.Context, interval time.Duration, time
 		var ready []string
 		for _, st := range statusBatch {
 			if st.Status != nil {
-				b.statuses[st.ID] = *st.Status
+				js := AgentJobStatus{Status: *st.Status, ErrorMessage: st.ErrorMessage}
+				if st.Timestamp != nil {
+					js.Timestamp = *st.Timestamp
+				}
+				b.statuses[st.ID] = js
 				if st.Status.IsTerminal() {
 					ready = append(ready, st.ID)
 				}
@@ -208,29 +215,43 @@ func (b *JobBatch) WaitContext(ctx context.Context, interval time.Duration, time
 		if len(ready) > 0 {
 			resultsBatch, err := b.agentsAPI.Jobs.RetrieveResultManyWithContext(ctx, ready)
 			if err != nil {
-				return nil, err
-			}
-
-			received := map[string]AgentJobResult{}
-			for _, res := range resultsBatch {
-				converted, err := convertBatchResult(res)
-				if err != nil {
+				// Synthesize empty results for failed/cancelled jobs; propagate error if any success/cached jobs are affected
+				allFailed := true
+				for _, id := range ready {
+					if cached, ok := b.statuses[id]; ok && (cached.Status == JobFailure || cached.Status == JobCancelled) {
+						result := AgentJobResult{Status: &cached.Status, ErrorMessage: cached.ErrorMessage}
+						b.completed[id] = result
+					} else {
+						allFailed = false
+					}
+				}
+				if !allFailed {
 					return nil, err
 				}
-				received[res.ID] = converted
-				b.completed[res.ID] = converted
-				if status, ok := b.statuses[res.ID]; ok && (status == JobFailure || status == JobCancelled) {
-					failures[res.ID] = status
+				pending = removeCompleted(pending, ready)
+			} else {
+				received := map[string]AgentJobResult{}
+				for _, res := range resultsBatch {
+					converted, err := convertBatchResult(res)
+					if err != nil {
+						return nil, err
+					}
+					if cached, ok := b.statuses[res.ID]; ok {
+						converted.Status = &cached.Status
+						converted.ErrorMessage = cached.ErrorMessage
+					}
+					received[res.ID] = converted
+					b.completed[res.ID] = converted
 				}
-			}
 
-			for _, id := range ready {
-				if _, ok := received[id]; !ok {
-					return nil, fmt.Errorf("job %s result missing in batch response", id)
+				for _, id := range ready {
+					if _, ok := received[id]; !ok {
+						return nil, fmt.Errorf("job %s result missing in batch response", id)
+					}
 				}
-			}
 
-			pending = removeCompleted(pending, ready)
+				pending = removeCompleted(pending, ready)
+			}
 		}
 
 		if len(pending) == 0 {
@@ -251,20 +272,16 @@ func (b *JobBatch) WaitContext(ctx context.Context, interval time.Duration, time
 		}
 	}
 
-	if len(failures) > 0 {
-		return results, fmt.Errorf("one or more jobs failed or were cancelled: %v", mapKeys(failures))
-	}
-
 	return results, nil
 }
 
 // RetrieveStatus returns latest known statuses keyed by job id.
-func (b *JobBatch) RetrieveStatus() (map[string]JobStatus, error) {
-	statusMap := map[string]JobStatus{}
+func (b *JobBatch) RetrieveStatus() (map[string]AgentJobStatus, error) {
+	statusMap := map[string]AgentJobStatus{}
 	toQuery := []string{}
 	for _, id := range b.jobIDs {
-		if st, ok := b.statuses[id]; ok {
-			statusMap[id] = st
+		if cached, ok := b.statuses[id]; ok && cached.Status.IsTerminal() {
+			statusMap[id] = cached
 		} else {
 			toQuery = append(toQuery, id)
 		}
@@ -276,8 +293,12 @@ func (b *JobBatch) RetrieveStatus() (map[string]JobStatus, error) {
 		}
 		for _, st := range statusBatch {
 			if st.Status != nil {
-				statusMap[st.ID] = *st.Status
-				b.statuses[st.ID] = *st.Status
+				js := AgentJobStatus{Status: *st.Status, ErrorMessage: st.ErrorMessage}
+				if st.Timestamp != nil {
+					js.Timestamp = *st.Timestamp
+				}
+				b.statuses[st.ID] = js
+				statusMap[st.ID] = js
 			}
 		}
 	}
@@ -301,17 +322,15 @@ func removeCompleted(pending []string, completed []string) []string {
 	return next
 }
 
-func mapKeys(m map[string]JobStatus) []string {
-	keys := make([]string, 0, len(m))
-	for k := range m {
-		keys = append(keys, k)
-	}
-	return keys
-}
-
 func convertBatchResult(res AgentJobResultBatch) (AgentJobResult, error) {
+	isFailed := res.Status != nil && (*res.Status == JobFailure || *res.Status == JobCancelled)
 	if res.AgentID == nil || res.AgentVersionID == nil {
-		return AgentJobResult{}, fmt.Errorf("job %s not found or deleted", res.ID)
+		if !isFailed {
+			return AgentJobResult{}, fmt.Errorf("job %s not found or deleted", res.ID)
+		}
+		// Failed/cancelled jobs may lack agent identifiers.
+		// ErrorMessage is set by the caller from the status cache.
+		return AgentJobResult{Status: res.Status}, nil
 	}
 
 	outputs := []AgentDatum{}
@@ -322,6 +341,7 @@ func convertBatchResult(res AgentJobResultBatch) (AgentJobResult, error) {
 		Inputs:         res.Inputs,
 		InputTokens:    res.InputTokens,
 		OutputTokens:   res.OutputTokens,
+		Status:         res.Status,
 	}
 
 	switch data := res.Result.(type) {

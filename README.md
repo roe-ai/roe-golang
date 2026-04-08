@@ -63,6 +63,34 @@ export ROE_API_KEY="your-api-key"
 export ROE_ORGANIZATION_ID="your-org-uuid"
 ```
 
+## Job Result Inspection
+
+After waiting for a job, you can inspect its outcome using status helpers:
+
+```go
+result, err := job.Wait(5*time.Second, 0)
+if err != nil {
+    log.Fatal(err) // only for timeouts/network errors
+}
+
+if result.Succeeded() {
+    for _, output := range result.Outputs {
+        fmt.Printf("%s: %s\n", output.Key, output.Value)
+    }
+} else if result.Cancelled() {
+    fmt.Println("Job was cancelled")
+} else if result.Failed() {
+    if result.ErrorMessage != nil {
+        fmt.Println("Error:", *result.ErrorMessage)
+    }
+}
+
+// Available fields
+// result.Status        *JobStatus - set by Wait/WaitContext
+// result.ErrorMessage  *string    - error details if failed
+// result.Outputs       []AgentDatum
+```
+
 ## Full Example
 
 Create an agent that extracts structured data from websites:
