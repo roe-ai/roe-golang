@@ -10,10 +10,6 @@ jobs:
   test:
     name: Test
     runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        go-version: ['1.23', '1.24']
-    
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -21,7 +17,7 @@ jobs:
       - name: Set up Go
         uses: actions/setup-go@v5
         with:
-          go-version: ${{ matrix.go-version }}
+          go-version: '1.24'
 
       - name: Verify dependencies
         run: go mod verify
@@ -42,7 +38,6 @@ jobs:
 
       - name: Upload coverage
         uses: codecov/codecov-action@v4
-        if: matrix.go-version == '1.23'
         with:
           file: ./coverage.out
           flags: unittests
@@ -60,7 +55,7 @@ jobs:
       - name: Set up Go
         uses: actions/setup-go@v5
         with:
-          go-version: '1.23'
+          go-version: '1.24'
 
       - name: Run golangci-lint
         uses: golangci/golangci-lint-action@v6
@@ -68,3 +63,23 @@ jobs:
           version: latest
           args: --timeout=5m
 
+  check-codegen-drift:
+    name: Check Codegen Drift
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Go
+        uses: actions/setup-go@v5
+        with:
+          go-version: '1.24'
+
+      - name: Download dependencies
+        run: go mod download
+
+      - name: Regenerate SDK
+        run: bash scripts/generate-sdk
+
+      - name: Check for codegen drift
+        run: git diff --exit-code -- openapi/openapi.yml generated/openapi.gen.go

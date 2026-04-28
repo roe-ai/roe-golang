@@ -2,6 +2,6 @@
 //
 // Deprecated: Use the module root package "github.com/roe-ai/roe-golang" instead.
 //
-// Note: PaginatedResponse[T] is not re-exported here due to Go 1.23 compatibility.
+// Note: PaginatedResponse[T] is not re-exported here to keep the compatibility shim minimal.
 // Import it directly from the root package: github.com/roe-ai/roe-golang
 package roe

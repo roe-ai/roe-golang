@@ -1,0 +1,11 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+GENERATED_SPEC="$ROOT_DIR/openapi/oapi-codegen-input.yml"
+trap 'rm -f "$GENERATED_SPEC"' EXIT
+
+cd "$ROOT_DIR"
+
+go generate ./generated/...
+gofmt -w generated/openapi.gen.go

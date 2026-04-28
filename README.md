@@ -8,7 +8,7 @@ Go SDK for the [Roe AI](https://www.roe-ai.com/) API.
 go get github.com/roe-ai/roe-golang
 ```
 
-Requires Go 1.23+
+Requires Go 1.24+
 
 ## Quick Start
 
@@ -61,6 +61,24 @@ Or use environment variables:
 ```bash
 export ROE_API_KEY="your-api-key"
 export ROE_ORGANIZATION_ID="your-org-uuid"
+```
+
+## Raw API Access
+
+The generated raw client is exposed from the main client:
+
+```go
+raw, err := client.Raw()
+if err != nil {
+    log.Fatal(err)
+}
+
+resp, err := raw.V1UsersCurrentUserRetrieveWithResponse(context.Background())
+if err != nil {
+    log.Fatal(err)
+}
+
+fmt.Println(resp.StatusCode())
 ```
 
 ## Job Result Inspection
