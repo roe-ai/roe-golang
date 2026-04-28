@@ -45,6 +45,20 @@ type RateLimitError struct {
 }
 type ServerError struct{ *APIError }
 
+// errorFromResponse converts a generated client's *http.Response + raw body
+// into a typed RoeError on non-2xx, or nil on success. Wrappers built on the
+// generated client invoke this after each `*WithResponse` call to preserve
+// the existing exception hierarchy.
+func errorFromResponse(httpResp *http.Response, body []byte) error {
+	if httpResp == nil {
+		return nil
+	}
+	if httpResp.StatusCode >= 200 && httpResp.StatusCode < 300 {
+		return nil
+	}
+	return apiErrorFromResponse(httpResp.StatusCode, body, httpResp.Header, defaultRequestIDHeader)
+}
+
 // apiErrorFromResponse maps an HTTP status code and optional JSON body to a typed error.
 func apiErrorFromResponse(status int, body []byte, headers http.Header, requestIDHeader string) error {
 	message, details := extractErrorDetail(status, body)
