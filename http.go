@@ -446,77 +446,9 @@ func (c *httpClient) sleepWithContext(ctx context.Context, delay time.Duration) 
 	}
 }
 
-func (c *httpClient) get(path string, query map[string]string, out any) error {
-	return c.getWithContext(context.Background(), path, query, out)
-}
-
-func (c *httpClient) getWithContext(ctx context.Context, path string, query map[string]string, out any) error {
-	data, err := c.doRequest(ctx, http.MethodGet, path, http.Header{}, nil, query)
-	if err != nil {
-		return err
-	}
-	if out == nil {
-		return nil
-	}
-	return json.Unmarshal(data, out)
-}
-
-func (c *httpClient) getBytesWithContext(ctx context.Context, path string, query map[string]string) ([]byte, error) {
-	return c.doRequest(ctx, http.MethodGet, path, http.Header{}, nil, query)
-}
-
-func (c *httpClient) deleteWithContext(ctx context.Context, path string, query map[string]string) error {
-	_, err := c.doRequest(ctx, http.MethodDelete, path, http.Header{}, nil, query)
-	return err
-}
-
-func (c *httpClient) postJSONWithContext(ctx context.Context, path string, payload any, query map[string]string, out any) error {
-	buf := &bytes.Buffer{}
-	if payload != nil {
-		if err := json.NewEncoder(buf).Encode(payload); err != nil {
-			return fmt.Errorf("encode json: %w", err)
-		}
-	}
-	headers := http.Header{}
-	headers.Set("Content-Type", "application/json")
-
-	data, err := c.doRequest(ctx, http.MethodPost, path, headers, buf, query)
-	if err != nil {
-		return err
-	}
-	if out == nil {
-		return nil
-	}
-	return json.Unmarshal(data, out)
-}
-
-func (c *httpClient) putJSONWithContext(ctx context.Context, path string, payload any, query map[string]string, out any) error {
-	buf := &bytes.Buffer{}
-	if payload != nil {
-		if err := json.NewEncoder(buf).Encode(payload); err != nil {
-			return fmt.Errorf("encode json: %w", err)
-		}
-	}
-	headers := http.Header{}
-	headers.Set("Content-Type", "application/json")
-
-	data, err := c.doRequest(ctx, http.MethodPut, path, headers, buf, query)
-	if err != nil {
-		return err
-	}
-	if out == nil {
-		return nil
-	}
-	return json.Unmarshal(data, out)
-}
-
 type preparedFile struct {
 	FieldName string
 	File      FileUpload
-}
-
-func (c *httpClient) postDynamicInputs(path string, inputs map[string]any, query map[string]string, out any, metadata map[string]any) error {
-	return c.postDynamicInputsWithContext(context.Background(), path, inputs, query, out, metadata)
 }
 
 // dynamicInputsRequest builds the body and Content-Type for a dynamic-input
@@ -654,27 +586,6 @@ func (c *httpClient) dynamicInputsRequest(inputs map[string]any, metadata map[st
 	}
 
 	return body, writer.FormDataContentType(), nil
-}
-
-// postDynamicInputsWithContext is a thin shim retained for the still-hand-
-// written agents.go callers. New wrappers should call dynamicInputsRequest
-// directly and feed the result into the generated client.
-func (c *httpClient) postDynamicInputsWithContext(ctx context.Context, path string, inputs map[string]any, query map[string]string, out any, metadata map[string]any) error {
-	body, contentType, err := c.dynamicInputsRequest(inputs, metadata)
-	if err != nil {
-		return err
-	}
-	headers := http.Header{}
-	headers.Set("Content-Type", contentType)
-
-	data, err := c.doRequest(ctx, http.MethodPost, path, headers, body, query)
-	if err != nil {
-		return err
-	}
-	if out == nil {
-		return nil
-	}
-	return json.Unmarshal(data, out)
 }
 
 func (c *httpClient) prepareMultipartFile(file FileUpload) (io.ReadCloser, string, string, error) {

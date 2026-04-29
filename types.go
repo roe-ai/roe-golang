@@ -3,19 +3,31 @@ package roe
 import (
 	"encoding/json"
 	"strings"
+
+	"github.com/roe-ai/roe-golang/generated"
 )
 
 // NOTE: Hand-written response models (BaseAgent, AgentVersion, Policy,
 // PolicyVersion, AgentInputDefinition, UserInfo, PaginatedResponse[T]) have
 // been removed; the AgentsAPI / PoliciesAPI wrappers now return generated
-// equivalents from the github.com/roe-ai/roe-golang/generated package.
+// equivalents. Aliases below preserve the bare names so existing call sites
+// keep compiling — `roe.BaseAgent` and `generated.BaseAgent` are the same type.
 //
-// What remains in this file is the polling-helper transport layer that
-// Job/JobBatch use internally: AgentJobStatus, AgentJobStatusBatch,
+// What remains hand-written in this file is the polling-helper transport
+// layer that Job/JobBatch use internally: AgentJobStatus, AgentJobStatusBatch,
 // AgentJobResult, AgentJobResultBatch, AgentDatum, Reference, JobStatus
 // (typed enum + IsTerminal()), and JobDataDeleteResponse. The bulk-status
 // and bulk-result wire formats include per-item job IDs that the generated
 // schemas omit, so these structs continue to back the parse path.
+
+type (
+	BaseAgent            = generated.BaseAgent
+	AgentVersion         = generated.AgentVersion
+	AgentInputDefinition = generated.AgentInputDefinition
+	UserInfo             = generated.UserInfo
+	Policy               = generated.Policy
+	PolicyVersion        = generated.PolicyVersion
+)
 
 // JobStatus enum values.
 type JobStatus int
@@ -62,22 +74,6 @@ type AgentDatum struct {
 	DataType    string   `json:"data_type"`
 	Value       string   `json:"value"`
 	Cost        *float64 `json:"cost,omitempty"`
-}
-
-// PaginatedResponse wraps paginated results.
-type PaginatedResponse[T any] struct {
-	Count    int     `json:"count"`
-	Next     *string `json:"next"`
-	Previous *string `json:"previous"`
-	Results  []T     `json:"results"`
-}
-
-func (p PaginatedResponse[T]) HasNext() bool {
-	return p.Next != nil
-}
-
-func (p PaginatedResponse[T]) HasPrevious() bool {
-	return p.Previous != nil
 }
 
 // AgentJobStatus describes job status.
@@ -199,25 +195,3 @@ type JobDataDeleteResponse struct {
 	Errors           []string `json:"errors"`
 }
 
-// Policy represents a policy resource for agentic workflows.
-type Policy struct {
-	ID               string  `json:"id"`
-	Name             string  `json:"name"`
-	Description      string  `json:"description"`
-	OrganizationID   string  `json:"organization_id"`
-	CurrentVersionID *string `json:"current_version_id"`
-	CreatedAt        string  `json:"created_at"`
-	UpdatedAt        string  `json:"updated_at"`
-}
-
-// PolicyVersion represents a specific version of a policy.
-type PolicyVersion struct {
-	ID            string         `json:"id"`
-	VersionName   string         `json:"version_name"`
-	Content       map[string]any `json:"content"`
-	CreatedAt     string         `json:"created_at"`
-	UpdatedAt     string         `json:"updated_at"`
-	Policy        *Policy        `json:"policy,omitempty"`
-	CreatedBy     map[string]any `json:"created_by,omitempty"`
-	BaseVersionID *string        `json:"base_version_id,omitempty"`
-}

@@ -2,14 +2,18 @@ package roe
 
 import (
 	"io"
-	"net/http"
+	"mime"
+	"mime/multipart"
 	"os"
 	"strings"
 	"testing"
 	"time"
 )
 
-func TestPostDynamicInputsWithFile(t *testing.T) {
+// TestDynamicInputsRequestWithFile verifies dynamicInputsRequest produces a
+// well-formed multipart/form-data body with both scalar form fields and
+// FileUpload parts (filename + content preserved).
+func TestDynamicInputsRequestWithFile(t *testing.T) {
 	tmp, err := os.CreateTemp("", "roe-upload-*.txt")
 	if err != nil {
 		t.Fatalf("create temp file: %v", err)
@@ -20,53 +24,9 @@ func TestPostDynamicInputsWithFile(t *testing.T) {
 	}
 	tmp.Close()
 
-	server := newTestServer(t, http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		if !strings.HasPrefix(r.Header.Get("Content-Type"), "multipart/form-data") {
-			t.Fatalf("expected multipart content type, got %s", r.Header.Get("Content-Type"))
-		}
-		reader, err := r.MultipartReader()
-		if err != nil {
-			t.Fatalf("multipart reader: %v", err)
-		}
-		seenFile := false
-		for {
-			part, err := reader.NextPart()
-			if err == io.EOF {
-				break
-			}
-			if err != nil {
-				t.Fatalf("read part: %v", err)
-			}
-			defer part.Close()
-			switch part.FormName() {
-			case "text":
-				content, _ := io.ReadAll(part)
-				if string(content) != "greeting" {
-					t.Fatalf("unexpected text field %s", string(content))
-				}
-			case "upload":
-				seenFile = true
-				if part.FileName() == "" {
-					t.Fatalf("expected filename on upload")
-				}
-				content, _ := io.ReadAll(part)
-				if string(content) != "hello world" {
-					t.Fatalf("unexpected file content: %s", string(content))
-				}
-			}
-		}
-		if !seenFile {
-			t.Fatalf("expected to see file upload")
-		}
-		w.Header().Set("Content-Type", "application/json")
-		_, _ = w.Write([]byte(`{"ok":true}`))
-	}))
-	defer server.Close()
-
 	cfg := Config{
 		APIKey:               "k",
 		OrganizationID:       "org",
-		BaseURL:              server.URL,
 		Timeout:              time.Second,
 		MaxRetries:           0,
 		RetryInitialInterval: 10 * time.Millisecond,
@@ -74,41 +34,65 @@ func TestPostDynamicInputsWithFile(t *testing.T) {
 		RetryMultiplier:      1,
 		RetryJitter:          0,
 	}
-
 	client := newHTTPClient(cfg, newAuth(cfg))
 	defer client.close()
 
-	var out map[string]bool
-	err = client.postDynamicInputs("/upload", map[string]any{
+	body, contentType, err := client.dynamicInputsRequest(map[string]any{
 		"text":   "greeting",
 		"upload": FileUpload{Path: tmp.Name()},
-	}, nil, &out, nil)
+	}, nil)
 	if err != nil {
-		t.Fatalf("upload failed: %v", err)
+		t.Fatalf("dynamicInputsRequest: %v", err)
 	}
-	if !out["ok"] {
-		t.Fatalf("unexpected response: %v", out)
+	if !strings.HasPrefix(contentType, "multipart/form-data") {
+		t.Fatalf("expected multipart content type, got %s", contentType)
+	}
+
+	mediaType, params, err := mime.ParseMediaType(contentType)
+	if err != nil || mediaType != "multipart/form-data" {
+		t.Fatalf("parse content type: %v / %s", err, mediaType)
+	}
+	reader := multipart.NewReader(body, params["boundary"])
+
+	seenFile := false
+	for {
+		part, err := reader.NextPart()
+		if err == io.EOF {
+			break
+		}
+		if err != nil {
+			t.Fatalf("read part: %v", err)
+		}
+		switch part.FormName() {
+		case "text":
+			content, _ := io.ReadAll(part)
+			if string(content) != "greeting" {
+				t.Fatalf("unexpected text field %s", string(content))
+			}
+		case "upload":
+			seenFile = true
+			if part.FileName() == "" {
+				t.Fatalf("expected filename on upload")
+			}
+			content, _ := io.ReadAll(part)
+			if string(content) != "hello world" {
+				t.Fatalf("unexpected file content: %s", string(content))
+			}
+		}
+		part.Close()
+	}
+	if !seenFile {
+		t.Fatalf("expected to see file upload")
 	}
 }
 
-func TestPostDynamicInputsWithURLInput(t *testing.T) {
-	server := newTestServer(t, http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		if r.Header.Get("Content-Type") != "application/x-www-form-urlencoded" {
-			t.Fatalf("expected urlencoded content type, got %s", r.Header.Get("Content-Type"))
-		}
-		body, _ := io.ReadAll(r.Body)
-		if string(body) != "upload=https%3A%2F%2Fexample.com%2Ffile.pdf" {
-			t.Fatalf("unexpected form body: %s", string(body))
-		}
-		w.Header().Set("Content-Type", "application/json")
-		_, _ = w.Write([]byte(`{"ok":true}`))
-	}))
-	defer server.Close()
-
+// TestDynamicInputsRequestWithURLInput verifies that a FileUpload carrying
+// only a URL collapses to a urlencoded form field — no multipart body, the
+// URL stays intact as the field value.
+func TestDynamicInputsRequestWithURLInput(t *testing.T) {
 	cfg := Config{
 		APIKey:               "k",
 		OrganizationID:       "org",
-		BaseURL:              server.URL,
 		Timeout:              time.Second,
 		MaxRetries:           0,
 		RetryInitialInterval: 5 * time.Millisecond,
@@ -116,15 +100,20 @@ func TestPostDynamicInputsWithURLInput(t *testing.T) {
 		RetryMultiplier:      1,
 		RetryJitter:          0,
 	}
-
 	client := newHTTPClient(cfg, newAuth(cfg))
 	defer client.close()
 
-	var out map[string]bool
-	err := client.postDynamicInputs("/upload", map[string]any{
+	body, contentType, err := client.dynamicInputsRequest(map[string]any{
 		"upload": FileUpload{URL: "https://example.com/file.pdf"},
-	}, nil, &out, nil)
+	}, nil)
 	if err != nil {
-		t.Fatalf("request failed: %v", err)
+		t.Fatalf("dynamicInputsRequest: %v", err)
+	}
+	if contentType != "application/x-www-form-urlencoded" {
+		t.Fatalf("expected urlencoded content type, got %s", contentType)
+	}
+	raw, _ := io.ReadAll(body)
+	if string(raw) != "upload=https%3A%2F%2Fexample.com%2Ffile.pdf" {
+		t.Fatalf("unexpected form body: %s", string(raw))
 	}
 }
