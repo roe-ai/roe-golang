@@ -22,6 +22,7 @@ type (
 	AgentJobsAPI      = root.AgentJobsAPI
 	PoliciesAPI       = root.PoliciesAPI
 	PolicyVersionsAPI = root.PolicyVersionsAPI
+	UsersAPI          = root.UsersAPI
 
 	// Generated CRUD models — wrapper return types after the major-version
 	// migration. Hand-written equivalents are gone; consumers can also
