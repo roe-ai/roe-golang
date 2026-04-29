@@ -1,11 +1,15 @@
 package roe
 
 import (
+	_ "embed"
 	"net/http"
 	"strings"
 )
 
-const userAgent = "roe-golang/0.1.0"
+//go:embed VERSION
+var versionString string
+
+var userAgent = "roe-golang/" + strings.TrimSpace(versionString)
 
 // Auth handles header generation.
 type Auth struct {

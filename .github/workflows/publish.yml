@@ -1,0 +1,42 @@
+name: Publish
+
+on:
+  push:
+    tags:
+      - "v*"
+
+permissions:
+  contents: write
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Create GitHub release
+        env:
+          GH_TOKEN: ${{ github.token }}
+          TAG_NAME: ${{ github.ref_name }}
+        run: gh release create "$TAG_NAME" --generate-notes
+
+      - name: Warm Go module proxy
+        # Best-effort: the GitHub release + tag are already published by the
+        # previous step, so a slow proxy indexing run must not fail this job.
+        # Retry up to 5 times with 30s backoff, then exit 0 regardless so a
+        # cold proxy never marks the publish workflow as failed.
+        env:
+          TAG_NAME: ${{ github.ref_name }}
+        run: |
+          URL="https://proxy.golang.org/github.com/roe-ai/roe-golang/@v/${TAG_NAME}.info"
+          for i in 1 2 3 4 5; do
+            if curl -sf "$URL"; then
+              echo "Proxy warmed on attempt $i"
+              exit 0
+            fi
+            echo "Attempt $i failed; retrying in 30s..."
+            sleep 30
+          done
+          echo "Proxy warm-up did not complete in 5 attempts (non-fatal)"
