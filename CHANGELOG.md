@@ -64,6 +64,13 @@ preserved; the **return types** now come from the `generated` package.
   `PolicyVersion` continue to resolve at the package root via type aliases
   to the equivalent `generated.*` types — call sites that only used those
   identifiers as types keep working.
+- `AgentVersionsAPI.ListPaginated` / `ListPaginatedWithContext` and the
+  `ListVersionsParams` struct (re-exported from `roe/reexport.go`).
+  `AgentVersionsAPI.List` already returns the generated paginated wrapper
+  (`*generated.PaginatedAgentVersionList`) with `Count`/`Next`/`Previous`/
+  `Results` fields, so the separate paginated entry point is redundant.
+  Callers that need page-level control can call the generated client
+  directly via `client.Raw().V1AgentsVersionsListWithResponse(ctx, ...)`.
 
 ### Migration guide
 
