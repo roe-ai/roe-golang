@@ -124,6 +124,24 @@ func findDetailString(parsed map[string]any) string {
 			}
 		}
 	}
+	for _, v := range parsed {
+		switch val := v.(type) {
+		case []any:
+			parts := []string{}
+			for _, item := range val {
+				if s := fmt.Sprint(item); s != "" {
+					parts = append(parts, s)
+				}
+			}
+			if len(parts) > 0 {
+				return strings.Join(parts, "; ")
+			}
+		case string:
+			if val != "" {
+				return val
+			}
+		}
+	}
 	return ""
 }
 

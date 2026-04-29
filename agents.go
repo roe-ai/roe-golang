@@ -24,6 +24,63 @@ func readAndCloseBody(rsp *http.Response) ([]byte, error) {
 	return io.ReadAll(rsp.Body)
 }
 
+func stringifyGeneratedStringField(value any) any {
+	if value == nil {
+		return nil
+	}
+	if _, ok := value.(string); ok {
+		return value
+	}
+	encoded, err := json.Marshal(value)
+	if err != nil {
+		return fmt.Sprint(value)
+	}
+	return string(encoded)
+}
+
+func normalizeBaseAgentTags(value any) {
+	switch v := value.(type) {
+	case map[string]any:
+		if tags, ok := v["tags"]; ok {
+			v["tags"] = stringifyGeneratedStringField(tags)
+		}
+		for _, child := range v {
+			normalizeBaseAgentTags(child)
+		}
+	case []any:
+		for _, child := range v {
+			normalizeBaseAgentTags(child)
+		}
+	}
+}
+
+func decodeAgentResponse[T any](httpResp *http.Response, context string) (*T, error) {
+	body, rErr := readAndCloseBody(httpResp)
+	if rErr != nil {
+		return nil, fmt.Errorf("%s: read body: %w", context, rErr)
+	}
+	if err := errorFromResponse(httpResp, body); err != nil {
+		return nil, err
+	}
+	if len(bytes.TrimSpace(body)) == 0 {
+		return nil, fmt.Errorf("%s: empty response body", context)
+	}
+	var payload any
+	if err := json.Unmarshal(body, &payload); err != nil {
+		return nil, fmt.Errorf("%s: parse response body: %w", context, err)
+	}
+	normalizeBaseAgentTags(payload)
+	normalized, err := json.Marshal(payload)
+	if err != nil {
+		return nil, fmt.Errorf("%s: normalize response body: %w", context, err)
+	}
+	var out T
+	if err := json.Unmarshal(normalized, &out); err != nil {
+		return nil, fmt.Errorf("%s: parse normalized response body: %w", context, err)
+	}
+	return &out, nil
+}
+
 const maxBatchSize = 1000
 
 // AgentsAPI manages agent operations. All methods delegate to the generated
@@ -46,7 +103,7 @@ func newAgentsAPI(client *RoeClient) *AgentsAPI {
 }
 
 func (a *AgentsAPI) raw() *generated.ClientWithResponses { return a.client.raw }
-func (a *AgentsAPI) http() *httpClient                  { return a.client.http }
+func (a *AgentsAPI) http() *httpClient                   { return a.client.http }
 
 func (a *AgentsAPI) orgUUID() (*openapi_types.UUID, error) {
 	if a.cfg.OrganizationID == "" {
@@ -90,14 +147,11 @@ func (a *AgentsAPI) ListWithContext(ctx context.Context, page, pageSize int) (*g
 	if pageSize > 0 {
 		params.PageSize = &pageSize
 	}
-	resp, err := a.raw().V1AgentsListWithResponse(ctx, params)
+	httpResp, err := a.raw().V1AgentsList(ctx, params)
 	if err != nil {
 		return nil, err
 	}
-	if err := errorFromResponse(resp.HTTPResponse, resp.Body); err != nil {
-		return nil, err
-	}
-	return resp.JSON200, nil
+	return decodeAgentResponse[generated.PaginatedBaseAgentList](httpResp, "list agents")
 }
 
 // Retrieve fetches an agent by ID.
@@ -115,14 +169,11 @@ func (a *AgentsAPI) RetrieveWithContext(ctx context.Context, agentID string) (*g
 	if err != nil {
 		return nil, err
 	}
-	resp, err := a.raw().V1AgentsRetrieveWithResponse(ctx, id, &generated.V1AgentsRetrieveParams{OrganizationId: orgID})
+	httpResp, err := a.raw().V1AgentsRetrieve(ctx, id, &generated.V1AgentsRetrieveParams{OrganizationId: orgID})
 	if err != nil {
 		return nil, err
 	}
-	if err := errorFromResponse(resp.HTTPResponse, resp.Body); err != nil {
-		return nil, err
-	}
-	return resp.JSON200, nil
+	return decodeAgentResponse[generated.BaseAgent](httpResp, "retrieve agent")
 }
 
 // Create creates a new agent.
@@ -149,14 +200,11 @@ func (a *AgentsAPI) CreateWithContext(ctx context.Context, name, engineClassID s
 	if description != "" {
 		body.Description = &description
 	}
-	resp, err := a.raw().V1AgentsCreateWithResponse(ctx, &generated.V1AgentsCreateParams{}, body)
+	httpResp, err := a.raw().V1AgentsCreate(ctx, &generated.V1AgentsCreateParams{}, body)
 	if err != nil {
 		return nil, err
 	}
-	if err := errorFromResponse(resp.HTTPResponse, resp.Body); err != nil {
-		return nil, err
-	}
-	return resp.JSON201, nil
+	return decodeAgentResponse[generated.BaseAgent](httpResp, "create agent")
 }
 
 // Update updates an agent's metadata. Pass nil for fields you don't want to change.
@@ -180,14 +228,11 @@ func (a *AgentsAPI) UpdateWithContext(ctx context.Context, agentID string, name 
 		DisableCache:    disableCache,
 		CacheFailedJobs: cacheFailedJobs,
 	}
-	resp, err := a.raw().V1AgentsPartialUpdateWithResponse(ctx, id, &generated.V1AgentsPartialUpdateParams{OrganizationId: orgID}, body)
+	httpResp, err := a.raw().V1AgentsPartialUpdate(ctx, id, &generated.V1AgentsPartialUpdateParams{OrganizationId: orgID}, body)
 	if err != nil {
 		return nil, err
 	}
-	if err := errorFromResponse(resp.HTTPResponse, resp.Body); err != nil {
-		return nil, err
-	}
-	return resp.JSON200, nil
+	return decodeAgentResponse[generated.BaseAgent](httpResp, "update agent")
 }
 
 // Delete removes an agent.
@@ -227,14 +272,11 @@ func (a *AgentsAPI) DuplicateWithContext(ctx context.Context, agentID string) (*
 	if err != nil {
 		return nil, err
 	}
-	resp, err := a.raw().V1AgentsDuplicateCreateWithResponse(ctx, id, &generated.V1AgentsDuplicateCreateParams{OrganizationId: orgID})
+	httpResp, err := a.raw().V1AgentsDuplicateCreate(ctx, id, &generated.V1AgentsDuplicateCreateParams{OrganizationId: orgID})
 	if err != nil {
 		return nil, err
 	}
-	if err := errorFromResponse(resp.HTTPResponse, resp.Body); err != nil {
-		return nil, err
-	}
-	return resp.JSON201, nil
+	return decodeAgentResponse[generated.AgentVersion](httpResp, "duplicate agent")
 }
 
 // Run starts an async job for the given agent. Inputs may include FileUpload
@@ -461,14 +503,11 @@ func (v *AgentVersionsAPI) ListWithContext(ctx context.Context, agentID string) 
 	if err != nil {
 		return nil, err
 	}
-	resp, err := v.raw().V1AgentsVersionsListWithResponse(ctx, id, &generated.V1AgentsVersionsListParams{OrganizationId: orgID})
+	httpResp, err := v.raw().V1AgentsVersionsList(ctx, id, &generated.V1AgentsVersionsListParams{OrganizationId: orgID})
 	if err != nil {
 		return nil, err
 	}
-	if err := errorFromResponse(resp.HTTPResponse, resp.Body); err != nil {
-		return nil, err
-	}
-	return resp.JSON200, nil
+	return decodeAgentResponse[[]generated.AgentVersion](httpResp, "list agent versions")
 }
 
 // Retrieve fetches a specific agent version.
@@ -494,14 +533,11 @@ func (v *AgentVersionsAPI) RetrieveWithContext(ctx context.Context, agentID, ver
 		OrganizationId:  orgID,
 		GetSupportsEval: getSupportsEval,
 	}
-	resp, err := v.raw().V1AgentsVersionsRetrieveWithResponse(ctx, aID, vID, params)
+	httpResp, err := v.raw().V1AgentsVersionsRetrieve(ctx, aID, vID, params)
 	if err != nil {
 		return nil, err
 	}
-	if err := errorFromResponse(resp.HTTPResponse, resp.Body); err != nil {
-		return nil, err
-	}
-	return resp.JSON200, nil
+	return decodeAgentResponse[generated.AgentVersion](httpResp, "retrieve agent version")
 }
 
 // RetrieveCurrent fetches the agent's current version.
@@ -533,14 +569,11 @@ func (v *AgentVersionsAPI) RetrieveCurrentWithEvalWithContext(ctx context.Contex
 		OrganizationId:  orgID,
 		GetSupportsEval: getSupportsEval,
 	}
-	resp, err := v.raw().V1AgentsVersionsCurrentRetrieveWithResponse(ctx, id, params)
+	httpResp, err := v.raw().V1AgentsVersionsCurrentRetrieve(ctx, id, params)
 	if err != nil {
 		return nil, err
 	}
-	if err := errorFromResponse(resp.HTTPResponse, resp.Body); err != nil {
-		return nil, err
-	}
-	return resp.JSON200, nil
+	return decodeAgentResponse[generated.AgentVersion](httpResp, "retrieve current agent version")
 }
 
 // Create creates a new agent version.
@@ -568,14 +601,11 @@ func (v *AgentVersionsAPI) CreateWithContext(ctx context.Context, agentID string
 	if description != "" {
 		body.Description = &description
 	}
-	resp, err := v.raw().V1AgentsVersionsCreateWithResponse(ctx, id, &generated.V1AgentsVersionsCreateParams{OrganizationId: orgID}, body)
+	httpResp, err := v.raw().V1AgentsVersionsCreate(ctx, id, &generated.V1AgentsVersionsCreateParams{OrganizationId: orgID}, body)
 	if err != nil {
 		return nil, err
 	}
-	if err := errorFromResponse(resp.HTTPResponse, resp.Body); err != nil {
-		return nil, err
-	}
-	return resp.JSON201, nil
+	return decodeAgentResponse[generated.AgentVersion](httpResp, "create agent version")
 }
 
 // Update edits an agent version's metadata. Pass empty strings to leave fields unchanged.
@@ -605,11 +635,15 @@ func (v *AgentVersionsAPI) UpdateWithContext(ctx context.Context, agentID, versi
 	if description != "" {
 		body.Description = &description
 	}
-	resp, err := v.raw().V1AgentsVersionsPartialUpdateWithResponse(ctx, aID, vID, &generated.V1AgentsVersionsPartialUpdateParams{OrganizationId: orgID}, body)
+	httpResp, err := v.raw().V1AgentsVersionsPartialUpdate(ctx, aID, vID, &generated.V1AgentsVersionsPartialUpdateParams{OrganizationId: orgID}, body)
 	if err != nil {
 		return err
 	}
-	return errorFromResponse(resp.HTTPResponse, resp.Body)
+	bodyBytes, rErr := readAndCloseBody(httpResp)
+	if rErr != nil {
+		return fmt.Errorf("update agent version: read body: %w", rErr)
+	}
+	return errorFromResponse(httpResp, bodyBytes)
 }
 
 // Delete removes an agent version.
@@ -666,17 +700,21 @@ func (j *AgentJobsAPI) RetrieveStatusWithContext(ctx context.Context, jobID stri
 	if err != nil {
 		return AgentJobStatus{}, err
 	}
-	resp, err := j.raw().V1AgentsJobsStatusRetrieveWithResponse(ctx, id, &generated.V1AgentsJobsStatusRetrieveParams{OrganizationId: orgID})
+	httpResp, err := j.raw().V1AgentsJobsStatusRetrieve(ctx, id, &generated.V1AgentsJobsStatusRetrieveParams{OrganizationId: orgID})
 	if err != nil {
 		return AgentJobStatus{}, err
 	}
-	if err := errorFromResponse(resp.HTTPResponse, resp.Body); err != nil {
+	body, rErr := readAndCloseBody(httpResp)
+	if rErr != nil {
+		return AgentJobStatus{}, fmt.Errorf("retrieve status: read body: %w", rErr)
+	}
+	if err := errorFromResponse(httpResp, body); err != nil {
 		return AgentJobStatus{}, err
 	}
 	// Parse the wire body into the handwritten polling-friendly struct so
 	// JobStatus is the typed enum and the timestamp is float64.
 	var status AgentJobStatus
-	if uErr := json.Unmarshal(resp.Body, &status); uErr != nil {
+	if uErr := json.Unmarshal(body, &status); uErr != nil {
 		return AgentJobStatus{}, fmt.Errorf("retrieve status: parse: %w", uErr)
 	}
 	return status, nil
@@ -697,15 +735,19 @@ func (j *AgentJobsAPI) RetrieveResultWithContext(ctx context.Context, jobID stri
 	if err != nil {
 		return AgentJobResult{}, err
 	}
-	resp, err := j.raw().V1AgentsJobsResultRetrieveWithResponse(ctx, id, &generated.V1AgentsJobsResultRetrieveParams{OrganizationId: orgID})
+	httpResp, err := j.raw().V1AgentsJobsResultRetrieve(ctx, id, &generated.V1AgentsJobsResultRetrieveParams{OrganizationId: orgID})
 	if err != nil {
 		return AgentJobResult{}, err
 	}
-	if err := errorFromResponse(resp.HTTPResponse, resp.Body); err != nil {
+	body, rErr := readAndCloseBody(httpResp)
+	if rErr != nil {
+		return AgentJobResult{}, fmt.Errorf("retrieve result: read body: %w", rErr)
+	}
+	if err := errorFromResponse(httpResp, body); err != nil {
 		return AgentJobResult{}, err
 	}
 	var result AgentJobResult
-	if uErr := json.Unmarshal(resp.Body, &result); uErr != nil {
+	if uErr := json.Unmarshal(body, &result); uErr != nil {
 		return AgentJobResult{}, fmt.Errorf("retrieve result: parse: %w", uErr)
 	}
 	return result, nil
@@ -886,14 +928,18 @@ func (j *AgentJobsAPI) DownloadReferenceWithContext(ctx context.Context, jobID, 
 			return nil
 		})
 	}
-	resp, err := j.raw().V1AgentsJobsReferencesRetrieveWithResponse(ctx, id, resourceID, params, editors...)
+	httpResp, err := j.raw().V1AgentsJobsReferencesRetrieve(ctx, id, resourceID, params, editors...)
 	if err != nil {
 		return nil, err
 	}
-	if err := errorFromResponse(resp.HTTPResponse, resp.Body); err != nil {
+	body, rErr := readAndCloseBody(httpResp)
+	if rErr != nil {
+		return nil, fmt.Errorf("download reference: read body: %w", rErr)
+	}
+	if err := errorFromResponse(httpResp, body); err != nil {
 		return nil, err
 	}
-	return resp.Body, nil
+	return body, nil
 }
 
 // DeleteData purges blob data for a job.
@@ -911,15 +957,19 @@ func (j *AgentJobsAPI) DeleteDataWithContext(ctx context.Context, jobID string) 
 	if err != nil {
 		return JobDataDeleteResponse{}, err
 	}
-	resp, err := j.raw().V1AgentsJobsDeleteDataCreateWithResponse(ctx, id, &generated.V1AgentsJobsDeleteDataCreateParams{OrganizationId: orgID})
+	httpResp, err := j.raw().V1AgentsJobsDeleteDataCreate(ctx, id, &generated.V1AgentsJobsDeleteDataCreateParams{OrganizationId: orgID})
 	if err != nil {
 		return JobDataDeleteResponse{}, err
 	}
-	if err := errorFromResponse(resp.HTTPResponse, resp.Body); err != nil {
+	body, rErr := readAndCloseBody(httpResp)
+	if rErr != nil {
+		return JobDataDeleteResponse{}, fmt.Errorf("delete data: read body: %w", rErr)
+	}
+	if err := errorFromResponse(httpResp, body); err != nil {
 		return JobDataDeleteResponse{}, err
 	}
 	var out JobDataDeleteResponse
-	if uErr := json.Unmarshal(resp.Body, &out); uErr != nil {
+	if uErr := json.Unmarshal(body, &out); uErr != nil {
 		return JobDataDeleteResponse{}, fmt.Errorf("delete data: parse: %w", uErr)
 	}
 	return out, nil
@@ -940,11 +990,15 @@ func (j *AgentJobsAPI) CancelWithContext(ctx context.Context, jobID string) erro
 	if err != nil {
 		return err
 	}
-	resp, err := j.raw().V1AgentsJobsCancelCreateWithResponse(ctx, id, &generated.V1AgentsJobsCancelCreateParams{OrganizationId: orgID})
+	httpResp, err := j.raw().V1AgentsJobsCancelCreate(ctx, id, &generated.V1AgentsJobsCancelCreateParams{OrganizationId: orgID})
 	if err != nil {
 		return err
 	}
-	return errorFromResponse(resp.HTTPResponse, resp.Body)
+	body, rErr := readAndCloseBody(httpResp)
+	if rErr != nil {
+		return fmt.Errorf("cancel job: read body: %w", rErr)
+	}
+	return errorFromResponse(httpResp, body)
 }
 
 // CancelAll cancels all running jobs for an agent.
@@ -962,11 +1016,15 @@ func (j *AgentJobsAPI) CancelAllWithContext(ctx context.Context, agentID string)
 	if err != nil {
 		return err
 	}
-	resp, err := j.raw().V1AgentsJobsCancelAllCreateWithResponse(ctx, id, &generated.V1AgentsJobsCancelAllCreateParams{OrganizationId: orgID})
+	httpResp, err := j.raw().V1AgentsJobsCancelAllCreate(ctx, id, &generated.V1AgentsJobsCancelAllCreateParams{OrganizationId: orgID})
 	if err != nil {
 		return err
 	}
-	return errorFromResponse(resp.HTTPResponse, resp.Body)
+	body, rErr := readAndCloseBody(httpResp)
+	if rErr != nil {
+		return fmt.Errorf("cancel all jobs: read body: %w", rErr)
+	}
+	return errorFromResponse(httpResp, body)
 }
 
 // helpers
@@ -1031,4 +1089,3 @@ func chunkAny[T any](items []T, size int) [][]T {
 	}
 	return chunks
 }
-

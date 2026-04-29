@@ -2,13 +2,11 @@
 
 Go SDK for the [Roe AI](https://www.roe-ai.com/) API.
 
-> **v2.0.0** — generated-client migration. The hand-written request layer
-> is gone; `BaseAgent`, `AgentVersion`, `Policy`, `PolicyVersion`,
-> `AgentInputDefinition`, and `UserInfo` now alias
-> `github.com/roe-ai/roe-golang/generated`. Field names follow the
-> generated convention: e.g. `agent.Id` (`*openapi_types.UUID`) replaces
-> the old `agent.ID` (`string`). Use `.String()` to get the string form.
-> See [CHANGELOG.md](CHANGELOG.md) for the full breaking-change list.
+> **v2.0.0** — Responses and types are aligned with OpenAPI-generated
+> structs (`github.com/roe-ai/roe-golang/generated`). For example, ids are
+> `*openapi_types.UUID` fields such as `agent.Id`; use `.String()` for API
+> string parameters. [CHANGELOG.md](CHANGELOG.md) lists notable behavioral
+> and naming changes alongside each release.
 
 ## Installation
 
@@ -73,19 +71,13 @@ export ROE_ORGANIZATION_ID="your-org-uuid"
 
 ## Raw API Access
 
-The generated raw client is exposed from the main client:
+The generated raw client is exposed from the main client (`client.Raw()`, returning `*generated.ClientWithResponses`). Pass a `context.Context` to the generated methods; add `"context"` to your imports when you copy snippets here into a real `main`:
 
 ```go
-raw, err := client.Raw()
-if err != nil {
-    log.Fatal(err)
-}
-
 resp, err := raw.V1UsersCurrentUserRetrieveWithResponse(context.Background())
 if err != nil {
-    log.Fatal(err)
+	log.Fatal(err)
 }
-
 fmt.Println(resp.StatusCode())
 ```
 
@@ -462,4 +454,5 @@ client.Policies.Versions.Create(policyID, content, versionName, baseVersionID)
 
 - [Roe AI](https://www.roe-ai.com/)
 - [API Docs](https://docs.roe-ai.com)
+- [Changelog](CHANGELOG.md)
 - [Examples](examples/)
