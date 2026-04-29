@@ -100,3 +100,60 @@ func TestRawClientExhaustsRetries(t *testing.T) {
 		t.Fatalf("expected 3 attempts (MaxRetries=2 + 1), got %d", got)
 	}
 }
+
+// TestRawClientBeforeRequestHookFiresOncePerAttempt guards against the bug
+// where BeforeRequest hooks ran twice per attempt on the generated-client
+// path: once via WithRequestEditorFn and again via doRetried's
+// runRequestHooks. Hooks must fire exactly once per HTTP attempt regardless
+// of the request origin.
+func TestRawClientBeforeRequestHookFiresOncePerAttempt(t *testing.T) {
+	var attempts int32
+	var hookCalls int32
+
+	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		n := atomic.AddInt32(&attempts, 1)
+		if n == 1 {
+			w.WriteHeader(http.StatusServiceUnavailable)
+			return
+		}
+		w.WriteHeader(http.StatusOK)
+	}))
+	defer server.Close()
+
+	client, err := NewClientWithConfig(Config{
+		APIKey:               "k",
+		OrganizationID:       testOrgUUID,
+		BaseURL:              server.URL,
+		Timeout:              2 * time.Second,
+		MaxRetries:           2,
+		RetryInitialInterval: time.Millisecond,
+		RetryMaxInterval:     time.Millisecond,
+		RetryMultiplier:      1,
+		BeforeRequest: []RequestHook{
+			func(_ *http.Request) { atomic.AddInt32(&hookCalls, 1) },
+		},
+	})
+	if err != nil {
+		t.Fatalf("NewClientWithConfig: %v", err)
+	}
+	defer client.Close()
+
+	raw, err := client.Raw()
+	if err != nil {
+		t.Fatalf("Raw: %v", err)
+	}
+
+	resp, err := raw.V1UsersCurrentUserRetrieveWithResponse(context.Background())
+	if err != nil {
+		t.Fatalf("call: %v", err)
+	}
+	if resp.StatusCode() != http.StatusOK {
+		t.Fatalf("expected 200 after retry, got %d", resp.StatusCode())
+	}
+	if got := atomic.LoadInt32(&attempts); got != 2 {
+		t.Fatalf("expected 2 attempts, got %d", got)
+	}
+	if got := atomic.LoadInt32(&hookCalls); got != 2 {
+		t.Fatalf("expected hook to fire once per attempt (2 total), got %d", got)
+	}
+}

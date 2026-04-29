@@ -90,6 +90,18 @@ func buildRawClient(c *RoeClient, extra ...generated.ClientOption) (*generated.C
 	options := []generated.ClientOption{
 		generated.WithHTTPClient(&retryDoer{c: c.http}),
 		generated.WithRequestEditorFn(func(ctx context.Context, req *http.Request) error {
+			// Apply auth + static extra headers here so the generated
+			// client's request carries them before the retryDoer hands
+			// off to httpClient.doRetried (which mirrors the legacy
+			// doRequest -> applyHeaders behaviour).
+			//
+			// BeforeRequest hooks are intentionally NOT invoked here:
+			// doRetried calls runRequestHooks per attempt, so running
+			// them in the editor would double-fire on the first attempt
+			// (and miss the per-retry replay semantics callers expect
+			// from the legacy path). Hooks fire exactly once per HTTP
+			// attempt regardless of whether the request originates from
+			// the generated client or the legacy hand-written helpers.
 			for key, values := range c.auth.Headers() {
 				for _, value := range values {
 					req.Header.Add(key, value)
@@ -99,9 +111,6 @@ func buildRawClient(c *RoeClient, extra ...generated.ClientOption) (*generated.C
 				for _, value := range values {
 					req.Header.Add(key, value)
 				}
-			}
-			for _, hook := range c.Config.BeforeRequest {
-				hook(req)
 			}
 			return ctx.Err()
 		}),
