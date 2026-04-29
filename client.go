@@ -54,7 +54,7 @@ func NewClientWithConfig(cfg Config) (*RoeClient, error) {
 	}
 	client.raw = raw
 
-	client.Agents = newAgentsAPI(cfg, httpClient)
+	client.Agents = newAgentsAPI(client)
 	client.Policies = newPoliciesAPI(client)
 
 	return client, nil

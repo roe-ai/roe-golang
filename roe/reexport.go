@@ -1,6 +1,9 @@
 package roe
 
-import root "github.com/roe-ai/roe-golang"
+import (
+	root "github.com/roe-ai/roe-golang"
+	"github.com/roe-ai/roe-golang/generated"
+)
 
 type (
 	// Core client/config.
@@ -13,20 +16,26 @@ type (
 	ResponseHook = root.ResponseHook
 
 	// API surfaces.
-	Auth               = root.Auth
-	AgentsAPI          = root.AgentsAPI
-	AgentVersionsAPI   = root.AgentVersionsAPI
-	AgentJobsAPI       = root.AgentJobsAPI
-	ListVersionsParams = root.ListVersionsParams
-	PoliciesAPI        = root.PoliciesAPI
-	PolicyVersionsAPI  = root.PolicyVersionsAPI
+	Auth              = root.Auth
+	AgentsAPI         = root.AgentsAPI
+	AgentVersionsAPI  = root.AgentVersionsAPI
+	AgentJobsAPI      = root.AgentJobsAPI
+	PoliciesAPI       = root.PoliciesAPI
+	PolicyVersionsAPI = root.PolicyVersionsAPI
 
-	// Models/results.
-	AgentInputDefinition = root.AgentInputDefinition
-	UserInfo             = root.UserInfo
-	BaseAgent            = root.BaseAgent
-	AgentVersion         = root.AgentVersion
+	// Generated CRUD models — wrapper return types after the major-version
+	// migration. Hand-written equivalents are gone; consumers can also
+	// import these directly from github.com/roe-ai/roe-golang/generated.
+	AgentInputDefinition = generated.AgentInputDefinition
+	UserInfo             = generated.UserInfo
+	BaseAgent            = generated.BaseAgent
+	AgentVersion         = generated.AgentVersion
+	Policy               = generated.Policy
+	PolicyVersion        = generated.PolicyVersion
 
+	// Polling-helper transport types kept hand-written so Job/JobBatch
+	// internals stay typed-enum-friendly and the bulk endpoints can carry
+	// per-item job IDs (which the generated schemas omit).
 	Job      = root.Job
 	JobBatch = root.JobBatch
 
@@ -39,8 +48,6 @@ type (
 	AgentJobStatusBatch   = root.AgentJobStatusBatch
 	AgentJobResultBatch   = root.AgentJobResultBatch
 	JobDataDeleteResponse = root.JobDataDeleteResponse
-	Policy                = root.Policy
-	PolicyVersion         = root.PolicyVersion
 
 	// File uploads.
 	FileUpload = root.FileUpload

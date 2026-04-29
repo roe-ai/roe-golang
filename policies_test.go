@@ -289,12 +289,14 @@ func TestPolicyVersionsCreate(t *testing.T) {
 // Agent-side tests retained here from the original policies_test.go because
 // they exercise the still-hand-written agents.go path.
 func TestCancelVerifiesPath(t *testing.T) {
+	const jobID = "11112222-3333-4444-5555-666677778888"
 	server := newTestServer(t, http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		if r.Method != http.MethodPost {
 			t.Fatalf("expected POST, got %s", r.Method)
 		}
-		if r.URL.Path != "/v1/agents/jobs/job-123/cancel/" {
-			t.Fatalf("expected cancel path, got %s", r.URL.Path)
+		expected := "/v1/agents/jobs/" + jobID + "/cancel/"
+		if r.URL.Path != expected {
+			t.Fatalf("expected cancel path %s, got %s", expected, r.URL.Path)
 		}
 		w.Header().Set("Content-Type", "application/json")
 		_, _ = w.Write([]byte(`{}`))
@@ -303,7 +305,7 @@ func TestCancelVerifiesPath(t *testing.T) {
 
 	client, err := NewClientWithConfig(Config{
 		APIKey:         "k",
-		OrganizationID: "org",
+		OrganizationID: testOrgUUID,
 		BaseURL:        server.URL,
 		Timeout:        time.Second,
 		MaxRetries:     0,
@@ -313,18 +315,20 @@ func TestCancelVerifiesPath(t *testing.T) {
 	}
 	defer client.Close()
 
-	if err := client.Agents.Jobs.Cancel("job-123"); err != nil {
+	if err := client.Agents.Jobs.Cancel(jobID); err != nil {
 		t.Fatalf("cancel: %v", err)
 	}
 }
 
 func TestCancelAllVerifiesPath(t *testing.T) {
+	const agentID = "99998888-7777-6666-5555-444433332222"
 	server := newTestServer(t, http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		if r.Method != http.MethodPost {
 			t.Fatalf("expected POST, got %s", r.Method)
 		}
-		if r.URL.Path != "/v1/agents/agent-123/jobs/cancel-all/" {
-			t.Fatalf("expected cancel-all path, got %s", r.URL.Path)
+		expected := "/v1/agents/" + agentID + "/jobs/cancel-all/"
+		if r.URL.Path != expected {
+			t.Fatalf("expected cancel-all path %s, got %s", expected, r.URL.Path)
 		}
 		w.Header().Set("Content-Type", "application/json")
 		_, _ = w.Write([]byte(`{}`))
@@ -333,7 +337,7 @@ func TestCancelAllVerifiesPath(t *testing.T) {
 
 	client, err := NewClientWithConfig(Config{
 		APIKey:         "k",
-		OrganizationID: "org",
+		OrganizationID: testOrgUUID,
 		BaseURL:        server.URL,
 		Timeout:        time.Second,
 		MaxRetries:     0,
@@ -343,12 +347,14 @@ func TestCancelAllVerifiesPath(t *testing.T) {
 	}
 	defer client.Close()
 
-	if err := client.Agents.Jobs.CancelAll("agent-123"); err != nil {
+	if err := client.Agents.Jobs.CancelAll(agentID); err != nil {
 		t.Fatalf("cancel all: %v", err)
 	}
 }
 
 func TestMetadataOnRun(t *testing.T) {
+	const agentID = "abcdef12-3456-7890-abcd-ef1234567890"
+	const jobID = "11112222-3333-4444-5555-666677778888"
 	server := newTestServer(t, http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		if r.Method != http.MethodPost {
 			t.Fatalf("expected POST, got %s", r.Method)
@@ -368,13 +374,13 @@ func TestMetadataOnRun(t *testing.T) {
 			t.Fatalf("expected source=go-sdk-test, got %v", meta["source"])
 		}
 		w.Header().Set("Content-Type", "application/json")
-		_, _ = w.Write([]byte(`"job-123"`))
+		_, _ = w.Write([]byte(`"` + jobID + `"`))
 	}))
 	defer server.Close()
 
 	client, err := NewClientWithConfig(Config{
 		APIKey:         "k",
-		OrganizationID: "org",
+		OrganizationID: testOrgUUID,
 		BaseURL:        server.URL,
 		Timeout:        time.Second,
 		MaxRetries:     0,
@@ -384,7 +390,7 @@ func TestMetadataOnRun(t *testing.T) {
 	}
 	defer client.Close()
 
-	_, err = client.Agents.Run("agent-id", 0, map[string]any{
+	_, err = client.Agents.Run(agentID, 0, map[string]any{
 		"text": "hello",
 	}, map[string]any{
 		"source": "go-sdk-test",
@@ -395,6 +401,7 @@ func TestMetadataOnRun(t *testing.T) {
 }
 
 func TestMetadataKeyCollisionReturnsError(t *testing.T) {
+	const agentID = "abcdef12-3456-7890-abcd-ef1234567890"
 	server := newTestServer(t, http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		t.Fatalf("should not reach server")
 	}))
@@ -402,7 +409,7 @@ func TestMetadataKeyCollisionReturnsError(t *testing.T) {
 
 	client, err := NewClientWithConfig(Config{
 		APIKey:         "k",
-		OrganizationID: "org",
+		OrganizationID: testOrgUUID,
 		BaseURL:        server.URL,
 		Timeout:        time.Second,
 		MaxRetries:     0,
@@ -412,7 +419,7 @@ func TestMetadataKeyCollisionReturnsError(t *testing.T) {
 	}
 	defer client.Close()
 
-	_, err = client.Agents.Run("agent-id", 0, map[string]any{
+	_, err = client.Agents.Run(agentID, 0, map[string]any{
 		"text":     "hello",
 		"metadata": "should-collide",
 	}, map[string]any{
