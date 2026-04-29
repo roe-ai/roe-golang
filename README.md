@@ -2,6 +2,14 @@
 
 Go SDK for the [Roe AI](https://www.roe-ai.com/) API.
 
+> **v2.0.0** — generated-client migration. The hand-written request layer
+> is gone; `BaseAgent`, `AgentVersion`, `Policy`, `PolicyVersion`,
+> `AgentInputDefinition`, and `UserInfo` now alias
+> `github.com/roe-ai/roe-golang/generated`. Field names follow the
+> generated convention: e.g. `agent.Id` (`*openapi_types.UUID`) replaces
+> the old `agent.ID` (`string`). Use `.String()` to get the string form.
+> See [CHANGELOG.md](CHANGELOG.md) for the full breaking-change list.
+
 ## Installation
 
 ```bash
@@ -163,8 +171,10 @@ func main() {
         "", "",
     )
 
+    agentID := agent.Id.String()
+
     // Run the agent
-    job, _ := client.Agents.Run(agent.ID, 0, map[string]any{
+    job, _ := client.Agents.Run(agentID, 0, map[string]any{
         "url": "https://www.roe-ai.com/",
     }, nil)
     result, _ := job.Wait(5*time.Second, 0)
@@ -184,7 +194,7 @@ func main() {
     }
 
     // Cleanup
-    client.Agents.Delete(agent.ID)
+    client.Agents.Delete(agentID)
 }
 ```
 
@@ -232,29 +242,31 @@ policy, _ := client.Policies.Create(
 Iterate on policies by creating new versions:
 
 ```go
+policyID := policy.Id.String()
+
 // Create a new version (automatically becomes the current version)
 newVersion, _ := client.Policies.Versions.Create(
-    policy.ID,
+    policyID,
     map[string]any{...}, // Updated policy content
     "v2 - added layering rules",
     "",
 )
 
 // List all versions
-versions, _ := client.Policies.Versions.List(policy.ID)
+versions, _ := client.Policies.Versions.List(policyID)
 
 // Retrieve a specific version
-version, _ := client.Policies.Versions.Retrieve(policy.ID, newVersion.ID)
+version, _ := client.Policies.Versions.Retrieve(policyID, newVersion.Id.String())
 
 // Update policy metadata
 name := "Updated Policy Name"
-client.Policies.Update(policy.ID, &name, nil)
+client.Policies.Update(policyID, &name, nil)
 
 // List all policies
 policies, _ := client.Policies.List(1, 50)
 
 // Delete a policy
-client.Policies.Delete(policy.ID)
+client.Policies.Delete(policyID)
 ```
 
 ### Policy Content Reference
