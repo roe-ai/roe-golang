@@ -432,3 +432,28 @@ func TestMetadataKeyCollisionReturnsError(t *testing.T) {
 		t.Fatalf("expected error about metadata collision, got: %v", err)
 	}
 }
+
+func TestPoliciesAPIListRequiresOrgID(t *testing.T) {
+	// PoliciesAPI.List should error when OrganizationID is unset, mirroring
+	// AgentsAPI.List — the spec marks the org filter as optional, but a
+	// misconfigured SDK silently returning unscoped results is worse than
+	// failing fast with an actionable error.
+	client, err := NewClientWithConfig(Config{
+		APIKey:     "k",
+		BaseURL:    "https://api.test.example",
+		Timeout:    time.Second,
+		MaxRetries: 0,
+	})
+	if err != nil {
+		t.Fatalf("new client: %v", err)
+	}
+	defer client.Close()
+
+	_, err = client.Policies.List(1, 10)
+	if err == nil {
+		t.Fatalf("expected error for missing organization ID, got nil")
+	}
+	if !strings.Contains(err.Error(), "organization ID is required") {
+		t.Fatalf("expected 'organization ID is required' error, got: %v", err)
+	}
+}

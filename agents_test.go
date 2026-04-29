@@ -172,3 +172,48 @@ func TestAgentsAPIRunManyWithContextStopsAfterCancel(t *testing.T) {
 		t.Fatalf("expected exactly 1 call, got %d", atomic.LoadInt32(&calls))
 	}
 }
+
+func TestDecodeJobIDInvalidBodyMentionsBothShapes(t *testing.T) {
+	_, err := decodeJobID([]byte("<html>503 Bad Gateway</html>"))
+	if err == nil {
+		t.Fatalf("expected error for invalid body, got nil")
+	}
+	if !strings.Contains(err.Error(), "not JSON") {
+		t.Fatalf("expected 'not JSON' in error, got: %v", err)
+	}
+	if !strings.Contains(err.Error(), "not UUID") {
+		t.Fatalf("expected 'not UUID' in error, got: %v", err)
+	}
+}
+
+func TestDecodeJobIDBareUUIDStillAccepted(t *testing.T) {
+	got, err := decodeJobID([]byte("  " + testAgentUUID + "  \n"))
+	if err != nil {
+		t.Fatalf("expected bare UUID to parse, got: %v", err)
+	}
+	if got != testAgentUUID {
+		t.Fatalf("expected %s, got %s", testAgentUUID, got)
+	}
+}
+
+func TestDownloadReferenceRejectsNonUUIDResourceID(t *testing.T) {
+	client, err := NewClientWithConfig(Config{
+		APIKey:         "k",
+		OrganizationID: testOrgUUID,
+		BaseURL:        "https://api.test.example",
+		Timeout:        time.Second,
+		MaxRetries:     0,
+	})
+	if err != nil {
+		t.Fatalf("new client: %v", err)
+	}
+	defer client.Close()
+
+	_, err = client.Agents.Jobs.DownloadReference(testAgentUUID, "not-a-uuid", false)
+	if err == nil {
+		t.Fatalf("expected error for invalid resourceID, got nil")
+	}
+	if !strings.Contains(err.Error(), "resourceID") {
+		t.Fatalf("expected error mentioning resourceID, got: %v", err)
+	}
+}

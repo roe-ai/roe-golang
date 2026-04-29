@@ -195,6 +195,11 @@ func (c *httpClient) doRetried(req *http.Request) (*http.Response, error) {
 	var lastErr error
 	maxAttempts := c.cfg.MaxRetries + 1
 
+	// Headers are intentionally NOT re-applied per attempt: req already
+	// carries them — set by applyHeaders in doRequest for the legacy path,
+	// or by RequestEditorFn (auth) in the retryDoer path before doRetried
+	// is invoked. req.Clone(ctx) preserves the header map, so each retry
+	// inherits the same auth/static headers without redundant work.
 	for attempt := 0; attempt < maxAttempts; attempt++ {
 		if err := ctx.Err(); err != nil {
 			return nil, err

@@ -866,8 +866,8 @@ func (j *AgentJobsAPI) DownloadReferenceWithContext(ctx context.Context, jobID, 
 	if err != nil {
 		return nil, err
 	}
-	if resourceID == "" {
-		return nil, fmt.Errorf("resourceID cannot be empty")
+	if _, err := parseUUIDParam("resourceID", resourceID); err != nil {
+		return nil, err
 	}
 	orgID, err := j.agentsAPI.orgUUID()
 	if err != nil {
@@ -979,12 +979,14 @@ func decodeJobID(body []byte) (string, error) {
 	var raw any
 	if err := json.Unmarshal(body, &raw); err != nil {
 		// Some servers may send a bare token without quotes; fall back to a
-		// trimmed string only if it parses as a UUID.
+		// trimmed string only if it parses as a UUID. If both shapes fail,
+		// surface both diagnostics — the JSON error alone is misleading
+		// because the body may be a partial HTML error page or similar.
 		s := bytes.TrimSpace(body)
-		if _, err := uuid.Parse(string(s)); err == nil {
-			return string(s), nil
+		if _, uuidErr := uuid.Parse(string(s)); uuidErr != nil {
+			return "", fmt.Errorf("parse job_id: not JSON (%v); not UUID (%w)", err, uuidErr)
 		}
-		return "", fmt.Errorf("parse job_id: %w", err)
+		return string(s), nil
 	}
 	switch v := raw.(type) {
 	case string:

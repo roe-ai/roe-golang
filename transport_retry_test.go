@@ -27,7 +27,7 @@ func TestRawClientRetriesOn503(t *testing.T) {
 
 	client, err := NewClientWithConfig(Config{
 		APIKey:               "k",
-		OrganizationID:       "test-org",
+		OrganizationID:       testOrgUUID,
 		BaseURL:              server.URL,
 		Timeout:              2 * time.Second,
 		MaxRetries:           2,
@@ -71,7 +71,7 @@ func TestRawClientExhaustsRetries(t *testing.T) {
 
 	client, err := NewClientWithConfig(Config{
 		APIKey:               "k",
-		OrganizationID:       "test-org",
+		OrganizationID:       testOrgUUID,
 		BaseURL:              server.URL,
 		Timeout:              2 * time.Second,
 		MaxRetries:           2,

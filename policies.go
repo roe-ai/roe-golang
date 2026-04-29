@@ -41,6 +41,21 @@ func (p *PoliciesAPI) orgUUID() (*openapi_types.UUID, error) {
 	return &id, nil
 }
 
+// requireOrgUUID returns the organization UUID and errors if the SDK was
+// constructed without one. Used by List, which would otherwise silently
+// return unscoped results on a misconfigured client — paralleling the
+// AgentsAPI.List behavior.
+func (p *PoliciesAPI) requireOrgUUID() (openapi_types.UUID, error) {
+	if p.cfg.OrganizationID == "" {
+		return openapi_types.UUID{}, fmt.Errorf("organization ID is required")
+	}
+	id, err := uuid.Parse(p.cfg.OrganizationID)
+	if err != nil {
+		return openapi_types.UUID{}, fmt.Errorf("invalid organization ID: %w", err)
+	}
+	return id, nil
+}
+
 func parseUUIDParam(name, value string) (openapi_types.UUID, error) {
 	if value == "" {
 		return openapi_types.UUID{}, fmt.Errorf("%s cannot be empty", name)
@@ -59,11 +74,11 @@ func (p *PoliciesAPI) List(page, pageSize int) (*generated.PaginatedPolicyList, 
 
 // ListWithContext returns paginated policies with a caller-supplied context.
 func (p *PoliciesAPI) ListWithContext(ctx context.Context, page, pageSize int) (*generated.PaginatedPolicyList, error) {
-	orgID, err := p.orgUUID()
+	orgID, err := p.requireOrgUUID()
 	if err != nil {
 		return nil, err
 	}
-	params := &generated.V1PoliciesListParams{OrganizationId: orgID}
+	params := &generated.V1PoliciesListParams{OrganizationId: &orgID}
 	if page > 0 {
 		params.Page = &page
 	}
