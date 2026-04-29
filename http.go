@@ -116,6 +116,10 @@ func (c *httpClient) buildURL(path string, query map[string]string) (string, err
 	return u.String(), nil
 }
 
+// doRequest is a thin shim around doRetried for the legacy hand-written API
+// helpers. It builds the request, sends it (with retry), reads the body, and
+// converts non-2xx responses to typed errors — preserving the original
+// contract of returning ([]byte, error).
 func (c *httpClient) doRequest(ctx context.Context, method, path string, headers http.Header, body io.Reader, query map[string]string) ([]byte, error) {
 	if ctx == nil {
 		ctx = context.Background()
@@ -126,43 +130,100 @@ func (c *httpClient) doRequest(ctx context.Context, method, path string, headers
 		return nil, err
 	}
 
-	var bodyBytes []byte
+	var bodyReader io.Reader
 	if body != nil {
 		if b, ok := body.(*bytes.Buffer); ok {
-			bodyBytes = b.Bytes()
+			bodyReader = bytes.NewReader(b.Bytes())
 		} else {
-			bodyBytes, err = io.ReadAll(body)
+			data, err := io.ReadAll(body)
 			if err != nil {
 				return nil, fmt.Errorf("read request body: %w", err)
 			}
+			bodyReader = bytes.NewReader(data)
 		}
+	}
+
+	req, err := http.NewRequestWithContext(ctx, method, fullURL, bodyReader)
+	if err != nil {
+		return nil, err
+	}
+	c.applyHeaders(req, headers)
+
+	resp, err := c.doRetried(req)
+	if err != nil {
+		return nil, err
+	}
+
+	respBody, readErr := io.ReadAll(resp.Body)
+	resp.Body.Close()
+	if readErr != nil {
+		return nil, fmt.Errorf("read response: %w", readErr)
+	}
+
+	if resp.StatusCode >= 200 && resp.StatusCode < 300 {
+		return respBody, nil
+	}
+
+	return nil, apiErrorFromResponse(resp.StatusCode, respBody, resp.Header, c.cfg.RequestIDHeader)
+}
+
+// doRetried executes a fully-built *http.Request with the SDK's retry policy.
+// It is the single retry loop for both the legacy hand-written helpers (via
+// doRequest) and the generated raw client (via the retryDoer adapter passed
+// to generated.WithHTTPClient). The returned *http.Response always has its
+// Body populated with a re-readable buffer; the caller must close Body.
+func (c *httpClient) doRetried(req *http.Request) (*http.Response, error) {
+	if req == nil {
+		return nil, fmt.Errorf("nil request")
+	}
+	ctx := req.Context()
+	if ctx == nil {
+		ctx = context.Background()
+	}
+
+	// Buffer the body so we can replay it on retries.
+	var bodyBytes []byte
+	if req.Body != nil {
+		b, err := io.ReadAll(req.Body)
+		_ = req.Body.Close()
+		if err != nil {
+			return nil, fmt.Errorf("read request body: %w", err)
+		}
+		bodyBytes = b
 	}
 
 	var lastErr error
 	maxAttempts := c.cfg.MaxRetries + 1
 
+	// Headers are intentionally NOT re-applied per attempt: req already
+	// carries them — set by applyHeaders in doRequest for the legacy path,
+	// or by RequestEditorFn (auth) in the retryDoer path before doRetried
+	// is invoked. req.Clone(ctx) preserves the header map, so each retry
+	// inherits the same auth/static headers without redundant work.
 	for attempt := 0; attempt < maxAttempts; attempt++ {
 		if err := ctx.Err(); err != nil {
 			return nil, err
 		}
 
-		var bodyReader io.Reader
+		attemptReq := req.Clone(ctx)
 		if bodyBytes != nil {
-			bodyReader = bytes.NewReader(bodyBytes)
+			attemptReq.Body = io.NopCloser(bytes.NewReader(bodyBytes))
+			attemptReq.GetBody = func() (io.ReadCloser, error) {
+				return io.NopCloser(bytes.NewReader(bodyBytes)), nil
+			}
+			attemptReq.ContentLength = int64(len(bodyBytes))
+		} else {
+			attemptReq.Body = nil
+			attemptReq.GetBody = nil
+			attemptReq.ContentLength = 0
 		}
 
-		req, err := http.NewRequestWithContext(ctx, method, fullURL, bodyReader)
-		if err != nil {
-			return nil, err
-		}
-
-		c.applyHeaders(req, headers)
-		c.attachRequestID(req)
-		c.runRequestHooks(req)
-		c.logRequest(req, attempt)
+		c.attachRequestID(attemptReq)
+		c.runRequestHooks(attemptReq)
+		c.logRequest(attemptReq, attempt)
 
 		start := time.Now()
-		resp, err := c.client.Do(req)
+		resp, err := c.client.Do(attemptReq)
 		duration := time.Since(start)
 
 		if err != nil {
@@ -171,8 +232,8 @@ func (c *httpClient) doRequest(ctx context.Context, method, path string, headers
 			}
 			lastErr = err
 			c.logf("retrying after error (attempt %d/%d): %v", attempt+1, maxAttempts, err)
-			if err := c.sleepWithContext(ctx, c.backoffDuration(attempt)); err != nil {
-				return nil, err
+			if sleepErr := c.sleepWithContext(ctx, c.backoffDuration(attempt)); sleepErr != nil {
+				return nil, sleepErr
 			}
 			continue
 		}
@@ -183,25 +244,21 @@ func (c *httpClient) doRequest(ctx context.Context, method, path string, headers
 			return nil, fmt.Errorf("read response: %w", readErr)
 		}
 
-		c.logResponse(req, resp, respBody, duration)
+		c.logResponse(attemptReq, resp, respBody, duration)
 		c.runResponseHooks(resp, respBody)
 
-		if resp.StatusCode >= 200 && resp.StatusCode < 300 {
-			return respBody, nil
-		}
-
-		apiErr := apiErrorFromResponse(resp.StatusCode, respBody, resp.Header, c.cfg.RequestIDHeader)
-		lastErr = apiErr
-
 		if c.shouldRetry(resp, nil, attempt) {
+			lastErr = apiErrorFromResponse(resp.StatusCode, respBody, resp.Header, c.cfg.RequestIDHeader)
 			c.logf("retrying after status %d (attempt %d/%d)", resp.StatusCode, attempt+1, maxAttempts)
-			if err := c.sleepWithContext(ctx, c.retryDelay(resp, attempt)); err != nil {
-				return nil, err
+			if sleepErr := c.sleepWithContext(ctx, c.retryDelay(resp, attempt)); sleepErr != nil {
+				return nil, sleepErr
 			}
 			continue
 		}
 
-		return nil, apiErr
+		// Restore the body so the caller can read it.
+		resp.Body = io.NopCloser(bytes.NewReader(respBody))
+		return resp, nil
 	}
 
 	return nil, lastErr
@@ -394,83 +451,31 @@ func (c *httpClient) sleepWithContext(ctx context.Context, delay time.Duration) 
 	}
 }
 
-func (c *httpClient) get(path string, query map[string]string, out any) error {
-	return c.getWithContext(context.Background(), path, query, out)
-}
-
-func (c *httpClient) getWithContext(ctx context.Context, path string, query map[string]string, out any) error {
-	data, err := c.doRequest(ctx, http.MethodGet, path, http.Header{}, nil, query)
-	if err != nil {
-		return err
-	}
-	if out == nil {
-		return nil
-	}
-	return json.Unmarshal(data, out)
-}
-
-func (c *httpClient) getBytesWithContext(ctx context.Context, path string, query map[string]string) ([]byte, error) {
-	return c.doRequest(ctx, http.MethodGet, path, http.Header{}, nil, query)
-}
-
-func (c *httpClient) deleteWithContext(ctx context.Context, path string, query map[string]string) error {
-	_, err := c.doRequest(ctx, http.MethodDelete, path, http.Header{}, nil, query)
-	return err
-}
-
-func (c *httpClient) postJSONWithContext(ctx context.Context, path string, payload any, query map[string]string, out any) error {
-	buf := &bytes.Buffer{}
-	if payload != nil {
-		if err := json.NewEncoder(buf).Encode(payload); err != nil {
-			return fmt.Errorf("encode json: %w", err)
-		}
-	}
-	headers := http.Header{}
-	headers.Set("Content-Type", "application/json")
-
-	data, err := c.doRequest(ctx, http.MethodPost, path, headers, buf, query)
-	if err != nil {
-		return err
-	}
-	if out == nil {
-		return nil
-	}
-	return json.Unmarshal(data, out)
-}
-
-func (c *httpClient) putJSONWithContext(ctx context.Context, path string, payload any, query map[string]string, out any) error {
-	buf := &bytes.Buffer{}
-	if payload != nil {
-		if err := json.NewEncoder(buf).Encode(payload); err != nil {
-			return fmt.Errorf("encode json: %w", err)
-		}
-	}
-	headers := http.Header{}
-	headers.Set("Content-Type", "application/json")
-
-	data, err := c.doRequest(ctx, http.MethodPut, path, headers, buf, query)
-	if err != nil {
-		return err
-	}
-	if out == nil {
-		return nil
-	}
-	return json.Unmarshal(data, out)
-}
-
 type preparedFile struct {
 	FieldName string
 	File      FileUpload
 }
 
-func (c *httpClient) postDynamicInputs(path string, inputs map[string]any, query map[string]string, out any, metadata map[string]any) error {
-	return c.postDynamicInputsWithContext(context.Background(), path, inputs, query, out, metadata)
-}
-
-func (c *httpClient) postDynamicInputsWithContext(ctx context.Context, path string, inputs map[string]any, query map[string]string, out any, metadata map[string]any) error {
+// dynamicInputsRequest builds the body and Content-Type for a dynamic-input
+// agent run request. It does NOT send the request — the wrapper layer feeds
+// the result into the generated client's *WithBodyWithResponse helper, which
+// owns the URL/path-param/query construction.
+//
+// Detection rules match the legacy postDynamicInputsWithContext helper:
+//   - FileUpload / *FileUpload (URL-only forms collapse to a form field)
+//   - *bytes.Buffer / *bytes.Reader / []byte / io.Reader → multipart file part
+//   - string: UUID → form, file path → multipart file, looks-like-path-but-
+//     missing → error, otherwise → form
+//   - fmt.Stringer → form
+//   - everything else → form via fmt.Sprintf("%v")
+//
+// When metadata is non-nil it is JSON-encoded and added as a "metadata" form
+// field; passing a "metadata" key in inputs alongside a non-nil metadata
+// argument is rejected.
+func (c *httpClient) dynamicInputsRequest(inputs map[string]any, metadata map[string]any) (io.Reader, string, error) {
 	if metadata != nil {
 		if _, exists := inputs["metadata"]; exists {
-			return fmt.Errorf("inputs must not contain key \"metadata\" when metadata parameter is set")
+			return nil, "", fmt.Errorf("inputs must not contain key \"metadata\" when metadata parameter is set")
 		}
 	}
 
@@ -508,7 +513,7 @@ func (c *httpClient) postDynamicInputsWithContext(ctx context.Context, path stri
 			case isFilePath(v):
 				files = append(files, preparedFile{FieldName: key, File: FileUpload{Path: v}})
 			case looksLikePath(v) && !isHTTPURL(v):
-				return fmt.Errorf("input %s references a file that was not found: %s", key, v)
+				return nil, "", fmt.Errorf("input %s references a file that was not found: %s", key, v)
 			default:
 				form.Set(key, v)
 			}
@@ -523,22 +528,13 @@ func (c *httpClient) postDynamicInputsWithContext(ctx context.Context, path stri
 	if metadata != nil {
 		metaJSON, err := json.Marshal(metadata)
 		if err != nil {
-			return fmt.Errorf("marshal metadata: %w", err)
+			return nil, "", fmt.Errorf("marshal metadata: %w", err)
 		}
 		form.Set("metadata", string(metaJSON))
 	}
 
 	if len(files) == 0 {
-		headers := http.Header{}
-		headers.Set("Content-Type", "application/x-www-form-urlencoded")
-		data, err := c.doRequest(ctx, http.MethodPost, path, headers, strings.NewReader(form.Encode()), query)
-		if err != nil {
-			return err
-		}
-		if out == nil {
-			return nil
-		}
-		return json.Unmarshal(data, out)
+		return strings.NewReader(form.Encode()), "application/x-www-form-urlencoded", nil
 	}
 
 	body := &bytes.Buffer{}
@@ -550,7 +546,7 @@ func (c *httpClient) postDynamicInputsWithContext(ctx context.Context, path stri
 		}
 	}
 
-	// Track opened readers for cleanup on error
+	// Track opened readers for cleanup on error.
 	var openedReaders []io.ReadCloser
 	closeAllReaders := func() {
 		for _, r := range openedReaders {
@@ -563,7 +559,7 @@ func (c *httpClient) postDynamicInputsWithContext(ctx context.Context, path stri
 		if err != nil {
 			closeAllReaders()
 			writer.Close()
-			return err
+			return nil, "", err
 		}
 		openedReaders = append(openedReaders, fileReader)
 
@@ -580,30 +576,21 @@ func (c *httpClient) postDynamicInputsWithContext(ctx context.Context, path stri
 		if err != nil {
 			closeAllReaders()
 			writer.Close()
-			return err
+			return nil, "", err
 		}
 		if _, err := io.Copy(part, fileReader); err != nil {
 			closeAllReaders()
 			writer.Close()
-			return err
+			return nil, "", err
 		}
 		fileReader.Close()
 	}
 
 	if err := writer.Close(); err != nil {
-		return err
+		return nil, "", err
 	}
 
-	headers := http.Header{}
-	headers.Set("Content-Type", writer.FormDataContentType())
-	data, err := c.doRequest(ctx, http.MethodPost, path, headers, body, query)
-	if err != nil {
-		return err
-	}
-	if out == nil {
-		return nil
-	}
-	return json.Unmarshal(data, out)
+	return body, writer.FormDataContentType(), nil
 }
 
 func (c *httpClient) prepareMultipartFile(file FileUpload) (io.ReadCloser, string, string, error) {

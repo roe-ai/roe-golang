@@ -10,7 +10,10 @@ import (
 	"time"
 )
 
-func TestAgentsAPIListWithContextSendsQueryAndSetsAgentAPI(t *testing.T) {
+// testOrgUUID is declared in policies_test.go (package-shared).
+const testAgentUUID = "77777777-7777-7777-7777-777777777777"
+
+func TestAgentsAPIListWithContextSendsQueryAndReturnsResult(t *testing.T) {
 	var calls int32
 	server := newTestServer(t, http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		atomic.AddInt32(&calls, 1)
@@ -22,8 +25,8 @@ func TestAgentsAPIListWithContextSendsQueryAndSetsAgentAPI(t *testing.T) {
 			t.Fatalf("unexpected path %s", r.URL.Path)
 		}
 		q := r.URL.Query()
-		if got := q.Get("organization_id"); got != "org" {
-			t.Fatalf("expected organization_id=org, got %q", got)
+		if got := q.Get("organization_id"); got != testOrgUUID {
+			t.Fatalf("expected organization_id=%s, got %q", testOrgUUID, got)
 		}
 		if got := q.Get("page"); got != "1" {
 			t.Fatalf("expected page=1, got %q", got)
@@ -39,13 +42,13 @@ func TestAgentsAPIListWithContextSendsQueryAndSetsAgentAPI(t *testing.T) {
 		}
 
 		w.Header().Set("Content-Type", "application/json")
-		_, _ = w.Write([]byte(`{"count":1,"next":null,"previous":null,"results":[{"id":"a1","name":"Agent","disable_cache":false,"cache_failed_jobs":false,"organization_id":"org","engine_class_id":"engine","job_count":0,"engine_name":"Engine"}]}`))
+		_, _ = w.Write([]byte(`{"count":1,"next":null,"previous":null,"results":[{"id":"` + testAgentUUID + `","name":"Agent","disable_cache":false,"cache_failed_jobs":false,"organization_id":"` + testOrgUUID + `","engine_class_id":"engine"}]}`))
 	}))
 	defer server.Close()
 
 	client, err := NewClientWithConfig(Config{
 		APIKey:         "k",
-		OrganizationID: "org",
+		OrganizationID: testOrgUUID,
 		BaseURL:        server.URL,
 		Timeout:        time.Second,
 		MaxRetries:     0,
@@ -62,14 +65,14 @@ func TestAgentsAPIListWithContextSendsQueryAndSetsAgentAPI(t *testing.T) {
 	if err != nil {
 		t.Fatalf("list: %v", err)
 	}
+	if resp == nil {
+		t.Fatalf("expected non-nil paginated response")
+	}
 	if len(resp.Results) != 1 {
 		t.Fatalf("expected 1 result, got %d", len(resp.Results))
 	}
-	if resp.Results[0].agentsAPI == nil {
-		t.Fatalf("expected agentsAPI to be set on result")
-	}
-	if resp.Results[0].agentsAPI != client.Agents {
-		t.Fatalf("expected result agentsAPI to match client agents API")
+	if got := resp.Results[0].Name; got != "Agent" {
+		t.Fatalf("expected Name=Agent, got %q", got)
 	}
 	if atomic.LoadInt32(&calls) != 1 {
 		t.Fatalf("expected 1 call, got %d", atomic.LoadInt32(&calls))
@@ -86,7 +89,7 @@ func TestAgentsAPIListWithContextCancelledDoesNotSendRequest(t *testing.T) {
 
 	client, err := NewClientWithConfig(Config{
 		APIKey:         "k",
-		OrganizationID: "org",
+		OrganizationID: testOrgUUID,
 		BaseURL:        server.URL,
 		Timeout:        time.Second,
 		MaxRetries:     0,
@@ -115,11 +118,12 @@ func TestAgentsAPIRunManyWithContextStopsAfterCancel(t *testing.T) {
 	var calls int32
 	server := newTestServer(t, http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		atomic.AddInt32(&calls, 1)
-		if r.URL.Path != "/v1/agents/run/agent-id/async/many/" {
-			t.Fatalf("unexpected path: %s", r.URL.Path)
+		expectedPath := "/v1/agents/run/" + testAgentUUID + "/async/many/"
+		if r.URL.Path != expectedPath {
+			t.Fatalf("unexpected path: %s (expected %s)", r.URL.Path, expectedPath)
 		}
 		w.Header().Set("Content-Type", "application/json")
-		_, _ = w.Write([]byte(`["job-1"]`))
+		_, _ = w.Write([]byte(`["` + testAgentUUID + `"]`))
 	}))
 	defer server.Close()
 
@@ -129,7 +133,7 @@ func TestAgentsAPIRunManyWithContextStopsAfterCancel(t *testing.T) {
 	var hookCalls int32
 	client, err := NewClientWithConfig(Config{
 		APIKey:         "k",
-		OrganizationID: "org",
+		OrganizationID: testOrgUUID,
 		BaseURL:        server.URL,
 		Timeout:        time.Second,
 		MaxRetries:     0,
@@ -157,7 +161,7 @@ func TestAgentsAPIRunManyWithContextStopsAfterCancel(t *testing.T) {
 		inputs[i] = map[string]any{"text": "hello"}
 	}
 
-	_, err = client.Agents.RunManyWithContext(ctx, "agent-id", inputs, 0, nil)
+	_, err = client.Agents.RunManyWithContext(ctx, testAgentUUID, inputs, 0, nil)
 	if err == nil {
 		t.Fatalf("expected error")
 	}
@@ -166,5 +170,50 @@ func TestAgentsAPIRunManyWithContextStopsAfterCancel(t *testing.T) {
 	}
 	if atomic.LoadInt32(&calls) != 1 {
 		t.Fatalf("expected exactly 1 call, got %d", atomic.LoadInt32(&calls))
+	}
+}
+
+func TestDecodeJobIDInvalidBodyMentionsBothShapes(t *testing.T) {
+	_, err := decodeJobID([]byte("<html>503 Bad Gateway</html>"))
+	if err == nil {
+		t.Fatalf("expected error for invalid body, got nil")
+	}
+	if !strings.Contains(err.Error(), "not JSON") {
+		t.Fatalf("expected 'not JSON' in error, got: %v", err)
+	}
+	if !strings.Contains(err.Error(), "not UUID") {
+		t.Fatalf("expected 'not UUID' in error, got: %v", err)
+	}
+}
+
+func TestDecodeJobIDBareUUIDStillAccepted(t *testing.T) {
+	got, err := decodeJobID([]byte("  " + testAgentUUID + "  \n"))
+	if err != nil {
+		t.Fatalf("expected bare UUID to parse, got: %v", err)
+	}
+	if got != testAgentUUID {
+		t.Fatalf("expected %s, got %s", testAgentUUID, got)
+	}
+}
+
+func TestDownloadReferenceRejectsNonUUIDResourceID(t *testing.T) {
+	client, err := NewClientWithConfig(Config{
+		APIKey:         "k",
+		OrganizationID: testOrgUUID,
+		BaseURL:        "https://api.test.example",
+		Timeout:        time.Second,
+		MaxRetries:     0,
+	})
+	if err != nil {
+		t.Fatalf("new client: %v", err)
+	}
+	defer client.Close()
+
+	_, err = client.Agents.Jobs.DownloadReference(testAgentUUID, "not-a-uuid", false)
+	if err == nil {
+		t.Fatalf("expected error for invalid resourceID, got nil")
+	}
+	if !strings.Contains(err.Error(), "resourceID") {
+		t.Fatalf("expected error mentioning resourceID, got: %v", err)
 	}
 }

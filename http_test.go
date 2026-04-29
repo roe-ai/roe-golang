@@ -42,8 +42,7 @@ func TestHTTPClientRetriesAndRequestID(t *testing.T) {
 	client := newHTTPClient(cfg, newAuth(cfg))
 	defer client.close()
 
-	var out map[string]bool
-	if err := client.get("/ok", nil, &out); err != nil {
+	if _, err := client.doRequest(context.Background(), http.MethodGet, "/ok", http.Header{}, nil, nil); err != nil {
 		t.Fatalf("request failed: %v", err)
 	}
 	if attempts != 3 {
@@ -76,7 +75,7 @@ func TestAPIErrorIncludesRequestID(t *testing.T) {
 	client := newHTTPClient(cfg, newAuth(cfg))
 	defer client.close()
 
-	err := client.get("/error", nil, nil)
+	_, err := client.doRequest(context.Background(), http.MethodGet, "/error", http.Header{}, nil, nil)
 	if err == nil {
 		t.Fatalf("expected error")
 	}
@@ -126,7 +125,7 @@ func TestHTTPClientRetrySleepHonorsContextCancellation(t *testing.T) {
 	}()
 
 	start := time.Now()
-	err := client.getWithContext(ctx, "/error", nil, nil)
+	_, err := client.doRequest(ctx, http.MethodGet, "/error", http.Header{}, nil, nil)
 	elapsed := time.Since(start)
 
 	if err == nil {
