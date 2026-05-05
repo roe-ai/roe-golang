@@ -9,7 +9,13 @@ import (
 )
 
 func TestJobBatchWaitPreservesOrder(t *testing.T) {
-	jobIDs := []string{"job-1", "job-2", "job-3"}
+	jobIDs := []string{
+		"aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa",
+		"bbbbbbbb-bbbb-bbbb-bbbb-bbbbbbbbbbbb",
+		"cccccccc-cccc-cccc-cccc-cccccccccccc",
+	}
+	const agentID = "dddddddd-dddd-dddd-dddd-dddddddddddd"
+	const versionID = "eeeeeeee-eeee-eeee-eeee-eeeeeeeeeeee"
 
 	server := newTestServer(t, http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		switch {
@@ -29,32 +35,32 @@ func TestJobBatchWaitPreservesOrder(t *testing.T) {
 			w.Header().Set("Content-Type", "application/json")
 			_ = json.NewEncoder(w).Encode(statuses)
 		case strings.HasSuffix(r.URL.Path, "/results/"):
-			agentID := "agent"
-			versionID := "v1"
+			aid := agentID
+			vid := versionID
 			results := []AgentJobResultBatch{
 				{
-					ID:             "job-2",
+					ID:             jobIDs[1],
 					Status:         nil,
-					AgentID:        &agentID,
-					AgentVersionID: &versionID,
+					AgentID:        &aid,
+					AgentVersionID: &vid,
 					Result: []any{
 						map[string]any{"key": "out", "value": "second", "description": "", "data_type": "text/plain"},
 					},
 				},
 				{
-					ID:             "job-1",
+					ID:             jobIDs[0],
 					Status:         nil,
-					AgentID:        &agentID,
-					AgentVersionID: &versionID,
+					AgentID:        &aid,
+					AgentVersionID: &vid,
 					Result: []any{
 						map[string]any{"key": "out", "value": "first", "description": "", "data_type": "text/plain"},
 					},
 				},
 				{
-					ID:             "job-3",
+					ID:             jobIDs[2],
 					Status:         nil,
-					AgentID:        &agentID,
-					AgentVersionID: &versionID,
+					AgentID:        &aid,
+					AgentVersionID: &vid,
 					Result: []any{
 						map[string]any{"key": "out", "value": "third", "description": "", "data_type": "text/plain"},
 					},
@@ -68,9 +74,9 @@ func TestJobBatchWaitPreservesOrder(t *testing.T) {
 	}))
 	defer server.Close()
 
-	cfg := Config{
+	client, err := NewClientWithConfig(Config{
 		APIKey:               "k",
-		OrganizationID:       "org",
+		OrganizationID:       testOrgUUID,
 		BaseURL:              server.URL,
 		Timeout:              time.Second,
 		MaxRetries:           0,
@@ -78,13 +84,13 @@ func TestJobBatchWaitPreservesOrder(t *testing.T) {
 		RetryMaxInterval:     5 * time.Millisecond,
 		RetryMultiplier:      1,
 		RetryJitter:          0,
+	})
+	if err != nil {
+		t.Fatalf("new client: %v", err)
 	}
+	defer client.Close()
 
-	client := newHTTPClient(cfg, newAuth(cfg))
-	defer client.close()
-
-	agents := newAgentsAPI(cfg, client)
-	batch := newJobBatch(agents, jobIDs, 1)
+	batch := newJobBatch(client.Agents, jobIDs, 1)
 	results, err := batch.Wait(5*time.Millisecond, time.Second)
 	if err != nil {
 		t.Fatalf("wait failed: %v", err)
