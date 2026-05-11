@@ -145,6 +145,36 @@ if result.Succeeded() {
 // result.Outputs       []AgentDatum
 ```
 
+## Errors
+
+Non-2xx responses return typed errors that embed `*APIError` and expose
+`.StatusCode` / `.Message`. Use `errors.As` to handle expected failures
+without parsing error strings:
+
+```go
+import (
+    "errors"
+    roe "github.com/roe-ai/roe-golang"
+)
+
+_, err := client.Agents.Retrieve("00000000-0000-0000-0000-000000000000")
+
+var notFound *roe.NotFoundError
+if errors.As(err, &notFound) {
+    log.Printf("not found: %d %s", notFound.StatusCode, notFound.Message)
+}
+```
+
+The full hierarchy is `BadRequestError` (400), `AuthenticationError` (401),
+`InsufficientCreditsError` (402), `ForbiddenError` (403), `NotFoundError`
+(404), `RateLimitError` (429), and `ServerError` (5xx) — all embedding
+`*APIError`.
+
+`job.Wait(...)` does not return a typed error for agent-side failures —
+instead the returned result reports `result.Failed() == true` with
+`result.ErrorMessage` populated. Transport / HTTP errors hit the typed
+hierarchy above.
+
 ## Full Example
 
 Create an agent that extracts structured data from websites:
@@ -380,6 +410,10 @@ client.Agents.Delete(agentID)
 client.Agents.Duplicate(agentID)
 ```
 
+> `Agents.Duplicate(...)` returns the new agent's first `AgentVersion`, **not**
+> a `BaseAgent`. The new agent's id is not on the returned object — to capture
+> it, list agents before and after and diff the ids.
+
 ### Running Agents
 
 ```go
@@ -436,32 +470,27 @@ client.Policies.Versions.Create(policyID, content, versionName, baseVersionID)
 
 | Model | Value |
 |-------|-------|
+| GPT-5.4 Pro | `gpt-5.4-pro-2026-03-05` |
 | GPT-5.4 | `gpt-5.4-2026-03-05` |
+| GPT-5.4 Mini | `gpt-5.4-mini-2026-03-17` |
+| GPT-5.4 Nano | `gpt-5.4-nano-2026-03-17` |
 | GPT-5.2 | `gpt-5.2-2025-12-11` |
-| GPT-5.1 | `gpt-5.1-2025-11-13` |
 | GPT-5 | `gpt-5-2025-08-07` |
-| GPT-5 Mini | `gpt-5-mini-2025-08-07` |
 | GPT-4.1 | `gpt-4.1-2025-04-14` |
-| GPT-4.1 Mini | `gpt-4.1-mini-2025-04-14` |
-| O3 Pro | `o3-pro-2025-06-10` |
-| O3 | `o3-2025-04-16` |
-| O4 Mini | `o4-mini-2025-04-16` |
-| GPT-4o | `gpt-4o-2024-11-20` |
-| Grok 4 | `grok-4-0709` |
-| Grok 4.1 Fast Reasoning | `grok-4-1-fast-reasoning` |
+| Claude Opus 4.7 | `claude-opus-4-7` |
 | Claude Opus 4.6 | `claude-opus-4-6` |
 | Claude Sonnet 4.6 | `claude-sonnet-4-6` |
-| Claude Opus 4.5 | `claude-opus-4-5-20251101` |
-| Claude Sonnet 4.5 | `claude-sonnet-4-5-20250929` |
-| Claude Opus 4.1 | `claude-opus-4-1-20250805` |
-| Claude Opus 4 | `claude-opus-4-20250514` |
-| Claude Sonnet 4 | `claude-sonnet-4-20250514` |
 | Claude Haiku 4.5 | `claude-haiku-4-5-20251001` |
-| Claude 3.5 Haiku | `claude-3-5-haiku-20241022` |
-| Gemini 3 Pro | `gemini-3-pro-preview` |
+| Gemini 3.1 Pro | `gemini-3.1-pro-preview` |
 | Gemini 3 Flash | `gemini-3-flash-preview` |
-| Gemini 2.5 Pro | `gemini-2.5-pro` |
-| Gemini 2.5 Flash | `gemini-2.5-flash` |
+| Grok 4.20 Reasoning | `grok-4.20-0309-reasoning` |
+
+The canonical source for currently-supported vs deprecated model strings is
+`roe-llm/src/roe_llm/defs.py` (`DEPRECATED_MODELS`) in the platform repo.
+Mini / nano / 4o / o-series / Gemini 2.5 / Gemini 3 Pro / Claude 4.5 and
+older / 3.x Haiku / Grok 4 and 4.1 rows were dropped from this table because
+new agents referencing them fail with `400: Model is deprecated and not
+allowed for new agents`.
 
 ## Engine Classes
 
