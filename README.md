@@ -90,7 +90,12 @@ if err != nil {
     log.Fatal(err)
 }
 
-gen := raw.ClientInterface.(*generated.Client)
+gen, ok := raw.ClientInterface.(*generated.Client)
+if !ok {
+    log.Fatalf("unexpected raw client type: %T", raw.ClientInterface)
+}
+
+ctx := context.Background()
 req, err := http.NewRequestWithContext(ctx, http.MethodGet, gen.Server+"v1/users/current_user/", nil)
 if err != nil {
     log.Fatal(err)
