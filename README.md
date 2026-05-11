@@ -154,6 +154,8 @@ without parsing error strings:
 ```go
 import (
     "errors"
+    "log"
+
     roe "github.com/roe-ai/roe-golang"
 )
 
@@ -410,9 +412,8 @@ client.Agents.Delete(agentID)
 client.Agents.Duplicate(agentID)
 ```
 
-> `Agents.Duplicate(...)` returns the new agent's first `AgentVersion`, **not**
-> a `BaseAgent`. The new agent's id is not on the returned object — to capture
-> it, list agents before and after and diff the ids.
+> `Agents.Duplicate(...)` returns the new `BaseAgent` directly — the new
+> agent's id is on the returned value as `.ID`.
 
 ### Running Agents
 
