@@ -70,21 +70,52 @@ export ROE_ORGANIZATION_ID="your-org-uuid"
 
 ## Raw API Access
 
-The generated raw client is exposed from the main client:
+When the ergonomic wrappers don't expose an endpoint you need, the generated
+client is available off `client.Raw()`. Each OpenAPI operation maps to a
+generated method on `*generated.ClientWithResponses`; godoc on the
+`generated` package lists the full surface. The example below uses the
+underlying generic client so it stays portable across `operationId` renames:
 
 ```go
+import (
+    "context"
+    "log"
+    "net/http"
+
+    "github.com/roe-ai/roe-golang/generated"
+)
+
 raw, err := client.Raw()
 if err != nil {
     log.Fatal(err)
 }
 
-resp, err := raw.V1UsersCurrentUserRetrieveWithResponse(context.Background())
+gen, ok := raw.ClientInterface.(*generated.Client)
+if !ok {
+    log.Fatalf("unexpected raw client type: %T", raw.ClientInterface)
+}
+
+ctx := context.Background()
+req, err := http.NewRequestWithContext(ctx, http.MethodGet, gen.Server+"v1/users/current_user/", nil)
 if err != nil {
     log.Fatal(err)
 }
-
-fmt.Println(resp.StatusCode())
+for _, edit := range gen.RequestEditors {
+    if err := edit(ctx, req); err != nil {
+        log.Fatal(err)
+    }
+}
+resp, err := gen.Client.Do(req)
+if err != nil {
+    log.Fatal(err)
+}
+defer resp.Body.Close()
 ```
+
+For typed responses, call the named generated method off `raw` directly —
+those symbols track the upstream OpenAPI `operationId` and may change across
+releases, so check the `generated` package godoc for the current surface
+rather than aliasing symbol names in your own code.
 
 ## Job Result Inspection
 
