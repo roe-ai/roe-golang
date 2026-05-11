@@ -2,7 +2,7 @@
 
 Go SDK for the [Roe AI](https://www.roe-ai.com/) API.
 
-> **v1.0.0** — The Go SDK uses an `oapi-codegen`-generated client; ergonomic
+> **v1.0.79** — The Go SDK uses an `oapi-codegen`-generated client; ergonomic
 > wrappers on `Agents` (with `Agents.Jobs` and `Agents.Versions`) and `Policies`
 > (with `Policies.Versions`) remain. Highlights and migration notes across
 > releases live in **[CHANGELOG.md](CHANGELOG.md)**.

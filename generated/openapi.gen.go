@@ -458,8 +458,8 @@ type UserInfo struct {
 	LastName    *string             `json:"last_name,omitempty"`
 }
 
-// V1AgentsListParams defines parameters for V1AgentsList.
-type V1AgentsListParams struct {
+// AgentsListParams defines parameters for AgentsList.
+type AgentsListParams struct {
 	// EngineClassId Filter agents by engine type.
 	EngineClassId *string `form:"engine_class_id,omitempty" json:"engine_class_id,omitempty"`
 
@@ -488,134 +488,134 @@ type V1AgentsListParams struct {
 	Tags *[]string `form:"tags,omitempty" json:"tags,omitempty"`
 }
 
-// V1AgentsCreateParams defines parameters for V1AgentsCreate.
-type V1AgentsCreateParams struct {
+// AgentsCreateParams defines parameters for AgentsCreate.
+type AgentsCreateParams struct {
 	// OrganizationId Organization ID. This is required for access control. It can be provided via query or request body depending on the endpoint.
 	OrganizationId *openapi_types.UUID `form:"organization_id,omitempty" json:"organization_id,omitempty"`
 }
 
-// V1AgentsJobsResultsCreateParams defines parameters for V1AgentsJobsResultsCreate.
-type V1AgentsJobsResultsCreateParams struct {
+// AgentsJobsResultsCreateParams defines parameters for AgentsJobsResultsCreate.
+type AgentsJobsResultsCreateParams struct {
 	// OrganizationId Organization ID. This is required for access control. It can be provided via query or request body depending on the endpoint.
 	OrganizationId *openapi_types.UUID `form:"organization_id,omitempty" json:"organization_id,omitempty"`
 }
 
-// V1AgentsJobsStatusesCreateParams defines parameters for V1AgentsJobsStatusesCreate.
-type V1AgentsJobsStatusesCreateParams struct {
+// AgentsJobsStatusesCreateParams defines parameters for AgentsJobsStatusesCreate.
+type AgentsJobsStatusesCreateParams struct {
 	// OrganizationId Organization ID. This is required for access control. It can be provided via query or request body depending on the endpoint.
 	OrganizationId *openapi_types.UUID `form:"organization_id,omitempty" json:"organization_id,omitempty"`
 }
 
-// V1AgentsJobsReferencesRetrieveParams defines parameters for V1AgentsJobsReferencesRetrieve.
-type V1AgentsJobsReferencesRetrieveParams struct {
+// AgentsJobsReferencesRetrieveParams defines parameters for AgentsJobsReferencesRetrieve.
+type AgentsJobsReferencesRetrieveParams struct {
 	// OrganizationId Organization ID. This is required for access control. It can be provided via query or request body depending on the endpoint.
 	OrganizationId *openapi_types.UUID `form:"organization_id,omitempty" json:"organization_id,omitempty"`
 }
 
-// V1AgentsJobsResultRetrieveParams defines parameters for V1AgentsJobsResultRetrieve.
-type V1AgentsJobsResultRetrieveParams struct {
+// AgentsJobsResultRetrieveParams defines parameters for AgentsJobsResultRetrieve.
+type AgentsJobsResultRetrieveParams struct {
 	// OrganizationId Organization ID. This is required for access control. It can be provided via query or request body depending on the endpoint.
 	OrganizationId *openapi_types.UUID `form:"organization_id,omitempty" json:"organization_id,omitempty"`
 }
 
-// V1AgentsJobsCancelCreateParams defines parameters for V1AgentsJobsCancelCreate.
-type V1AgentsJobsCancelCreateParams struct {
+// AgentsJobsCancelCreateParams defines parameters for AgentsJobsCancelCreate.
+type AgentsJobsCancelCreateParams struct {
 	// OrganizationId Organization ID. This is required for access control. It can be provided via query or request body depending on the endpoint.
 	OrganizationId *openapi_types.UUID `form:"organization_id,omitempty" json:"organization_id,omitempty"`
 }
 
-// V1AgentsJobsDeleteDataCreateParams defines parameters for V1AgentsJobsDeleteDataCreate.
-type V1AgentsJobsDeleteDataCreateParams struct {
+// AgentsJobsDeleteDataCreateParams defines parameters for AgentsJobsDeleteDataCreate.
+type AgentsJobsDeleteDataCreateParams struct {
 	// OrganizationId Organization ID. This is required for access control. It can be provided via query or request body depending on the endpoint.
 	OrganizationId *openapi_types.UUID `form:"organization_id,omitempty" json:"organization_id,omitempty"`
 }
 
-// V1AgentsJobsStatusRetrieveParams defines parameters for V1AgentsJobsStatusRetrieve.
-type V1AgentsJobsStatusRetrieveParams struct {
+// AgentsJobsStatusRetrieveParams defines parameters for AgentsJobsStatusRetrieve.
+type AgentsJobsStatusRetrieveParams struct {
 	// OrganizationId Organization ID. This is required for access control. It can be provided via query or request body depending on the endpoint.
 	OrganizationId *openapi_types.UUID `form:"organization_id,omitempty" json:"organization_id,omitempty"`
 }
 
-// AgentsRun2Params defines parameters for AgentsRun2.
-type AgentsRun2Params struct {
+// AgentsRunParams defines parameters for AgentsRun.
+type AgentsRunParams struct {
 	// OrganizationId Organization ID. This is required for access control. It can be provided via query or request body depending on the endpoint.
 	OrganizationId *openapi_types.UUID `form:"organization_id,omitempty" json:"organization_id,omitempty"`
 }
 
-// V1AgentsRunAsyncCreateParams defines parameters for V1AgentsRunAsyncCreate.
-type V1AgentsRunAsyncCreateParams struct {
+// AgentsRunAsyncCreateParams defines parameters for AgentsRunAsyncCreate.
+type AgentsRunAsyncCreateParams struct {
 	// OrganizationId Organization ID. This is required for access control. It can be provided via query or request body depending on the endpoint.
 	OrganizationId *openapi_types.UUID `form:"organization_id,omitempty" json:"organization_id,omitempty"`
 }
 
-// AgentsRunAsyncMany5Params defines parameters for AgentsRunAsyncMany5.
-type AgentsRunAsyncMany5Params struct {
+// AgentsRunAsyncManyParams defines parameters for AgentsRunAsyncMany.
+type AgentsRunAsyncManyParams struct {
 	// OrganizationId Organization ID. This is required for access control. It can be provided via query or request body depending on the endpoint.
 	OrganizationId *openapi_types.UUID `form:"organization_id,omitempty" json:"organization_id,omitempty"`
 }
 
-// AgentsRunVersion2Params defines parameters for AgentsRunVersion2.
-type AgentsRunVersion2Params struct {
+// AgentsRunVersionParams defines parameters for AgentsRunVersion.
+type AgentsRunVersionParams struct {
 	// OrganizationId Organization ID. This is required for access control. It can be provided via query or request body depending on the endpoint.
 	OrganizationId *openapi_types.UUID `form:"organization_id,omitempty" json:"organization_id,omitempty"`
 }
 
-// V1AgentsRunVersionsAsyncCreateParams defines parameters for V1AgentsRunVersionsAsyncCreate.
-type V1AgentsRunVersionsAsyncCreateParams struct {
+// AgentsRunVersionsAsyncCreateParams defines parameters for AgentsRunVersionsAsyncCreate.
+type AgentsRunVersionsAsyncCreateParams struct {
 	// OrganizationId Organization ID. This is required for access control. It can be provided via query or request body depending on the endpoint.
 	OrganizationId *openapi_types.UUID `form:"organization_id,omitempty" json:"organization_id,omitempty"`
 }
 
-// V1AgentsDestroyParams defines parameters for V1AgentsDestroy.
-type V1AgentsDestroyParams struct {
+// AgentsDestroyParams defines parameters for AgentsDestroy.
+type AgentsDestroyParams struct {
 	// OrganizationId Organization ID. This is required for access control. It can be provided via query or request body depending on the endpoint.
 	OrganizationId *openapi_types.UUID `form:"organization_id,omitempty" json:"organization_id,omitempty"`
 }
 
-// V1AgentsRetrieveParams defines parameters for V1AgentsRetrieve.
-type V1AgentsRetrieveParams struct {
+// AgentsRetrieveParams defines parameters for AgentsRetrieve.
+type AgentsRetrieveParams struct {
 	// OrganizationId Organization ID. This is required for access control. It can be provided via query or request body depending on the endpoint.
 	OrganizationId *openapi_types.UUID `form:"organization_id,omitempty" json:"organization_id,omitempty"`
 }
 
-// V1AgentsPartialUpdateParams defines parameters for V1AgentsPartialUpdate.
-type V1AgentsPartialUpdateParams struct {
+// AgentsPartialUpdateParams defines parameters for AgentsPartialUpdate.
+type AgentsPartialUpdateParams struct {
 	// OrganizationId Organization ID. This is required for access control. It can be provided via query or request body depending on the endpoint.
 	OrganizationId *openapi_types.UUID `form:"organization_id,omitempty" json:"organization_id,omitempty"`
 }
 
-// V1AgentsUpdateParams defines parameters for V1AgentsUpdate.
-type V1AgentsUpdateParams struct {
+// AgentsUpdateParams defines parameters for AgentsUpdate.
+type AgentsUpdateParams struct {
 	// OrganizationId Organization ID. This is required for access control. It can be provided via query or request body depending on the endpoint.
 	OrganizationId *openapi_types.UUID `form:"organization_id,omitempty" json:"organization_id,omitempty"`
 }
 
-// V1AgentsDuplicateCreateParams defines parameters for V1AgentsDuplicateCreate.
-type V1AgentsDuplicateCreateParams struct {
+// AgentsDuplicateCreateParams defines parameters for AgentsDuplicateCreate.
+type AgentsDuplicateCreateParams struct {
 	// OrganizationId Organization ID. This is required for access control. It can be provided via query or request body depending on the endpoint.
 	OrganizationId *openapi_types.UUID `form:"organization_id,omitempty" json:"organization_id,omitempty"`
 }
 
-// V1AgentsJobsCancelAllCreateParams defines parameters for V1AgentsJobsCancelAllCreate.
-type V1AgentsJobsCancelAllCreateParams struct {
+// AgentsJobsCancelAllCreateParams defines parameters for AgentsJobsCancelAllCreate.
+type AgentsJobsCancelAllCreateParams struct {
 	// OrganizationId Organization ID. This is required for access control. It can be provided via query or request body depending on the endpoint.
 	OrganizationId *openapi_types.UUID `form:"organization_id,omitempty" json:"organization_id,omitempty"`
 }
 
-// V1AgentsVersionsListParams defines parameters for V1AgentsVersionsList.
-type V1AgentsVersionsListParams struct {
+// AgentsVersionsListParams defines parameters for AgentsVersionsList.
+type AgentsVersionsListParams struct {
 	// OrganizationId Organization ID. This is required for access control. It can be provided via query or request body depending on the endpoint.
 	OrganizationId *openapi_types.UUID `form:"organization_id,omitempty" json:"organization_id,omitempty"`
 }
 
-// V1AgentsVersionsCreateParams defines parameters for V1AgentsVersionsCreate.
-type V1AgentsVersionsCreateParams struct {
+// AgentsVersionsCreateParams defines parameters for AgentsVersionsCreate.
+type AgentsVersionsCreateParams struct {
 	// OrganizationId Organization ID. This is required for access control. It can be provided via query or request body depending on the endpoint.
 	OrganizationId *openapi_types.UUID `form:"organization_id,omitempty" json:"organization_id,omitempty"`
 }
 
-// V1AgentsVersionsCurrentRetrieveParams defines parameters for V1AgentsVersionsCurrentRetrieve.
-type V1AgentsVersionsCurrentRetrieveParams struct {
+// AgentsVersionsCurrentRetrieveParams defines parameters for AgentsVersionsCurrentRetrieve.
+type AgentsVersionsCurrentRetrieveParams struct {
 	// GetSupportsEval Include information on whether the agent engine supports evaluation.
 	GetSupportsEval *bool `form:"get_supports_eval,omitempty" json:"get_supports_eval,omitempty"`
 
@@ -623,14 +623,14 @@ type V1AgentsVersionsCurrentRetrieveParams struct {
 	OrganizationId *openapi_types.UUID `form:"organization_id,omitempty" json:"organization_id,omitempty"`
 }
 
-// V1AgentsVersionsDestroyParams defines parameters for V1AgentsVersionsDestroy.
-type V1AgentsVersionsDestroyParams struct {
+// AgentsVersionsDestroyParams defines parameters for AgentsVersionsDestroy.
+type AgentsVersionsDestroyParams struct {
 	// OrganizationId Organization ID. This is required for access control. It can be provided via query or request body depending on the endpoint.
 	OrganizationId *openapi_types.UUID `form:"organization_id,omitempty" json:"organization_id,omitempty"`
 }
 
-// V1AgentsVersionsRetrieveParams defines parameters for V1AgentsVersionsRetrieve.
-type V1AgentsVersionsRetrieveParams struct {
+// AgentsVersionsRetrieveParams defines parameters for AgentsVersionsRetrieve.
+type AgentsVersionsRetrieveParams struct {
 	// GetSupportsEval Include information on whether the agent engine supports evaluation.
 	GetSupportsEval *bool `form:"get_supports_eval,omitempty" json:"get_supports_eval,omitempty"`
 
@@ -638,20 +638,20 @@ type V1AgentsVersionsRetrieveParams struct {
 	OrganizationId *openapi_types.UUID `form:"organization_id,omitempty" json:"organization_id,omitempty"`
 }
 
-// V1AgentsVersionsPartialUpdateParams defines parameters for V1AgentsVersionsPartialUpdate.
-type V1AgentsVersionsPartialUpdateParams struct {
+// AgentsVersionsPartialUpdateParams defines parameters for AgentsVersionsPartialUpdate.
+type AgentsVersionsPartialUpdateParams struct {
 	// OrganizationId Organization ID. This is required for access control. It can be provided via query or request body depending on the endpoint.
 	OrganizationId *openapi_types.UUID `form:"organization_id,omitempty" json:"organization_id,omitempty"`
 }
 
-// V1AgentsVersionsUpdateParams defines parameters for V1AgentsVersionsUpdate.
-type V1AgentsVersionsUpdateParams struct {
+// AgentsVersionsUpdateParams defines parameters for AgentsVersionsUpdate.
+type AgentsVersionsUpdateParams struct {
 	// OrganizationId Organization ID. This is required for access control. It can be provided via query or request body depending on the endpoint.
 	OrganizationId *openapi_types.UUID `form:"organization_id,omitempty" json:"organization_id,omitempty"`
 }
 
-// V1PoliciesListParams defines parameters for V1PoliciesList.
-type V1PoliciesListParams struct {
+// PoliciesListParams defines parameters for PoliciesList.
+type PoliciesListParams struct {
 	// Ordering Which field to use when ordering the results.
 	Ordering *string `form:"ordering,omitempty" json:"ordering,omitempty"`
 
@@ -668,38 +668,38 @@ type V1PoliciesListParams struct {
 	OrganizationId *openapi_types.UUID `form:"organization_id,omitempty" json:"organization_id,omitempty"`
 }
 
-// V1PoliciesCreateParams defines parameters for V1PoliciesCreate.
-type V1PoliciesCreateParams struct {
+// PoliciesCreateParams defines parameters for PoliciesCreate.
+type PoliciesCreateParams struct {
 	// OrganizationId Organization ID. This is required for access control. It can be provided via query or request body depending on the endpoint.
 	OrganizationId *openapi_types.UUID `form:"organization_id,omitempty" json:"organization_id,omitempty"`
 }
 
-// V1PoliciesDestroyParams defines parameters for V1PoliciesDestroy.
-type V1PoliciesDestroyParams struct {
+// PoliciesDestroyParams defines parameters for PoliciesDestroy.
+type PoliciesDestroyParams struct {
 	// OrganizationId Organization ID. This is required for access control. It can be provided via query or request body depending on the endpoint.
 	OrganizationId *openapi_types.UUID `form:"organization_id,omitempty" json:"organization_id,omitempty"`
 }
 
-// V1PoliciesRetrieveParams defines parameters for V1PoliciesRetrieve.
-type V1PoliciesRetrieveParams struct {
+// PoliciesRetrieveParams defines parameters for PoliciesRetrieve.
+type PoliciesRetrieveParams struct {
 	// OrganizationId Organization ID. This is required for access control. It can be provided via query or request body depending on the endpoint.
 	OrganizationId *openapi_types.UUID `form:"organization_id,omitempty" json:"organization_id,omitempty"`
 }
 
-// V1PoliciesPartialUpdateParams defines parameters for V1PoliciesPartialUpdate.
-type V1PoliciesPartialUpdateParams struct {
+// PoliciesPartialUpdateParams defines parameters for PoliciesPartialUpdate.
+type PoliciesPartialUpdateParams struct {
 	// OrganizationId Organization ID. This is required for access control. It can be provided via query or request body depending on the endpoint.
 	OrganizationId *openapi_types.UUID `form:"organization_id,omitempty" json:"organization_id,omitempty"`
 }
 
-// V1PoliciesUpdateParams defines parameters for V1PoliciesUpdate.
-type V1PoliciesUpdateParams struct {
+// PoliciesUpdateParams defines parameters for PoliciesUpdate.
+type PoliciesUpdateParams struct {
 	// OrganizationId Organization ID. This is required for access control. It can be provided via query or request body depending on the endpoint.
 	OrganizationId *openapi_types.UUID `form:"organization_id,omitempty" json:"organization_id,omitempty"`
 }
 
-// V1PoliciesVersionsListParams defines parameters for V1PoliciesVersionsList.
-type V1PoliciesVersionsListParams struct {
+// PoliciesVersionsListParams defines parameters for PoliciesVersionsList.
+type PoliciesVersionsListParams struct {
 	// Page A page number within the paginated result set.
 	Page *int `form:"page,omitempty" json:"page,omitempty"`
 
@@ -710,170 +710,170 @@ type V1PoliciesVersionsListParams struct {
 	OrganizationId *openapi_types.UUID `form:"organization_id,omitempty" json:"organization_id,omitempty"`
 }
 
-// V1PoliciesVersionsCreateParams defines parameters for V1PoliciesVersionsCreate.
-type V1PoliciesVersionsCreateParams struct {
+// PoliciesVersionsCreateParams defines parameters for PoliciesVersionsCreate.
+type PoliciesVersionsCreateParams struct {
 	// OrganizationId Organization ID. This is required for access control. It can be provided via query or request body depending on the endpoint.
 	OrganizationId *openapi_types.UUID `form:"organization_id,omitempty" json:"organization_id,omitempty"`
 }
 
-// V1PoliciesVersionsRetrieveParams defines parameters for V1PoliciesVersionsRetrieve.
-type V1PoliciesVersionsRetrieveParams struct {
+// PoliciesVersionsRetrieveParams defines parameters for PoliciesVersionsRetrieve.
+type PoliciesVersionsRetrieveParams struct {
 	// OrganizationId Organization ID. This is required for access control. It can be provided via query or request body depending on the endpoint.
 	OrganizationId *openapi_types.UUID `form:"organization_id,omitempty" json:"organization_id,omitempty"`
 }
 
-// V1AgentsCreateJSONRequestBody defines body for V1AgentsCreate for application/json ContentType.
-type V1AgentsCreateJSONRequestBody = BaseAgentCreateRequest
+// AgentsCreateJSONRequestBody defines body for AgentsCreate for application/json ContentType.
+type AgentsCreateJSONRequestBody = BaseAgentCreateRequest
 
-// V1AgentsCreateFormdataRequestBody defines body for V1AgentsCreate for application/x-www-form-urlencoded ContentType.
-type V1AgentsCreateFormdataRequestBody = BaseAgentCreateRequest
+// AgentsCreateFormdataRequestBody defines body for AgentsCreate for application/x-www-form-urlencoded ContentType.
+type AgentsCreateFormdataRequestBody = BaseAgentCreateRequest
 
-// V1AgentsCreateMultipartRequestBody defines body for V1AgentsCreate for multipart/form-data ContentType.
-type V1AgentsCreateMultipartRequestBody = BaseAgentCreateRequest
+// AgentsCreateMultipartRequestBody defines body for AgentsCreate for multipart/form-data ContentType.
+type AgentsCreateMultipartRequestBody = BaseAgentCreateRequest
 
-// V1AgentsJobsResultsCreateJSONRequestBody defines body for V1AgentsJobsResultsCreate for application/json ContentType.
-type V1AgentsJobsResultsCreateJSONRequestBody = AgentJobResultManyRequestRequest
+// AgentsJobsResultsCreateJSONRequestBody defines body for AgentsJobsResultsCreate for application/json ContentType.
+type AgentsJobsResultsCreateJSONRequestBody = AgentJobResultManyRequestRequest
 
-// V1AgentsJobsResultsCreateFormdataRequestBody defines body for V1AgentsJobsResultsCreate for application/x-www-form-urlencoded ContentType.
-type V1AgentsJobsResultsCreateFormdataRequestBody = AgentJobResultManyRequestRequest
+// AgentsJobsResultsCreateFormdataRequestBody defines body for AgentsJobsResultsCreate for application/x-www-form-urlencoded ContentType.
+type AgentsJobsResultsCreateFormdataRequestBody = AgentJobResultManyRequestRequest
 
-// V1AgentsJobsResultsCreateMultipartRequestBody defines body for V1AgentsJobsResultsCreate for multipart/form-data ContentType.
-type V1AgentsJobsResultsCreateMultipartRequestBody = AgentJobResultManyRequestRequest
+// AgentsJobsResultsCreateMultipartRequestBody defines body for AgentsJobsResultsCreate for multipart/form-data ContentType.
+type AgentsJobsResultsCreateMultipartRequestBody = AgentJobResultManyRequestRequest
 
-// V1AgentsJobsStatusesCreateJSONRequestBody defines body for V1AgentsJobsStatusesCreate for application/json ContentType.
-type V1AgentsJobsStatusesCreateJSONRequestBody = AgentJobStatusManyRequestRequest
+// AgentsJobsStatusesCreateJSONRequestBody defines body for AgentsJobsStatusesCreate for application/json ContentType.
+type AgentsJobsStatusesCreateJSONRequestBody = AgentJobStatusManyRequestRequest
 
-// V1AgentsJobsStatusesCreateFormdataRequestBody defines body for V1AgentsJobsStatusesCreate for application/x-www-form-urlencoded ContentType.
-type V1AgentsJobsStatusesCreateFormdataRequestBody = AgentJobStatusManyRequestRequest
+// AgentsJobsStatusesCreateFormdataRequestBody defines body for AgentsJobsStatusesCreate for application/x-www-form-urlencoded ContentType.
+type AgentsJobsStatusesCreateFormdataRequestBody = AgentJobStatusManyRequestRequest
 
-// V1AgentsJobsStatusesCreateMultipartRequestBody defines body for V1AgentsJobsStatusesCreate for multipart/form-data ContentType.
-type V1AgentsJobsStatusesCreateMultipartRequestBody = AgentJobStatusManyRequestRequest
+// AgentsJobsStatusesCreateMultipartRequestBody defines body for AgentsJobsStatusesCreate for multipart/form-data ContentType.
+type AgentsJobsStatusesCreateMultipartRequestBody = AgentJobStatusManyRequestRequest
 
-// AgentsRun2JSONRequestBody defines body for AgentsRun2 for application/json ContentType.
-type AgentsRun2JSONRequestBody = AgentExecutionRequestRequest
+// AgentsRunJSONRequestBody defines body for AgentsRun for application/json ContentType.
+type AgentsRunJSONRequestBody = AgentExecutionRequestRequest
 
-// AgentsRun2FormdataRequestBody defines body for AgentsRun2 for application/x-www-form-urlencoded ContentType.
-type AgentsRun2FormdataRequestBody = AgentExecutionRequestRequest
+// AgentsRunFormdataRequestBody defines body for AgentsRun for application/x-www-form-urlencoded ContentType.
+type AgentsRunFormdataRequestBody = AgentExecutionRequestRequest
 
-// AgentsRun2MultipartRequestBody defines body for AgentsRun2 for multipart/form-data ContentType.
-type AgentsRun2MultipartRequestBody = AgentExecutionRequestRequest
+// AgentsRunMultipartRequestBody defines body for AgentsRun for multipart/form-data ContentType.
+type AgentsRunMultipartRequestBody = AgentExecutionRequestRequest
 
-// V1AgentsRunAsyncCreateJSONRequestBody defines body for V1AgentsRunAsyncCreate for application/json ContentType.
-type V1AgentsRunAsyncCreateJSONRequestBody = AgentExecutionRequestRequest
+// AgentsRunAsyncCreateJSONRequestBody defines body for AgentsRunAsyncCreate for application/json ContentType.
+type AgentsRunAsyncCreateJSONRequestBody = AgentExecutionRequestRequest
 
-// V1AgentsRunAsyncCreateFormdataRequestBody defines body for V1AgentsRunAsyncCreate for application/x-www-form-urlencoded ContentType.
-type V1AgentsRunAsyncCreateFormdataRequestBody = AgentExecutionRequestRequest
+// AgentsRunAsyncCreateFormdataRequestBody defines body for AgentsRunAsyncCreate for application/x-www-form-urlencoded ContentType.
+type AgentsRunAsyncCreateFormdataRequestBody = AgentExecutionRequestRequest
 
-// V1AgentsRunAsyncCreateMultipartRequestBody defines body for V1AgentsRunAsyncCreate for multipart/form-data ContentType.
-type V1AgentsRunAsyncCreateMultipartRequestBody = AgentExecutionRequestRequest
+// AgentsRunAsyncCreateMultipartRequestBody defines body for AgentsRunAsyncCreate for multipart/form-data ContentType.
+type AgentsRunAsyncCreateMultipartRequestBody = AgentExecutionRequestRequest
 
-// AgentsRunAsyncMany5JSONRequestBody defines body for AgentsRunAsyncMany5 for application/json ContentType.
-type AgentsRunAsyncMany5JSONRequestBody = AgentRunAsyncManyRequestRequest
+// AgentsRunAsyncManyJSONRequestBody defines body for AgentsRunAsyncMany for application/json ContentType.
+type AgentsRunAsyncManyJSONRequestBody = AgentRunAsyncManyRequestRequest
 
-// AgentsRunAsyncMany5FormdataRequestBody defines body for AgentsRunAsyncMany5 for application/x-www-form-urlencoded ContentType.
-type AgentsRunAsyncMany5FormdataRequestBody = AgentRunAsyncManyRequestRequest
+// AgentsRunAsyncManyFormdataRequestBody defines body for AgentsRunAsyncMany for application/x-www-form-urlencoded ContentType.
+type AgentsRunAsyncManyFormdataRequestBody = AgentRunAsyncManyRequestRequest
 
-// AgentsRunAsyncMany5MultipartRequestBody defines body for AgentsRunAsyncMany5 for multipart/form-data ContentType.
-type AgentsRunAsyncMany5MultipartRequestBody = AgentRunAsyncManyRequestRequest
+// AgentsRunAsyncManyMultipartRequestBody defines body for AgentsRunAsyncMany for multipart/form-data ContentType.
+type AgentsRunAsyncManyMultipartRequestBody = AgentRunAsyncManyRequestRequest
 
-// AgentsRunVersion2JSONRequestBody defines body for AgentsRunVersion2 for application/json ContentType.
-type AgentsRunVersion2JSONRequestBody = AgentExecutionRequestRequest
+// AgentsRunVersionJSONRequestBody defines body for AgentsRunVersion for application/json ContentType.
+type AgentsRunVersionJSONRequestBody = AgentExecutionRequestRequest
 
-// AgentsRunVersion2FormdataRequestBody defines body for AgentsRunVersion2 for application/x-www-form-urlencoded ContentType.
-type AgentsRunVersion2FormdataRequestBody = AgentExecutionRequestRequest
+// AgentsRunVersionFormdataRequestBody defines body for AgentsRunVersion for application/x-www-form-urlencoded ContentType.
+type AgentsRunVersionFormdataRequestBody = AgentExecutionRequestRequest
 
-// AgentsRunVersion2MultipartRequestBody defines body for AgentsRunVersion2 for multipart/form-data ContentType.
-type AgentsRunVersion2MultipartRequestBody = AgentExecutionRequestRequest
+// AgentsRunVersionMultipartRequestBody defines body for AgentsRunVersion for multipart/form-data ContentType.
+type AgentsRunVersionMultipartRequestBody = AgentExecutionRequestRequest
 
-// V1AgentsRunVersionsAsyncCreateJSONRequestBody defines body for V1AgentsRunVersionsAsyncCreate for application/json ContentType.
-type V1AgentsRunVersionsAsyncCreateJSONRequestBody = AgentExecutionRequestRequest
+// AgentsRunVersionsAsyncCreateJSONRequestBody defines body for AgentsRunVersionsAsyncCreate for application/json ContentType.
+type AgentsRunVersionsAsyncCreateJSONRequestBody = AgentExecutionRequestRequest
 
-// V1AgentsRunVersionsAsyncCreateFormdataRequestBody defines body for V1AgentsRunVersionsAsyncCreate for application/x-www-form-urlencoded ContentType.
-type V1AgentsRunVersionsAsyncCreateFormdataRequestBody = AgentExecutionRequestRequest
+// AgentsRunVersionsAsyncCreateFormdataRequestBody defines body for AgentsRunVersionsAsyncCreate for application/x-www-form-urlencoded ContentType.
+type AgentsRunVersionsAsyncCreateFormdataRequestBody = AgentExecutionRequestRequest
 
-// V1AgentsRunVersionsAsyncCreateMultipartRequestBody defines body for V1AgentsRunVersionsAsyncCreate for multipart/form-data ContentType.
-type V1AgentsRunVersionsAsyncCreateMultipartRequestBody = AgentExecutionRequestRequest
+// AgentsRunVersionsAsyncCreateMultipartRequestBody defines body for AgentsRunVersionsAsyncCreate for multipart/form-data ContentType.
+type AgentsRunVersionsAsyncCreateMultipartRequestBody = AgentExecutionRequestRequest
 
-// V1AgentsPartialUpdateJSONRequestBody defines body for V1AgentsPartialUpdate for application/json ContentType.
-type V1AgentsPartialUpdateJSONRequestBody = PatchedBaseAgentUpdateRequest
+// AgentsPartialUpdateJSONRequestBody defines body for AgentsPartialUpdate for application/json ContentType.
+type AgentsPartialUpdateJSONRequestBody = PatchedBaseAgentUpdateRequest
 
-// V1AgentsPartialUpdateFormdataRequestBody defines body for V1AgentsPartialUpdate for application/x-www-form-urlencoded ContentType.
-type V1AgentsPartialUpdateFormdataRequestBody = PatchedBaseAgentUpdateRequest
+// AgentsPartialUpdateFormdataRequestBody defines body for AgentsPartialUpdate for application/x-www-form-urlencoded ContentType.
+type AgentsPartialUpdateFormdataRequestBody = PatchedBaseAgentUpdateRequest
 
-// V1AgentsPartialUpdateMultipartRequestBody defines body for V1AgentsPartialUpdate for multipart/form-data ContentType.
-type V1AgentsPartialUpdateMultipartRequestBody = PatchedBaseAgentUpdateRequest
+// AgentsPartialUpdateMultipartRequestBody defines body for AgentsPartialUpdate for multipart/form-data ContentType.
+type AgentsPartialUpdateMultipartRequestBody = PatchedBaseAgentUpdateRequest
 
-// V1AgentsUpdateJSONRequestBody defines body for V1AgentsUpdate for application/json ContentType.
-type V1AgentsUpdateJSONRequestBody = BaseAgentUpdateRequest
+// AgentsUpdateJSONRequestBody defines body for AgentsUpdate for application/json ContentType.
+type AgentsUpdateJSONRequestBody = BaseAgentUpdateRequest
 
-// V1AgentsUpdateFormdataRequestBody defines body for V1AgentsUpdate for application/x-www-form-urlencoded ContentType.
-type V1AgentsUpdateFormdataRequestBody = BaseAgentUpdateRequest
+// AgentsUpdateFormdataRequestBody defines body for AgentsUpdate for application/x-www-form-urlencoded ContentType.
+type AgentsUpdateFormdataRequestBody = BaseAgentUpdateRequest
 
-// V1AgentsUpdateMultipartRequestBody defines body for V1AgentsUpdate for multipart/form-data ContentType.
-type V1AgentsUpdateMultipartRequestBody = BaseAgentUpdateRequest
+// AgentsUpdateMultipartRequestBody defines body for AgentsUpdate for multipart/form-data ContentType.
+type AgentsUpdateMultipartRequestBody = BaseAgentUpdateRequest
 
-// V1AgentsVersionsCreateJSONRequestBody defines body for V1AgentsVersionsCreate for application/json ContentType.
-type V1AgentsVersionsCreateJSONRequestBody = AgentVersionCreateRequest
+// AgentsVersionsCreateJSONRequestBody defines body for AgentsVersionsCreate for application/json ContentType.
+type AgentsVersionsCreateJSONRequestBody = AgentVersionCreateRequest
 
-// V1AgentsVersionsCreateFormdataRequestBody defines body for V1AgentsVersionsCreate for application/x-www-form-urlencoded ContentType.
-type V1AgentsVersionsCreateFormdataRequestBody = AgentVersionCreateRequest
+// AgentsVersionsCreateFormdataRequestBody defines body for AgentsVersionsCreate for application/x-www-form-urlencoded ContentType.
+type AgentsVersionsCreateFormdataRequestBody = AgentVersionCreateRequest
 
-// V1AgentsVersionsCreateMultipartRequestBody defines body for V1AgentsVersionsCreate for multipart/form-data ContentType.
-type V1AgentsVersionsCreateMultipartRequestBody = AgentVersionCreateRequest
+// AgentsVersionsCreateMultipartRequestBody defines body for AgentsVersionsCreate for multipart/form-data ContentType.
+type AgentsVersionsCreateMultipartRequestBody = AgentVersionCreateRequest
 
-// V1AgentsVersionsPartialUpdateJSONRequestBody defines body for V1AgentsVersionsPartialUpdate for application/json ContentType.
-type V1AgentsVersionsPartialUpdateJSONRequestBody = PatchedPatchedAgentVersionUpdateRequestRequest
+// AgentsVersionsPartialUpdateJSONRequestBody defines body for AgentsVersionsPartialUpdate for application/json ContentType.
+type AgentsVersionsPartialUpdateJSONRequestBody = PatchedPatchedAgentVersionUpdateRequestRequest
 
-// V1AgentsVersionsPartialUpdateFormdataRequestBody defines body for V1AgentsVersionsPartialUpdate for application/x-www-form-urlencoded ContentType.
-type V1AgentsVersionsPartialUpdateFormdataRequestBody = PatchedPatchedAgentVersionUpdateRequestRequest
+// AgentsVersionsPartialUpdateFormdataRequestBody defines body for AgentsVersionsPartialUpdate for application/x-www-form-urlencoded ContentType.
+type AgentsVersionsPartialUpdateFormdataRequestBody = PatchedPatchedAgentVersionUpdateRequestRequest
 
-// V1AgentsVersionsPartialUpdateMultipartRequestBody defines body for V1AgentsVersionsPartialUpdate for multipart/form-data ContentType.
-type V1AgentsVersionsPartialUpdateMultipartRequestBody = PatchedPatchedAgentVersionUpdateRequestRequest
+// AgentsVersionsPartialUpdateMultipartRequestBody defines body for AgentsVersionsPartialUpdate for multipart/form-data ContentType.
+type AgentsVersionsPartialUpdateMultipartRequestBody = PatchedPatchedAgentVersionUpdateRequestRequest
 
-// V1AgentsVersionsUpdateJSONRequestBody defines body for V1AgentsVersionsUpdate for application/json ContentType.
-type V1AgentsVersionsUpdateJSONRequestBody = AgentVersionUpdateRequestRequest
+// AgentsVersionsUpdateJSONRequestBody defines body for AgentsVersionsUpdate for application/json ContentType.
+type AgentsVersionsUpdateJSONRequestBody = AgentVersionUpdateRequestRequest
 
-// V1AgentsVersionsUpdateFormdataRequestBody defines body for V1AgentsVersionsUpdate for application/x-www-form-urlencoded ContentType.
-type V1AgentsVersionsUpdateFormdataRequestBody = AgentVersionUpdateRequestRequest
+// AgentsVersionsUpdateFormdataRequestBody defines body for AgentsVersionsUpdate for application/x-www-form-urlencoded ContentType.
+type AgentsVersionsUpdateFormdataRequestBody = AgentVersionUpdateRequestRequest
 
-// V1AgentsVersionsUpdateMultipartRequestBody defines body for V1AgentsVersionsUpdate for multipart/form-data ContentType.
-type V1AgentsVersionsUpdateMultipartRequestBody = AgentVersionUpdateRequestRequest
+// AgentsVersionsUpdateMultipartRequestBody defines body for AgentsVersionsUpdate for multipart/form-data ContentType.
+type AgentsVersionsUpdateMultipartRequestBody = AgentVersionUpdateRequestRequest
 
-// V1PoliciesCreateJSONRequestBody defines body for V1PoliciesCreate for application/json ContentType.
-type V1PoliciesCreateJSONRequestBody = CreatePolicyRequest
+// PoliciesCreateJSONRequestBody defines body for PoliciesCreate for application/json ContentType.
+type PoliciesCreateJSONRequestBody = CreatePolicyRequest
 
-// V1PoliciesCreateFormdataRequestBody defines body for V1PoliciesCreate for application/x-www-form-urlencoded ContentType.
-type V1PoliciesCreateFormdataRequestBody = CreatePolicyRequest
+// PoliciesCreateFormdataRequestBody defines body for PoliciesCreate for application/x-www-form-urlencoded ContentType.
+type PoliciesCreateFormdataRequestBody = CreatePolicyRequest
 
-// V1PoliciesCreateMultipartRequestBody defines body for V1PoliciesCreate for multipart/form-data ContentType.
-type V1PoliciesCreateMultipartRequestBody = CreatePolicyRequest
+// PoliciesCreateMultipartRequestBody defines body for PoliciesCreate for multipart/form-data ContentType.
+type PoliciesCreateMultipartRequestBody = CreatePolicyRequest
 
-// V1PoliciesPartialUpdateJSONRequestBody defines body for V1PoliciesPartialUpdate for application/json ContentType.
-type V1PoliciesPartialUpdateJSONRequestBody = PatchedUpdatePolicyRequest
+// PoliciesPartialUpdateJSONRequestBody defines body for PoliciesPartialUpdate for application/json ContentType.
+type PoliciesPartialUpdateJSONRequestBody = PatchedUpdatePolicyRequest
 
-// V1PoliciesPartialUpdateFormdataRequestBody defines body for V1PoliciesPartialUpdate for application/x-www-form-urlencoded ContentType.
-type V1PoliciesPartialUpdateFormdataRequestBody = PatchedUpdatePolicyRequest
+// PoliciesPartialUpdateFormdataRequestBody defines body for PoliciesPartialUpdate for application/x-www-form-urlencoded ContentType.
+type PoliciesPartialUpdateFormdataRequestBody = PatchedUpdatePolicyRequest
 
-// V1PoliciesPartialUpdateMultipartRequestBody defines body for V1PoliciesPartialUpdate for multipart/form-data ContentType.
-type V1PoliciesPartialUpdateMultipartRequestBody = PatchedUpdatePolicyRequest
+// PoliciesPartialUpdateMultipartRequestBody defines body for PoliciesPartialUpdate for multipart/form-data ContentType.
+type PoliciesPartialUpdateMultipartRequestBody = PatchedUpdatePolicyRequest
 
-// V1PoliciesUpdateJSONRequestBody defines body for V1PoliciesUpdate for application/json ContentType.
-type V1PoliciesUpdateJSONRequestBody = UpdatePolicyRequest
+// PoliciesUpdateJSONRequestBody defines body for PoliciesUpdate for application/json ContentType.
+type PoliciesUpdateJSONRequestBody = UpdatePolicyRequest
 
-// V1PoliciesUpdateFormdataRequestBody defines body for V1PoliciesUpdate for application/x-www-form-urlencoded ContentType.
-type V1PoliciesUpdateFormdataRequestBody = UpdatePolicyRequest
+// PoliciesUpdateFormdataRequestBody defines body for PoliciesUpdate for application/x-www-form-urlencoded ContentType.
+type PoliciesUpdateFormdataRequestBody = UpdatePolicyRequest
 
-// V1PoliciesUpdateMultipartRequestBody defines body for V1PoliciesUpdate for multipart/form-data ContentType.
-type V1PoliciesUpdateMultipartRequestBody = UpdatePolicyRequest
+// PoliciesUpdateMultipartRequestBody defines body for PoliciesUpdate for multipart/form-data ContentType.
+type PoliciesUpdateMultipartRequestBody = UpdatePolicyRequest
 
-// V1PoliciesVersionsCreateJSONRequestBody defines body for V1PoliciesVersionsCreate for application/json ContentType.
-type V1PoliciesVersionsCreateJSONRequestBody = CreatePolicyVersionRequest
+// PoliciesVersionsCreateJSONRequestBody defines body for PoliciesVersionsCreate for application/json ContentType.
+type PoliciesVersionsCreateJSONRequestBody = CreatePolicyVersionRequest
 
-// V1PoliciesVersionsCreateFormdataRequestBody defines body for V1PoliciesVersionsCreate for application/x-www-form-urlencoded ContentType.
-type V1PoliciesVersionsCreateFormdataRequestBody = CreatePolicyVersionRequest
+// PoliciesVersionsCreateFormdataRequestBody defines body for PoliciesVersionsCreate for application/x-www-form-urlencoded ContentType.
+type PoliciesVersionsCreateFormdataRequestBody = CreatePolicyVersionRequest
 
-// V1PoliciesVersionsCreateMultipartRequestBody defines body for V1PoliciesVersionsCreate for multipart/form-data ContentType.
-type V1PoliciesVersionsCreateMultipartRequestBody = CreatePolicyVersionRequest
+// PoliciesVersionsCreateMultipartRequestBody defines body for PoliciesVersionsCreate for multipart/form-data ContentType.
+type PoliciesVersionsCreateMultipartRequestBody = CreatePolicyVersionRequest
 
 // RequestEditorFn  is the function signature for the RequestEditor callback function
 type RequestEditorFn func(ctx context.Context, req *http.Request) error
@@ -948,188 +948,188 @@ func WithRequestEditorFn(fn RequestEditorFn) ClientOption {
 
 // The interface specification for the client above.
 type ClientInterface interface {
-	// V1AgentsList request
-	V1AgentsList(ctx context.Context, params *V1AgentsListParams, reqEditors ...RequestEditorFn) (*http.Response, error)
+	// AgentsList request
+	AgentsList(ctx context.Context, params *AgentsListParams, reqEditors ...RequestEditorFn) (*http.Response, error)
 
-	// V1AgentsCreateWithBody request with any body
-	V1AgentsCreateWithBody(ctx context.Context, params *V1AgentsCreateParams, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
+	// AgentsCreateWithBody request with any body
+	AgentsCreateWithBody(ctx context.Context, params *AgentsCreateParams, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
 
-	V1AgentsCreate(ctx context.Context, params *V1AgentsCreateParams, body V1AgentsCreateJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
+	AgentsCreate(ctx context.Context, params *AgentsCreateParams, body AgentsCreateJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
 
-	V1AgentsCreateWithFormdataBody(ctx context.Context, params *V1AgentsCreateParams, body V1AgentsCreateFormdataRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
+	AgentsCreateWithFormdataBody(ctx context.Context, params *AgentsCreateParams, body AgentsCreateFormdataRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
 
-	// V1AgentsJobsResultsCreateWithBody request with any body
-	V1AgentsJobsResultsCreateWithBody(ctx context.Context, params *V1AgentsJobsResultsCreateParams, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
+	// AgentsJobsResultsCreateWithBody request with any body
+	AgentsJobsResultsCreateWithBody(ctx context.Context, params *AgentsJobsResultsCreateParams, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
 
-	V1AgentsJobsResultsCreate(ctx context.Context, params *V1AgentsJobsResultsCreateParams, body V1AgentsJobsResultsCreateJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
+	AgentsJobsResultsCreate(ctx context.Context, params *AgentsJobsResultsCreateParams, body AgentsJobsResultsCreateJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
 
-	V1AgentsJobsResultsCreateWithFormdataBody(ctx context.Context, params *V1AgentsJobsResultsCreateParams, body V1AgentsJobsResultsCreateFormdataRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
+	AgentsJobsResultsCreateWithFormdataBody(ctx context.Context, params *AgentsJobsResultsCreateParams, body AgentsJobsResultsCreateFormdataRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
 
-	// V1AgentsJobsStatusesCreateWithBody request with any body
-	V1AgentsJobsStatusesCreateWithBody(ctx context.Context, params *V1AgentsJobsStatusesCreateParams, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
+	// AgentsJobsStatusesCreateWithBody request with any body
+	AgentsJobsStatusesCreateWithBody(ctx context.Context, params *AgentsJobsStatusesCreateParams, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
 
-	V1AgentsJobsStatusesCreate(ctx context.Context, params *V1AgentsJobsStatusesCreateParams, body V1AgentsJobsStatusesCreateJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
+	AgentsJobsStatusesCreate(ctx context.Context, params *AgentsJobsStatusesCreateParams, body AgentsJobsStatusesCreateJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
 
-	V1AgentsJobsStatusesCreateWithFormdataBody(ctx context.Context, params *V1AgentsJobsStatusesCreateParams, body V1AgentsJobsStatusesCreateFormdataRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
+	AgentsJobsStatusesCreateWithFormdataBody(ctx context.Context, params *AgentsJobsStatusesCreateParams, body AgentsJobsStatusesCreateFormdataRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
 
-	// V1AgentsJobsReferencesRetrieve request
-	V1AgentsJobsReferencesRetrieve(ctx context.Context, agentJobId openapi_types.UUID, resourceId string, params *V1AgentsJobsReferencesRetrieveParams, reqEditors ...RequestEditorFn) (*http.Response, error)
+	// AgentsJobsReferencesRetrieve request
+	AgentsJobsReferencesRetrieve(ctx context.Context, agentJobId openapi_types.UUID, resourceId string, params *AgentsJobsReferencesRetrieveParams, reqEditors ...RequestEditorFn) (*http.Response, error)
 
-	// V1AgentsJobsResultRetrieve request
-	V1AgentsJobsResultRetrieve(ctx context.Context, agentJobId openapi_types.UUID, params *V1AgentsJobsResultRetrieveParams, reqEditors ...RequestEditorFn) (*http.Response, error)
+	// AgentsJobsResultRetrieve request
+	AgentsJobsResultRetrieve(ctx context.Context, agentJobId openapi_types.UUID, params *AgentsJobsResultRetrieveParams, reqEditors ...RequestEditorFn) (*http.Response, error)
 
-	// V1AgentsJobsCancelCreate request
-	V1AgentsJobsCancelCreate(ctx context.Context, jobId openapi_types.UUID, params *V1AgentsJobsCancelCreateParams, reqEditors ...RequestEditorFn) (*http.Response, error)
+	// AgentsJobsCancelCreate request
+	AgentsJobsCancelCreate(ctx context.Context, jobId openapi_types.UUID, params *AgentsJobsCancelCreateParams, reqEditors ...RequestEditorFn) (*http.Response, error)
 
-	// V1AgentsJobsDeleteDataCreate request
-	V1AgentsJobsDeleteDataCreate(ctx context.Context, jobId openapi_types.UUID, params *V1AgentsJobsDeleteDataCreateParams, reqEditors ...RequestEditorFn) (*http.Response, error)
+	// AgentsJobsDeleteDataCreate request
+	AgentsJobsDeleteDataCreate(ctx context.Context, jobId openapi_types.UUID, params *AgentsJobsDeleteDataCreateParams, reqEditors ...RequestEditorFn) (*http.Response, error)
 
-	// V1AgentsJobsStatusRetrieve request
-	V1AgentsJobsStatusRetrieve(ctx context.Context, jobId openapi_types.UUID, params *V1AgentsJobsStatusRetrieveParams, reqEditors ...RequestEditorFn) (*http.Response, error)
+	// AgentsJobsStatusRetrieve request
+	AgentsJobsStatusRetrieve(ctx context.Context, jobId openapi_types.UUID, params *AgentsJobsStatusRetrieveParams, reqEditors ...RequestEditorFn) (*http.Response, error)
 
-	// AgentsRun2WithBody request with any body
-	AgentsRun2WithBody(ctx context.Context, agentId openapi_types.UUID, params *AgentsRun2Params, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
+	// AgentsRunWithBody request with any body
+	AgentsRunWithBody(ctx context.Context, agentId openapi_types.UUID, params *AgentsRunParams, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
 
-	AgentsRun2(ctx context.Context, agentId openapi_types.UUID, params *AgentsRun2Params, body AgentsRun2JSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
+	AgentsRun(ctx context.Context, agentId openapi_types.UUID, params *AgentsRunParams, body AgentsRunJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
 
-	AgentsRun2WithFormdataBody(ctx context.Context, agentId openapi_types.UUID, params *AgentsRun2Params, body AgentsRun2FormdataRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
+	AgentsRunWithFormdataBody(ctx context.Context, agentId openapi_types.UUID, params *AgentsRunParams, body AgentsRunFormdataRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
 
-	// V1AgentsRunAsyncCreateWithBody request with any body
-	V1AgentsRunAsyncCreateWithBody(ctx context.Context, agentId openapi_types.UUID, params *V1AgentsRunAsyncCreateParams, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
+	// AgentsRunAsyncCreateWithBody request with any body
+	AgentsRunAsyncCreateWithBody(ctx context.Context, agentId openapi_types.UUID, params *AgentsRunAsyncCreateParams, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
 
-	V1AgentsRunAsyncCreate(ctx context.Context, agentId openapi_types.UUID, params *V1AgentsRunAsyncCreateParams, body V1AgentsRunAsyncCreateJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
+	AgentsRunAsyncCreate(ctx context.Context, agentId openapi_types.UUID, params *AgentsRunAsyncCreateParams, body AgentsRunAsyncCreateJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
 
-	V1AgentsRunAsyncCreateWithFormdataBody(ctx context.Context, agentId openapi_types.UUID, params *V1AgentsRunAsyncCreateParams, body V1AgentsRunAsyncCreateFormdataRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
+	AgentsRunAsyncCreateWithFormdataBody(ctx context.Context, agentId openapi_types.UUID, params *AgentsRunAsyncCreateParams, body AgentsRunAsyncCreateFormdataRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
 
-	// AgentsRunAsyncMany5WithBody request with any body
-	AgentsRunAsyncMany5WithBody(ctx context.Context, agentId openapi_types.UUID, params *AgentsRunAsyncMany5Params, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
+	// AgentsRunAsyncManyWithBody request with any body
+	AgentsRunAsyncManyWithBody(ctx context.Context, agentId openapi_types.UUID, params *AgentsRunAsyncManyParams, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
 
-	AgentsRunAsyncMany5(ctx context.Context, agentId openapi_types.UUID, params *AgentsRunAsyncMany5Params, body AgentsRunAsyncMany5JSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
+	AgentsRunAsyncMany(ctx context.Context, agentId openapi_types.UUID, params *AgentsRunAsyncManyParams, body AgentsRunAsyncManyJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
 
-	AgentsRunAsyncMany5WithFormdataBody(ctx context.Context, agentId openapi_types.UUID, params *AgentsRunAsyncMany5Params, body AgentsRunAsyncMany5FormdataRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
+	AgentsRunAsyncManyWithFormdataBody(ctx context.Context, agentId openapi_types.UUID, params *AgentsRunAsyncManyParams, body AgentsRunAsyncManyFormdataRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
 
-	// AgentsRunVersion2WithBody request with any body
-	AgentsRunVersion2WithBody(ctx context.Context, agentId openapi_types.UUID, agentVersionId openapi_types.UUID, params *AgentsRunVersion2Params, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
+	// AgentsRunVersionWithBody request with any body
+	AgentsRunVersionWithBody(ctx context.Context, agentId openapi_types.UUID, agentVersionId openapi_types.UUID, params *AgentsRunVersionParams, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
 
-	AgentsRunVersion2(ctx context.Context, agentId openapi_types.UUID, agentVersionId openapi_types.UUID, params *AgentsRunVersion2Params, body AgentsRunVersion2JSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
+	AgentsRunVersion(ctx context.Context, agentId openapi_types.UUID, agentVersionId openapi_types.UUID, params *AgentsRunVersionParams, body AgentsRunVersionJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
 
-	AgentsRunVersion2WithFormdataBody(ctx context.Context, agentId openapi_types.UUID, agentVersionId openapi_types.UUID, params *AgentsRunVersion2Params, body AgentsRunVersion2FormdataRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
+	AgentsRunVersionWithFormdataBody(ctx context.Context, agentId openapi_types.UUID, agentVersionId openapi_types.UUID, params *AgentsRunVersionParams, body AgentsRunVersionFormdataRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
 
-	// V1AgentsRunVersionsAsyncCreateWithBody request with any body
-	V1AgentsRunVersionsAsyncCreateWithBody(ctx context.Context, agentId openapi_types.UUID, agentVersionId openapi_types.UUID, params *V1AgentsRunVersionsAsyncCreateParams, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
+	// AgentsRunVersionsAsyncCreateWithBody request with any body
+	AgentsRunVersionsAsyncCreateWithBody(ctx context.Context, agentId openapi_types.UUID, agentVersionId openapi_types.UUID, params *AgentsRunVersionsAsyncCreateParams, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
 
-	V1AgentsRunVersionsAsyncCreate(ctx context.Context, agentId openapi_types.UUID, agentVersionId openapi_types.UUID, params *V1AgentsRunVersionsAsyncCreateParams, body V1AgentsRunVersionsAsyncCreateJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
+	AgentsRunVersionsAsyncCreate(ctx context.Context, agentId openapi_types.UUID, agentVersionId openapi_types.UUID, params *AgentsRunVersionsAsyncCreateParams, body AgentsRunVersionsAsyncCreateJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
 
-	V1AgentsRunVersionsAsyncCreateWithFormdataBody(ctx context.Context, agentId openapi_types.UUID, agentVersionId openapi_types.UUID, params *V1AgentsRunVersionsAsyncCreateParams, body V1AgentsRunVersionsAsyncCreateFormdataRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
+	AgentsRunVersionsAsyncCreateWithFormdataBody(ctx context.Context, agentId openapi_types.UUID, agentVersionId openapi_types.UUID, params *AgentsRunVersionsAsyncCreateParams, body AgentsRunVersionsAsyncCreateFormdataRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
 
-	// V1AgentsDestroy request
-	V1AgentsDestroy(ctx context.Context, agentId openapi_types.UUID, params *V1AgentsDestroyParams, reqEditors ...RequestEditorFn) (*http.Response, error)
+	// AgentsDestroy request
+	AgentsDestroy(ctx context.Context, agentId openapi_types.UUID, params *AgentsDestroyParams, reqEditors ...RequestEditorFn) (*http.Response, error)
 
-	// V1AgentsRetrieve request
-	V1AgentsRetrieve(ctx context.Context, agentId openapi_types.UUID, params *V1AgentsRetrieveParams, reqEditors ...RequestEditorFn) (*http.Response, error)
+	// AgentsRetrieve request
+	AgentsRetrieve(ctx context.Context, agentId openapi_types.UUID, params *AgentsRetrieveParams, reqEditors ...RequestEditorFn) (*http.Response, error)
 
-	// V1AgentsPartialUpdateWithBody request with any body
-	V1AgentsPartialUpdateWithBody(ctx context.Context, agentId openapi_types.UUID, params *V1AgentsPartialUpdateParams, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
+	// AgentsPartialUpdateWithBody request with any body
+	AgentsPartialUpdateWithBody(ctx context.Context, agentId openapi_types.UUID, params *AgentsPartialUpdateParams, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
 
-	V1AgentsPartialUpdate(ctx context.Context, agentId openapi_types.UUID, params *V1AgentsPartialUpdateParams, body V1AgentsPartialUpdateJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
+	AgentsPartialUpdate(ctx context.Context, agentId openapi_types.UUID, params *AgentsPartialUpdateParams, body AgentsPartialUpdateJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
 
-	V1AgentsPartialUpdateWithFormdataBody(ctx context.Context, agentId openapi_types.UUID, params *V1AgentsPartialUpdateParams, body V1AgentsPartialUpdateFormdataRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
+	AgentsPartialUpdateWithFormdataBody(ctx context.Context, agentId openapi_types.UUID, params *AgentsPartialUpdateParams, body AgentsPartialUpdateFormdataRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
 
-	// V1AgentsUpdateWithBody request with any body
-	V1AgentsUpdateWithBody(ctx context.Context, agentId openapi_types.UUID, params *V1AgentsUpdateParams, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
+	// AgentsUpdateWithBody request with any body
+	AgentsUpdateWithBody(ctx context.Context, agentId openapi_types.UUID, params *AgentsUpdateParams, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
 
-	V1AgentsUpdate(ctx context.Context, agentId openapi_types.UUID, params *V1AgentsUpdateParams, body V1AgentsUpdateJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
+	AgentsUpdate(ctx context.Context, agentId openapi_types.UUID, params *AgentsUpdateParams, body AgentsUpdateJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
 
-	V1AgentsUpdateWithFormdataBody(ctx context.Context, agentId openapi_types.UUID, params *V1AgentsUpdateParams, body V1AgentsUpdateFormdataRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
+	AgentsUpdateWithFormdataBody(ctx context.Context, agentId openapi_types.UUID, params *AgentsUpdateParams, body AgentsUpdateFormdataRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
 
-	// V1AgentsDuplicateCreate request
-	V1AgentsDuplicateCreate(ctx context.Context, agentId openapi_types.UUID, params *V1AgentsDuplicateCreateParams, reqEditors ...RequestEditorFn) (*http.Response, error)
+	// AgentsDuplicateCreate request
+	AgentsDuplicateCreate(ctx context.Context, agentId openapi_types.UUID, params *AgentsDuplicateCreateParams, reqEditors ...RequestEditorFn) (*http.Response, error)
 
-	// V1AgentsJobsCancelAllCreate request
-	V1AgentsJobsCancelAllCreate(ctx context.Context, agentId openapi_types.UUID, params *V1AgentsJobsCancelAllCreateParams, reqEditors ...RequestEditorFn) (*http.Response, error)
+	// AgentsJobsCancelAllCreate request
+	AgentsJobsCancelAllCreate(ctx context.Context, agentId openapi_types.UUID, params *AgentsJobsCancelAllCreateParams, reqEditors ...RequestEditorFn) (*http.Response, error)
 
-	// V1AgentsVersionsList request
-	V1AgentsVersionsList(ctx context.Context, agentId openapi_types.UUID, params *V1AgentsVersionsListParams, reqEditors ...RequestEditorFn) (*http.Response, error)
+	// AgentsVersionsList request
+	AgentsVersionsList(ctx context.Context, agentId openapi_types.UUID, params *AgentsVersionsListParams, reqEditors ...RequestEditorFn) (*http.Response, error)
 
-	// V1AgentsVersionsCreateWithBody request with any body
-	V1AgentsVersionsCreateWithBody(ctx context.Context, agentId openapi_types.UUID, params *V1AgentsVersionsCreateParams, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
+	// AgentsVersionsCreateWithBody request with any body
+	AgentsVersionsCreateWithBody(ctx context.Context, agentId openapi_types.UUID, params *AgentsVersionsCreateParams, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
 
-	V1AgentsVersionsCreate(ctx context.Context, agentId openapi_types.UUID, params *V1AgentsVersionsCreateParams, body V1AgentsVersionsCreateJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
+	AgentsVersionsCreate(ctx context.Context, agentId openapi_types.UUID, params *AgentsVersionsCreateParams, body AgentsVersionsCreateJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
 
-	V1AgentsVersionsCreateWithFormdataBody(ctx context.Context, agentId openapi_types.UUID, params *V1AgentsVersionsCreateParams, body V1AgentsVersionsCreateFormdataRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
+	AgentsVersionsCreateWithFormdataBody(ctx context.Context, agentId openapi_types.UUID, params *AgentsVersionsCreateParams, body AgentsVersionsCreateFormdataRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
 
-	// V1AgentsVersionsCurrentRetrieve request
-	V1AgentsVersionsCurrentRetrieve(ctx context.Context, agentId openapi_types.UUID, params *V1AgentsVersionsCurrentRetrieveParams, reqEditors ...RequestEditorFn) (*http.Response, error)
+	// AgentsVersionsCurrentRetrieve request
+	AgentsVersionsCurrentRetrieve(ctx context.Context, agentId openapi_types.UUID, params *AgentsVersionsCurrentRetrieveParams, reqEditors ...RequestEditorFn) (*http.Response, error)
 
-	// V1AgentsVersionsDestroy request
-	V1AgentsVersionsDestroy(ctx context.Context, agentId openapi_types.UUID, agentVersionId openapi_types.UUID, params *V1AgentsVersionsDestroyParams, reqEditors ...RequestEditorFn) (*http.Response, error)
+	// AgentsVersionsDestroy request
+	AgentsVersionsDestroy(ctx context.Context, agentId openapi_types.UUID, agentVersionId openapi_types.UUID, params *AgentsVersionsDestroyParams, reqEditors ...RequestEditorFn) (*http.Response, error)
 
-	// V1AgentsVersionsRetrieve request
-	V1AgentsVersionsRetrieve(ctx context.Context, agentId openapi_types.UUID, agentVersionId openapi_types.UUID, params *V1AgentsVersionsRetrieveParams, reqEditors ...RequestEditorFn) (*http.Response, error)
+	// AgentsVersionsRetrieve request
+	AgentsVersionsRetrieve(ctx context.Context, agentId openapi_types.UUID, agentVersionId openapi_types.UUID, params *AgentsVersionsRetrieveParams, reqEditors ...RequestEditorFn) (*http.Response, error)
 
-	// V1AgentsVersionsPartialUpdateWithBody request with any body
-	V1AgentsVersionsPartialUpdateWithBody(ctx context.Context, agentId openapi_types.UUID, agentVersionId openapi_types.UUID, params *V1AgentsVersionsPartialUpdateParams, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
+	// AgentsVersionsPartialUpdateWithBody request with any body
+	AgentsVersionsPartialUpdateWithBody(ctx context.Context, agentId openapi_types.UUID, agentVersionId openapi_types.UUID, params *AgentsVersionsPartialUpdateParams, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
 
-	V1AgentsVersionsPartialUpdate(ctx context.Context, agentId openapi_types.UUID, agentVersionId openapi_types.UUID, params *V1AgentsVersionsPartialUpdateParams, body V1AgentsVersionsPartialUpdateJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
+	AgentsVersionsPartialUpdate(ctx context.Context, agentId openapi_types.UUID, agentVersionId openapi_types.UUID, params *AgentsVersionsPartialUpdateParams, body AgentsVersionsPartialUpdateJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
 
-	V1AgentsVersionsPartialUpdateWithFormdataBody(ctx context.Context, agentId openapi_types.UUID, agentVersionId openapi_types.UUID, params *V1AgentsVersionsPartialUpdateParams, body V1AgentsVersionsPartialUpdateFormdataRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
+	AgentsVersionsPartialUpdateWithFormdataBody(ctx context.Context, agentId openapi_types.UUID, agentVersionId openapi_types.UUID, params *AgentsVersionsPartialUpdateParams, body AgentsVersionsPartialUpdateFormdataRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
 
-	// V1AgentsVersionsUpdateWithBody request with any body
-	V1AgentsVersionsUpdateWithBody(ctx context.Context, agentId openapi_types.UUID, agentVersionId openapi_types.UUID, params *V1AgentsVersionsUpdateParams, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
+	// AgentsVersionsUpdateWithBody request with any body
+	AgentsVersionsUpdateWithBody(ctx context.Context, agentId openapi_types.UUID, agentVersionId openapi_types.UUID, params *AgentsVersionsUpdateParams, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
 
-	V1AgentsVersionsUpdate(ctx context.Context, agentId openapi_types.UUID, agentVersionId openapi_types.UUID, params *V1AgentsVersionsUpdateParams, body V1AgentsVersionsUpdateJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
+	AgentsVersionsUpdate(ctx context.Context, agentId openapi_types.UUID, agentVersionId openapi_types.UUID, params *AgentsVersionsUpdateParams, body AgentsVersionsUpdateJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
 
-	V1AgentsVersionsUpdateWithFormdataBody(ctx context.Context, agentId openapi_types.UUID, agentVersionId openapi_types.UUID, params *V1AgentsVersionsUpdateParams, body V1AgentsVersionsUpdateFormdataRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
+	AgentsVersionsUpdateWithFormdataBody(ctx context.Context, agentId openapi_types.UUID, agentVersionId openapi_types.UUID, params *AgentsVersionsUpdateParams, body AgentsVersionsUpdateFormdataRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
 
-	// V1PoliciesList request
-	V1PoliciesList(ctx context.Context, params *V1PoliciesListParams, reqEditors ...RequestEditorFn) (*http.Response, error)
+	// PoliciesList request
+	PoliciesList(ctx context.Context, params *PoliciesListParams, reqEditors ...RequestEditorFn) (*http.Response, error)
 
-	// V1PoliciesCreateWithBody request with any body
-	V1PoliciesCreateWithBody(ctx context.Context, params *V1PoliciesCreateParams, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
+	// PoliciesCreateWithBody request with any body
+	PoliciesCreateWithBody(ctx context.Context, params *PoliciesCreateParams, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
 
-	V1PoliciesCreate(ctx context.Context, params *V1PoliciesCreateParams, body V1PoliciesCreateJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
+	PoliciesCreate(ctx context.Context, params *PoliciesCreateParams, body PoliciesCreateJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
 
-	V1PoliciesCreateWithFormdataBody(ctx context.Context, params *V1PoliciesCreateParams, body V1PoliciesCreateFormdataRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
+	PoliciesCreateWithFormdataBody(ctx context.Context, params *PoliciesCreateParams, body PoliciesCreateFormdataRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
 
-	// V1PoliciesDestroy request
-	V1PoliciesDestroy(ctx context.Context, id openapi_types.UUID, params *V1PoliciesDestroyParams, reqEditors ...RequestEditorFn) (*http.Response, error)
+	// PoliciesDestroy request
+	PoliciesDestroy(ctx context.Context, id openapi_types.UUID, params *PoliciesDestroyParams, reqEditors ...RequestEditorFn) (*http.Response, error)
 
-	// V1PoliciesRetrieve request
-	V1PoliciesRetrieve(ctx context.Context, id openapi_types.UUID, params *V1PoliciesRetrieveParams, reqEditors ...RequestEditorFn) (*http.Response, error)
+	// PoliciesRetrieve request
+	PoliciesRetrieve(ctx context.Context, id openapi_types.UUID, params *PoliciesRetrieveParams, reqEditors ...RequestEditorFn) (*http.Response, error)
 
-	// V1PoliciesPartialUpdateWithBody request with any body
-	V1PoliciesPartialUpdateWithBody(ctx context.Context, id openapi_types.UUID, params *V1PoliciesPartialUpdateParams, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
+	// PoliciesPartialUpdateWithBody request with any body
+	PoliciesPartialUpdateWithBody(ctx context.Context, id openapi_types.UUID, params *PoliciesPartialUpdateParams, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
 
-	V1PoliciesPartialUpdate(ctx context.Context, id openapi_types.UUID, params *V1PoliciesPartialUpdateParams, body V1PoliciesPartialUpdateJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
+	PoliciesPartialUpdate(ctx context.Context, id openapi_types.UUID, params *PoliciesPartialUpdateParams, body PoliciesPartialUpdateJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
 
-	V1PoliciesPartialUpdateWithFormdataBody(ctx context.Context, id openapi_types.UUID, params *V1PoliciesPartialUpdateParams, body V1PoliciesPartialUpdateFormdataRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
+	PoliciesPartialUpdateWithFormdataBody(ctx context.Context, id openapi_types.UUID, params *PoliciesPartialUpdateParams, body PoliciesPartialUpdateFormdataRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
 
-	// V1PoliciesUpdateWithBody request with any body
-	V1PoliciesUpdateWithBody(ctx context.Context, id openapi_types.UUID, params *V1PoliciesUpdateParams, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
+	// PoliciesUpdateWithBody request with any body
+	PoliciesUpdateWithBody(ctx context.Context, id openapi_types.UUID, params *PoliciesUpdateParams, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
 
-	V1PoliciesUpdate(ctx context.Context, id openapi_types.UUID, params *V1PoliciesUpdateParams, body V1PoliciesUpdateJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
+	PoliciesUpdate(ctx context.Context, id openapi_types.UUID, params *PoliciesUpdateParams, body PoliciesUpdateJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
 
-	V1PoliciesUpdateWithFormdataBody(ctx context.Context, id openapi_types.UUID, params *V1PoliciesUpdateParams, body V1PoliciesUpdateFormdataRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
+	PoliciesUpdateWithFormdataBody(ctx context.Context, id openapi_types.UUID, params *PoliciesUpdateParams, body PoliciesUpdateFormdataRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
 
-	// V1PoliciesVersionsList request
-	V1PoliciesVersionsList(ctx context.Context, policyId openapi_types.UUID, params *V1PoliciesVersionsListParams, reqEditors ...RequestEditorFn) (*http.Response, error)
+	// PoliciesVersionsList request
+	PoliciesVersionsList(ctx context.Context, policyId openapi_types.UUID, params *PoliciesVersionsListParams, reqEditors ...RequestEditorFn) (*http.Response, error)
 
-	// V1PoliciesVersionsCreateWithBody request with any body
-	V1PoliciesVersionsCreateWithBody(ctx context.Context, policyId openapi_types.UUID, params *V1PoliciesVersionsCreateParams, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
+	// PoliciesVersionsCreateWithBody request with any body
+	PoliciesVersionsCreateWithBody(ctx context.Context, policyId openapi_types.UUID, params *PoliciesVersionsCreateParams, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
 
-	V1PoliciesVersionsCreate(ctx context.Context, policyId openapi_types.UUID, params *V1PoliciesVersionsCreateParams, body V1PoliciesVersionsCreateJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
+	PoliciesVersionsCreate(ctx context.Context, policyId openapi_types.UUID, params *PoliciesVersionsCreateParams, body PoliciesVersionsCreateJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
 
-	V1PoliciesVersionsCreateWithFormdataBody(ctx context.Context, policyId openapi_types.UUID, params *V1PoliciesVersionsCreateParams, body V1PoliciesVersionsCreateFormdataRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
+	PoliciesVersionsCreateWithFormdataBody(ctx context.Context, policyId openapi_types.UUID, params *PoliciesVersionsCreateParams, body PoliciesVersionsCreateFormdataRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
 
-	// V1PoliciesVersionsRetrieve request
-	V1PoliciesVersionsRetrieve(ctx context.Context, policyId openapi_types.UUID, versionId openapi_types.UUID, params *V1PoliciesVersionsRetrieveParams, reqEditors ...RequestEditorFn) (*http.Response, error)
+	// PoliciesVersionsRetrieve request
+	PoliciesVersionsRetrieve(ctx context.Context, policyId openapi_types.UUID, versionId openapi_types.UUID, params *PoliciesVersionsRetrieveParams, reqEditors ...RequestEditorFn) (*http.Response, error)
 
-	// V1UsersCurrentUserRetrieve request
-	V1UsersCurrentUserRetrieve(ctx context.Context, reqEditors ...RequestEditorFn) (*http.Response, error)
+	// UsersCurrentUserRetrieve request
+	UsersCurrentUserRetrieve(ctx context.Context, reqEditors ...RequestEditorFn) (*http.Response, error)
 }
 
-func (c *Client) V1AgentsList(ctx context.Context, params *V1AgentsListParams, reqEditors ...RequestEditorFn) (*http.Response, error) {
-	req, err := NewV1AgentsListRequest(c.Server, params)
+func (c *Client) AgentsList(ctx context.Context, params *AgentsListParams, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewAgentsListRequest(c.Server, params)
 	if err != nil {
 		return nil, err
 	}
@@ -1140,8 +1140,8 @@ func (c *Client) V1AgentsList(ctx context.Context, params *V1AgentsListParams, r
 	return c.Client.Do(req)
 }
 
-func (c *Client) V1AgentsCreateWithBody(ctx context.Context, params *V1AgentsCreateParams, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error) {
-	req, err := NewV1AgentsCreateRequestWithBody(c.Server, params, contentType, body)
+func (c *Client) AgentsCreateWithBody(ctx context.Context, params *AgentsCreateParams, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewAgentsCreateRequestWithBody(c.Server, params, contentType, body)
 	if err != nil {
 		return nil, err
 	}
@@ -1152,8 +1152,8 @@ func (c *Client) V1AgentsCreateWithBody(ctx context.Context, params *V1AgentsCre
 	return c.Client.Do(req)
 }
 
-func (c *Client) V1AgentsCreate(ctx context.Context, params *V1AgentsCreateParams, body V1AgentsCreateJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
-	req, err := NewV1AgentsCreateRequest(c.Server, params, body)
+func (c *Client) AgentsCreate(ctx context.Context, params *AgentsCreateParams, body AgentsCreateJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewAgentsCreateRequest(c.Server, params, body)
 	if err != nil {
 		return nil, err
 	}
@@ -1164,8 +1164,8 @@ func (c *Client) V1AgentsCreate(ctx context.Context, params *V1AgentsCreateParam
 	return c.Client.Do(req)
 }
 
-func (c *Client) V1AgentsCreateWithFormdataBody(ctx context.Context, params *V1AgentsCreateParams, body V1AgentsCreateFormdataRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
-	req, err := NewV1AgentsCreateRequestWithFormdataBody(c.Server, params, body)
+func (c *Client) AgentsCreateWithFormdataBody(ctx context.Context, params *AgentsCreateParams, body AgentsCreateFormdataRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewAgentsCreateRequestWithFormdataBody(c.Server, params, body)
 	if err != nil {
 		return nil, err
 	}
@@ -1176,8 +1176,8 @@ func (c *Client) V1AgentsCreateWithFormdataBody(ctx context.Context, params *V1A
 	return c.Client.Do(req)
 }
 
-func (c *Client) V1AgentsJobsResultsCreateWithBody(ctx context.Context, params *V1AgentsJobsResultsCreateParams, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error) {
-	req, err := NewV1AgentsJobsResultsCreateRequestWithBody(c.Server, params, contentType, body)
+func (c *Client) AgentsJobsResultsCreateWithBody(ctx context.Context, params *AgentsJobsResultsCreateParams, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewAgentsJobsResultsCreateRequestWithBody(c.Server, params, contentType, body)
 	if err != nil {
 		return nil, err
 	}
@@ -1188,8 +1188,8 @@ func (c *Client) V1AgentsJobsResultsCreateWithBody(ctx context.Context, params *
 	return c.Client.Do(req)
 }
 
-func (c *Client) V1AgentsJobsResultsCreate(ctx context.Context, params *V1AgentsJobsResultsCreateParams, body V1AgentsJobsResultsCreateJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
-	req, err := NewV1AgentsJobsResultsCreateRequest(c.Server, params, body)
+func (c *Client) AgentsJobsResultsCreate(ctx context.Context, params *AgentsJobsResultsCreateParams, body AgentsJobsResultsCreateJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewAgentsJobsResultsCreateRequest(c.Server, params, body)
 	if err != nil {
 		return nil, err
 	}
@@ -1200,8 +1200,8 @@ func (c *Client) V1AgentsJobsResultsCreate(ctx context.Context, params *V1Agents
 	return c.Client.Do(req)
 }
 
-func (c *Client) V1AgentsJobsResultsCreateWithFormdataBody(ctx context.Context, params *V1AgentsJobsResultsCreateParams, body V1AgentsJobsResultsCreateFormdataRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
-	req, err := NewV1AgentsJobsResultsCreateRequestWithFormdataBody(c.Server, params, body)
+func (c *Client) AgentsJobsResultsCreateWithFormdataBody(ctx context.Context, params *AgentsJobsResultsCreateParams, body AgentsJobsResultsCreateFormdataRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewAgentsJobsResultsCreateRequestWithFormdataBody(c.Server, params, body)
 	if err != nil {
 		return nil, err
 	}
@@ -1212,8 +1212,8 @@ func (c *Client) V1AgentsJobsResultsCreateWithFormdataBody(ctx context.Context, 
 	return c.Client.Do(req)
 }
 
-func (c *Client) V1AgentsJobsStatusesCreateWithBody(ctx context.Context, params *V1AgentsJobsStatusesCreateParams, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error) {
-	req, err := NewV1AgentsJobsStatusesCreateRequestWithBody(c.Server, params, contentType, body)
+func (c *Client) AgentsJobsStatusesCreateWithBody(ctx context.Context, params *AgentsJobsStatusesCreateParams, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewAgentsJobsStatusesCreateRequestWithBody(c.Server, params, contentType, body)
 	if err != nil {
 		return nil, err
 	}
@@ -1224,8 +1224,8 @@ func (c *Client) V1AgentsJobsStatusesCreateWithBody(ctx context.Context, params 
 	return c.Client.Do(req)
 }
 
-func (c *Client) V1AgentsJobsStatusesCreate(ctx context.Context, params *V1AgentsJobsStatusesCreateParams, body V1AgentsJobsStatusesCreateJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
-	req, err := NewV1AgentsJobsStatusesCreateRequest(c.Server, params, body)
+func (c *Client) AgentsJobsStatusesCreate(ctx context.Context, params *AgentsJobsStatusesCreateParams, body AgentsJobsStatusesCreateJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewAgentsJobsStatusesCreateRequest(c.Server, params, body)
 	if err != nil {
 		return nil, err
 	}
@@ -1236,8 +1236,8 @@ func (c *Client) V1AgentsJobsStatusesCreate(ctx context.Context, params *V1Agent
 	return c.Client.Do(req)
 }
 
-func (c *Client) V1AgentsJobsStatusesCreateWithFormdataBody(ctx context.Context, params *V1AgentsJobsStatusesCreateParams, body V1AgentsJobsStatusesCreateFormdataRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
-	req, err := NewV1AgentsJobsStatusesCreateRequestWithFormdataBody(c.Server, params, body)
+func (c *Client) AgentsJobsStatusesCreateWithFormdataBody(ctx context.Context, params *AgentsJobsStatusesCreateParams, body AgentsJobsStatusesCreateFormdataRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewAgentsJobsStatusesCreateRequestWithFormdataBody(c.Server, params, body)
 	if err != nil {
 		return nil, err
 	}
@@ -1248,8 +1248,8 @@ func (c *Client) V1AgentsJobsStatusesCreateWithFormdataBody(ctx context.Context,
 	return c.Client.Do(req)
 }
 
-func (c *Client) V1AgentsJobsReferencesRetrieve(ctx context.Context, agentJobId openapi_types.UUID, resourceId string, params *V1AgentsJobsReferencesRetrieveParams, reqEditors ...RequestEditorFn) (*http.Response, error) {
-	req, err := NewV1AgentsJobsReferencesRetrieveRequest(c.Server, agentJobId, resourceId, params)
+func (c *Client) AgentsJobsReferencesRetrieve(ctx context.Context, agentJobId openapi_types.UUID, resourceId string, params *AgentsJobsReferencesRetrieveParams, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewAgentsJobsReferencesRetrieveRequest(c.Server, agentJobId, resourceId, params)
 	if err != nil {
 		return nil, err
 	}
@@ -1260,8 +1260,8 @@ func (c *Client) V1AgentsJobsReferencesRetrieve(ctx context.Context, agentJobId 
 	return c.Client.Do(req)
 }
 
-func (c *Client) V1AgentsJobsResultRetrieve(ctx context.Context, agentJobId openapi_types.UUID, params *V1AgentsJobsResultRetrieveParams, reqEditors ...RequestEditorFn) (*http.Response, error) {
-	req, err := NewV1AgentsJobsResultRetrieveRequest(c.Server, agentJobId, params)
+func (c *Client) AgentsJobsResultRetrieve(ctx context.Context, agentJobId openapi_types.UUID, params *AgentsJobsResultRetrieveParams, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewAgentsJobsResultRetrieveRequest(c.Server, agentJobId, params)
 	if err != nil {
 		return nil, err
 	}
@@ -1272,8 +1272,8 @@ func (c *Client) V1AgentsJobsResultRetrieve(ctx context.Context, agentJobId open
 	return c.Client.Do(req)
 }
 
-func (c *Client) V1AgentsJobsCancelCreate(ctx context.Context, jobId openapi_types.UUID, params *V1AgentsJobsCancelCreateParams, reqEditors ...RequestEditorFn) (*http.Response, error) {
-	req, err := NewV1AgentsJobsCancelCreateRequest(c.Server, jobId, params)
+func (c *Client) AgentsJobsCancelCreate(ctx context.Context, jobId openapi_types.UUID, params *AgentsJobsCancelCreateParams, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewAgentsJobsCancelCreateRequest(c.Server, jobId, params)
 	if err != nil {
 		return nil, err
 	}
@@ -1284,8 +1284,8 @@ func (c *Client) V1AgentsJobsCancelCreate(ctx context.Context, jobId openapi_typ
 	return c.Client.Do(req)
 }
 
-func (c *Client) V1AgentsJobsDeleteDataCreate(ctx context.Context, jobId openapi_types.UUID, params *V1AgentsJobsDeleteDataCreateParams, reqEditors ...RequestEditorFn) (*http.Response, error) {
-	req, err := NewV1AgentsJobsDeleteDataCreateRequest(c.Server, jobId, params)
+func (c *Client) AgentsJobsDeleteDataCreate(ctx context.Context, jobId openapi_types.UUID, params *AgentsJobsDeleteDataCreateParams, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewAgentsJobsDeleteDataCreateRequest(c.Server, jobId, params)
 	if err != nil {
 		return nil, err
 	}
@@ -1296,8 +1296,8 @@ func (c *Client) V1AgentsJobsDeleteDataCreate(ctx context.Context, jobId openapi
 	return c.Client.Do(req)
 }
 
-func (c *Client) V1AgentsJobsStatusRetrieve(ctx context.Context, jobId openapi_types.UUID, params *V1AgentsJobsStatusRetrieveParams, reqEditors ...RequestEditorFn) (*http.Response, error) {
-	req, err := NewV1AgentsJobsStatusRetrieveRequest(c.Server, jobId, params)
+func (c *Client) AgentsJobsStatusRetrieve(ctx context.Context, jobId openapi_types.UUID, params *AgentsJobsStatusRetrieveParams, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewAgentsJobsStatusRetrieveRequest(c.Server, jobId, params)
 	if err != nil {
 		return nil, err
 	}
@@ -1308,8 +1308,8 @@ func (c *Client) V1AgentsJobsStatusRetrieve(ctx context.Context, jobId openapi_t
 	return c.Client.Do(req)
 }
 
-func (c *Client) AgentsRun2WithBody(ctx context.Context, agentId openapi_types.UUID, params *AgentsRun2Params, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error) {
-	req, err := NewAgentsRun2RequestWithBody(c.Server, agentId, params, contentType, body)
+func (c *Client) AgentsRunWithBody(ctx context.Context, agentId openapi_types.UUID, params *AgentsRunParams, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewAgentsRunRequestWithBody(c.Server, agentId, params, contentType, body)
 	if err != nil {
 		return nil, err
 	}
@@ -1320,8 +1320,8 @@ func (c *Client) AgentsRun2WithBody(ctx context.Context, agentId openapi_types.U
 	return c.Client.Do(req)
 }
 
-func (c *Client) AgentsRun2(ctx context.Context, agentId openapi_types.UUID, params *AgentsRun2Params, body AgentsRun2JSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
-	req, err := NewAgentsRun2Request(c.Server, agentId, params, body)
+func (c *Client) AgentsRun(ctx context.Context, agentId openapi_types.UUID, params *AgentsRunParams, body AgentsRunJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewAgentsRunRequest(c.Server, agentId, params, body)
 	if err != nil {
 		return nil, err
 	}
@@ -1332,8 +1332,8 @@ func (c *Client) AgentsRun2(ctx context.Context, agentId openapi_types.UUID, par
 	return c.Client.Do(req)
 }
 
-func (c *Client) AgentsRun2WithFormdataBody(ctx context.Context, agentId openapi_types.UUID, params *AgentsRun2Params, body AgentsRun2FormdataRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
-	req, err := NewAgentsRun2RequestWithFormdataBody(c.Server, agentId, params, body)
+func (c *Client) AgentsRunWithFormdataBody(ctx context.Context, agentId openapi_types.UUID, params *AgentsRunParams, body AgentsRunFormdataRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewAgentsRunRequestWithFormdataBody(c.Server, agentId, params, body)
 	if err != nil {
 		return nil, err
 	}
@@ -1344,8 +1344,8 @@ func (c *Client) AgentsRun2WithFormdataBody(ctx context.Context, agentId openapi
 	return c.Client.Do(req)
 }
 
-func (c *Client) V1AgentsRunAsyncCreateWithBody(ctx context.Context, agentId openapi_types.UUID, params *V1AgentsRunAsyncCreateParams, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error) {
-	req, err := NewV1AgentsRunAsyncCreateRequestWithBody(c.Server, agentId, params, contentType, body)
+func (c *Client) AgentsRunAsyncCreateWithBody(ctx context.Context, agentId openapi_types.UUID, params *AgentsRunAsyncCreateParams, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewAgentsRunAsyncCreateRequestWithBody(c.Server, agentId, params, contentType, body)
 	if err != nil {
 		return nil, err
 	}
@@ -1356,8 +1356,8 @@ func (c *Client) V1AgentsRunAsyncCreateWithBody(ctx context.Context, agentId ope
 	return c.Client.Do(req)
 }
 
-func (c *Client) V1AgentsRunAsyncCreate(ctx context.Context, agentId openapi_types.UUID, params *V1AgentsRunAsyncCreateParams, body V1AgentsRunAsyncCreateJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
-	req, err := NewV1AgentsRunAsyncCreateRequest(c.Server, agentId, params, body)
+func (c *Client) AgentsRunAsyncCreate(ctx context.Context, agentId openapi_types.UUID, params *AgentsRunAsyncCreateParams, body AgentsRunAsyncCreateJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewAgentsRunAsyncCreateRequest(c.Server, agentId, params, body)
 	if err != nil {
 		return nil, err
 	}
@@ -1368,8 +1368,8 @@ func (c *Client) V1AgentsRunAsyncCreate(ctx context.Context, agentId openapi_typ
 	return c.Client.Do(req)
 }
 
-func (c *Client) V1AgentsRunAsyncCreateWithFormdataBody(ctx context.Context, agentId openapi_types.UUID, params *V1AgentsRunAsyncCreateParams, body V1AgentsRunAsyncCreateFormdataRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
-	req, err := NewV1AgentsRunAsyncCreateRequestWithFormdataBody(c.Server, agentId, params, body)
+func (c *Client) AgentsRunAsyncCreateWithFormdataBody(ctx context.Context, agentId openapi_types.UUID, params *AgentsRunAsyncCreateParams, body AgentsRunAsyncCreateFormdataRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewAgentsRunAsyncCreateRequestWithFormdataBody(c.Server, agentId, params, body)
 	if err != nil {
 		return nil, err
 	}
@@ -1380,8 +1380,8 @@ func (c *Client) V1AgentsRunAsyncCreateWithFormdataBody(ctx context.Context, age
 	return c.Client.Do(req)
 }
 
-func (c *Client) AgentsRunAsyncMany5WithBody(ctx context.Context, agentId openapi_types.UUID, params *AgentsRunAsyncMany5Params, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error) {
-	req, err := NewAgentsRunAsyncMany5RequestWithBody(c.Server, agentId, params, contentType, body)
+func (c *Client) AgentsRunAsyncManyWithBody(ctx context.Context, agentId openapi_types.UUID, params *AgentsRunAsyncManyParams, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewAgentsRunAsyncManyRequestWithBody(c.Server, agentId, params, contentType, body)
 	if err != nil {
 		return nil, err
 	}
@@ -1392,8 +1392,8 @@ func (c *Client) AgentsRunAsyncMany5WithBody(ctx context.Context, agentId openap
 	return c.Client.Do(req)
 }
 
-func (c *Client) AgentsRunAsyncMany5(ctx context.Context, agentId openapi_types.UUID, params *AgentsRunAsyncMany5Params, body AgentsRunAsyncMany5JSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
-	req, err := NewAgentsRunAsyncMany5Request(c.Server, agentId, params, body)
+func (c *Client) AgentsRunAsyncMany(ctx context.Context, agentId openapi_types.UUID, params *AgentsRunAsyncManyParams, body AgentsRunAsyncManyJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewAgentsRunAsyncManyRequest(c.Server, agentId, params, body)
 	if err != nil {
 		return nil, err
 	}
@@ -1404,8 +1404,8 @@ func (c *Client) AgentsRunAsyncMany5(ctx context.Context, agentId openapi_types.
 	return c.Client.Do(req)
 }
 
-func (c *Client) AgentsRunAsyncMany5WithFormdataBody(ctx context.Context, agentId openapi_types.UUID, params *AgentsRunAsyncMany5Params, body AgentsRunAsyncMany5FormdataRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
-	req, err := NewAgentsRunAsyncMany5RequestWithFormdataBody(c.Server, agentId, params, body)
+func (c *Client) AgentsRunAsyncManyWithFormdataBody(ctx context.Context, agentId openapi_types.UUID, params *AgentsRunAsyncManyParams, body AgentsRunAsyncManyFormdataRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewAgentsRunAsyncManyRequestWithFormdataBody(c.Server, agentId, params, body)
 	if err != nil {
 		return nil, err
 	}
@@ -1416,8 +1416,8 @@ func (c *Client) AgentsRunAsyncMany5WithFormdataBody(ctx context.Context, agentI
 	return c.Client.Do(req)
 }
 
-func (c *Client) AgentsRunVersion2WithBody(ctx context.Context, agentId openapi_types.UUID, agentVersionId openapi_types.UUID, params *AgentsRunVersion2Params, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error) {
-	req, err := NewAgentsRunVersion2RequestWithBody(c.Server, agentId, agentVersionId, params, contentType, body)
+func (c *Client) AgentsRunVersionWithBody(ctx context.Context, agentId openapi_types.UUID, agentVersionId openapi_types.UUID, params *AgentsRunVersionParams, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewAgentsRunVersionRequestWithBody(c.Server, agentId, agentVersionId, params, contentType, body)
 	if err != nil {
 		return nil, err
 	}
@@ -1428,8 +1428,8 @@ func (c *Client) AgentsRunVersion2WithBody(ctx context.Context, agentId openapi_
 	return c.Client.Do(req)
 }
 
-func (c *Client) AgentsRunVersion2(ctx context.Context, agentId openapi_types.UUID, agentVersionId openapi_types.UUID, params *AgentsRunVersion2Params, body AgentsRunVersion2JSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
-	req, err := NewAgentsRunVersion2Request(c.Server, agentId, agentVersionId, params, body)
+func (c *Client) AgentsRunVersion(ctx context.Context, agentId openapi_types.UUID, agentVersionId openapi_types.UUID, params *AgentsRunVersionParams, body AgentsRunVersionJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewAgentsRunVersionRequest(c.Server, agentId, agentVersionId, params, body)
 	if err != nil {
 		return nil, err
 	}
@@ -1440,8 +1440,8 @@ func (c *Client) AgentsRunVersion2(ctx context.Context, agentId openapi_types.UU
 	return c.Client.Do(req)
 }
 
-func (c *Client) AgentsRunVersion2WithFormdataBody(ctx context.Context, agentId openapi_types.UUID, agentVersionId openapi_types.UUID, params *AgentsRunVersion2Params, body AgentsRunVersion2FormdataRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
-	req, err := NewAgentsRunVersion2RequestWithFormdataBody(c.Server, agentId, agentVersionId, params, body)
+func (c *Client) AgentsRunVersionWithFormdataBody(ctx context.Context, agentId openapi_types.UUID, agentVersionId openapi_types.UUID, params *AgentsRunVersionParams, body AgentsRunVersionFormdataRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewAgentsRunVersionRequestWithFormdataBody(c.Server, agentId, agentVersionId, params, body)
 	if err != nil {
 		return nil, err
 	}
@@ -1452,8 +1452,8 @@ func (c *Client) AgentsRunVersion2WithFormdataBody(ctx context.Context, agentId 
 	return c.Client.Do(req)
 }
 
-func (c *Client) V1AgentsRunVersionsAsyncCreateWithBody(ctx context.Context, agentId openapi_types.UUID, agentVersionId openapi_types.UUID, params *V1AgentsRunVersionsAsyncCreateParams, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error) {
-	req, err := NewV1AgentsRunVersionsAsyncCreateRequestWithBody(c.Server, agentId, agentVersionId, params, contentType, body)
+func (c *Client) AgentsRunVersionsAsyncCreateWithBody(ctx context.Context, agentId openapi_types.UUID, agentVersionId openapi_types.UUID, params *AgentsRunVersionsAsyncCreateParams, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewAgentsRunVersionsAsyncCreateRequestWithBody(c.Server, agentId, agentVersionId, params, contentType, body)
 	if err != nil {
 		return nil, err
 	}
@@ -1464,8 +1464,8 @@ func (c *Client) V1AgentsRunVersionsAsyncCreateWithBody(ctx context.Context, age
 	return c.Client.Do(req)
 }
 
-func (c *Client) V1AgentsRunVersionsAsyncCreate(ctx context.Context, agentId openapi_types.UUID, agentVersionId openapi_types.UUID, params *V1AgentsRunVersionsAsyncCreateParams, body V1AgentsRunVersionsAsyncCreateJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
-	req, err := NewV1AgentsRunVersionsAsyncCreateRequest(c.Server, agentId, agentVersionId, params, body)
+func (c *Client) AgentsRunVersionsAsyncCreate(ctx context.Context, agentId openapi_types.UUID, agentVersionId openapi_types.UUID, params *AgentsRunVersionsAsyncCreateParams, body AgentsRunVersionsAsyncCreateJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewAgentsRunVersionsAsyncCreateRequest(c.Server, agentId, agentVersionId, params, body)
 	if err != nil {
 		return nil, err
 	}
@@ -1476,8 +1476,8 @@ func (c *Client) V1AgentsRunVersionsAsyncCreate(ctx context.Context, agentId ope
 	return c.Client.Do(req)
 }
 
-func (c *Client) V1AgentsRunVersionsAsyncCreateWithFormdataBody(ctx context.Context, agentId openapi_types.UUID, agentVersionId openapi_types.UUID, params *V1AgentsRunVersionsAsyncCreateParams, body V1AgentsRunVersionsAsyncCreateFormdataRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
-	req, err := NewV1AgentsRunVersionsAsyncCreateRequestWithFormdataBody(c.Server, agentId, agentVersionId, params, body)
+func (c *Client) AgentsRunVersionsAsyncCreateWithFormdataBody(ctx context.Context, agentId openapi_types.UUID, agentVersionId openapi_types.UUID, params *AgentsRunVersionsAsyncCreateParams, body AgentsRunVersionsAsyncCreateFormdataRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewAgentsRunVersionsAsyncCreateRequestWithFormdataBody(c.Server, agentId, agentVersionId, params, body)
 	if err != nil {
 		return nil, err
 	}
@@ -1488,8 +1488,8 @@ func (c *Client) V1AgentsRunVersionsAsyncCreateWithFormdataBody(ctx context.Cont
 	return c.Client.Do(req)
 }
 
-func (c *Client) V1AgentsDestroy(ctx context.Context, agentId openapi_types.UUID, params *V1AgentsDestroyParams, reqEditors ...RequestEditorFn) (*http.Response, error) {
-	req, err := NewV1AgentsDestroyRequest(c.Server, agentId, params)
+func (c *Client) AgentsDestroy(ctx context.Context, agentId openapi_types.UUID, params *AgentsDestroyParams, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewAgentsDestroyRequest(c.Server, agentId, params)
 	if err != nil {
 		return nil, err
 	}
@@ -1500,8 +1500,8 @@ func (c *Client) V1AgentsDestroy(ctx context.Context, agentId openapi_types.UUID
 	return c.Client.Do(req)
 }
 
-func (c *Client) V1AgentsRetrieve(ctx context.Context, agentId openapi_types.UUID, params *V1AgentsRetrieveParams, reqEditors ...RequestEditorFn) (*http.Response, error) {
-	req, err := NewV1AgentsRetrieveRequest(c.Server, agentId, params)
+func (c *Client) AgentsRetrieve(ctx context.Context, agentId openapi_types.UUID, params *AgentsRetrieveParams, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewAgentsRetrieveRequest(c.Server, agentId, params)
 	if err != nil {
 		return nil, err
 	}
@@ -1512,8 +1512,8 @@ func (c *Client) V1AgentsRetrieve(ctx context.Context, agentId openapi_types.UUI
 	return c.Client.Do(req)
 }
 
-func (c *Client) V1AgentsPartialUpdateWithBody(ctx context.Context, agentId openapi_types.UUID, params *V1AgentsPartialUpdateParams, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error) {
-	req, err := NewV1AgentsPartialUpdateRequestWithBody(c.Server, agentId, params, contentType, body)
+func (c *Client) AgentsPartialUpdateWithBody(ctx context.Context, agentId openapi_types.UUID, params *AgentsPartialUpdateParams, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewAgentsPartialUpdateRequestWithBody(c.Server, agentId, params, contentType, body)
 	if err != nil {
 		return nil, err
 	}
@@ -1524,8 +1524,8 @@ func (c *Client) V1AgentsPartialUpdateWithBody(ctx context.Context, agentId open
 	return c.Client.Do(req)
 }
 
-func (c *Client) V1AgentsPartialUpdate(ctx context.Context, agentId openapi_types.UUID, params *V1AgentsPartialUpdateParams, body V1AgentsPartialUpdateJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
-	req, err := NewV1AgentsPartialUpdateRequest(c.Server, agentId, params, body)
+func (c *Client) AgentsPartialUpdate(ctx context.Context, agentId openapi_types.UUID, params *AgentsPartialUpdateParams, body AgentsPartialUpdateJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewAgentsPartialUpdateRequest(c.Server, agentId, params, body)
 	if err != nil {
 		return nil, err
 	}
@@ -1536,8 +1536,8 @@ func (c *Client) V1AgentsPartialUpdate(ctx context.Context, agentId openapi_type
 	return c.Client.Do(req)
 }
 
-func (c *Client) V1AgentsPartialUpdateWithFormdataBody(ctx context.Context, agentId openapi_types.UUID, params *V1AgentsPartialUpdateParams, body V1AgentsPartialUpdateFormdataRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
-	req, err := NewV1AgentsPartialUpdateRequestWithFormdataBody(c.Server, agentId, params, body)
+func (c *Client) AgentsPartialUpdateWithFormdataBody(ctx context.Context, agentId openapi_types.UUID, params *AgentsPartialUpdateParams, body AgentsPartialUpdateFormdataRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewAgentsPartialUpdateRequestWithFormdataBody(c.Server, agentId, params, body)
 	if err != nil {
 		return nil, err
 	}
@@ -1548,8 +1548,8 @@ func (c *Client) V1AgentsPartialUpdateWithFormdataBody(ctx context.Context, agen
 	return c.Client.Do(req)
 }
 
-func (c *Client) V1AgentsUpdateWithBody(ctx context.Context, agentId openapi_types.UUID, params *V1AgentsUpdateParams, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error) {
-	req, err := NewV1AgentsUpdateRequestWithBody(c.Server, agentId, params, contentType, body)
+func (c *Client) AgentsUpdateWithBody(ctx context.Context, agentId openapi_types.UUID, params *AgentsUpdateParams, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewAgentsUpdateRequestWithBody(c.Server, agentId, params, contentType, body)
 	if err != nil {
 		return nil, err
 	}
@@ -1560,8 +1560,8 @@ func (c *Client) V1AgentsUpdateWithBody(ctx context.Context, agentId openapi_typ
 	return c.Client.Do(req)
 }
 
-func (c *Client) V1AgentsUpdate(ctx context.Context, agentId openapi_types.UUID, params *V1AgentsUpdateParams, body V1AgentsUpdateJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
-	req, err := NewV1AgentsUpdateRequest(c.Server, agentId, params, body)
+func (c *Client) AgentsUpdate(ctx context.Context, agentId openapi_types.UUID, params *AgentsUpdateParams, body AgentsUpdateJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewAgentsUpdateRequest(c.Server, agentId, params, body)
 	if err != nil {
 		return nil, err
 	}
@@ -1572,8 +1572,8 @@ func (c *Client) V1AgentsUpdate(ctx context.Context, agentId openapi_types.UUID,
 	return c.Client.Do(req)
 }
 
-func (c *Client) V1AgentsUpdateWithFormdataBody(ctx context.Context, agentId openapi_types.UUID, params *V1AgentsUpdateParams, body V1AgentsUpdateFormdataRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
-	req, err := NewV1AgentsUpdateRequestWithFormdataBody(c.Server, agentId, params, body)
+func (c *Client) AgentsUpdateWithFormdataBody(ctx context.Context, agentId openapi_types.UUID, params *AgentsUpdateParams, body AgentsUpdateFormdataRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewAgentsUpdateRequestWithFormdataBody(c.Server, agentId, params, body)
 	if err != nil {
 		return nil, err
 	}
@@ -1584,8 +1584,8 @@ func (c *Client) V1AgentsUpdateWithFormdataBody(ctx context.Context, agentId ope
 	return c.Client.Do(req)
 }
 
-func (c *Client) V1AgentsDuplicateCreate(ctx context.Context, agentId openapi_types.UUID, params *V1AgentsDuplicateCreateParams, reqEditors ...RequestEditorFn) (*http.Response, error) {
-	req, err := NewV1AgentsDuplicateCreateRequest(c.Server, agentId, params)
+func (c *Client) AgentsDuplicateCreate(ctx context.Context, agentId openapi_types.UUID, params *AgentsDuplicateCreateParams, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewAgentsDuplicateCreateRequest(c.Server, agentId, params)
 	if err != nil {
 		return nil, err
 	}
@@ -1596,8 +1596,8 @@ func (c *Client) V1AgentsDuplicateCreate(ctx context.Context, agentId openapi_ty
 	return c.Client.Do(req)
 }
 
-func (c *Client) V1AgentsJobsCancelAllCreate(ctx context.Context, agentId openapi_types.UUID, params *V1AgentsJobsCancelAllCreateParams, reqEditors ...RequestEditorFn) (*http.Response, error) {
-	req, err := NewV1AgentsJobsCancelAllCreateRequest(c.Server, agentId, params)
+func (c *Client) AgentsJobsCancelAllCreate(ctx context.Context, agentId openapi_types.UUID, params *AgentsJobsCancelAllCreateParams, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewAgentsJobsCancelAllCreateRequest(c.Server, agentId, params)
 	if err != nil {
 		return nil, err
 	}
@@ -1608,8 +1608,8 @@ func (c *Client) V1AgentsJobsCancelAllCreate(ctx context.Context, agentId openap
 	return c.Client.Do(req)
 }
 
-func (c *Client) V1AgentsVersionsList(ctx context.Context, agentId openapi_types.UUID, params *V1AgentsVersionsListParams, reqEditors ...RequestEditorFn) (*http.Response, error) {
-	req, err := NewV1AgentsVersionsListRequest(c.Server, agentId, params)
+func (c *Client) AgentsVersionsList(ctx context.Context, agentId openapi_types.UUID, params *AgentsVersionsListParams, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewAgentsVersionsListRequest(c.Server, agentId, params)
 	if err != nil {
 		return nil, err
 	}
@@ -1620,8 +1620,8 @@ func (c *Client) V1AgentsVersionsList(ctx context.Context, agentId openapi_types
 	return c.Client.Do(req)
 }
 
-func (c *Client) V1AgentsVersionsCreateWithBody(ctx context.Context, agentId openapi_types.UUID, params *V1AgentsVersionsCreateParams, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error) {
-	req, err := NewV1AgentsVersionsCreateRequestWithBody(c.Server, agentId, params, contentType, body)
+func (c *Client) AgentsVersionsCreateWithBody(ctx context.Context, agentId openapi_types.UUID, params *AgentsVersionsCreateParams, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewAgentsVersionsCreateRequestWithBody(c.Server, agentId, params, contentType, body)
 	if err != nil {
 		return nil, err
 	}
@@ -1632,8 +1632,8 @@ func (c *Client) V1AgentsVersionsCreateWithBody(ctx context.Context, agentId ope
 	return c.Client.Do(req)
 }
 
-func (c *Client) V1AgentsVersionsCreate(ctx context.Context, agentId openapi_types.UUID, params *V1AgentsVersionsCreateParams, body V1AgentsVersionsCreateJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
-	req, err := NewV1AgentsVersionsCreateRequest(c.Server, agentId, params, body)
+func (c *Client) AgentsVersionsCreate(ctx context.Context, agentId openapi_types.UUID, params *AgentsVersionsCreateParams, body AgentsVersionsCreateJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewAgentsVersionsCreateRequest(c.Server, agentId, params, body)
 	if err != nil {
 		return nil, err
 	}
@@ -1644,8 +1644,8 @@ func (c *Client) V1AgentsVersionsCreate(ctx context.Context, agentId openapi_typ
 	return c.Client.Do(req)
 }
 
-func (c *Client) V1AgentsVersionsCreateWithFormdataBody(ctx context.Context, agentId openapi_types.UUID, params *V1AgentsVersionsCreateParams, body V1AgentsVersionsCreateFormdataRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
-	req, err := NewV1AgentsVersionsCreateRequestWithFormdataBody(c.Server, agentId, params, body)
+func (c *Client) AgentsVersionsCreateWithFormdataBody(ctx context.Context, agentId openapi_types.UUID, params *AgentsVersionsCreateParams, body AgentsVersionsCreateFormdataRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewAgentsVersionsCreateRequestWithFormdataBody(c.Server, agentId, params, body)
 	if err != nil {
 		return nil, err
 	}
@@ -1656,8 +1656,8 @@ func (c *Client) V1AgentsVersionsCreateWithFormdataBody(ctx context.Context, age
 	return c.Client.Do(req)
 }
 
-func (c *Client) V1AgentsVersionsCurrentRetrieve(ctx context.Context, agentId openapi_types.UUID, params *V1AgentsVersionsCurrentRetrieveParams, reqEditors ...RequestEditorFn) (*http.Response, error) {
-	req, err := NewV1AgentsVersionsCurrentRetrieveRequest(c.Server, agentId, params)
+func (c *Client) AgentsVersionsCurrentRetrieve(ctx context.Context, agentId openapi_types.UUID, params *AgentsVersionsCurrentRetrieveParams, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewAgentsVersionsCurrentRetrieveRequest(c.Server, agentId, params)
 	if err != nil {
 		return nil, err
 	}
@@ -1668,8 +1668,8 @@ func (c *Client) V1AgentsVersionsCurrentRetrieve(ctx context.Context, agentId op
 	return c.Client.Do(req)
 }
 
-func (c *Client) V1AgentsVersionsDestroy(ctx context.Context, agentId openapi_types.UUID, agentVersionId openapi_types.UUID, params *V1AgentsVersionsDestroyParams, reqEditors ...RequestEditorFn) (*http.Response, error) {
-	req, err := NewV1AgentsVersionsDestroyRequest(c.Server, agentId, agentVersionId, params)
+func (c *Client) AgentsVersionsDestroy(ctx context.Context, agentId openapi_types.UUID, agentVersionId openapi_types.UUID, params *AgentsVersionsDestroyParams, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewAgentsVersionsDestroyRequest(c.Server, agentId, agentVersionId, params)
 	if err != nil {
 		return nil, err
 	}
@@ -1680,8 +1680,8 @@ func (c *Client) V1AgentsVersionsDestroy(ctx context.Context, agentId openapi_ty
 	return c.Client.Do(req)
 }
 
-func (c *Client) V1AgentsVersionsRetrieve(ctx context.Context, agentId openapi_types.UUID, agentVersionId openapi_types.UUID, params *V1AgentsVersionsRetrieveParams, reqEditors ...RequestEditorFn) (*http.Response, error) {
-	req, err := NewV1AgentsVersionsRetrieveRequest(c.Server, agentId, agentVersionId, params)
+func (c *Client) AgentsVersionsRetrieve(ctx context.Context, agentId openapi_types.UUID, agentVersionId openapi_types.UUID, params *AgentsVersionsRetrieveParams, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewAgentsVersionsRetrieveRequest(c.Server, agentId, agentVersionId, params)
 	if err != nil {
 		return nil, err
 	}
@@ -1692,8 +1692,8 @@ func (c *Client) V1AgentsVersionsRetrieve(ctx context.Context, agentId openapi_t
 	return c.Client.Do(req)
 }
 
-func (c *Client) V1AgentsVersionsPartialUpdateWithBody(ctx context.Context, agentId openapi_types.UUID, agentVersionId openapi_types.UUID, params *V1AgentsVersionsPartialUpdateParams, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error) {
-	req, err := NewV1AgentsVersionsPartialUpdateRequestWithBody(c.Server, agentId, agentVersionId, params, contentType, body)
+func (c *Client) AgentsVersionsPartialUpdateWithBody(ctx context.Context, agentId openapi_types.UUID, agentVersionId openapi_types.UUID, params *AgentsVersionsPartialUpdateParams, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewAgentsVersionsPartialUpdateRequestWithBody(c.Server, agentId, agentVersionId, params, contentType, body)
 	if err != nil {
 		return nil, err
 	}
@@ -1704,8 +1704,8 @@ func (c *Client) V1AgentsVersionsPartialUpdateWithBody(ctx context.Context, agen
 	return c.Client.Do(req)
 }
 
-func (c *Client) V1AgentsVersionsPartialUpdate(ctx context.Context, agentId openapi_types.UUID, agentVersionId openapi_types.UUID, params *V1AgentsVersionsPartialUpdateParams, body V1AgentsVersionsPartialUpdateJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
-	req, err := NewV1AgentsVersionsPartialUpdateRequest(c.Server, agentId, agentVersionId, params, body)
+func (c *Client) AgentsVersionsPartialUpdate(ctx context.Context, agentId openapi_types.UUID, agentVersionId openapi_types.UUID, params *AgentsVersionsPartialUpdateParams, body AgentsVersionsPartialUpdateJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewAgentsVersionsPartialUpdateRequest(c.Server, agentId, agentVersionId, params, body)
 	if err != nil {
 		return nil, err
 	}
@@ -1716,8 +1716,8 @@ func (c *Client) V1AgentsVersionsPartialUpdate(ctx context.Context, agentId open
 	return c.Client.Do(req)
 }
 
-func (c *Client) V1AgentsVersionsPartialUpdateWithFormdataBody(ctx context.Context, agentId openapi_types.UUID, agentVersionId openapi_types.UUID, params *V1AgentsVersionsPartialUpdateParams, body V1AgentsVersionsPartialUpdateFormdataRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
-	req, err := NewV1AgentsVersionsPartialUpdateRequestWithFormdataBody(c.Server, agentId, agentVersionId, params, body)
+func (c *Client) AgentsVersionsPartialUpdateWithFormdataBody(ctx context.Context, agentId openapi_types.UUID, agentVersionId openapi_types.UUID, params *AgentsVersionsPartialUpdateParams, body AgentsVersionsPartialUpdateFormdataRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewAgentsVersionsPartialUpdateRequestWithFormdataBody(c.Server, agentId, agentVersionId, params, body)
 	if err != nil {
 		return nil, err
 	}
@@ -1728,8 +1728,8 @@ func (c *Client) V1AgentsVersionsPartialUpdateWithFormdataBody(ctx context.Conte
 	return c.Client.Do(req)
 }
 
-func (c *Client) V1AgentsVersionsUpdateWithBody(ctx context.Context, agentId openapi_types.UUID, agentVersionId openapi_types.UUID, params *V1AgentsVersionsUpdateParams, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error) {
-	req, err := NewV1AgentsVersionsUpdateRequestWithBody(c.Server, agentId, agentVersionId, params, contentType, body)
+func (c *Client) AgentsVersionsUpdateWithBody(ctx context.Context, agentId openapi_types.UUID, agentVersionId openapi_types.UUID, params *AgentsVersionsUpdateParams, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewAgentsVersionsUpdateRequestWithBody(c.Server, agentId, agentVersionId, params, contentType, body)
 	if err != nil {
 		return nil, err
 	}
@@ -1740,8 +1740,8 @@ func (c *Client) V1AgentsVersionsUpdateWithBody(ctx context.Context, agentId ope
 	return c.Client.Do(req)
 }
 
-func (c *Client) V1AgentsVersionsUpdate(ctx context.Context, agentId openapi_types.UUID, agentVersionId openapi_types.UUID, params *V1AgentsVersionsUpdateParams, body V1AgentsVersionsUpdateJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
-	req, err := NewV1AgentsVersionsUpdateRequest(c.Server, agentId, agentVersionId, params, body)
+func (c *Client) AgentsVersionsUpdate(ctx context.Context, agentId openapi_types.UUID, agentVersionId openapi_types.UUID, params *AgentsVersionsUpdateParams, body AgentsVersionsUpdateJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewAgentsVersionsUpdateRequest(c.Server, agentId, agentVersionId, params, body)
 	if err != nil {
 		return nil, err
 	}
@@ -1752,8 +1752,8 @@ func (c *Client) V1AgentsVersionsUpdate(ctx context.Context, agentId openapi_typ
 	return c.Client.Do(req)
 }
 
-func (c *Client) V1AgentsVersionsUpdateWithFormdataBody(ctx context.Context, agentId openapi_types.UUID, agentVersionId openapi_types.UUID, params *V1AgentsVersionsUpdateParams, body V1AgentsVersionsUpdateFormdataRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
-	req, err := NewV1AgentsVersionsUpdateRequestWithFormdataBody(c.Server, agentId, agentVersionId, params, body)
+func (c *Client) AgentsVersionsUpdateWithFormdataBody(ctx context.Context, agentId openapi_types.UUID, agentVersionId openapi_types.UUID, params *AgentsVersionsUpdateParams, body AgentsVersionsUpdateFormdataRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewAgentsVersionsUpdateRequestWithFormdataBody(c.Server, agentId, agentVersionId, params, body)
 	if err != nil {
 		return nil, err
 	}
@@ -1764,8 +1764,8 @@ func (c *Client) V1AgentsVersionsUpdateWithFormdataBody(ctx context.Context, age
 	return c.Client.Do(req)
 }
 
-func (c *Client) V1PoliciesList(ctx context.Context, params *V1PoliciesListParams, reqEditors ...RequestEditorFn) (*http.Response, error) {
-	req, err := NewV1PoliciesListRequest(c.Server, params)
+func (c *Client) PoliciesList(ctx context.Context, params *PoliciesListParams, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewPoliciesListRequest(c.Server, params)
 	if err != nil {
 		return nil, err
 	}
@@ -1776,8 +1776,8 @@ func (c *Client) V1PoliciesList(ctx context.Context, params *V1PoliciesListParam
 	return c.Client.Do(req)
 }
 
-func (c *Client) V1PoliciesCreateWithBody(ctx context.Context, params *V1PoliciesCreateParams, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error) {
-	req, err := NewV1PoliciesCreateRequestWithBody(c.Server, params, contentType, body)
+func (c *Client) PoliciesCreateWithBody(ctx context.Context, params *PoliciesCreateParams, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewPoliciesCreateRequestWithBody(c.Server, params, contentType, body)
 	if err != nil {
 		return nil, err
 	}
@@ -1788,8 +1788,8 @@ func (c *Client) V1PoliciesCreateWithBody(ctx context.Context, params *V1Policie
 	return c.Client.Do(req)
 }
 
-func (c *Client) V1PoliciesCreate(ctx context.Context, params *V1PoliciesCreateParams, body V1PoliciesCreateJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
-	req, err := NewV1PoliciesCreateRequest(c.Server, params, body)
+func (c *Client) PoliciesCreate(ctx context.Context, params *PoliciesCreateParams, body PoliciesCreateJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewPoliciesCreateRequest(c.Server, params, body)
 	if err != nil {
 		return nil, err
 	}
@@ -1800,8 +1800,8 @@ func (c *Client) V1PoliciesCreate(ctx context.Context, params *V1PoliciesCreateP
 	return c.Client.Do(req)
 }
 
-func (c *Client) V1PoliciesCreateWithFormdataBody(ctx context.Context, params *V1PoliciesCreateParams, body V1PoliciesCreateFormdataRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
-	req, err := NewV1PoliciesCreateRequestWithFormdataBody(c.Server, params, body)
+func (c *Client) PoliciesCreateWithFormdataBody(ctx context.Context, params *PoliciesCreateParams, body PoliciesCreateFormdataRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewPoliciesCreateRequestWithFormdataBody(c.Server, params, body)
 	if err != nil {
 		return nil, err
 	}
@@ -1812,8 +1812,8 @@ func (c *Client) V1PoliciesCreateWithFormdataBody(ctx context.Context, params *V
 	return c.Client.Do(req)
 }
 
-func (c *Client) V1PoliciesDestroy(ctx context.Context, id openapi_types.UUID, params *V1PoliciesDestroyParams, reqEditors ...RequestEditorFn) (*http.Response, error) {
-	req, err := NewV1PoliciesDestroyRequest(c.Server, id, params)
+func (c *Client) PoliciesDestroy(ctx context.Context, id openapi_types.UUID, params *PoliciesDestroyParams, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewPoliciesDestroyRequest(c.Server, id, params)
 	if err != nil {
 		return nil, err
 	}
@@ -1824,8 +1824,8 @@ func (c *Client) V1PoliciesDestroy(ctx context.Context, id openapi_types.UUID, p
 	return c.Client.Do(req)
 }
 
-func (c *Client) V1PoliciesRetrieve(ctx context.Context, id openapi_types.UUID, params *V1PoliciesRetrieveParams, reqEditors ...RequestEditorFn) (*http.Response, error) {
-	req, err := NewV1PoliciesRetrieveRequest(c.Server, id, params)
+func (c *Client) PoliciesRetrieve(ctx context.Context, id openapi_types.UUID, params *PoliciesRetrieveParams, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewPoliciesRetrieveRequest(c.Server, id, params)
 	if err != nil {
 		return nil, err
 	}
@@ -1836,8 +1836,8 @@ func (c *Client) V1PoliciesRetrieve(ctx context.Context, id openapi_types.UUID, 
 	return c.Client.Do(req)
 }
 
-func (c *Client) V1PoliciesPartialUpdateWithBody(ctx context.Context, id openapi_types.UUID, params *V1PoliciesPartialUpdateParams, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error) {
-	req, err := NewV1PoliciesPartialUpdateRequestWithBody(c.Server, id, params, contentType, body)
+func (c *Client) PoliciesPartialUpdateWithBody(ctx context.Context, id openapi_types.UUID, params *PoliciesPartialUpdateParams, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewPoliciesPartialUpdateRequestWithBody(c.Server, id, params, contentType, body)
 	if err != nil {
 		return nil, err
 	}
@@ -1848,8 +1848,8 @@ func (c *Client) V1PoliciesPartialUpdateWithBody(ctx context.Context, id openapi
 	return c.Client.Do(req)
 }
 
-func (c *Client) V1PoliciesPartialUpdate(ctx context.Context, id openapi_types.UUID, params *V1PoliciesPartialUpdateParams, body V1PoliciesPartialUpdateJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
-	req, err := NewV1PoliciesPartialUpdateRequest(c.Server, id, params, body)
+func (c *Client) PoliciesPartialUpdate(ctx context.Context, id openapi_types.UUID, params *PoliciesPartialUpdateParams, body PoliciesPartialUpdateJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewPoliciesPartialUpdateRequest(c.Server, id, params, body)
 	if err != nil {
 		return nil, err
 	}
@@ -1860,8 +1860,8 @@ func (c *Client) V1PoliciesPartialUpdate(ctx context.Context, id openapi_types.U
 	return c.Client.Do(req)
 }
 
-func (c *Client) V1PoliciesPartialUpdateWithFormdataBody(ctx context.Context, id openapi_types.UUID, params *V1PoliciesPartialUpdateParams, body V1PoliciesPartialUpdateFormdataRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
-	req, err := NewV1PoliciesPartialUpdateRequestWithFormdataBody(c.Server, id, params, body)
+func (c *Client) PoliciesPartialUpdateWithFormdataBody(ctx context.Context, id openapi_types.UUID, params *PoliciesPartialUpdateParams, body PoliciesPartialUpdateFormdataRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewPoliciesPartialUpdateRequestWithFormdataBody(c.Server, id, params, body)
 	if err != nil {
 		return nil, err
 	}
@@ -1872,8 +1872,8 @@ func (c *Client) V1PoliciesPartialUpdateWithFormdataBody(ctx context.Context, id
 	return c.Client.Do(req)
 }
 
-func (c *Client) V1PoliciesUpdateWithBody(ctx context.Context, id openapi_types.UUID, params *V1PoliciesUpdateParams, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error) {
-	req, err := NewV1PoliciesUpdateRequestWithBody(c.Server, id, params, contentType, body)
+func (c *Client) PoliciesUpdateWithBody(ctx context.Context, id openapi_types.UUID, params *PoliciesUpdateParams, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewPoliciesUpdateRequestWithBody(c.Server, id, params, contentType, body)
 	if err != nil {
 		return nil, err
 	}
@@ -1884,8 +1884,8 @@ func (c *Client) V1PoliciesUpdateWithBody(ctx context.Context, id openapi_types.
 	return c.Client.Do(req)
 }
 
-func (c *Client) V1PoliciesUpdate(ctx context.Context, id openapi_types.UUID, params *V1PoliciesUpdateParams, body V1PoliciesUpdateJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
-	req, err := NewV1PoliciesUpdateRequest(c.Server, id, params, body)
+func (c *Client) PoliciesUpdate(ctx context.Context, id openapi_types.UUID, params *PoliciesUpdateParams, body PoliciesUpdateJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewPoliciesUpdateRequest(c.Server, id, params, body)
 	if err != nil {
 		return nil, err
 	}
@@ -1896,8 +1896,8 @@ func (c *Client) V1PoliciesUpdate(ctx context.Context, id openapi_types.UUID, pa
 	return c.Client.Do(req)
 }
 
-func (c *Client) V1PoliciesUpdateWithFormdataBody(ctx context.Context, id openapi_types.UUID, params *V1PoliciesUpdateParams, body V1PoliciesUpdateFormdataRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
-	req, err := NewV1PoliciesUpdateRequestWithFormdataBody(c.Server, id, params, body)
+func (c *Client) PoliciesUpdateWithFormdataBody(ctx context.Context, id openapi_types.UUID, params *PoliciesUpdateParams, body PoliciesUpdateFormdataRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewPoliciesUpdateRequestWithFormdataBody(c.Server, id, params, body)
 	if err != nil {
 		return nil, err
 	}
@@ -1908,8 +1908,8 @@ func (c *Client) V1PoliciesUpdateWithFormdataBody(ctx context.Context, id openap
 	return c.Client.Do(req)
 }
 
-func (c *Client) V1PoliciesVersionsList(ctx context.Context, policyId openapi_types.UUID, params *V1PoliciesVersionsListParams, reqEditors ...RequestEditorFn) (*http.Response, error) {
-	req, err := NewV1PoliciesVersionsListRequest(c.Server, policyId, params)
+func (c *Client) PoliciesVersionsList(ctx context.Context, policyId openapi_types.UUID, params *PoliciesVersionsListParams, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewPoliciesVersionsListRequest(c.Server, policyId, params)
 	if err != nil {
 		return nil, err
 	}
@@ -1920,8 +1920,8 @@ func (c *Client) V1PoliciesVersionsList(ctx context.Context, policyId openapi_ty
 	return c.Client.Do(req)
 }
 
-func (c *Client) V1PoliciesVersionsCreateWithBody(ctx context.Context, policyId openapi_types.UUID, params *V1PoliciesVersionsCreateParams, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error) {
-	req, err := NewV1PoliciesVersionsCreateRequestWithBody(c.Server, policyId, params, contentType, body)
+func (c *Client) PoliciesVersionsCreateWithBody(ctx context.Context, policyId openapi_types.UUID, params *PoliciesVersionsCreateParams, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewPoliciesVersionsCreateRequestWithBody(c.Server, policyId, params, contentType, body)
 	if err != nil {
 		return nil, err
 	}
@@ -1932,8 +1932,8 @@ func (c *Client) V1PoliciesVersionsCreateWithBody(ctx context.Context, policyId 
 	return c.Client.Do(req)
 }
 
-func (c *Client) V1PoliciesVersionsCreate(ctx context.Context, policyId openapi_types.UUID, params *V1PoliciesVersionsCreateParams, body V1PoliciesVersionsCreateJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
-	req, err := NewV1PoliciesVersionsCreateRequest(c.Server, policyId, params, body)
+func (c *Client) PoliciesVersionsCreate(ctx context.Context, policyId openapi_types.UUID, params *PoliciesVersionsCreateParams, body PoliciesVersionsCreateJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewPoliciesVersionsCreateRequest(c.Server, policyId, params, body)
 	if err != nil {
 		return nil, err
 	}
@@ -1944,8 +1944,8 @@ func (c *Client) V1PoliciesVersionsCreate(ctx context.Context, policyId openapi_
 	return c.Client.Do(req)
 }
 
-func (c *Client) V1PoliciesVersionsCreateWithFormdataBody(ctx context.Context, policyId openapi_types.UUID, params *V1PoliciesVersionsCreateParams, body V1PoliciesVersionsCreateFormdataRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
-	req, err := NewV1PoliciesVersionsCreateRequestWithFormdataBody(c.Server, policyId, params, body)
+func (c *Client) PoliciesVersionsCreateWithFormdataBody(ctx context.Context, policyId openapi_types.UUID, params *PoliciesVersionsCreateParams, body PoliciesVersionsCreateFormdataRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewPoliciesVersionsCreateRequestWithFormdataBody(c.Server, policyId, params, body)
 	if err != nil {
 		return nil, err
 	}
@@ -1956,8 +1956,8 @@ func (c *Client) V1PoliciesVersionsCreateWithFormdataBody(ctx context.Context, p
 	return c.Client.Do(req)
 }
 
-func (c *Client) V1PoliciesVersionsRetrieve(ctx context.Context, policyId openapi_types.UUID, versionId openapi_types.UUID, params *V1PoliciesVersionsRetrieveParams, reqEditors ...RequestEditorFn) (*http.Response, error) {
-	req, err := NewV1PoliciesVersionsRetrieveRequest(c.Server, policyId, versionId, params)
+func (c *Client) PoliciesVersionsRetrieve(ctx context.Context, policyId openapi_types.UUID, versionId openapi_types.UUID, params *PoliciesVersionsRetrieveParams, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewPoliciesVersionsRetrieveRequest(c.Server, policyId, versionId, params)
 	if err != nil {
 		return nil, err
 	}
@@ -1968,8 +1968,8 @@ func (c *Client) V1PoliciesVersionsRetrieve(ctx context.Context, policyId openap
 	return c.Client.Do(req)
 }
 
-func (c *Client) V1UsersCurrentUserRetrieve(ctx context.Context, reqEditors ...RequestEditorFn) (*http.Response, error) {
-	req, err := NewV1UsersCurrentUserRetrieveRequest(c.Server)
+func (c *Client) UsersCurrentUserRetrieve(ctx context.Context, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewUsersCurrentUserRetrieveRequest(c.Server)
 	if err != nil {
 		return nil, err
 	}
@@ -1980,8 +1980,8 @@ func (c *Client) V1UsersCurrentUserRetrieve(ctx context.Context, reqEditors ...R
 	return c.Client.Do(req)
 }
 
-// NewV1AgentsListRequest generates requests for V1AgentsList
-func NewV1AgentsListRequest(server string, params *V1AgentsListParams) (*http.Request, error) {
+// NewAgentsListRequest generates requests for AgentsList
+func NewAgentsListRequest(server string, params *AgentsListParams) (*http.Request, error) {
 	var err error
 
 	serverURL, err := url.Parse(server)
@@ -2153,30 +2153,30 @@ func NewV1AgentsListRequest(server string, params *V1AgentsListParams) (*http.Re
 	return req, nil
 }
 
-// NewV1AgentsCreateRequest calls the generic V1AgentsCreate builder with application/json body
-func NewV1AgentsCreateRequest(server string, params *V1AgentsCreateParams, body V1AgentsCreateJSONRequestBody) (*http.Request, error) {
+// NewAgentsCreateRequest calls the generic AgentsCreate builder with application/json body
+func NewAgentsCreateRequest(server string, params *AgentsCreateParams, body AgentsCreateJSONRequestBody) (*http.Request, error) {
 	var bodyReader io.Reader
 	buf, err := json.Marshal(body)
 	if err != nil {
 		return nil, err
 	}
 	bodyReader = bytes.NewReader(buf)
-	return NewV1AgentsCreateRequestWithBody(server, params, "application/json", bodyReader)
+	return NewAgentsCreateRequestWithBody(server, params, "application/json", bodyReader)
 }
 
-// NewV1AgentsCreateRequestWithFormdataBody calls the generic V1AgentsCreate builder with application/x-www-form-urlencoded body
-func NewV1AgentsCreateRequestWithFormdataBody(server string, params *V1AgentsCreateParams, body V1AgentsCreateFormdataRequestBody) (*http.Request, error) {
+// NewAgentsCreateRequestWithFormdataBody calls the generic AgentsCreate builder with application/x-www-form-urlencoded body
+func NewAgentsCreateRequestWithFormdataBody(server string, params *AgentsCreateParams, body AgentsCreateFormdataRequestBody) (*http.Request, error) {
 	var bodyReader io.Reader
 	bodyStr, err := runtime.MarshalForm(body, nil)
 	if err != nil {
 		return nil, err
 	}
 	bodyReader = strings.NewReader(bodyStr.Encode())
-	return NewV1AgentsCreateRequestWithBody(server, params, "application/x-www-form-urlencoded", bodyReader)
+	return NewAgentsCreateRequestWithBody(server, params, "application/x-www-form-urlencoded", bodyReader)
 }
 
-// NewV1AgentsCreateRequestWithBody generates requests for V1AgentsCreate with any type of body
-func NewV1AgentsCreateRequestWithBody(server string, params *V1AgentsCreateParams, contentType string, body io.Reader) (*http.Request, error) {
+// NewAgentsCreateRequestWithBody generates requests for AgentsCreate with any type of body
+func NewAgentsCreateRequestWithBody(server string, params *AgentsCreateParams, contentType string, body io.Reader) (*http.Request, error) {
 	var err error
 
 	serverURL, err := url.Parse(server)
@@ -2226,30 +2226,30 @@ func NewV1AgentsCreateRequestWithBody(server string, params *V1AgentsCreateParam
 	return req, nil
 }
 
-// NewV1AgentsJobsResultsCreateRequest calls the generic V1AgentsJobsResultsCreate builder with application/json body
-func NewV1AgentsJobsResultsCreateRequest(server string, params *V1AgentsJobsResultsCreateParams, body V1AgentsJobsResultsCreateJSONRequestBody) (*http.Request, error) {
+// NewAgentsJobsResultsCreateRequest calls the generic AgentsJobsResultsCreate builder with application/json body
+func NewAgentsJobsResultsCreateRequest(server string, params *AgentsJobsResultsCreateParams, body AgentsJobsResultsCreateJSONRequestBody) (*http.Request, error) {
 	var bodyReader io.Reader
 	buf, err := json.Marshal(body)
 	if err != nil {
 		return nil, err
 	}
 	bodyReader = bytes.NewReader(buf)
-	return NewV1AgentsJobsResultsCreateRequestWithBody(server, params, "application/json", bodyReader)
+	return NewAgentsJobsResultsCreateRequestWithBody(server, params, "application/json", bodyReader)
 }
 
-// NewV1AgentsJobsResultsCreateRequestWithFormdataBody calls the generic V1AgentsJobsResultsCreate builder with application/x-www-form-urlencoded body
-func NewV1AgentsJobsResultsCreateRequestWithFormdataBody(server string, params *V1AgentsJobsResultsCreateParams, body V1AgentsJobsResultsCreateFormdataRequestBody) (*http.Request, error) {
+// NewAgentsJobsResultsCreateRequestWithFormdataBody calls the generic AgentsJobsResultsCreate builder with application/x-www-form-urlencoded body
+func NewAgentsJobsResultsCreateRequestWithFormdataBody(server string, params *AgentsJobsResultsCreateParams, body AgentsJobsResultsCreateFormdataRequestBody) (*http.Request, error) {
 	var bodyReader io.Reader
 	bodyStr, err := runtime.MarshalForm(body, nil)
 	if err != nil {
 		return nil, err
 	}
 	bodyReader = strings.NewReader(bodyStr.Encode())
-	return NewV1AgentsJobsResultsCreateRequestWithBody(server, params, "application/x-www-form-urlencoded", bodyReader)
+	return NewAgentsJobsResultsCreateRequestWithBody(server, params, "application/x-www-form-urlencoded", bodyReader)
 }
 
-// NewV1AgentsJobsResultsCreateRequestWithBody generates requests for V1AgentsJobsResultsCreate with any type of body
-func NewV1AgentsJobsResultsCreateRequestWithBody(server string, params *V1AgentsJobsResultsCreateParams, contentType string, body io.Reader) (*http.Request, error) {
+// NewAgentsJobsResultsCreateRequestWithBody generates requests for AgentsJobsResultsCreate with any type of body
+func NewAgentsJobsResultsCreateRequestWithBody(server string, params *AgentsJobsResultsCreateParams, contentType string, body io.Reader) (*http.Request, error) {
 	var err error
 
 	serverURL, err := url.Parse(server)
@@ -2299,30 +2299,30 @@ func NewV1AgentsJobsResultsCreateRequestWithBody(server string, params *V1Agents
 	return req, nil
 }
 
-// NewV1AgentsJobsStatusesCreateRequest calls the generic V1AgentsJobsStatusesCreate builder with application/json body
-func NewV1AgentsJobsStatusesCreateRequest(server string, params *V1AgentsJobsStatusesCreateParams, body V1AgentsJobsStatusesCreateJSONRequestBody) (*http.Request, error) {
+// NewAgentsJobsStatusesCreateRequest calls the generic AgentsJobsStatusesCreate builder with application/json body
+func NewAgentsJobsStatusesCreateRequest(server string, params *AgentsJobsStatusesCreateParams, body AgentsJobsStatusesCreateJSONRequestBody) (*http.Request, error) {
 	var bodyReader io.Reader
 	buf, err := json.Marshal(body)
 	if err != nil {
 		return nil, err
 	}
 	bodyReader = bytes.NewReader(buf)
-	return NewV1AgentsJobsStatusesCreateRequestWithBody(server, params, "application/json", bodyReader)
+	return NewAgentsJobsStatusesCreateRequestWithBody(server, params, "application/json", bodyReader)
 }
 
-// NewV1AgentsJobsStatusesCreateRequestWithFormdataBody calls the generic V1AgentsJobsStatusesCreate builder with application/x-www-form-urlencoded body
-func NewV1AgentsJobsStatusesCreateRequestWithFormdataBody(server string, params *V1AgentsJobsStatusesCreateParams, body V1AgentsJobsStatusesCreateFormdataRequestBody) (*http.Request, error) {
+// NewAgentsJobsStatusesCreateRequestWithFormdataBody calls the generic AgentsJobsStatusesCreate builder with application/x-www-form-urlencoded body
+func NewAgentsJobsStatusesCreateRequestWithFormdataBody(server string, params *AgentsJobsStatusesCreateParams, body AgentsJobsStatusesCreateFormdataRequestBody) (*http.Request, error) {
 	var bodyReader io.Reader
 	bodyStr, err := runtime.MarshalForm(body, nil)
 	if err != nil {
 		return nil, err
 	}
 	bodyReader = strings.NewReader(bodyStr.Encode())
-	return NewV1AgentsJobsStatusesCreateRequestWithBody(server, params, "application/x-www-form-urlencoded", bodyReader)
+	return NewAgentsJobsStatusesCreateRequestWithBody(server, params, "application/x-www-form-urlencoded", bodyReader)
 }
 
-// NewV1AgentsJobsStatusesCreateRequestWithBody generates requests for V1AgentsJobsStatusesCreate with any type of body
-func NewV1AgentsJobsStatusesCreateRequestWithBody(server string, params *V1AgentsJobsStatusesCreateParams, contentType string, body io.Reader) (*http.Request, error) {
+// NewAgentsJobsStatusesCreateRequestWithBody generates requests for AgentsJobsStatusesCreate with any type of body
+func NewAgentsJobsStatusesCreateRequestWithBody(server string, params *AgentsJobsStatusesCreateParams, contentType string, body io.Reader) (*http.Request, error) {
 	var err error
 
 	serverURL, err := url.Parse(server)
@@ -2372,8 +2372,8 @@ func NewV1AgentsJobsStatusesCreateRequestWithBody(server string, params *V1Agent
 	return req, nil
 }
 
-// NewV1AgentsJobsReferencesRetrieveRequest generates requests for V1AgentsJobsReferencesRetrieve
-func NewV1AgentsJobsReferencesRetrieveRequest(server string, agentJobId openapi_types.UUID, resourceId string, params *V1AgentsJobsReferencesRetrieveParams) (*http.Request, error) {
+// NewAgentsJobsReferencesRetrieveRequest generates requests for AgentsJobsReferencesRetrieve
+func NewAgentsJobsReferencesRetrieveRequest(server string, agentJobId openapi_types.UUID, resourceId string, params *AgentsJobsReferencesRetrieveParams) (*http.Request, error) {
 	var err error
 
 	var pathParam0 string
@@ -2435,8 +2435,8 @@ func NewV1AgentsJobsReferencesRetrieveRequest(server string, agentJobId openapi_
 	return req, nil
 }
 
-// NewV1AgentsJobsResultRetrieveRequest generates requests for V1AgentsJobsResultRetrieve
-func NewV1AgentsJobsResultRetrieveRequest(server string, agentJobId openapi_types.UUID, params *V1AgentsJobsResultRetrieveParams) (*http.Request, error) {
+// NewAgentsJobsResultRetrieveRequest generates requests for AgentsJobsResultRetrieve
+func NewAgentsJobsResultRetrieveRequest(server string, agentJobId openapi_types.UUID, params *AgentsJobsResultRetrieveParams) (*http.Request, error) {
 	var err error
 
 	var pathParam0 string
@@ -2491,8 +2491,8 @@ func NewV1AgentsJobsResultRetrieveRequest(server string, agentJobId openapi_type
 	return req, nil
 }
 
-// NewV1AgentsJobsCancelCreateRequest generates requests for V1AgentsJobsCancelCreate
-func NewV1AgentsJobsCancelCreateRequest(server string, jobId openapi_types.UUID, params *V1AgentsJobsCancelCreateParams) (*http.Request, error) {
+// NewAgentsJobsCancelCreateRequest generates requests for AgentsJobsCancelCreate
+func NewAgentsJobsCancelCreateRequest(server string, jobId openapi_types.UUID, params *AgentsJobsCancelCreateParams) (*http.Request, error) {
 	var err error
 
 	var pathParam0 string
@@ -2547,8 +2547,8 @@ func NewV1AgentsJobsCancelCreateRequest(server string, jobId openapi_types.UUID,
 	return req, nil
 }
 
-// NewV1AgentsJobsDeleteDataCreateRequest generates requests for V1AgentsJobsDeleteDataCreate
-func NewV1AgentsJobsDeleteDataCreateRequest(server string, jobId openapi_types.UUID, params *V1AgentsJobsDeleteDataCreateParams) (*http.Request, error) {
+// NewAgentsJobsDeleteDataCreateRequest generates requests for AgentsJobsDeleteDataCreate
+func NewAgentsJobsDeleteDataCreateRequest(server string, jobId openapi_types.UUID, params *AgentsJobsDeleteDataCreateParams) (*http.Request, error) {
 	var err error
 
 	var pathParam0 string
@@ -2603,8 +2603,8 @@ func NewV1AgentsJobsDeleteDataCreateRequest(server string, jobId openapi_types.U
 	return req, nil
 }
 
-// NewV1AgentsJobsStatusRetrieveRequest generates requests for V1AgentsJobsStatusRetrieve
-func NewV1AgentsJobsStatusRetrieveRequest(server string, jobId openapi_types.UUID, params *V1AgentsJobsStatusRetrieveParams) (*http.Request, error) {
+// NewAgentsJobsStatusRetrieveRequest generates requests for AgentsJobsStatusRetrieve
+func NewAgentsJobsStatusRetrieveRequest(server string, jobId openapi_types.UUID, params *AgentsJobsStatusRetrieveParams) (*http.Request, error) {
 	var err error
 
 	var pathParam0 string
@@ -2659,30 +2659,30 @@ func NewV1AgentsJobsStatusRetrieveRequest(server string, jobId openapi_types.UUI
 	return req, nil
 }
 
-// NewAgentsRun2Request calls the generic AgentsRun2 builder with application/json body
-func NewAgentsRun2Request(server string, agentId openapi_types.UUID, params *AgentsRun2Params, body AgentsRun2JSONRequestBody) (*http.Request, error) {
+// NewAgentsRunRequest calls the generic AgentsRun builder with application/json body
+func NewAgentsRunRequest(server string, agentId openapi_types.UUID, params *AgentsRunParams, body AgentsRunJSONRequestBody) (*http.Request, error) {
 	var bodyReader io.Reader
 	buf, err := json.Marshal(body)
 	if err != nil {
 		return nil, err
 	}
 	bodyReader = bytes.NewReader(buf)
-	return NewAgentsRun2RequestWithBody(server, agentId, params, "application/json", bodyReader)
+	return NewAgentsRunRequestWithBody(server, agentId, params, "application/json", bodyReader)
 }
 
-// NewAgentsRun2RequestWithFormdataBody calls the generic AgentsRun2 builder with application/x-www-form-urlencoded body
-func NewAgentsRun2RequestWithFormdataBody(server string, agentId openapi_types.UUID, params *AgentsRun2Params, body AgentsRun2FormdataRequestBody) (*http.Request, error) {
+// NewAgentsRunRequestWithFormdataBody calls the generic AgentsRun builder with application/x-www-form-urlencoded body
+func NewAgentsRunRequestWithFormdataBody(server string, agentId openapi_types.UUID, params *AgentsRunParams, body AgentsRunFormdataRequestBody) (*http.Request, error) {
 	var bodyReader io.Reader
 	bodyStr, err := runtime.MarshalForm(body, nil)
 	if err != nil {
 		return nil, err
 	}
 	bodyReader = strings.NewReader(bodyStr.Encode())
-	return NewAgentsRun2RequestWithBody(server, agentId, params, "application/x-www-form-urlencoded", bodyReader)
+	return NewAgentsRunRequestWithBody(server, agentId, params, "application/x-www-form-urlencoded", bodyReader)
 }
 
-// NewAgentsRun2RequestWithBody generates requests for AgentsRun2 with any type of body
-func NewAgentsRun2RequestWithBody(server string, agentId openapi_types.UUID, params *AgentsRun2Params, contentType string, body io.Reader) (*http.Request, error) {
+// NewAgentsRunRequestWithBody generates requests for AgentsRun with any type of body
+func NewAgentsRunRequestWithBody(server string, agentId openapi_types.UUID, params *AgentsRunParams, contentType string, body io.Reader) (*http.Request, error) {
 	var err error
 
 	var pathParam0 string
@@ -2739,30 +2739,30 @@ func NewAgentsRun2RequestWithBody(server string, agentId openapi_types.UUID, par
 	return req, nil
 }
 
-// NewV1AgentsRunAsyncCreateRequest calls the generic V1AgentsRunAsyncCreate builder with application/json body
-func NewV1AgentsRunAsyncCreateRequest(server string, agentId openapi_types.UUID, params *V1AgentsRunAsyncCreateParams, body V1AgentsRunAsyncCreateJSONRequestBody) (*http.Request, error) {
+// NewAgentsRunAsyncCreateRequest calls the generic AgentsRunAsyncCreate builder with application/json body
+func NewAgentsRunAsyncCreateRequest(server string, agentId openapi_types.UUID, params *AgentsRunAsyncCreateParams, body AgentsRunAsyncCreateJSONRequestBody) (*http.Request, error) {
 	var bodyReader io.Reader
 	buf, err := json.Marshal(body)
 	if err != nil {
 		return nil, err
 	}
 	bodyReader = bytes.NewReader(buf)
-	return NewV1AgentsRunAsyncCreateRequestWithBody(server, agentId, params, "application/json", bodyReader)
+	return NewAgentsRunAsyncCreateRequestWithBody(server, agentId, params, "application/json", bodyReader)
 }
 
-// NewV1AgentsRunAsyncCreateRequestWithFormdataBody calls the generic V1AgentsRunAsyncCreate builder with application/x-www-form-urlencoded body
-func NewV1AgentsRunAsyncCreateRequestWithFormdataBody(server string, agentId openapi_types.UUID, params *V1AgentsRunAsyncCreateParams, body V1AgentsRunAsyncCreateFormdataRequestBody) (*http.Request, error) {
+// NewAgentsRunAsyncCreateRequestWithFormdataBody calls the generic AgentsRunAsyncCreate builder with application/x-www-form-urlencoded body
+func NewAgentsRunAsyncCreateRequestWithFormdataBody(server string, agentId openapi_types.UUID, params *AgentsRunAsyncCreateParams, body AgentsRunAsyncCreateFormdataRequestBody) (*http.Request, error) {
 	var bodyReader io.Reader
 	bodyStr, err := runtime.MarshalForm(body, nil)
 	if err != nil {
 		return nil, err
 	}
 	bodyReader = strings.NewReader(bodyStr.Encode())
-	return NewV1AgentsRunAsyncCreateRequestWithBody(server, agentId, params, "application/x-www-form-urlencoded", bodyReader)
+	return NewAgentsRunAsyncCreateRequestWithBody(server, agentId, params, "application/x-www-form-urlencoded", bodyReader)
 }
 
-// NewV1AgentsRunAsyncCreateRequestWithBody generates requests for V1AgentsRunAsyncCreate with any type of body
-func NewV1AgentsRunAsyncCreateRequestWithBody(server string, agentId openapi_types.UUID, params *V1AgentsRunAsyncCreateParams, contentType string, body io.Reader) (*http.Request, error) {
+// NewAgentsRunAsyncCreateRequestWithBody generates requests for AgentsRunAsyncCreate with any type of body
+func NewAgentsRunAsyncCreateRequestWithBody(server string, agentId openapi_types.UUID, params *AgentsRunAsyncCreateParams, contentType string, body io.Reader) (*http.Request, error) {
 	var err error
 
 	var pathParam0 string
@@ -2819,30 +2819,30 @@ func NewV1AgentsRunAsyncCreateRequestWithBody(server string, agentId openapi_typ
 	return req, nil
 }
 
-// NewAgentsRunAsyncMany5Request calls the generic AgentsRunAsyncMany5 builder with application/json body
-func NewAgentsRunAsyncMany5Request(server string, agentId openapi_types.UUID, params *AgentsRunAsyncMany5Params, body AgentsRunAsyncMany5JSONRequestBody) (*http.Request, error) {
+// NewAgentsRunAsyncManyRequest calls the generic AgentsRunAsyncMany builder with application/json body
+func NewAgentsRunAsyncManyRequest(server string, agentId openapi_types.UUID, params *AgentsRunAsyncManyParams, body AgentsRunAsyncManyJSONRequestBody) (*http.Request, error) {
 	var bodyReader io.Reader
 	buf, err := json.Marshal(body)
 	if err != nil {
 		return nil, err
 	}
 	bodyReader = bytes.NewReader(buf)
-	return NewAgentsRunAsyncMany5RequestWithBody(server, agentId, params, "application/json", bodyReader)
+	return NewAgentsRunAsyncManyRequestWithBody(server, agentId, params, "application/json", bodyReader)
 }
 
-// NewAgentsRunAsyncMany5RequestWithFormdataBody calls the generic AgentsRunAsyncMany5 builder with application/x-www-form-urlencoded body
-func NewAgentsRunAsyncMany5RequestWithFormdataBody(server string, agentId openapi_types.UUID, params *AgentsRunAsyncMany5Params, body AgentsRunAsyncMany5FormdataRequestBody) (*http.Request, error) {
+// NewAgentsRunAsyncManyRequestWithFormdataBody calls the generic AgentsRunAsyncMany builder with application/x-www-form-urlencoded body
+func NewAgentsRunAsyncManyRequestWithFormdataBody(server string, agentId openapi_types.UUID, params *AgentsRunAsyncManyParams, body AgentsRunAsyncManyFormdataRequestBody) (*http.Request, error) {
 	var bodyReader io.Reader
 	bodyStr, err := runtime.MarshalForm(body, nil)
 	if err != nil {
 		return nil, err
 	}
 	bodyReader = strings.NewReader(bodyStr.Encode())
-	return NewAgentsRunAsyncMany5RequestWithBody(server, agentId, params, "application/x-www-form-urlencoded", bodyReader)
+	return NewAgentsRunAsyncManyRequestWithBody(server, agentId, params, "application/x-www-form-urlencoded", bodyReader)
 }
 
-// NewAgentsRunAsyncMany5RequestWithBody generates requests for AgentsRunAsyncMany5 with any type of body
-func NewAgentsRunAsyncMany5RequestWithBody(server string, agentId openapi_types.UUID, params *AgentsRunAsyncMany5Params, contentType string, body io.Reader) (*http.Request, error) {
+// NewAgentsRunAsyncManyRequestWithBody generates requests for AgentsRunAsyncMany with any type of body
+func NewAgentsRunAsyncManyRequestWithBody(server string, agentId openapi_types.UUID, params *AgentsRunAsyncManyParams, contentType string, body io.Reader) (*http.Request, error) {
 	var err error
 
 	var pathParam0 string
@@ -2899,30 +2899,30 @@ func NewAgentsRunAsyncMany5RequestWithBody(server string, agentId openapi_types.
 	return req, nil
 }
 
-// NewAgentsRunVersion2Request calls the generic AgentsRunVersion2 builder with application/json body
-func NewAgentsRunVersion2Request(server string, agentId openapi_types.UUID, agentVersionId openapi_types.UUID, params *AgentsRunVersion2Params, body AgentsRunVersion2JSONRequestBody) (*http.Request, error) {
+// NewAgentsRunVersionRequest calls the generic AgentsRunVersion builder with application/json body
+func NewAgentsRunVersionRequest(server string, agentId openapi_types.UUID, agentVersionId openapi_types.UUID, params *AgentsRunVersionParams, body AgentsRunVersionJSONRequestBody) (*http.Request, error) {
 	var bodyReader io.Reader
 	buf, err := json.Marshal(body)
 	if err != nil {
 		return nil, err
 	}
 	bodyReader = bytes.NewReader(buf)
-	return NewAgentsRunVersion2RequestWithBody(server, agentId, agentVersionId, params, "application/json", bodyReader)
+	return NewAgentsRunVersionRequestWithBody(server, agentId, agentVersionId, params, "application/json", bodyReader)
 }
 
-// NewAgentsRunVersion2RequestWithFormdataBody calls the generic AgentsRunVersion2 builder with application/x-www-form-urlencoded body
-func NewAgentsRunVersion2RequestWithFormdataBody(server string, agentId openapi_types.UUID, agentVersionId openapi_types.UUID, params *AgentsRunVersion2Params, body AgentsRunVersion2FormdataRequestBody) (*http.Request, error) {
+// NewAgentsRunVersionRequestWithFormdataBody calls the generic AgentsRunVersion builder with application/x-www-form-urlencoded body
+func NewAgentsRunVersionRequestWithFormdataBody(server string, agentId openapi_types.UUID, agentVersionId openapi_types.UUID, params *AgentsRunVersionParams, body AgentsRunVersionFormdataRequestBody) (*http.Request, error) {
 	var bodyReader io.Reader
 	bodyStr, err := runtime.MarshalForm(body, nil)
 	if err != nil {
 		return nil, err
 	}
 	bodyReader = strings.NewReader(bodyStr.Encode())
-	return NewAgentsRunVersion2RequestWithBody(server, agentId, agentVersionId, params, "application/x-www-form-urlencoded", bodyReader)
+	return NewAgentsRunVersionRequestWithBody(server, agentId, agentVersionId, params, "application/x-www-form-urlencoded", bodyReader)
 }
 
-// NewAgentsRunVersion2RequestWithBody generates requests for AgentsRunVersion2 with any type of body
-func NewAgentsRunVersion2RequestWithBody(server string, agentId openapi_types.UUID, agentVersionId openapi_types.UUID, params *AgentsRunVersion2Params, contentType string, body io.Reader) (*http.Request, error) {
+// NewAgentsRunVersionRequestWithBody generates requests for AgentsRunVersion with any type of body
+func NewAgentsRunVersionRequestWithBody(server string, agentId openapi_types.UUID, agentVersionId openapi_types.UUID, params *AgentsRunVersionParams, contentType string, body io.Reader) (*http.Request, error) {
 	var err error
 
 	var pathParam0 string
@@ -2986,30 +2986,30 @@ func NewAgentsRunVersion2RequestWithBody(server string, agentId openapi_types.UU
 	return req, nil
 }
 
-// NewV1AgentsRunVersionsAsyncCreateRequest calls the generic V1AgentsRunVersionsAsyncCreate builder with application/json body
-func NewV1AgentsRunVersionsAsyncCreateRequest(server string, agentId openapi_types.UUID, agentVersionId openapi_types.UUID, params *V1AgentsRunVersionsAsyncCreateParams, body V1AgentsRunVersionsAsyncCreateJSONRequestBody) (*http.Request, error) {
+// NewAgentsRunVersionsAsyncCreateRequest calls the generic AgentsRunVersionsAsyncCreate builder with application/json body
+func NewAgentsRunVersionsAsyncCreateRequest(server string, agentId openapi_types.UUID, agentVersionId openapi_types.UUID, params *AgentsRunVersionsAsyncCreateParams, body AgentsRunVersionsAsyncCreateJSONRequestBody) (*http.Request, error) {
 	var bodyReader io.Reader
 	buf, err := json.Marshal(body)
 	if err != nil {
 		return nil, err
 	}
 	bodyReader = bytes.NewReader(buf)
-	return NewV1AgentsRunVersionsAsyncCreateRequestWithBody(server, agentId, agentVersionId, params, "application/json", bodyReader)
+	return NewAgentsRunVersionsAsyncCreateRequestWithBody(server, agentId, agentVersionId, params, "application/json", bodyReader)
 }
 
-// NewV1AgentsRunVersionsAsyncCreateRequestWithFormdataBody calls the generic V1AgentsRunVersionsAsyncCreate builder with application/x-www-form-urlencoded body
-func NewV1AgentsRunVersionsAsyncCreateRequestWithFormdataBody(server string, agentId openapi_types.UUID, agentVersionId openapi_types.UUID, params *V1AgentsRunVersionsAsyncCreateParams, body V1AgentsRunVersionsAsyncCreateFormdataRequestBody) (*http.Request, error) {
+// NewAgentsRunVersionsAsyncCreateRequestWithFormdataBody calls the generic AgentsRunVersionsAsyncCreate builder with application/x-www-form-urlencoded body
+func NewAgentsRunVersionsAsyncCreateRequestWithFormdataBody(server string, agentId openapi_types.UUID, agentVersionId openapi_types.UUID, params *AgentsRunVersionsAsyncCreateParams, body AgentsRunVersionsAsyncCreateFormdataRequestBody) (*http.Request, error) {
 	var bodyReader io.Reader
 	bodyStr, err := runtime.MarshalForm(body, nil)
 	if err != nil {
 		return nil, err
 	}
 	bodyReader = strings.NewReader(bodyStr.Encode())
-	return NewV1AgentsRunVersionsAsyncCreateRequestWithBody(server, agentId, agentVersionId, params, "application/x-www-form-urlencoded", bodyReader)
+	return NewAgentsRunVersionsAsyncCreateRequestWithBody(server, agentId, agentVersionId, params, "application/x-www-form-urlencoded", bodyReader)
 }
 
-// NewV1AgentsRunVersionsAsyncCreateRequestWithBody generates requests for V1AgentsRunVersionsAsyncCreate with any type of body
-func NewV1AgentsRunVersionsAsyncCreateRequestWithBody(server string, agentId openapi_types.UUID, agentVersionId openapi_types.UUID, params *V1AgentsRunVersionsAsyncCreateParams, contentType string, body io.Reader) (*http.Request, error) {
+// NewAgentsRunVersionsAsyncCreateRequestWithBody generates requests for AgentsRunVersionsAsyncCreate with any type of body
+func NewAgentsRunVersionsAsyncCreateRequestWithBody(server string, agentId openapi_types.UUID, agentVersionId openapi_types.UUID, params *AgentsRunVersionsAsyncCreateParams, contentType string, body io.Reader) (*http.Request, error) {
 	var err error
 
 	var pathParam0 string
@@ -3073,8 +3073,8 @@ func NewV1AgentsRunVersionsAsyncCreateRequestWithBody(server string, agentId ope
 	return req, nil
 }
 
-// NewV1AgentsDestroyRequest generates requests for V1AgentsDestroy
-func NewV1AgentsDestroyRequest(server string, agentId openapi_types.UUID, params *V1AgentsDestroyParams) (*http.Request, error) {
+// NewAgentsDestroyRequest generates requests for AgentsDestroy
+func NewAgentsDestroyRequest(server string, agentId openapi_types.UUID, params *AgentsDestroyParams) (*http.Request, error) {
 	var err error
 
 	var pathParam0 string
@@ -3129,8 +3129,8 @@ func NewV1AgentsDestroyRequest(server string, agentId openapi_types.UUID, params
 	return req, nil
 }
 
-// NewV1AgentsRetrieveRequest generates requests for V1AgentsRetrieve
-func NewV1AgentsRetrieveRequest(server string, agentId openapi_types.UUID, params *V1AgentsRetrieveParams) (*http.Request, error) {
+// NewAgentsRetrieveRequest generates requests for AgentsRetrieve
+func NewAgentsRetrieveRequest(server string, agentId openapi_types.UUID, params *AgentsRetrieveParams) (*http.Request, error) {
 	var err error
 
 	var pathParam0 string
@@ -3185,30 +3185,30 @@ func NewV1AgentsRetrieveRequest(server string, agentId openapi_types.UUID, param
 	return req, nil
 }
 
-// NewV1AgentsPartialUpdateRequest calls the generic V1AgentsPartialUpdate builder with application/json body
-func NewV1AgentsPartialUpdateRequest(server string, agentId openapi_types.UUID, params *V1AgentsPartialUpdateParams, body V1AgentsPartialUpdateJSONRequestBody) (*http.Request, error) {
+// NewAgentsPartialUpdateRequest calls the generic AgentsPartialUpdate builder with application/json body
+func NewAgentsPartialUpdateRequest(server string, agentId openapi_types.UUID, params *AgentsPartialUpdateParams, body AgentsPartialUpdateJSONRequestBody) (*http.Request, error) {
 	var bodyReader io.Reader
 	buf, err := json.Marshal(body)
 	if err != nil {
 		return nil, err
 	}
 	bodyReader = bytes.NewReader(buf)
-	return NewV1AgentsPartialUpdateRequestWithBody(server, agentId, params, "application/json", bodyReader)
+	return NewAgentsPartialUpdateRequestWithBody(server, agentId, params, "application/json", bodyReader)
 }
 
-// NewV1AgentsPartialUpdateRequestWithFormdataBody calls the generic V1AgentsPartialUpdate builder with application/x-www-form-urlencoded body
-func NewV1AgentsPartialUpdateRequestWithFormdataBody(server string, agentId openapi_types.UUID, params *V1AgentsPartialUpdateParams, body V1AgentsPartialUpdateFormdataRequestBody) (*http.Request, error) {
+// NewAgentsPartialUpdateRequestWithFormdataBody calls the generic AgentsPartialUpdate builder with application/x-www-form-urlencoded body
+func NewAgentsPartialUpdateRequestWithFormdataBody(server string, agentId openapi_types.UUID, params *AgentsPartialUpdateParams, body AgentsPartialUpdateFormdataRequestBody) (*http.Request, error) {
 	var bodyReader io.Reader
 	bodyStr, err := runtime.MarshalForm(body, nil)
 	if err != nil {
 		return nil, err
 	}
 	bodyReader = strings.NewReader(bodyStr.Encode())
-	return NewV1AgentsPartialUpdateRequestWithBody(server, agentId, params, "application/x-www-form-urlencoded", bodyReader)
+	return NewAgentsPartialUpdateRequestWithBody(server, agentId, params, "application/x-www-form-urlencoded", bodyReader)
 }
 
-// NewV1AgentsPartialUpdateRequestWithBody generates requests for V1AgentsPartialUpdate with any type of body
-func NewV1AgentsPartialUpdateRequestWithBody(server string, agentId openapi_types.UUID, params *V1AgentsPartialUpdateParams, contentType string, body io.Reader) (*http.Request, error) {
+// NewAgentsPartialUpdateRequestWithBody generates requests for AgentsPartialUpdate with any type of body
+func NewAgentsPartialUpdateRequestWithBody(server string, agentId openapi_types.UUID, params *AgentsPartialUpdateParams, contentType string, body io.Reader) (*http.Request, error) {
 	var err error
 
 	var pathParam0 string
@@ -3265,30 +3265,30 @@ func NewV1AgentsPartialUpdateRequestWithBody(server string, agentId openapi_type
 	return req, nil
 }
 
-// NewV1AgentsUpdateRequest calls the generic V1AgentsUpdate builder with application/json body
-func NewV1AgentsUpdateRequest(server string, agentId openapi_types.UUID, params *V1AgentsUpdateParams, body V1AgentsUpdateJSONRequestBody) (*http.Request, error) {
+// NewAgentsUpdateRequest calls the generic AgentsUpdate builder with application/json body
+func NewAgentsUpdateRequest(server string, agentId openapi_types.UUID, params *AgentsUpdateParams, body AgentsUpdateJSONRequestBody) (*http.Request, error) {
 	var bodyReader io.Reader
 	buf, err := json.Marshal(body)
 	if err != nil {
 		return nil, err
 	}
 	bodyReader = bytes.NewReader(buf)
-	return NewV1AgentsUpdateRequestWithBody(server, agentId, params, "application/json", bodyReader)
+	return NewAgentsUpdateRequestWithBody(server, agentId, params, "application/json", bodyReader)
 }
 
-// NewV1AgentsUpdateRequestWithFormdataBody calls the generic V1AgentsUpdate builder with application/x-www-form-urlencoded body
-func NewV1AgentsUpdateRequestWithFormdataBody(server string, agentId openapi_types.UUID, params *V1AgentsUpdateParams, body V1AgentsUpdateFormdataRequestBody) (*http.Request, error) {
+// NewAgentsUpdateRequestWithFormdataBody calls the generic AgentsUpdate builder with application/x-www-form-urlencoded body
+func NewAgentsUpdateRequestWithFormdataBody(server string, agentId openapi_types.UUID, params *AgentsUpdateParams, body AgentsUpdateFormdataRequestBody) (*http.Request, error) {
 	var bodyReader io.Reader
 	bodyStr, err := runtime.MarshalForm(body, nil)
 	if err != nil {
 		return nil, err
 	}
 	bodyReader = strings.NewReader(bodyStr.Encode())
-	return NewV1AgentsUpdateRequestWithBody(server, agentId, params, "application/x-www-form-urlencoded", bodyReader)
+	return NewAgentsUpdateRequestWithBody(server, agentId, params, "application/x-www-form-urlencoded", bodyReader)
 }
 
-// NewV1AgentsUpdateRequestWithBody generates requests for V1AgentsUpdate with any type of body
-func NewV1AgentsUpdateRequestWithBody(server string, agentId openapi_types.UUID, params *V1AgentsUpdateParams, contentType string, body io.Reader) (*http.Request, error) {
+// NewAgentsUpdateRequestWithBody generates requests for AgentsUpdate with any type of body
+func NewAgentsUpdateRequestWithBody(server string, agentId openapi_types.UUID, params *AgentsUpdateParams, contentType string, body io.Reader) (*http.Request, error) {
 	var err error
 
 	var pathParam0 string
@@ -3345,8 +3345,8 @@ func NewV1AgentsUpdateRequestWithBody(server string, agentId openapi_types.UUID,
 	return req, nil
 }
 
-// NewV1AgentsDuplicateCreateRequest generates requests for V1AgentsDuplicateCreate
-func NewV1AgentsDuplicateCreateRequest(server string, agentId openapi_types.UUID, params *V1AgentsDuplicateCreateParams) (*http.Request, error) {
+// NewAgentsDuplicateCreateRequest generates requests for AgentsDuplicateCreate
+func NewAgentsDuplicateCreateRequest(server string, agentId openapi_types.UUID, params *AgentsDuplicateCreateParams) (*http.Request, error) {
 	var err error
 
 	var pathParam0 string
@@ -3401,8 +3401,8 @@ func NewV1AgentsDuplicateCreateRequest(server string, agentId openapi_types.UUID
 	return req, nil
 }
 
-// NewV1AgentsJobsCancelAllCreateRequest generates requests for V1AgentsJobsCancelAllCreate
-func NewV1AgentsJobsCancelAllCreateRequest(server string, agentId openapi_types.UUID, params *V1AgentsJobsCancelAllCreateParams) (*http.Request, error) {
+// NewAgentsJobsCancelAllCreateRequest generates requests for AgentsJobsCancelAllCreate
+func NewAgentsJobsCancelAllCreateRequest(server string, agentId openapi_types.UUID, params *AgentsJobsCancelAllCreateParams) (*http.Request, error) {
 	var err error
 
 	var pathParam0 string
@@ -3457,8 +3457,8 @@ func NewV1AgentsJobsCancelAllCreateRequest(server string, agentId openapi_types.
 	return req, nil
 }
 
-// NewV1AgentsVersionsListRequest generates requests for V1AgentsVersionsList
-func NewV1AgentsVersionsListRequest(server string, agentId openapi_types.UUID, params *V1AgentsVersionsListParams) (*http.Request, error) {
+// NewAgentsVersionsListRequest generates requests for AgentsVersionsList
+func NewAgentsVersionsListRequest(server string, agentId openapi_types.UUID, params *AgentsVersionsListParams) (*http.Request, error) {
 	var err error
 
 	var pathParam0 string
@@ -3513,30 +3513,30 @@ func NewV1AgentsVersionsListRequest(server string, agentId openapi_types.UUID, p
 	return req, nil
 }
 
-// NewV1AgentsVersionsCreateRequest calls the generic V1AgentsVersionsCreate builder with application/json body
-func NewV1AgentsVersionsCreateRequest(server string, agentId openapi_types.UUID, params *V1AgentsVersionsCreateParams, body V1AgentsVersionsCreateJSONRequestBody) (*http.Request, error) {
+// NewAgentsVersionsCreateRequest calls the generic AgentsVersionsCreate builder with application/json body
+func NewAgentsVersionsCreateRequest(server string, agentId openapi_types.UUID, params *AgentsVersionsCreateParams, body AgentsVersionsCreateJSONRequestBody) (*http.Request, error) {
 	var bodyReader io.Reader
 	buf, err := json.Marshal(body)
 	if err != nil {
 		return nil, err
 	}
 	bodyReader = bytes.NewReader(buf)
-	return NewV1AgentsVersionsCreateRequestWithBody(server, agentId, params, "application/json", bodyReader)
+	return NewAgentsVersionsCreateRequestWithBody(server, agentId, params, "application/json", bodyReader)
 }
 
-// NewV1AgentsVersionsCreateRequestWithFormdataBody calls the generic V1AgentsVersionsCreate builder with application/x-www-form-urlencoded body
-func NewV1AgentsVersionsCreateRequestWithFormdataBody(server string, agentId openapi_types.UUID, params *V1AgentsVersionsCreateParams, body V1AgentsVersionsCreateFormdataRequestBody) (*http.Request, error) {
+// NewAgentsVersionsCreateRequestWithFormdataBody calls the generic AgentsVersionsCreate builder with application/x-www-form-urlencoded body
+func NewAgentsVersionsCreateRequestWithFormdataBody(server string, agentId openapi_types.UUID, params *AgentsVersionsCreateParams, body AgentsVersionsCreateFormdataRequestBody) (*http.Request, error) {
 	var bodyReader io.Reader
 	bodyStr, err := runtime.MarshalForm(body, nil)
 	if err != nil {
 		return nil, err
 	}
 	bodyReader = strings.NewReader(bodyStr.Encode())
-	return NewV1AgentsVersionsCreateRequestWithBody(server, agentId, params, "application/x-www-form-urlencoded", bodyReader)
+	return NewAgentsVersionsCreateRequestWithBody(server, agentId, params, "application/x-www-form-urlencoded", bodyReader)
 }
 
-// NewV1AgentsVersionsCreateRequestWithBody generates requests for V1AgentsVersionsCreate with any type of body
-func NewV1AgentsVersionsCreateRequestWithBody(server string, agentId openapi_types.UUID, params *V1AgentsVersionsCreateParams, contentType string, body io.Reader) (*http.Request, error) {
+// NewAgentsVersionsCreateRequestWithBody generates requests for AgentsVersionsCreate with any type of body
+func NewAgentsVersionsCreateRequestWithBody(server string, agentId openapi_types.UUID, params *AgentsVersionsCreateParams, contentType string, body io.Reader) (*http.Request, error) {
 	var err error
 
 	var pathParam0 string
@@ -3593,8 +3593,8 @@ func NewV1AgentsVersionsCreateRequestWithBody(server string, agentId openapi_typ
 	return req, nil
 }
 
-// NewV1AgentsVersionsCurrentRetrieveRequest generates requests for V1AgentsVersionsCurrentRetrieve
-func NewV1AgentsVersionsCurrentRetrieveRequest(server string, agentId openapi_types.UUID, params *V1AgentsVersionsCurrentRetrieveParams) (*http.Request, error) {
+// NewAgentsVersionsCurrentRetrieveRequest generates requests for AgentsVersionsCurrentRetrieve
+func NewAgentsVersionsCurrentRetrieveRequest(server string, agentId openapi_types.UUID, params *AgentsVersionsCurrentRetrieveParams) (*http.Request, error) {
 	var err error
 
 	var pathParam0 string
@@ -3665,8 +3665,8 @@ func NewV1AgentsVersionsCurrentRetrieveRequest(server string, agentId openapi_ty
 	return req, nil
 }
 
-// NewV1AgentsVersionsDestroyRequest generates requests for V1AgentsVersionsDestroy
-func NewV1AgentsVersionsDestroyRequest(server string, agentId openapi_types.UUID, agentVersionId openapi_types.UUID, params *V1AgentsVersionsDestroyParams) (*http.Request, error) {
+// NewAgentsVersionsDestroyRequest generates requests for AgentsVersionsDestroy
+func NewAgentsVersionsDestroyRequest(server string, agentId openapi_types.UUID, agentVersionId openapi_types.UUID, params *AgentsVersionsDestroyParams) (*http.Request, error) {
 	var err error
 
 	var pathParam0 string
@@ -3728,8 +3728,8 @@ func NewV1AgentsVersionsDestroyRequest(server string, agentId openapi_types.UUID
 	return req, nil
 }
 
-// NewV1AgentsVersionsRetrieveRequest generates requests for V1AgentsVersionsRetrieve
-func NewV1AgentsVersionsRetrieveRequest(server string, agentId openapi_types.UUID, agentVersionId openapi_types.UUID, params *V1AgentsVersionsRetrieveParams) (*http.Request, error) {
+// NewAgentsVersionsRetrieveRequest generates requests for AgentsVersionsRetrieve
+func NewAgentsVersionsRetrieveRequest(server string, agentId openapi_types.UUID, agentVersionId openapi_types.UUID, params *AgentsVersionsRetrieveParams) (*http.Request, error) {
 	var err error
 
 	var pathParam0 string
@@ -3807,30 +3807,30 @@ func NewV1AgentsVersionsRetrieveRequest(server string, agentId openapi_types.UUI
 	return req, nil
 }
 
-// NewV1AgentsVersionsPartialUpdateRequest calls the generic V1AgentsVersionsPartialUpdate builder with application/json body
-func NewV1AgentsVersionsPartialUpdateRequest(server string, agentId openapi_types.UUID, agentVersionId openapi_types.UUID, params *V1AgentsVersionsPartialUpdateParams, body V1AgentsVersionsPartialUpdateJSONRequestBody) (*http.Request, error) {
+// NewAgentsVersionsPartialUpdateRequest calls the generic AgentsVersionsPartialUpdate builder with application/json body
+func NewAgentsVersionsPartialUpdateRequest(server string, agentId openapi_types.UUID, agentVersionId openapi_types.UUID, params *AgentsVersionsPartialUpdateParams, body AgentsVersionsPartialUpdateJSONRequestBody) (*http.Request, error) {
 	var bodyReader io.Reader
 	buf, err := json.Marshal(body)
 	if err != nil {
 		return nil, err
 	}
 	bodyReader = bytes.NewReader(buf)
-	return NewV1AgentsVersionsPartialUpdateRequestWithBody(server, agentId, agentVersionId, params, "application/json", bodyReader)
+	return NewAgentsVersionsPartialUpdateRequestWithBody(server, agentId, agentVersionId, params, "application/json", bodyReader)
 }
 
-// NewV1AgentsVersionsPartialUpdateRequestWithFormdataBody calls the generic V1AgentsVersionsPartialUpdate builder with application/x-www-form-urlencoded body
-func NewV1AgentsVersionsPartialUpdateRequestWithFormdataBody(server string, agentId openapi_types.UUID, agentVersionId openapi_types.UUID, params *V1AgentsVersionsPartialUpdateParams, body V1AgentsVersionsPartialUpdateFormdataRequestBody) (*http.Request, error) {
+// NewAgentsVersionsPartialUpdateRequestWithFormdataBody calls the generic AgentsVersionsPartialUpdate builder with application/x-www-form-urlencoded body
+func NewAgentsVersionsPartialUpdateRequestWithFormdataBody(server string, agentId openapi_types.UUID, agentVersionId openapi_types.UUID, params *AgentsVersionsPartialUpdateParams, body AgentsVersionsPartialUpdateFormdataRequestBody) (*http.Request, error) {
 	var bodyReader io.Reader
 	bodyStr, err := runtime.MarshalForm(body, nil)
 	if err != nil {
 		return nil, err
 	}
 	bodyReader = strings.NewReader(bodyStr.Encode())
-	return NewV1AgentsVersionsPartialUpdateRequestWithBody(server, agentId, agentVersionId, params, "application/x-www-form-urlencoded", bodyReader)
+	return NewAgentsVersionsPartialUpdateRequestWithBody(server, agentId, agentVersionId, params, "application/x-www-form-urlencoded", bodyReader)
 }
 
-// NewV1AgentsVersionsPartialUpdateRequestWithBody generates requests for V1AgentsVersionsPartialUpdate with any type of body
-func NewV1AgentsVersionsPartialUpdateRequestWithBody(server string, agentId openapi_types.UUID, agentVersionId openapi_types.UUID, params *V1AgentsVersionsPartialUpdateParams, contentType string, body io.Reader) (*http.Request, error) {
+// NewAgentsVersionsPartialUpdateRequestWithBody generates requests for AgentsVersionsPartialUpdate with any type of body
+func NewAgentsVersionsPartialUpdateRequestWithBody(server string, agentId openapi_types.UUID, agentVersionId openapi_types.UUID, params *AgentsVersionsPartialUpdateParams, contentType string, body io.Reader) (*http.Request, error) {
 	var err error
 
 	var pathParam0 string
@@ -3894,30 +3894,30 @@ func NewV1AgentsVersionsPartialUpdateRequestWithBody(server string, agentId open
 	return req, nil
 }
 
-// NewV1AgentsVersionsUpdateRequest calls the generic V1AgentsVersionsUpdate builder with application/json body
-func NewV1AgentsVersionsUpdateRequest(server string, agentId openapi_types.UUID, agentVersionId openapi_types.UUID, params *V1AgentsVersionsUpdateParams, body V1AgentsVersionsUpdateJSONRequestBody) (*http.Request, error) {
+// NewAgentsVersionsUpdateRequest calls the generic AgentsVersionsUpdate builder with application/json body
+func NewAgentsVersionsUpdateRequest(server string, agentId openapi_types.UUID, agentVersionId openapi_types.UUID, params *AgentsVersionsUpdateParams, body AgentsVersionsUpdateJSONRequestBody) (*http.Request, error) {
 	var bodyReader io.Reader
 	buf, err := json.Marshal(body)
 	if err != nil {
 		return nil, err
 	}
 	bodyReader = bytes.NewReader(buf)
-	return NewV1AgentsVersionsUpdateRequestWithBody(server, agentId, agentVersionId, params, "application/json", bodyReader)
+	return NewAgentsVersionsUpdateRequestWithBody(server, agentId, agentVersionId, params, "application/json", bodyReader)
 }
 
-// NewV1AgentsVersionsUpdateRequestWithFormdataBody calls the generic V1AgentsVersionsUpdate builder with application/x-www-form-urlencoded body
-func NewV1AgentsVersionsUpdateRequestWithFormdataBody(server string, agentId openapi_types.UUID, agentVersionId openapi_types.UUID, params *V1AgentsVersionsUpdateParams, body V1AgentsVersionsUpdateFormdataRequestBody) (*http.Request, error) {
+// NewAgentsVersionsUpdateRequestWithFormdataBody calls the generic AgentsVersionsUpdate builder with application/x-www-form-urlencoded body
+func NewAgentsVersionsUpdateRequestWithFormdataBody(server string, agentId openapi_types.UUID, agentVersionId openapi_types.UUID, params *AgentsVersionsUpdateParams, body AgentsVersionsUpdateFormdataRequestBody) (*http.Request, error) {
 	var bodyReader io.Reader
 	bodyStr, err := runtime.MarshalForm(body, nil)
 	if err != nil {
 		return nil, err
 	}
 	bodyReader = strings.NewReader(bodyStr.Encode())
-	return NewV1AgentsVersionsUpdateRequestWithBody(server, agentId, agentVersionId, params, "application/x-www-form-urlencoded", bodyReader)
+	return NewAgentsVersionsUpdateRequestWithBody(server, agentId, agentVersionId, params, "application/x-www-form-urlencoded", bodyReader)
 }
 
-// NewV1AgentsVersionsUpdateRequestWithBody generates requests for V1AgentsVersionsUpdate with any type of body
-func NewV1AgentsVersionsUpdateRequestWithBody(server string, agentId openapi_types.UUID, agentVersionId openapi_types.UUID, params *V1AgentsVersionsUpdateParams, contentType string, body io.Reader) (*http.Request, error) {
+// NewAgentsVersionsUpdateRequestWithBody generates requests for AgentsVersionsUpdate with any type of body
+func NewAgentsVersionsUpdateRequestWithBody(server string, agentId openapi_types.UUID, agentVersionId openapi_types.UUID, params *AgentsVersionsUpdateParams, contentType string, body io.Reader) (*http.Request, error) {
 	var err error
 
 	var pathParam0 string
@@ -3981,8 +3981,8 @@ func NewV1AgentsVersionsUpdateRequestWithBody(server string, agentId openapi_typ
 	return req, nil
 }
 
-// NewV1PoliciesListRequest generates requests for V1PoliciesList
-func NewV1PoliciesListRequest(server string, params *V1PoliciesListParams) (*http.Request, error) {
+// NewPoliciesListRequest generates requests for PoliciesList
+func NewPoliciesListRequest(server string, params *PoliciesListParams) (*http.Request, error) {
 	var err error
 
 	serverURL, err := url.Parse(server)
@@ -4094,30 +4094,30 @@ func NewV1PoliciesListRequest(server string, params *V1PoliciesListParams) (*htt
 	return req, nil
 }
 
-// NewV1PoliciesCreateRequest calls the generic V1PoliciesCreate builder with application/json body
-func NewV1PoliciesCreateRequest(server string, params *V1PoliciesCreateParams, body V1PoliciesCreateJSONRequestBody) (*http.Request, error) {
+// NewPoliciesCreateRequest calls the generic PoliciesCreate builder with application/json body
+func NewPoliciesCreateRequest(server string, params *PoliciesCreateParams, body PoliciesCreateJSONRequestBody) (*http.Request, error) {
 	var bodyReader io.Reader
 	buf, err := json.Marshal(body)
 	if err != nil {
 		return nil, err
 	}
 	bodyReader = bytes.NewReader(buf)
-	return NewV1PoliciesCreateRequestWithBody(server, params, "application/json", bodyReader)
+	return NewPoliciesCreateRequestWithBody(server, params, "application/json", bodyReader)
 }
 
-// NewV1PoliciesCreateRequestWithFormdataBody calls the generic V1PoliciesCreate builder with application/x-www-form-urlencoded body
-func NewV1PoliciesCreateRequestWithFormdataBody(server string, params *V1PoliciesCreateParams, body V1PoliciesCreateFormdataRequestBody) (*http.Request, error) {
+// NewPoliciesCreateRequestWithFormdataBody calls the generic PoliciesCreate builder with application/x-www-form-urlencoded body
+func NewPoliciesCreateRequestWithFormdataBody(server string, params *PoliciesCreateParams, body PoliciesCreateFormdataRequestBody) (*http.Request, error) {
 	var bodyReader io.Reader
 	bodyStr, err := runtime.MarshalForm(body, nil)
 	if err != nil {
 		return nil, err
 	}
 	bodyReader = strings.NewReader(bodyStr.Encode())
-	return NewV1PoliciesCreateRequestWithBody(server, params, "application/x-www-form-urlencoded", bodyReader)
+	return NewPoliciesCreateRequestWithBody(server, params, "application/x-www-form-urlencoded", bodyReader)
 }
 
-// NewV1PoliciesCreateRequestWithBody generates requests for V1PoliciesCreate with any type of body
-func NewV1PoliciesCreateRequestWithBody(server string, params *V1PoliciesCreateParams, contentType string, body io.Reader) (*http.Request, error) {
+// NewPoliciesCreateRequestWithBody generates requests for PoliciesCreate with any type of body
+func NewPoliciesCreateRequestWithBody(server string, params *PoliciesCreateParams, contentType string, body io.Reader) (*http.Request, error) {
 	var err error
 
 	serverURL, err := url.Parse(server)
@@ -4167,8 +4167,8 @@ func NewV1PoliciesCreateRequestWithBody(server string, params *V1PoliciesCreateP
 	return req, nil
 }
 
-// NewV1PoliciesDestroyRequest generates requests for V1PoliciesDestroy
-func NewV1PoliciesDestroyRequest(server string, id openapi_types.UUID, params *V1PoliciesDestroyParams) (*http.Request, error) {
+// NewPoliciesDestroyRequest generates requests for PoliciesDestroy
+func NewPoliciesDestroyRequest(server string, id openapi_types.UUID, params *PoliciesDestroyParams) (*http.Request, error) {
 	var err error
 
 	var pathParam0 string
@@ -4223,8 +4223,8 @@ func NewV1PoliciesDestroyRequest(server string, id openapi_types.UUID, params *V
 	return req, nil
 }
 
-// NewV1PoliciesRetrieveRequest generates requests for V1PoliciesRetrieve
-func NewV1PoliciesRetrieveRequest(server string, id openapi_types.UUID, params *V1PoliciesRetrieveParams) (*http.Request, error) {
+// NewPoliciesRetrieveRequest generates requests for PoliciesRetrieve
+func NewPoliciesRetrieveRequest(server string, id openapi_types.UUID, params *PoliciesRetrieveParams) (*http.Request, error) {
 	var err error
 
 	var pathParam0 string
@@ -4279,30 +4279,30 @@ func NewV1PoliciesRetrieveRequest(server string, id openapi_types.UUID, params *
 	return req, nil
 }
 
-// NewV1PoliciesPartialUpdateRequest calls the generic V1PoliciesPartialUpdate builder with application/json body
-func NewV1PoliciesPartialUpdateRequest(server string, id openapi_types.UUID, params *V1PoliciesPartialUpdateParams, body V1PoliciesPartialUpdateJSONRequestBody) (*http.Request, error) {
+// NewPoliciesPartialUpdateRequest calls the generic PoliciesPartialUpdate builder with application/json body
+func NewPoliciesPartialUpdateRequest(server string, id openapi_types.UUID, params *PoliciesPartialUpdateParams, body PoliciesPartialUpdateJSONRequestBody) (*http.Request, error) {
 	var bodyReader io.Reader
 	buf, err := json.Marshal(body)
 	if err != nil {
 		return nil, err
 	}
 	bodyReader = bytes.NewReader(buf)
-	return NewV1PoliciesPartialUpdateRequestWithBody(server, id, params, "application/json", bodyReader)
+	return NewPoliciesPartialUpdateRequestWithBody(server, id, params, "application/json", bodyReader)
 }
 
-// NewV1PoliciesPartialUpdateRequestWithFormdataBody calls the generic V1PoliciesPartialUpdate builder with application/x-www-form-urlencoded body
-func NewV1PoliciesPartialUpdateRequestWithFormdataBody(server string, id openapi_types.UUID, params *V1PoliciesPartialUpdateParams, body V1PoliciesPartialUpdateFormdataRequestBody) (*http.Request, error) {
+// NewPoliciesPartialUpdateRequestWithFormdataBody calls the generic PoliciesPartialUpdate builder with application/x-www-form-urlencoded body
+func NewPoliciesPartialUpdateRequestWithFormdataBody(server string, id openapi_types.UUID, params *PoliciesPartialUpdateParams, body PoliciesPartialUpdateFormdataRequestBody) (*http.Request, error) {
 	var bodyReader io.Reader
 	bodyStr, err := runtime.MarshalForm(body, nil)
 	if err != nil {
 		return nil, err
 	}
 	bodyReader = strings.NewReader(bodyStr.Encode())
-	return NewV1PoliciesPartialUpdateRequestWithBody(server, id, params, "application/x-www-form-urlencoded", bodyReader)
+	return NewPoliciesPartialUpdateRequestWithBody(server, id, params, "application/x-www-form-urlencoded", bodyReader)
 }
 
-// NewV1PoliciesPartialUpdateRequestWithBody generates requests for V1PoliciesPartialUpdate with any type of body
-func NewV1PoliciesPartialUpdateRequestWithBody(server string, id openapi_types.UUID, params *V1PoliciesPartialUpdateParams, contentType string, body io.Reader) (*http.Request, error) {
+// NewPoliciesPartialUpdateRequestWithBody generates requests for PoliciesPartialUpdate with any type of body
+func NewPoliciesPartialUpdateRequestWithBody(server string, id openapi_types.UUID, params *PoliciesPartialUpdateParams, contentType string, body io.Reader) (*http.Request, error) {
 	var err error
 
 	var pathParam0 string
@@ -4359,30 +4359,30 @@ func NewV1PoliciesPartialUpdateRequestWithBody(server string, id openapi_types.U
 	return req, nil
 }
 
-// NewV1PoliciesUpdateRequest calls the generic V1PoliciesUpdate builder with application/json body
-func NewV1PoliciesUpdateRequest(server string, id openapi_types.UUID, params *V1PoliciesUpdateParams, body V1PoliciesUpdateJSONRequestBody) (*http.Request, error) {
+// NewPoliciesUpdateRequest calls the generic PoliciesUpdate builder with application/json body
+func NewPoliciesUpdateRequest(server string, id openapi_types.UUID, params *PoliciesUpdateParams, body PoliciesUpdateJSONRequestBody) (*http.Request, error) {
 	var bodyReader io.Reader
 	buf, err := json.Marshal(body)
 	if err != nil {
 		return nil, err
 	}
 	bodyReader = bytes.NewReader(buf)
-	return NewV1PoliciesUpdateRequestWithBody(server, id, params, "application/json", bodyReader)
+	return NewPoliciesUpdateRequestWithBody(server, id, params, "application/json", bodyReader)
 }
 
-// NewV1PoliciesUpdateRequestWithFormdataBody calls the generic V1PoliciesUpdate builder with application/x-www-form-urlencoded body
-func NewV1PoliciesUpdateRequestWithFormdataBody(server string, id openapi_types.UUID, params *V1PoliciesUpdateParams, body V1PoliciesUpdateFormdataRequestBody) (*http.Request, error) {
+// NewPoliciesUpdateRequestWithFormdataBody calls the generic PoliciesUpdate builder with application/x-www-form-urlencoded body
+func NewPoliciesUpdateRequestWithFormdataBody(server string, id openapi_types.UUID, params *PoliciesUpdateParams, body PoliciesUpdateFormdataRequestBody) (*http.Request, error) {
 	var bodyReader io.Reader
 	bodyStr, err := runtime.MarshalForm(body, nil)
 	if err != nil {
 		return nil, err
 	}
 	bodyReader = strings.NewReader(bodyStr.Encode())
-	return NewV1PoliciesUpdateRequestWithBody(server, id, params, "application/x-www-form-urlencoded", bodyReader)
+	return NewPoliciesUpdateRequestWithBody(server, id, params, "application/x-www-form-urlencoded", bodyReader)
 }
 
-// NewV1PoliciesUpdateRequestWithBody generates requests for V1PoliciesUpdate with any type of body
-func NewV1PoliciesUpdateRequestWithBody(server string, id openapi_types.UUID, params *V1PoliciesUpdateParams, contentType string, body io.Reader) (*http.Request, error) {
+// NewPoliciesUpdateRequestWithBody generates requests for PoliciesUpdate with any type of body
+func NewPoliciesUpdateRequestWithBody(server string, id openapi_types.UUID, params *PoliciesUpdateParams, contentType string, body io.Reader) (*http.Request, error) {
 	var err error
 
 	var pathParam0 string
@@ -4439,8 +4439,8 @@ func NewV1PoliciesUpdateRequestWithBody(server string, id openapi_types.UUID, pa
 	return req, nil
 }
 
-// NewV1PoliciesVersionsListRequest generates requests for V1PoliciesVersionsList
-func NewV1PoliciesVersionsListRequest(server string, policyId openapi_types.UUID, params *V1PoliciesVersionsListParams) (*http.Request, error) {
+// NewPoliciesVersionsListRequest generates requests for PoliciesVersionsList
+func NewPoliciesVersionsListRequest(server string, policyId openapi_types.UUID, params *PoliciesVersionsListParams) (*http.Request, error) {
 	var err error
 
 	var pathParam0 string
@@ -4527,30 +4527,30 @@ func NewV1PoliciesVersionsListRequest(server string, policyId openapi_types.UUID
 	return req, nil
 }
 
-// NewV1PoliciesVersionsCreateRequest calls the generic V1PoliciesVersionsCreate builder with application/json body
-func NewV1PoliciesVersionsCreateRequest(server string, policyId openapi_types.UUID, params *V1PoliciesVersionsCreateParams, body V1PoliciesVersionsCreateJSONRequestBody) (*http.Request, error) {
+// NewPoliciesVersionsCreateRequest calls the generic PoliciesVersionsCreate builder with application/json body
+func NewPoliciesVersionsCreateRequest(server string, policyId openapi_types.UUID, params *PoliciesVersionsCreateParams, body PoliciesVersionsCreateJSONRequestBody) (*http.Request, error) {
 	var bodyReader io.Reader
 	buf, err := json.Marshal(body)
 	if err != nil {
 		return nil, err
 	}
 	bodyReader = bytes.NewReader(buf)
-	return NewV1PoliciesVersionsCreateRequestWithBody(server, policyId, params, "application/json", bodyReader)
+	return NewPoliciesVersionsCreateRequestWithBody(server, policyId, params, "application/json", bodyReader)
 }
 
-// NewV1PoliciesVersionsCreateRequestWithFormdataBody calls the generic V1PoliciesVersionsCreate builder with application/x-www-form-urlencoded body
-func NewV1PoliciesVersionsCreateRequestWithFormdataBody(server string, policyId openapi_types.UUID, params *V1PoliciesVersionsCreateParams, body V1PoliciesVersionsCreateFormdataRequestBody) (*http.Request, error) {
+// NewPoliciesVersionsCreateRequestWithFormdataBody calls the generic PoliciesVersionsCreate builder with application/x-www-form-urlencoded body
+func NewPoliciesVersionsCreateRequestWithFormdataBody(server string, policyId openapi_types.UUID, params *PoliciesVersionsCreateParams, body PoliciesVersionsCreateFormdataRequestBody) (*http.Request, error) {
 	var bodyReader io.Reader
 	bodyStr, err := runtime.MarshalForm(body, nil)
 	if err != nil {
 		return nil, err
 	}
 	bodyReader = strings.NewReader(bodyStr.Encode())
-	return NewV1PoliciesVersionsCreateRequestWithBody(server, policyId, params, "application/x-www-form-urlencoded", bodyReader)
+	return NewPoliciesVersionsCreateRequestWithBody(server, policyId, params, "application/x-www-form-urlencoded", bodyReader)
 }
 
-// NewV1PoliciesVersionsCreateRequestWithBody generates requests for V1PoliciesVersionsCreate with any type of body
-func NewV1PoliciesVersionsCreateRequestWithBody(server string, policyId openapi_types.UUID, params *V1PoliciesVersionsCreateParams, contentType string, body io.Reader) (*http.Request, error) {
+// NewPoliciesVersionsCreateRequestWithBody generates requests for PoliciesVersionsCreate with any type of body
+func NewPoliciesVersionsCreateRequestWithBody(server string, policyId openapi_types.UUID, params *PoliciesVersionsCreateParams, contentType string, body io.Reader) (*http.Request, error) {
 	var err error
 
 	var pathParam0 string
@@ -4607,8 +4607,8 @@ func NewV1PoliciesVersionsCreateRequestWithBody(server string, policyId openapi_
 	return req, nil
 }
 
-// NewV1PoliciesVersionsRetrieveRequest generates requests for V1PoliciesVersionsRetrieve
-func NewV1PoliciesVersionsRetrieveRequest(server string, policyId openapi_types.UUID, versionId openapi_types.UUID, params *V1PoliciesVersionsRetrieveParams) (*http.Request, error) {
+// NewPoliciesVersionsRetrieveRequest generates requests for PoliciesVersionsRetrieve
+func NewPoliciesVersionsRetrieveRequest(server string, policyId openapi_types.UUID, versionId openapi_types.UUID, params *PoliciesVersionsRetrieveParams) (*http.Request, error) {
 	var err error
 
 	var pathParam0 string
@@ -4670,8 +4670,8 @@ func NewV1PoliciesVersionsRetrieveRequest(server string, policyId openapi_types.
 	return req, nil
 }
 
-// NewV1UsersCurrentUserRetrieveRequest generates requests for V1UsersCurrentUserRetrieve
-func NewV1UsersCurrentUserRetrieveRequest(server string) (*http.Request, error) {
+// NewUsersCurrentUserRetrieveRequest generates requests for UsersCurrentUserRetrieve
+func NewUsersCurrentUserRetrieveRequest(server string) (*http.Request, error) {
 	var err error
 
 	serverURL, err := url.Parse(server)
@@ -4740,187 +4740,187 @@ func WithBaseURL(baseURL string) ClientOption {
 
 // ClientWithResponsesInterface is the interface specification for the client with responses above.
 type ClientWithResponsesInterface interface {
-	// V1AgentsListWithResponse request
-	V1AgentsListWithResponse(ctx context.Context, params *V1AgentsListParams, reqEditors ...RequestEditorFn) (*V1AgentsListResponse, error)
+	// AgentsListWithResponse request
+	AgentsListWithResponse(ctx context.Context, params *AgentsListParams, reqEditors ...RequestEditorFn) (*AgentsListResponse, error)
 
-	// V1AgentsCreateWithBodyWithResponse request with any body
-	V1AgentsCreateWithBodyWithResponse(ctx context.Context, params *V1AgentsCreateParams, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*V1AgentsCreateResponse, error)
+	// AgentsCreateWithBodyWithResponse request with any body
+	AgentsCreateWithBodyWithResponse(ctx context.Context, params *AgentsCreateParams, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*AgentsCreateResponse, error)
 
-	V1AgentsCreateWithResponse(ctx context.Context, params *V1AgentsCreateParams, body V1AgentsCreateJSONRequestBody, reqEditors ...RequestEditorFn) (*V1AgentsCreateResponse, error)
+	AgentsCreateWithResponse(ctx context.Context, params *AgentsCreateParams, body AgentsCreateJSONRequestBody, reqEditors ...RequestEditorFn) (*AgentsCreateResponse, error)
 
-	V1AgentsCreateWithFormdataBodyWithResponse(ctx context.Context, params *V1AgentsCreateParams, body V1AgentsCreateFormdataRequestBody, reqEditors ...RequestEditorFn) (*V1AgentsCreateResponse, error)
+	AgentsCreateWithFormdataBodyWithResponse(ctx context.Context, params *AgentsCreateParams, body AgentsCreateFormdataRequestBody, reqEditors ...RequestEditorFn) (*AgentsCreateResponse, error)
 
-	// V1AgentsJobsResultsCreateWithBodyWithResponse request with any body
-	V1AgentsJobsResultsCreateWithBodyWithResponse(ctx context.Context, params *V1AgentsJobsResultsCreateParams, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*V1AgentsJobsResultsCreateResponse, error)
+	// AgentsJobsResultsCreateWithBodyWithResponse request with any body
+	AgentsJobsResultsCreateWithBodyWithResponse(ctx context.Context, params *AgentsJobsResultsCreateParams, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*AgentsJobsResultsCreateResponse, error)
 
-	V1AgentsJobsResultsCreateWithResponse(ctx context.Context, params *V1AgentsJobsResultsCreateParams, body V1AgentsJobsResultsCreateJSONRequestBody, reqEditors ...RequestEditorFn) (*V1AgentsJobsResultsCreateResponse, error)
+	AgentsJobsResultsCreateWithResponse(ctx context.Context, params *AgentsJobsResultsCreateParams, body AgentsJobsResultsCreateJSONRequestBody, reqEditors ...RequestEditorFn) (*AgentsJobsResultsCreateResponse, error)
 
-	V1AgentsJobsResultsCreateWithFormdataBodyWithResponse(ctx context.Context, params *V1AgentsJobsResultsCreateParams, body V1AgentsJobsResultsCreateFormdataRequestBody, reqEditors ...RequestEditorFn) (*V1AgentsJobsResultsCreateResponse, error)
+	AgentsJobsResultsCreateWithFormdataBodyWithResponse(ctx context.Context, params *AgentsJobsResultsCreateParams, body AgentsJobsResultsCreateFormdataRequestBody, reqEditors ...RequestEditorFn) (*AgentsJobsResultsCreateResponse, error)
 
-	// V1AgentsJobsStatusesCreateWithBodyWithResponse request with any body
-	V1AgentsJobsStatusesCreateWithBodyWithResponse(ctx context.Context, params *V1AgentsJobsStatusesCreateParams, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*V1AgentsJobsStatusesCreateResponse, error)
+	// AgentsJobsStatusesCreateWithBodyWithResponse request with any body
+	AgentsJobsStatusesCreateWithBodyWithResponse(ctx context.Context, params *AgentsJobsStatusesCreateParams, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*AgentsJobsStatusesCreateResponse, error)
 
-	V1AgentsJobsStatusesCreateWithResponse(ctx context.Context, params *V1AgentsJobsStatusesCreateParams, body V1AgentsJobsStatusesCreateJSONRequestBody, reqEditors ...RequestEditorFn) (*V1AgentsJobsStatusesCreateResponse, error)
+	AgentsJobsStatusesCreateWithResponse(ctx context.Context, params *AgentsJobsStatusesCreateParams, body AgentsJobsStatusesCreateJSONRequestBody, reqEditors ...RequestEditorFn) (*AgentsJobsStatusesCreateResponse, error)
 
-	V1AgentsJobsStatusesCreateWithFormdataBodyWithResponse(ctx context.Context, params *V1AgentsJobsStatusesCreateParams, body V1AgentsJobsStatusesCreateFormdataRequestBody, reqEditors ...RequestEditorFn) (*V1AgentsJobsStatusesCreateResponse, error)
+	AgentsJobsStatusesCreateWithFormdataBodyWithResponse(ctx context.Context, params *AgentsJobsStatusesCreateParams, body AgentsJobsStatusesCreateFormdataRequestBody, reqEditors ...RequestEditorFn) (*AgentsJobsStatusesCreateResponse, error)
 
-	// V1AgentsJobsReferencesRetrieveWithResponse request
-	V1AgentsJobsReferencesRetrieveWithResponse(ctx context.Context, agentJobId openapi_types.UUID, resourceId string, params *V1AgentsJobsReferencesRetrieveParams, reqEditors ...RequestEditorFn) (*V1AgentsJobsReferencesRetrieveResponse, error)
+	// AgentsJobsReferencesRetrieveWithResponse request
+	AgentsJobsReferencesRetrieveWithResponse(ctx context.Context, agentJobId openapi_types.UUID, resourceId string, params *AgentsJobsReferencesRetrieveParams, reqEditors ...RequestEditorFn) (*AgentsJobsReferencesRetrieveResponse, error)
 
-	// V1AgentsJobsResultRetrieveWithResponse request
-	V1AgentsJobsResultRetrieveWithResponse(ctx context.Context, agentJobId openapi_types.UUID, params *V1AgentsJobsResultRetrieveParams, reqEditors ...RequestEditorFn) (*V1AgentsJobsResultRetrieveResponse, error)
+	// AgentsJobsResultRetrieveWithResponse request
+	AgentsJobsResultRetrieveWithResponse(ctx context.Context, agentJobId openapi_types.UUID, params *AgentsJobsResultRetrieveParams, reqEditors ...RequestEditorFn) (*AgentsJobsResultRetrieveResponse, error)
 
-	// V1AgentsJobsCancelCreateWithResponse request
-	V1AgentsJobsCancelCreateWithResponse(ctx context.Context, jobId openapi_types.UUID, params *V1AgentsJobsCancelCreateParams, reqEditors ...RequestEditorFn) (*V1AgentsJobsCancelCreateResponse, error)
+	// AgentsJobsCancelCreateWithResponse request
+	AgentsJobsCancelCreateWithResponse(ctx context.Context, jobId openapi_types.UUID, params *AgentsJobsCancelCreateParams, reqEditors ...RequestEditorFn) (*AgentsJobsCancelCreateResponse, error)
 
-	// V1AgentsJobsDeleteDataCreateWithResponse request
-	V1AgentsJobsDeleteDataCreateWithResponse(ctx context.Context, jobId openapi_types.UUID, params *V1AgentsJobsDeleteDataCreateParams, reqEditors ...RequestEditorFn) (*V1AgentsJobsDeleteDataCreateResponse, error)
+	// AgentsJobsDeleteDataCreateWithResponse request
+	AgentsJobsDeleteDataCreateWithResponse(ctx context.Context, jobId openapi_types.UUID, params *AgentsJobsDeleteDataCreateParams, reqEditors ...RequestEditorFn) (*AgentsJobsDeleteDataCreateResponse, error)
 
-	// V1AgentsJobsStatusRetrieveWithResponse request
-	V1AgentsJobsStatusRetrieveWithResponse(ctx context.Context, jobId openapi_types.UUID, params *V1AgentsJobsStatusRetrieveParams, reqEditors ...RequestEditorFn) (*V1AgentsJobsStatusRetrieveResponse, error)
+	// AgentsJobsStatusRetrieveWithResponse request
+	AgentsJobsStatusRetrieveWithResponse(ctx context.Context, jobId openapi_types.UUID, params *AgentsJobsStatusRetrieveParams, reqEditors ...RequestEditorFn) (*AgentsJobsStatusRetrieveResponse, error)
 
-	// AgentsRun2WithBodyWithResponse request with any body
-	AgentsRun2WithBodyWithResponse(ctx context.Context, agentId openapi_types.UUID, params *AgentsRun2Params, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*AgentsRun2Response, error)
+	// AgentsRunWithBodyWithResponse request with any body
+	AgentsRunWithBodyWithResponse(ctx context.Context, agentId openapi_types.UUID, params *AgentsRunParams, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*AgentsRunResponse, error)
 
-	AgentsRun2WithResponse(ctx context.Context, agentId openapi_types.UUID, params *AgentsRun2Params, body AgentsRun2JSONRequestBody, reqEditors ...RequestEditorFn) (*AgentsRun2Response, error)
+	AgentsRunWithResponse(ctx context.Context, agentId openapi_types.UUID, params *AgentsRunParams, body AgentsRunJSONRequestBody, reqEditors ...RequestEditorFn) (*AgentsRunResponse, error)
 
-	AgentsRun2WithFormdataBodyWithResponse(ctx context.Context, agentId openapi_types.UUID, params *AgentsRun2Params, body AgentsRun2FormdataRequestBody, reqEditors ...RequestEditorFn) (*AgentsRun2Response, error)
+	AgentsRunWithFormdataBodyWithResponse(ctx context.Context, agentId openapi_types.UUID, params *AgentsRunParams, body AgentsRunFormdataRequestBody, reqEditors ...RequestEditorFn) (*AgentsRunResponse, error)
 
-	// V1AgentsRunAsyncCreateWithBodyWithResponse request with any body
-	V1AgentsRunAsyncCreateWithBodyWithResponse(ctx context.Context, agentId openapi_types.UUID, params *V1AgentsRunAsyncCreateParams, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*V1AgentsRunAsyncCreateResponse, error)
+	// AgentsRunAsyncCreateWithBodyWithResponse request with any body
+	AgentsRunAsyncCreateWithBodyWithResponse(ctx context.Context, agentId openapi_types.UUID, params *AgentsRunAsyncCreateParams, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*AgentsRunAsyncCreateResponse, error)
 
-	V1AgentsRunAsyncCreateWithResponse(ctx context.Context, agentId openapi_types.UUID, params *V1AgentsRunAsyncCreateParams, body V1AgentsRunAsyncCreateJSONRequestBody, reqEditors ...RequestEditorFn) (*V1AgentsRunAsyncCreateResponse, error)
+	AgentsRunAsyncCreateWithResponse(ctx context.Context, agentId openapi_types.UUID, params *AgentsRunAsyncCreateParams, body AgentsRunAsyncCreateJSONRequestBody, reqEditors ...RequestEditorFn) (*AgentsRunAsyncCreateResponse, error)
 
-	V1AgentsRunAsyncCreateWithFormdataBodyWithResponse(ctx context.Context, agentId openapi_types.UUID, params *V1AgentsRunAsyncCreateParams, body V1AgentsRunAsyncCreateFormdataRequestBody, reqEditors ...RequestEditorFn) (*V1AgentsRunAsyncCreateResponse, error)
+	AgentsRunAsyncCreateWithFormdataBodyWithResponse(ctx context.Context, agentId openapi_types.UUID, params *AgentsRunAsyncCreateParams, body AgentsRunAsyncCreateFormdataRequestBody, reqEditors ...RequestEditorFn) (*AgentsRunAsyncCreateResponse, error)
 
-	// AgentsRunAsyncMany5WithBodyWithResponse request with any body
-	AgentsRunAsyncMany5WithBodyWithResponse(ctx context.Context, agentId openapi_types.UUID, params *AgentsRunAsyncMany5Params, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*AgentsRunAsyncMany5Response, error)
+	// AgentsRunAsyncManyWithBodyWithResponse request with any body
+	AgentsRunAsyncManyWithBodyWithResponse(ctx context.Context, agentId openapi_types.UUID, params *AgentsRunAsyncManyParams, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*AgentsRunAsyncManyResponse, error)
 
-	AgentsRunAsyncMany5WithResponse(ctx context.Context, agentId openapi_types.UUID, params *AgentsRunAsyncMany5Params, body AgentsRunAsyncMany5JSONRequestBody, reqEditors ...RequestEditorFn) (*AgentsRunAsyncMany5Response, error)
+	AgentsRunAsyncManyWithResponse(ctx context.Context, agentId openapi_types.UUID, params *AgentsRunAsyncManyParams, body AgentsRunAsyncManyJSONRequestBody, reqEditors ...RequestEditorFn) (*AgentsRunAsyncManyResponse, error)
 
-	AgentsRunAsyncMany5WithFormdataBodyWithResponse(ctx context.Context, agentId openapi_types.UUID, params *AgentsRunAsyncMany5Params, body AgentsRunAsyncMany5FormdataRequestBody, reqEditors ...RequestEditorFn) (*AgentsRunAsyncMany5Response, error)
+	AgentsRunAsyncManyWithFormdataBodyWithResponse(ctx context.Context, agentId openapi_types.UUID, params *AgentsRunAsyncManyParams, body AgentsRunAsyncManyFormdataRequestBody, reqEditors ...RequestEditorFn) (*AgentsRunAsyncManyResponse, error)
 
-	// AgentsRunVersion2WithBodyWithResponse request with any body
-	AgentsRunVersion2WithBodyWithResponse(ctx context.Context, agentId openapi_types.UUID, agentVersionId openapi_types.UUID, params *AgentsRunVersion2Params, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*AgentsRunVersion2Response, error)
+	// AgentsRunVersionWithBodyWithResponse request with any body
+	AgentsRunVersionWithBodyWithResponse(ctx context.Context, agentId openapi_types.UUID, agentVersionId openapi_types.UUID, params *AgentsRunVersionParams, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*AgentsRunVersionResponse, error)
 
-	AgentsRunVersion2WithResponse(ctx context.Context, agentId openapi_types.UUID, agentVersionId openapi_types.UUID, params *AgentsRunVersion2Params, body AgentsRunVersion2JSONRequestBody, reqEditors ...RequestEditorFn) (*AgentsRunVersion2Response, error)
+	AgentsRunVersionWithResponse(ctx context.Context, agentId openapi_types.UUID, agentVersionId openapi_types.UUID, params *AgentsRunVersionParams, body AgentsRunVersionJSONRequestBody, reqEditors ...RequestEditorFn) (*AgentsRunVersionResponse, error)
 
-	AgentsRunVersion2WithFormdataBodyWithResponse(ctx context.Context, agentId openapi_types.UUID, agentVersionId openapi_types.UUID, params *AgentsRunVersion2Params, body AgentsRunVersion2FormdataRequestBody, reqEditors ...RequestEditorFn) (*AgentsRunVersion2Response, error)
+	AgentsRunVersionWithFormdataBodyWithResponse(ctx context.Context, agentId openapi_types.UUID, agentVersionId openapi_types.UUID, params *AgentsRunVersionParams, body AgentsRunVersionFormdataRequestBody, reqEditors ...RequestEditorFn) (*AgentsRunVersionResponse, error)
 
-	// V1AgentsRunVersionsAsyncCreateWithBodyWithResponse request with any body
-	V1AgentsRunVersionsAsyncCreateWithBodyWithResponse(ctx context.Context, agentId openapi_types.UUID, agentVersionId openapi_types.UUID, params *V1AgentsRunVersionsAsyncCreateParams, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*V1AgentsRunVersionsAsyncCreateResponse, error)
+	// AgentsRunVersionsAsyncCreateWithBodyWithResponse request with any body
+	AgentsRunVersionsAsyncCreateWithBodyWithResponse(ctx context.Context, agentId openapi_types.UUID, agentVersionId openapi_types.UUID, params *AgentsRunVersionsAsyncCreateParams, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*AgentsRunVersionsAsyncCreateResponse, error)
 
-	V1AgentsRunVersionsAsyncCreateWithResponse(ctx context.Context, agentId openapi_types.UUID, agentVersionId openapi_types.UUID, params *V1AgentsRunVersionsAsyncCreateParams, body V1AgentsRunVersionsAsyncCreateJSONRequestBody, reqEditors ...RequestEditorFn) (*V1AgentsRunVersionsAsyncCreateResponse, error)
+	AgentsRunVersionsAsyncCreateWithResponse(ctx context.Context, agentId openapi_types.UUID, agentVersionId openapi_types.UUID, params *AgentsRunVersionsAsyncCreateParams, body AgentsRunVersionsAsyncCreateJSONRequestBody, reqEditors ...RequestEditorFn) (*AgentsRunVersionsAsyncCreateResponse, error)
 
-	V1AgentsRunVersionsAsyncCreateWithFormdataBodyWithResponse(ctx context.Context, agentId openapi_types.UUID, agentVersionId openapi_types.UUID, params *V1AgentsRunVersionsAsyncCreateParams, body V1AgentsRunVersionsAsyncCreateFormdataRequestBody, reqEditors ...RequestEditorFn) (*V1AgentsRunVersionsAsyncCreateResponse, error)
+	AgentsRunVersionsAsyncCreateWithFormdataBodyWithResponse(ctx context.Context, agentId openapi_types.UUID, agentVersionId openapi_types.UUID, params *AgentsRunVersionsAsyncCreateParams, body AgentsRunVersionsAsyncCreateFormdataRequestBody, reqEditors ...RequestEditorFn) (*AgentsRunVersionsAsyncCreateResponse, error)
 
-	// V1AgentsDestroyWithResponse request
-	V1AgentsDestroyWithResponse(ctx context.Context, agentId openapi_types.UUID, params *V1AgentsDestroyParams, reqEditors ...RequestEditorFn) (*V1AgentsDestroyResponse, error)
+	// AgentsDestroyWithResponse request
+	AgentsDestroyWithResponse(ctx context.Context, agentId openapi_types.UUID, params *AgentsDestroyParams, reqEditors ...RequestEditorFn) (*AgentsDestroyResponse, error)
 
-	// V1AgentsRetrieveWithResponse request
-	V1AgentsRetrieveWithResponse(ctx context.Context, agentId openapi_types.UUID, params *V1AgentsRetrieveParams, reqEditors ...RequestEditorFn) (*V1AgentsRetrieveResponse, error)
+	// AgentsRetrieveWithResponse request
+	AgentsRetrieveWithResponse(ctx context.Context, agentId openapi_types.UUID, params *AgentsRetrieveParams, reqEditors ...RequestEditorFn) (*AgentsRetrieveResponse, error)
 
-	// V1AgentsPartialUpdateWithBodyWithResponse request with any body
-	V1AgentsPartialUpdateWithBodyWithResponse(ctx context.Context, agentId openapi_types.UUID, params *V1AgentsPartialUpdateParams, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*V1AgentsPartialUpdateResponse, error)
+	// AgentsPartialUpdateWithBodyWithResponse request with any body
+	AgentsPartialUpdateWithBodyWithResponse(ctx context.Context, agentId openapi_types.UUID, params *AgentsPartialUpdateParams, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*AgentsPartialUpdateResponse, error)
 
-	V1AgentsPartialUpdateWithResponse(ctx context.Context, agentId openapi_types.UUID, params *V1AgentsPartialUpdateParams, body V1AgentsPartialUpdateJSONRequestBody, reqEditors ...RequestEditorFn) (*V1AgentsPartialUpdateResponse, error)
+	AgentsPartialUpdateWithResponse(ctx context.Context, agentId openapi_types.UUID, params *AgentsPartialUpdateParams, body AgentsPartialUpdateJSONRequestBody, reqEditors ...RequestEditorFn) (*AgentsPartialUpdateResponse, error)
 
-	V1AgentsPartialUpdateWithFormdataBodyWithResponse(ctx context.Context, agentId openapi_types.UUID, params *V1AgentsPartialUpdateParams, body V1AgentsPartialUpdateFormdataRequestBody, reqEditors ...RequestEditorFn) (*V1AgentsPartialUpdateResponse, error)
+	AgentsPartialUpdateWithFormdataBodyWithResponse(ctx context.Context, agentId openapi_types.UUID, params *AgentsPartialUpdateParams, body AgentsPartialUpdateFormdataRequestBody, reqEditors ...RequestEditorFn) (*AgentsPartialUpdateResponse, error)
 
-	// V1AgentsUpdateWithBodyWithResponse request with any body
-	V1AgentsUpdateWithBodyWithResponse(ctx context.Context, agentId openapi_types.UUID, params *V1AgentsUpdateParams, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*V1AgentsUpdateResponse, error)
+	// AgentsUpdateWithBodyWithResponse request with any body
+	AgentsUpdateWithBodyWithResponse(ctx context.Context, agentId openapi_types.UUID, params *AgentsUpdateParams, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*AgentsUpdateResponse, error)
 
-	V1AgentsUpdateWithResponse(ctx context.Context, agentId openapi_types.UUID, params *V1AgentsUpdateParams, body V1AgentsUpdateJSONRequestBody, reqEditors ...RequestEditorFn) (*V1AgentsUpdateResponse, error)
+	AgentsUpdateWithResponse(ctx context.Context, agentId openapi_types.UUID, params *AgentsUpdateParams, body AgentsUpdateJSONRequestBody, reqEditors ...RequestEditorFn) (*AgentsUpdateResponse, error)
 
-	V1AgentsUpdateWithFormdataBodyWithResponse(ctx context.Context, agentId openapi_types.UUID, params *V1AgentsUpdateParams, body V1AgentsUpdateFormdataRequestBody, reqEditors ...RequestEditorFn) (*V1AgentsUpdateResponse, error)
+	AgentsUpdateWithFormdataBodyWithResponse(ctx context.Context, agentId openapi_types.UUID, params *AgentsUpdateParams, body AgentsUpdateFormdataRequestBody, reqEditors ...RequestEditorFn) (*AgentsUpdateResponse, error)
 
-	// V1AgentsDuplicateCreateWithResponse request
-	V1AgentsDuplicateCreateWithResponse(ctx context.Context, agentId openapi_types.UUID, params *V1AgentsDuplicateCreateParams, reqEditors ...RequestEditorFn) (*V1AgentsDuplicateCreateResponse, error)
+	// AgentsDuplicateCreateWithResponse request
+	AgentsDuplicateCreateWithResponse(ctx context.Context, agentId openapi_types.UUID, params *AgentsDuplicateCreateParams, reqEditors ...RequestEditorFn) (*AgentsDuplicateCreateResponse, error)
 
-	// V1AgentsJobsCancelAllCreateWithResponse request
-	V1AgentsJobsCancelAllCreateWithResponse(ctx context.Context, agentId openapi_types.UUID, params *V1AgentsJobsCancelAllCreateParams, reqEditors ...RequestEditorFn) (*V1AgentsJobsCancelAllCreateResponse, error)
+	// AgentsJobsCancelAllCreateWithResponse request
+	AgentsJobsCancelAllCreateWithResponse(ctx context.Context, agentId openapi_types.UUID, params *AgentsJobsCancelAllCreateParams, reqEditors ...RequestEditorFn) (*AgentsJobsCancelAllCreateResponse, error)
 
-	// V1AgentsVersionsListWithResponse request
-	V1AgentsVersionsListWithResponse(ctx context.Context, agentId openapi_types.UUID, params *V1AgentsVersionsListParams, reqEditors ...RequestEditorFn) (*V1AgentsVersionsListResponse, error)
+	// AgentsVersionsListWithResponse request
+	AgentsVersionsListWithResponse(ctx context.Context, agentId openapi_types.UUID, params *AgentsVersionsListParams, reqEditors ...RequestEditorFn) (*AgentsVersionsListResponse, error)
 
-	// V1AgentsVersionsCreateWithBodyWithResponse request with any body
-	V1AgentsVersionsCreateWithBodyWithResponse(ctx context.Context, agentId openapi_types.UUID, params *V1AgentsVersionsCreateParams, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*V1AgentsVersionsCreateResponse, error)
+	// AgentsVersionsCreateWithBodyWithResponse request with any body
+	AgentsVersionsCreateWithBodyWithResponse(ctx context.Context, agentId openapi_types.UUID, params *AgentsVersionsCreateParams, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*AgentsVersionsCreateResponse, error)
 
-	V1AgentsVersionsCreateWithResponse(ctx context.Context, agentId openapi_types.UUID, params *V1AgentsVersionsCreateParams, body V1AgentsVersionsCreateJSONRequestBody, reqEditors ...RequestEditorFn) (*V1AgentsVersionsCreateResponse, error)
+	AgentsVersionsCreateWithResponse(ctx context.Context, agentId openapi_types.UUID, params *AgentsVersionsCreateParams, body AgentsVersionsCreateJSONRequestBody, reqEditors ...RequestEditorFn) (*AgentsVersionsCreateResponse, error)
 
-	V1AgentsVersionsCreateWithFormdataBodyWithResponse(ctx context.Context, agentId openapi_types.UUID, params *V1AgentsVersionsCreateParams, body V1AgentsVersionsCreateFormdataRequestBody, reqEditors ...RequestEditorFn) (*V1AgentsVersionsCreateResponse, error)
+	AgentsVersionsCreateWithFormdataBodyWithResponse(ctx context.Context, agentId openapi_types.UUID, params *AgentsVersionsCreateParams, body AgentsVersionsCreateFormdataRequestBody, reqEditors ...RequestEditorFn) (*AgentsVersionsCreateResponse, error)
 
-	// V1AgentsVersionsCurrentRetrieveWithResponse request
-	V1AgentsVersionsCurrentRetrieveWithResponse(ctx context.Context, agentId openapi_types.UUID, params *V1AgentsVersionsCurrentRetrieveParams, reqEditors ...RequestEditorFn) (*V1AgentsVersionsCurrentRetrieveResponse, error)
+	// AgentsVersionsCurrentRetrieveWithResponse request
+	AgentsVersionsCurrentRetrieveWithResponse(ctx context.Context, agentId openapi_types.UUID, params *AgentsVersionsCurrentRetrieveParams, reqEditors ...RequestEditorFn) (*AgentsVersionsCurrentRetrieveResponse, error)
 
-	// V1AgentsVersionsDestroyWithResponse request
-	V1AgentsVersionsDestroyWithResponse(ctx context.Context, agentId openapi_types.UUID, agentVersionId openapi_types.UUID, params *V1AgentsVersionsDestroyParams, reqEditors ...RequestEditorFn) (*V1AgentsVersionsDestroyResponse, error)
+	// AgentsVersionsDestroyWithResponse request
+	AgentsVersionsDestroyWithResponse(ctx context.Context, agentId openapi_types.UUID, agentVersionId openapi_types.UUID, params *AgentsVersionsDestroyParams, reqEditors ...RequestEditorFn) (*AgentsVersionsDestroyResponse, error)
 
-	// V1AgentsVersionsRetrieveWithResponse request
-	V1AgentsVersionsRetrieveWithResponse(ctx context.Context, agentId openapi_types.UUID, agentVersionId openapi_types.UUID, params *V1AgentsVersionsRetrieveParams, reqEditors ...RequestEditorFn) (*V1AgentsVersionsRetrieveResponse, error)
+	// AgentsVersionsRetrieveWithResponse request
+	AgentsVersionsRetrieveWithResponse(ctx context.Context, agentId openapi_types.UUID, agentVersionId openapi_types.UUID, params *AgentsVersionsRetrieveParams, reqEditors ...RequestEditorFn) (*AgentsVersionsRetrieveResponse, error)
 
-	// V1AgentsVersionsPartialUpdateWithBodyWithResponse request with any body
-	V1AgentsVersionsPartialUpdateWithBodyWithResponse(ctx context.Context, agentId openapi_types.UUID, agentVersionId openapi_types.UUID, params *V1AgentsVersionsPartialUpdateParams, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*V1AgentsVersionsPartialUpdateResponse, error)
+	// AgentsVersionsPartialUpdateWithBodyWithResponse request with any body
+	AgentsVersionsPartialUpdateWithBodyWithResponse(ctx context.Context, agentId openapi_types.UUID, agentVersionId openapi_types.UUID, params *AgentsVersionsPartialUpdateParams, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*AgentsVersionsPartialUpdateResponse, error)
 
-	V1AgentsVersionsPartialUpdateWithResponse(ctx context.Context, agentId openapi_types.UUID, agentVersionId openapi_types.UUID, params *V1AgentsVersionsPartialUpdateParams, body V1AgentsVersionsPartialUpdateJSONRequestBody, reqEditors ...RequestEditorFn) (*V1AgentsVersionsPartialUpdateResponse, error)
+	AgentsVersionsPartialUpdateWithResponse(ctx context.Context, agentId openapi_types.UUID, agentVersionId openapi_types.UUID, params *AgentsVersionsPartialUpdateParams, body AgentsVersionsPartialUpdateJSONRequestBody, reqEditors ...RequestEditorFn) (*AgentsVersionsPartialUpdateResponse, error)
 
-	V1AgentsVersionsPartialUpdateWithFormdataBodyWithResponse(ctx context.Context, agentId openapi_types.UUID, agentVersionId openapi_types.UUID, params *V1AgentsVersionsPartialUpdateParams, body V1AgentsVersionsPartialUpdateFormdataRequestBody, reqEditors ...RequestEditorFn) (*V1AgentsVersionsPartialUpdateResponse, error)
+	AgentsVersionsPartialUpdateWithFormdataBodyWithResponse(ctx context.Context, agentId openapi_types.UUID, agentVersionId openapi_types.UUID, params *AgentsVersionsPartialUpdateParams, body AgentsVersionsPartialUpdateFormdataRequestBody, reqEditors ...RequestEditorFn) (*AgentsVersionsPartialUpdateResponse, error)
 
-	// V1AgentsVersionsUpdateWithBodyWithResponse request with any body
-	V1AgentsVersionsUpdateWithBodyWithResponse(ctx context.Context, agentId openapi_types.UUID, agentVersionId openapi_types.UUID, params *V1AgentsVersionsUpdateParams, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*V1AgentsVersionsUpdateResponse, error)
+	// AgentsVersionsUpdateWithBodyWithResponse request with any body
+	AgentsVersionsUpdateWithBodyWithResponse(ctx context.Context, agentId openapi_types.UUID, agentVersionId openapi_types.UUID, params *AgentsVersionsUpdateParams, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*AgentsVersionsUpdateResponse, error)
 
-	V1AgentsVersionsUpdateWithResponse(ctx context.Context, agentId openapi_types.UUID, agentVersionId openapi_types.UUID, params *V1AgentsVersionsUpdateParams, body V1AgentsVersionsUpdateJSONRequestBody, reqEditors ...RequestEditorFn) (*V1AgentsVersionsUpdateResponse, error)
+	AgentsVersionsUpdateWithResponse(ctx context.Context, agentId openapi_types.UUID, agentVersionId openapi_types.UUID, params *AgentsVersionsUpdateParams, body AgentsVersionsUpdateJSONRequestBody, reqEditors ...RequestEditorFn) (*AgentsVersionsUpdateResponse, error)
 
-	V1AgentsVersionsUpdateWithFormdataBodyWithResponse(ctx context.Context, agentId openapi_types.UUID, agentVersionId openapi_types.UUID, params *V1AgentsVersionsUpdateParams, body V1AgentsVersionsUpdateFormdataRequestBody, reqEditors ...RequestEditorFn) (*V1AgentsVersionsUpdateResponse, error)
+	AgentsVersionsUpdateWithFormdataBodyWithResponse(ctx context.Context, agentId openapi_types.UUID, agentVersionId openapi_types.UUID, params *AgentsVersionsUpdateParams, body AgentsVersionsUpdateFormdataRequestBody, reqEditors ...RequestEditorFn) (*AgentsVersionsUpdateResponse, error)
 
-	// V1PoliciesListWithResponse request
-	V1PoliciesListWithResponse(ctx context.Context, params *V1PoliciesListParams, reqEditors ...RequestEditorFn) (*V1PoliciesListResponse, error)
+	// PoliciesListWithResponse request
+	PoliciesListWithResponse(ctx context.Context, params *PoliciesListParams, reqEditors ...RequestEditorFn) (*PoliciesListResponse, error)
 
-	// V1PoliciesCreateWithBodyWithResponse request with any body
-	V1PoliciesCreateWithBodyWithResponse(ctx context.Context, params *V1PoliciesCreateParams, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*V1PoliciesCreateResponse, error)
+	// PoliciesCreateWithBodyWithResponse request with any body
+	PoliciesCreateWithBodyWithResponse(ctx context.Context, params *PoliciesCreateParams, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*PoliciesCreateResponse, error)
 
-	V1PoliciesCreateWithResponse(ctx context.Context, params *V1PoliciesCreateParams, body V1PoliciesCreateJSONRequestBody, reqEditors ...RequestEditorFn) (*V1PoliciesCreateResponse, error)
+	PoliciesCreateWithResponse(ctx context.Context, params *PoliciesCreateParams, body PoliciesCreateJSONRequestBody, reqEditors ...RequestEditorFn) (*PoliciesCreateResponse, error)
 
-	V1PoliciesCreateWithFormdataBodyWithResponse(ctx context.Context, params *V1PoliciesCreateParams, body V1PoliciesCreateFormdataRequestBody, reqEditors ...RequestEditorFn) (*V1PoliciesCreateResponse, error)
+	PoliciesCreateWithFormdataBodyWithResponse(ctx context.Context, params *PoliciesCreateParams, body PoliciesCreateFormdataRequestBody, reqEditors ...RequestEditorFn) (*PoliciesCreateResponse, error)
 
-	// V1PoliciesDestroyWithResponse request
-	V1PoliciesDestroyWithResponse(ctx context.Context, id openapi_types.UUID, params *V1PoliciesDestroyParams, reqEditors ...RequestEditorFn) (*V1PoliciesDestroyResponse, error)
+	// PoliciesDestroyWithResponse request
+	PoliciesDestroyWithResponse(ctx context.Context, id openapi_types.UUID, params *PoliciesDestroyParams, reqEditors ...RequestEditorFn) (*PoliciesDestroyResponse, error)
 
-	// V1PoliciesRetrieveWithResponse request
-	V1PoliciesRetrieveWithResponse(ctx context.Context, id openapi_types.UUID, params *V1PoliciesRetrieveParams, reqEditors ...RequestEditorFn) (*V1PoliciesRetrieveResponse, error)
+	// PoliciesRetrieveWithResponse request
+	PoliciesRetrieveWithResponse(ctx context.Context, id openapi_types.UUID, params *PoliciesRetrieveParams, reqEditors ...RequestEditorFn) (*PoliciesRetrieveResponse, error)
 
-	// V1PoliciesPartialUpdateWithBodyWithResponse request with any body
-	V1PoliciesPartialUpdateWithBodyWithResponse(ctx context.Context, id openapi_types.UUID, params *V1PoliciesPartialUpdateParams, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*V1PoliciesPartialUpdateResponse, error)
+	// PoliciesPartialUpdateWithBodyWithResponse request with any body
+	PoliciesPartialUpdateWithBodyWithResponse(ctx context.Context, id openapi_types.UUID, params *PoliciesPartialUpdateParams, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*PoliciesPartialUpdateResponse, error)
 
-	V1PoliciesPartialUpdateWithResponse(ctx context.Context, id openapi_types.UUID, params *V1PoliciesPartialUpdateParams, body V1PoliciesPartialUpdateJSONRequestBody, reqEditors ...RequestEditorFn) (*V1PoliciesPartialUpdateResponse, error)
+	PoliciesPartialUpdateWithResponse(ctx context.Context, id openapi_types.UUID, params *PoliciesPartialUpdateParams, body PoliciesPartialUpdateJSONRequestBody, reqEditors ...RequestEditorFn) (*PoliciesPartialUpdateResponse, error)
 
-	V1PoliciesPartialUpdateWithFormdataBodyWithResponse(ctx context.Context, id openapi_types.UUID, params *V1PoliciesPartialUpdateParams, body V1PoliciesPartialUpdateFormdataRequestBody, reqEditors ...RequestEditorFn) (*V1PoliciesPartialUpdateResponse, error)
+	PoliciesPartialUpdateWithFormdataBodyWithResponse(ctx context.Context, id openapi_types.UUID, params *PoliciesPartialUpdateParams, body PoliciesPartialUpdateFormdataRequestBody, reqEditors ...RequestEditorFn) (*PoliciesPartialUpdateResponse, error)
 
-	// V1PoliciesUpdateWithBodyWithResponse request with any body
-	V1PoliciesUpdateWithBodyWithResponse(ctx context.Context, id openapi_types.UUID, params *V1PoliciesUpdateParams, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*V1PoliciesUpdateResponse, error)
+	// PoliciesUpdateWithBodyWithResponse request with any body
+	PoliciesUpdateWithBodyWithResponse(ctx context.Context, id openapi_types.UUID, params *PoliciesUpdateParams, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*PoliciesUpdateResponse, error)
 
-	V1PoliciesUpdateWithResponse(ctx context.Context, id openapi_types.UUID, params *V1PoliciesUpdateParams, body V1PoliciesUpdateJSONRequestBody, reqEditors ...RequestEditorFn) (*V1PoliciesUpdateResponse, error)
+	PoliciesUpdateWithResponse(ctx context.Context, id openapi_types.UUID, params *PoliciesUpdateParams, body PoliciesUpdateJSONRequestBody, reqEditors ...RequestEditorFn) (*PoliciesUpdateResponse, error)
 
-	V1PoliciesUpdateWithFormdataBodyWithResponse(ctx context.Context, id openapi_types.UUID, params *V1PoliciesUpdateParams, body V1PoliciesUpdateFormdataRequestBody, reqEditors ...RequestEditorFn) (*V1PoliciesUpdateResponse, error)
+	PoliciesUpdateWithFormdataBodyWithResponse(ctx context.Context, id openapi_types.UUID, params *PoliciesUpdateParams, body PoliciesUpdateFormdataRequestBody, reqEditors ...RequestEditorFn) (*PoliciesUpdateResponse, error)
 
-	// V1PoliciesVersionsListWithResponse request
-	V1PoliciesVersionsListWithResponse(ctx context.Context, policyId openapi_types.UUID, params *V1PoliciesVersionsListParams, reqEditors ...RequestEditorFn) (*V1PoliciesVersionsListResponse, error)
+	// PoliciesVersionsListWithResponse request
+	PoliciesVersionsListWithResponse(ctx context.Context, policyId openapi_types.UUID, params *PoliciesVersionsListParams, reqEditors ...RequestEditorFn) (*PoliciesVersionsListResponse, error)
 
-	// V1PoliciesVersionsCreateWithBodyWithResponse request with any body
-	V1PoliciesVersionsCreateWithBodyWithResponse(ctx context.Context, policyId openapi_types.UUID, params *V1PoliciesVersionsCreateParams, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*V1PoliciesVersionsCreateResponse, error)
+	// PoliciesVersionsCreateWithBodyWithResponse request with any body
+	PoliciesVersionsCreateWithBodyWithResponse(ctx context.Context, policyId openapi_types.UUID, params *PoliciesVersionsCreateParams, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*PoliciesVersionsCreateResponse, error)
 
-	V1PoliciesVersionsCreateWithResponse(ctx context.Context, policyId openapi_types.UUID, params *V1PoliciesVersionsCreateParams, body V1PoliciesVersionsCreateJSONRequestBody, reqEditors ...RequestEditorFn) (*V1PoliciesVersionsCreateResponse, error)
+	PoliciesVersionsCreateWithResponse(ctx context.Context, policyId openapi_types.UUID, params *PoliciesVersionsCreateParams, body PoliciesVersionsCreateJSONRequestBody, reqEditors ...RequestEditorFn) (*PoliciesVersionsCreateResponse, error)
 
-	V1PoliciesVersionsCreateWithFormdataBodyWithResponse(ctx context.Context, policyId openapi_types.UUID, params *V1PoliciesVersionsCreateParams, body V1PoliciesVersionsCreateFormdataRequestBody, reqEditors ...RequestEditorFn) (*V1PoliciesVersionsCreateResponse, error)
+	PoliciesVersionsCreateWithFormdataBodyWithResponse(ctx context.Context, policyId openapi_types.UUID, params *PoliciesVersionsCreateParams, body PoliciesVersionsCreateFormdataRequestBody, reqEditors ...RequestEditorFn) (*PoliciesVersionsCreateResponse, error)
 
-	// V1PoliciesVersionsRetrieveWithResponse request
-	V1PoliciesVersionsRetrieveWithResponse(ctx context.Context, policyId openapi_types.UUID, versionId openapi_types.UUID, params *V1PoliciesVersionsRetrieveParams, reqEditors ...RequestEditorFn) (*V1PoliciesVersionsRetrieveResponse, error)
+	// PoliciesVersionsRetrieveWithResponse request
+	PoliciesVersionsRetrieveWithResponse(ctx context.Context, policyId openapi_types.UUID, versionId openapi_types.UUID, params *PoliciesVersionsRetrieveParams, reqEditors ...RequestEditorFn) (*PoliciesVersionsRetrieveResponse, error)
 
-	// V1UsersCurrentUserRetrieveWithResponse request
-	V1UsersCurrentUserRetrieveWithResponse(ctx context.Context, reqEditors ...RequestEditorFn) (*V1UsersCurrentUserRetrieveResponse, error)
+	// UsersCurrentUserRetrieveWithResponse request
+	UsersCurrentUserRetrieveWithResponse(ctx context.Context, reqEditors ...RequestEditorFn) (*UsersCurrentUserRetrieveResponse, error)
 }
 
-type V1AgentsListResponse struct {
+type AgentsListResponse struct {
 	Body         []byte
 	HTTPResponse *http.Response
 	JSON200      *PaginatedBaseAgentList
@@ -4930,7 +4930,7 @@ type V1AgentsListResponse struct {
 }
 
 // Status returns HTTPResponse.Status
-func (r V1AgentsListResponse) Status() string {
+func (r AgentsListResponse) Status() string {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.Status
 	}
@@ -4938,14 +4938,14 @@ func (r V1AgentsListResponse) Status() string {
 }
 
 // StatusCode returns HTTPResponse.StatusCode
-func (r V1AgentsListResponse) StatusCode() int {
+func (r AgentsListResponse) StatusCode() int {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.StatusCode
 	}
 	return 0
 }
 
-type V1AgentsCreateResponse struct {
+type AgentsCreateResponse struct {
 	Body         []byte
 	HTTPResponse *http.Response
 	JSON201      *BaseAgent
@@ -4954,7 +4954,7 @@ type V1AgentsCreateResponse struct {
 }
 
 // Status returns HTTPResponse.Status
-func (r V1AgentsCreateResponse) Status() string {
+func (r AgentsCreateResponse) Status() string {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.Status
 	}
@@ -4962,14 +4962,14 @@ func (r V1AgentsCreateResponse) Status() string {
 }
 
 // StatusCode returns HTTPResponse.StatusCode
-func (r V1AgentsCreateResponse) StatusCode() int {
+func (r AgentsCreateResponse) StatusCode() int {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.StatusCode
 	}
 	return 0
 }
 
-type V1AgentsJobsResultsCreateResponse struct {
+type AgentsJobsResultsCreateResponse struct {
 	Body         []byte
 	HTTPResponse *http.Response
 	JSON200      *PaginatedAgentJobResultItemList
@@ -4978,7 +4978,7 @@ type V1AgentsJobsResultsCreateResponse struct {
 }
 
 // Status returns HTTPResponse.Status
-func (r V1AgentsJobsResultsCreateResponse) Status() string {
+func (r AgentsJobsResultsCreateResponse) Status() string {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.Status
 	}
@@ -4986,14 +4986,14 @@ func (r V1AgentsJobsResultsCreateResponse) Status() string {
 }
 
 // StatusCode returns HTTPResponse.StatusCode
-func (r V1AgentsJobsResultsCreateResponse) StatusCode() int {
+func (r AgentsJobsResultsCreateResponse) StatusCode() int {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.StatusCode
 	}
 	return 0
 }
 
-type V1AgentsJobsStatusesCreateResponse struct {
+type AgentsJobsStatusesCreateResponse struct {
 	Body         []byte
 	HTTPResponse *http.Response
 	JSON200      *[]AgentJobStatus
@@ -5002,7 +5002,7 @@ type V1AgentsJobsStatusesCreateResponse struct {
 }
 
 // Status returns HTTPResponse.Status
-func (r V1AgentsJobsStatusesCreateResponse) Status() string {
+func (r AgentsJobsStatusesCreateResponse) Status() string {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.Status
 	}
@@ -5010,20 +5010,20 @@ func (r V1AgentsJobsStatusesCreateResponse) Status() string {
 }
 
 // StatusCode returns HTTPResponse.StatusCode
-func (r V1AgentsJobsStatusesCreateResponse) StatusCode() int {
+func (r AgentsJobsStatusesCreateResponse) StatusCode() int {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.StatusCode
 	}
 	return 0
 }
 
-type V1AgentsJobsReferencesRetrieveResponse struct {
+type AgentsJobsReferencesRetrieveResponse struct {
 	Body         []byte
 	HTTPResponse *http.Response
 }
 
 // Status returns HTTPResponse.Status
-func (r V1AgentsJobsReferencesRetrieveResponse) Status() string {
+func (r AgentsJobsReferencesRetrieveResponse) Status() string {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.Status
 	}
@@ -5031,14 +5031,14 @@ func (r V1AgentsJobsReferencesRetrieveResponse) Status() string {
 }
 
 // StatusCode returns HTTPResponse.StatusCode
-func (r V1AgentsJobsReferencesRetrieveResponse) StatusCode() int {
+func (r AgentsJobsReferencesRetrieveResponse) StatusCode() int {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.StatusCode
 	}
 	return 0
 }
 
-type V1AgentsJobsResultRetrieveResponse struct {
+type AgentsJobsResultRetrieveResponse struct {
 	Body         []byte
 	HTTPResponse *http.Response
 	JSON200      *AgentJobResultResponse
@@ -5048,7 +5048,7 @@ type V1AgentsJobsResultRetrieveResponse struct {
 }
 
 // Status returns HTTPResponse.Status
-func (r V1AgentsJobsResultRetrieveResponse) Status() string {
+func (r AgentsJobsResultRetrieveResponse) Status() string {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.Status
 	}
@@ -5056,14 +5056,14 @@ func (r V1AgentsJobsResultRetrieveResponse) Status() string {
 }
 
 // StatusCode returns HTTPResponse.StatusCode
-func (r V1AgentsJobsResultRetrieveResponse) StatusCode() int {
+func (r AgentsJobsResultRetrieveResponse) StatusCode() int {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.StatusCode
 	}
 	return 0
 }
 
-type V1AgentsJobsCancelCreateResponse struct {
+type AgentsJobsCancelCreateResponse struct {
 	Body         []byte
 	HTTPResponse *http.Response
 	JSON403      *ErrorResponse
@@ -5071,7 +5071,7 @@ type V1AgentsJobsCancelCreateResponse struct {
 }
 
 // Status returns HTTPResponse.Status
-func (r V1AgentsJobsCancelCreateResponse) Status() string {
+func (r AgentsJobsCancelCreateResponse) Status() string {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.Status
 	}
@@ -5079,14 +5079,14 @@ func (r V1AgentsJobsCancelCreateResponse) Status() string {
 }
 
 // StatusCode returns HTTPResponse.StatusCode
-func (r V1AgentsJobsCancelCreateResponse) StatusCode() int {
+func (r AgentsJobsCancelCreateResponse) StatusCode() int {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.StatusCode
 	}
 	return 0
 }
 
-type V1AgentsJobsDeleteDataCreateResponse struct {
+type AgentsJobsDeleteDataCreateResponse struct {
 	Body         []byte
 	HTTPResponse *http.Response
 	JSON200      *AgentJobDeleteDataResponse
@@ -5097,7 +5097,7 @@ type V1AgentsJobsDeleteDataCreateResponse struct {
 }
 
 // Status returns HTTPResponse.Status
-func (r V1AgentsJobsDeleteDataCreateResponse) Status() string {
+func (r AgentsJobsDeleteDataCreateResponse) Status() string {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.Status
 	}
@@ -5105,14 +5105,14 @@ func (r V1AgentsJobsDeleteDataCreateResponse) Status() string {
 }
 
 // StatusCode returns HTTPResponse.StatusCode
-func (r V1AgentsJobsDeleteDataCreateResponse) StatusCode() int {
+func (r AgentsJobsDeleteDataCreateResponse) StatusCode() int {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.StatusCode
 	}
 	return 0
 }
 
-type V1AgentsJobsStatusRetrieveResponse struct {
+type AgentsJobsStatusRetrieveResponse struct {
 	Body         []byte
 	HTTPResponse *http.Response
 	JSON200      *AgentJobStatus
@@ -5121,7 +5121,7 @@ type V1AgentsJobsStatusRetrieveResponse struct {
 }
 
 // Status returns HTTPResponse.Status
-func (r V1AgentsJobsStatusRetrieveResponse) Status() string {
+func (r AgentsJobsStatusRetrieveResponse) Status() string {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.Status
 	}
@@ -5129,14 +5129,14 @@ func (r V1AgentsJobsStatusRetrieveResponse) Status() string {
 }
 
 // StatusCode returns HTTPResponse.StatusCode
-func (r V1AgentsJobsStatusRetrieveResponse) StatusCode() int {
+func (r AgentsJobsStatusRetrieveResponse) StatusCode() int {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.StatusCode
 	}
 	return 0
 }
 
-type AgentsRun2Response struct {
+type AgentsRunResponse struct {
 	Body         []byte
 	HTTPResponse *http.Response
 	JSON200      *[]AgentDatum
@@ -5147,7 +5147,7 @@ type AgentsRun2Response struct {
 }
 
 // Status returns HTTPResponse.Status
-func (r AgentsRun2Response) Status() string {
+func (r AgentsRunResponse) Status() string {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.Status
 	}
@@ -5155,14 +5155,14 @@ func (r AgentsRun2Response) Status() string {
 }
 
 // StatusCode returns HTTPResponse.StatusCode
-func (r AgentsRun2Response) StatusCode() int {
+func (r AgentsRunResponse) StatusCode() int {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.StatusCode
 	}
 	return 0
 }
 
-type V1AgentsRunAsyncCreateResponse struct {
+type AgentsRunAsyncCreateResponse struct {
 	Body         []byte
 	HTTPResponse *http.Response
 	JSON200      *string
@@ -5174,7 +5174,7 @@ type V1AgentsRunAsyncCreateResponse struct {
 }
 
 // Status returns HTTPResponse.Status
-func (r V1AgentsRunAsyncCreateResponse) Status() string {
+func (r AgentsRunAsyncCreateResponse) Status() string {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.Status
 	}
@@ -5182,14 +5182,14 @@ func (r V1AgentsRunAsyncCreateResponse) Status() string {
 }
 
 // StatusCode returns HTTPResponse.StatusCode
-func (r V1AgentsRunAsyncCreateResponse) StatusCode() int {
+func (r AgentsRunAsyncCreateResponse) StatusCode() int {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.StatusCode
 	}
 	return 0
 }
 
-type AgentsRunAsyncMany5Response struct {
+type AgentsRunAsyncManyResponse struct {
 	Body         []byte
 	HTTPResponse *http.Response
 	JSON200      *map[string]interface{}
@@ -5200,7 +5200,7 @@ type AgentsRunAsyncMany5Response struct {
 }
 
 // Status returns HTTPResponse.Status
-func (r AgentsRunAsyncMany5Response) Status() string {
+func (r AgentsRunAsyncManyResponse) Status() string {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.Status
 	}
@@ -5208,14 +5208,14 @@ func (r AgentsRunAsyncMany5Response) Status() string {
 }
 
 // StatusCode returns HTTPResponse.StatusCode
-func (r AgentsRunAsyncMany5Response) StatusCode() int {
+func (r AgentsRunAsyncManyResponse) StatusCode() int {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.StatusCode
 	}
 	return 0
 }
 
-type AgentsRunVersion2Response struct {
+type AgentsRunVersionResponse struct {
 	Body         []byte
 	HTTPResponse *http.Response
 	JSON200      *[]AgentDatum
@@ -5226,7 +5226,7 @@ type AgentsRunVersion2Response struct {
 }
 
 // Status returns HTTPResponse.Status
-func (r AgentsRunVersion2Response) Status() string {
+func (r AgentsRunVersionResponse) Status() string {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.Status
 	}
@@ -5234,14 +5234,14 @@ func (r AgentsRunVersion2Response) Status() string {
 }
 
 // StatusCode returns HTTPResponse.StatusCode
-func (r AgentsRunVersion2Response) StatusCode() int {
+func (r AgentsRunVersionResponse) StatusCode() int {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.StatusCode
 	}
 	return 0
 }
 
-type V1AgentsRunVersionsAsyncCreateResponse struct {
+type AgentsRunVersionsAsyncCreateResponse struct {
 	Body         []byte
 	HTTPResponse *http.Response
 	JSON200      *string
@@ -5253,7 +5253,7 @@ type V1AgentsRunVersionsAsyncCreateResponse struct {
 }
 
 // Status returns HTTPResponse.Status
-func (r V1AgentsRunVersionsAsyncCreateResponse) Status() string {
+func (r AgentsRunVersionsAsyncCreateResponse) Status() string {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.Status
 	}
@@ -5261,14 +5261,14 @@ func (r V1AgentsRunVersionsAsyncCreateResponse) Status() string {
 }
 
 // StatusCode returns HTTPResponse.StatusCode
-func (r V1AgentsRunVersionsAsyncCreateResponse) StatusCode() int {
+func (r AgentsRunVersionsAsyncCreateResponse) StatusCode() int {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.StatusCode
 	}
 	return 0
 }
 
-type V1AgentsDestroyResponse struct {
+type AgentsDestroyResponse struct {
 	Body         []byte
 	HTTPResponse *http.Response
 	JSON403      *ErrorResponse
@@ -5277,7 +5277,7 @@ type V1AgentsDestroyResponse struct {
 }
 
 // Status returns HTTPResponse.Status
-func (r V1AgentsDestroyResponse) Status() string {
+func (r AgentsDestroyResponse) Status() string {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.Status
 	}
@@ -5285,14 +5285,14 @@ func (r V1AgentsDestroyResponse) Status() string {
 }
 
 // StatusCode returns HTTPResponse.StatusCode
-func (r V1AgentsDestroyResponse) StatusCode() int {
+func (r AgentsDestroyResponse) StatusCode() int {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.StatusCode
 	}
 	return 0
 }
 
-type V1AgentsRetrieveResponse struct {
+type AgentsRetrieveResponse struct {
 	Body         []byte
 	HTTPResponse *http.Response
 	JSON200      *BaseAgent
@@ -5301,7 +5301,7 @@ type V1AgentsRetrieveResponse struct {
 }
 
 // Status returns HTTPResponse.Status
-func (r V1AgentsRetrieveResponse) Status() string {
+func (r AgentsRetrieveResponse) Status() string {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.Status
 	}
@@ -5309,39 +5309,14 @@ func (r V1AgentsRetrieveResponse) Status() string {
 }
 
 // StatusCode returns HTTPResponse.StatusCode
-func (r V1AgentsRetrieveResponse) StatusCode() int {
+func (r AgentsRetrieveResponse) StatusCode() int {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.StatusCode
 	}
 	return 0
 }
 
-type V1AgentsPartialUpdateResponse struct {
-	Body         []byte
-	HTTPResponse *http.Response
-	JSON200      *BaseAgent
-	JSON400      *ErrorResponse
-	JSON403      *ErrorResponse
-	JSON404      *ErrorResponse
-}
-
-// Status returns HTTPResponse.Status
-func (r V1AgentsPartialUpdateResponse) Status() string {
-	if r.HTTPResponse != nil {
-		return r.HTTPResponse.Status
-	}
-	return http.StatusText(0)
-}
-
-// StatusCode returns HTTPResponse.StatusCode
-func (r V1AgentsPartialUpdateResponse) StatusCode() int {
-	if r.HTTPResponse != nil {
-		return r.HTTPResponse.StatusCode
-	}
-	return 0
-}
-
-type V1AgentsUpdateResponse struct {
+type AgentsPartialUpdateResponse struct {
 	Body         []byte
 	HTTPResponse *http.Response
 	JSON200      *BaseAgent
@@ -5351,7 +5326,7 @@ type V1AgentsUpdateResponse struct {
 }
 
 // Status returns HTTPResponse.Status
-func (r V1AgentsUpdateResponse) Status() string {
+func (r AgentsPartialUpdateResponse) Status() string {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.Status
 	}
@@ -5359,14 +5334,39 @@ func (r V1AgentsUpdateResponse) Status() string {
 }
 
 // StatusCode returns HTTPResponse.StatusCode
-func (r V1AgentsUpdateResponse) StatusCode() int {
+func (r AgentsPartialUpdateResponse) StatusCode() int {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.StatusCode
 	}
 	return 0
 }
 
-type V1AgentsDuplicateCreateResponse struct {
+type AgentsUpdateResponse struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	JSON200      *BaseAgent
+	JSON400      *ErrorResponse
+	JSON403      *ErrorResponse
+	JSON404      *ErrorResponse
+}
+
+// Status returns HTTPResponse.Status
+func (r AgentsUpdateResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r AgentsUpdateResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+type AgentsDuplicateCreateResponse struct {
 	Body         []byte
 	HTTPResponse *http.Response
 	JSON201      *AgentVersion
@@ -5375,7 +5375,7 @@ type V1AgentsDuplicateCreateResponse struct {
 }
 
 // Status returns HTTPResponse.Status
-func (r V1AgentsDuplicateCreateResponse) Status() string {
+func (r AgentsDuplicateCreateResponse) Status() string {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.Status
 	}
@@ -5383,14 +5383,14 @@ func (r V1AgentsDuplicateCreateResponse) Status() string {
 }
 
 // StatusCode returns HTTPResponse.StatusCode
-func (r V1AgentsDuplicateCreateResponse) StatusCode() int {
+func (r AgentsDuplicateCreateResponse) StatusCode() int {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.StatusCode
 	}
 	return 0
 }
 
-type V1AgentsJobsCancelAllCreateResponse struct {
+type AgentsJobsCancelAllCreateResponse struct {
 	Body         []byte
 	HTTPResponse *http.Response
 	JSON403      *ErrorResponse
@@ -5398,7 +5398,7 @@ type V1AgentsJobsCancelAllCreateResponse struct {
 }
 
 // Status returns HTTPResponse.Status
-func (r V1AgentsJobsCancelAllCreateResponse) Status() string {
+func (r AgentsJobsCancelAllCreateResponse) Status() string {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.Status
 	}
@@ -5406,14 +5406,14 @@ func (r V1AgentsJobsCancelAllCreateResponse) Status() string {
 }
 
 // StatusCode returns HTTPResponse.StatusCode
-func (r V1AgentsJobsCancelAllCreateResponse) StatusCode() int {
+func (r AgentsJobsCancelAllCreateResponse) StatusCode() int {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.StatusCode
 	}
 	return 0
 }
 
-type V1AgentsVersionsListResponse struct {
+type AgentsVersionsListResponse struct {
 	Body         []byte
 	HTTPResponse *http.Response
 	JSON200      *[]AgentVersion
@@ -5422,7 +5422,7 @@ type V1AgentsVersionsListResponse struct {
 }
 
 // Status returns HTTPResponse.Status
-func (r V1AgentsVersionsListResponse) Status() string {
+func (r AgentsVersionsListResponse) Status() string {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.Status
 	}
@@ -5430,14 +5430,14 @@ func (r V1AgentsVersionsListResponse) Status() string {
 }
 
 // StatusCode returns HTTPResponse.StatusCode
-func (r V1AgentsVersionsListResponse) StatusCode() int {
+func (r AgentsVersionsListResponse) StatusCode() int {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.StatusCode
 	}
 	return 0
 }
 
-type V1AgentsVersionsCreateResponse struct {
+type AgentsVersionsCreateResponse struct {
 	Body         []byte
 	HTTPResponse *http.Response
 	JSON201      *AgentVersion
@@ -5447,7 +5447,7 @@ type V1AgentsVersionsCreateResponse struct {
 }
 
 // Status returns HTTPResponse.Status
-func (r V1AgentsVersionsCreateResponse) Status() string {
+func (r AgentsVersionsCreateResponse) Status() string {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.Status
 	}
@@ -5455,14 +5455,14 @@ func (r V1AgentsVersionsCreateResponse) Status() string {
 }
 
 // StatusCode returns HTTPResponse.StatusCode
-func (r V1AgentsVersionsCreateResponse) StatusCode() int {
+func (r AgentsVersionsCreateResponse) StatusCode() int {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.StatusCode
 	}
 	return 0
 }
 
-type V1AgentsVersionsCurrentRetrieveResponse struct {
+type AgentsVersionsCurrentRetrieveResponse struct {
 	Body         []byte
 	HTTPResponse *http.Response
 	JSON200      *AgentVersion
@@ -5471,7 +5471,7 @@ type V1AgentsVersionsCurrentRetrieveResponse struct {
 }
 
 // Status returns HTTPResponse.Status
-func (r V1AgentsVersionsCurrentRetrieveResponse) Status() string {
+func (r AgentsVersionsCurrentRetrieveResponse) Status() string {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.Status
 	}
@@ -5479,14 +5479,14 @@ func (r V1AgentsVersionsCurrentRetrieveResponse) Status() string {
 }
 
 // StatusCode returns HTTPResponse.StatusCode
-func (r V1AgentsVersionsCurrentRetrieveResponse) StatusCode() int {
+func (r AgentsVersionsCurrentRetrieveResponse) StatusCode() int {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.StatusCode
 	}
 	return 0
 }
 
-type V1AgentsVersionsDestroyResponse struct {
+type AgentsVersionsDestroyResponse struct {
 	Body         []byte
 	HTTPResponse *http.Response
 	JSON403      *ErrorResponse
@@ -5494,7 +5494,7 @@ type V1AgentsVersionsDestroyResponse struct {
 }
 
 // Status returns HTTPResponse.Status
-func (r V1AgentsVersionsDestroyResponse) Status() string {
+func (r AgentsVersionsDestroyResponse) Status() string {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.Status
 	}
@@ -5502,14 +5502,14 @@ func (r V1AgentsVersionsDestroyResponse) Status() string {
 }
 
 // StatusCode returns HTTPResponse.StatusCode
-func (r V1AgentsVersionsDestroyResponse) StatusCode() int {
+func (r AgentsVersionsDestroyResponse) StatusCode() int {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.StatusCode
 	}
 	return 0
 }
 
-type V1AgentsVersionsRetrieveResponse struct {
+type AgentsVersionsRetrieveResponse struct {
 	Body         []byte
 	HTTPResponse *http.Response
 	JSON200      *AgentVersion
@@ -5518,7 +5518,7 @@ type V1AgentsVersionsRetrieveResponse struct {
 }
 
 // Status returns HTTPResponse.Status
-func (r V1AgentsVersionsRetrieveResponse) Status() string {
+func (r AgentsVersionsRetrieveResponse) Status() string {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.Status
 	}
@@ -5526,14 +5526,14 @@ func (r V1AgentsVersionsRetrieveResponse) Status() string {
 }
 
 // StatusCode returns HTTPResponse.StatusCode
-func (r V1AgentsVersionsRetrieveResponse) StatusCode() int {
+func (r AgentsVersionsRetrieveResponse) StatusCode() int {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.StatusCode
 	}
 	return 0
 }
 
-type V1AgentsVersionsPartialUpdateResponse struct {
+type AgentsVersionsPartialUpdateResponse struct {
 	Body         []byte
 	HTTPResponse *http.Response
 	JSON403      *ErrorResponse
@@ -5541,7 +5541,7 @@ type V1AgentsVersionsPartialUpdateResponse struct {
 }
 
 // Status returns HTTPResponse.Status
-func (r V1AgentsVersionsPartialUpdateResponse) Status() string {
+func (r AgentsVersionsPartialUpdateResponse) Status() string {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.Status
 	}
@@ -5549,14 +5549,14 @@ func (r V1AgentsVersionsPartialUpdateResponse) Status() string {
 }
 
 // StatusCode returns HTTPResponse.StatusCode
-func (r V1AgentsVersionsPartialUpdateResponse) StatusCode() int {
+func (r AgentsVersionsPartialUpdateResponse) StatusCode() int {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.StatusCode
 	}
 	return 0
 }
 
-type V1AgentsVersionsUpdateResponse struct {
+type AgentsVersionsUpdateResponse struct {
 	Body         []byte
 	HTTPResponse *http.Response
 	JSON403      *ErrorResponse
@@ -5564,7 +5564,7 @@ type V1AgentsVersionsUpdateResponse struct {
 }
 
 // Status returns HTTPResponse.Status
-func (r V1AgentsVersionsUpdateResponse) Status() string {
+func (r AgentsVersionsUpdateResponse) Status() string {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.Status
 	}
@@ -5572,21 +5572,21 @@ func (r V1AgentsVersionsUpdateResponse) Status() string {
 }
 
 // StatusCode returns HTTPResponse.StatusCode
-func (r V1AgentsVersionsUpdateResponse) StatusCode() int {
+func (r AgentsVersionsUpdateResponse) StatusCode() int {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.StatusCode
 	}
 	return 0
 }
 
-type V1PoliciesListResponse struct {
+type PoliciesListResponse struct {
 	Body         []byte
 	HTTPResponse *http.Response
 	JSON200      *PaginatedPolicyList
 }
 
 // Status returns HTTPResponse.Status
-func (r V1PoliciesListResponse) Status() string {
+func (r PoliciesListResponse) Status() string {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.Status
 	}
@@ -5594,21 +5594,21 @@ func (r V1PoliciesListResponse) Status() string {
 }
 
 // StatusCode returns HTTPResponse.StatusCode
-func (r V1PoliciesListResponse) StatusCode() int {
+func (r PoliciesListResponse) StatusCode() int {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.StatusCode
 	}
 	return 0
 }
 
-type V1PoliciesCreateResponse struct {
+type PoliciesCreateResponse struct {
 	Body         []byte
 	HTTPResponse *http.Response
 	JSON201      *CreatePolicy
 }
 
 // Status returns HTTPResponse.Status
-func (r V1PoliciesCreateResponse) Status() string {
+func (r PoliciesCreateResponse) Status() string {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.Status
 	}
@@ -5616,20 +5616,20 @@ func (r V1PoliciesCreateResponse) Status() string {
 }
 
 // StatusCode returns HTTPResponse.StatusCode
-func (r V1PoliciesCreateResponse) StatusCode() int {
+func (r PoliciesCreateResponse) StatusCode() int {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.StatusCode
 	}
 	return 0
 }
 
-type V1PoliciesDestroyResponse struct {
+type PoliciesDestroyResponse struct {
 	Body         []byte
 	HTTPResponse *http.Response
 }
 
 // Status returns HTTPResponse.Status
-func (r V1PoliciesDestroyResponse) Status() string {
+func (r PoliciesDestroyResponse) Status() string {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.Status
 	}
@@ -5637,21 +5637,21 @@ func (r V1PoliciesDestroyResponse) Status() string {
 }
 
 // StatusCode returns HTTPResponse.StatusCode
-func (r V1PoliciesDestroyResponse) StatusCode() int {
+func (r PoliciesDestroyResponse) StatusCode() int {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.StatusCode
 	}
 	return 0
 }
 
-type V1PoliciesRetrieveResponse struct {
+type PoliciesRetrieveResponse struct {
 	Body         []byte
 	HTTPResponse *http.Response
 	JSON200      *Policy
 }
 
 // Status returns HTTPResponse.Status
-func (r V1PoliciesRetrieveResponse) Status() string {
+func (r PoliciesRetrieveResponse) Status() string {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.Status
 	}
@@ -5659,21 +5659,21 @@ func (r V1PoliciesRetrieveResponse) Status() string {
 }
 
 // StatusCode returns HTTPResponse.StatusCode
-func (r V1PoliciesRetrieveResponse) StatusCode() int {
+func (r PoliciesRetrieveResponse) StatusCode() int {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.StatusCode
 	}
 	return 0
 }
 
-type V1PoliciesPartialUpdateResponse struct {
+type PoliciesPartialUpdateResponse struct {
 	Body         []byte
 	HTTPResponse *http.Response
 	JSON200      *UpdatePolicy
 }
 
 // Status returns HTTPResponse.Status
-func (r V1PoliciesPartialUpdateResponse) Status() string {
+func (r PoliciesPartialUpdateResponse) Status() string {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.Status
 	}
@@ -5681,21 +5681,21 @@ func (r V1PoliciesPartialUpdateResponse) Status() string {
 }
 
 // StatusCode returns HTTPResponse.StatusCode
-func (r V1PoliciesPartialUpdateResponse) StatusCode() int {
+func (r PoliciesPartialUpdateResponse) StatusCode() int {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.StatusCode
 	}
 	return 0
 }
 
-type V1PoliciesUpdateResponse struct {
+type PoliciesUpdateResponse struct {
 	Body         []byte
 	HTTPResponse *http.Response
 	JSON200      *UpdatePolicy
 }
 
 // Status returns HTTPResponse.Status
-func (r V1PoliciesUpdateResponse) Status() string {
+func (r PoliciesUpdateResponse) Status() string {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.Status
 	}
@@ -5703,21 +5703,21 @@ func (r V1PoliciesUpdateResponse) Status() string {
 }
 
 // StatusCode returns HTTPResponse.StatusCode
-func (r V1PoliciesUpdateResponse) StatusCode() int {
+func (r PoliciesUpdateResponse) StatusCode() int {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.StatusCode
 	}
 	return 0
 }
 
-type V1PoliciesVersionsListResponse struct {
+type PoliciesVersionsListResponse struct {
 	Body         []byte
 	HTTPResponse *http.Response
 	JSON200      *PaginatedPolicyVersionList
 }
 
 // Status returns HTTPResponse.Status
-func (r V1PoliciesVersionsListResponse) Status() string {
+func (r PoliciesVersionsListResponse) Status() string {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.Status
 	}
@@ -5725,21 +5725,21 @@ func (r V1PoliciesVersionsListResponse) Status() string {
 }
 
 // StatusCode returns HTTPResponse.StatusCode
-func (r V1PoliciesVersionsListResponse) StatusCode() int {
+func (r PoliciesVersionsListResponse) StatusCode() int {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.StatusCode
 	}
 	return 0
 }
 
-type V1PoliciesVersionsCreateResponse struct {
+type PoliciesVersionsCreateResponse struct {
 	Body         []byte
 	HTTPResponse *http.Response
 	JSON201      *CreatePolicyVersion
 }
 
 // Status returns HTTPResponse.Status
-func (r V1PoliciesVersionsCreateResponse) Status() string {
+func (r PoliciesVersionsCreateResponse) Status() string {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.Status
 	}
@@ -5747,21 +5747,21 @@ func (r V1PoliciesVersionsCreateResponse) Status() string {
 }
 
 // StatusCode returns HTTPResponse.StatusCode
-func (r V1PoliciesVersionsCreateResponse) StatusCode() int {
+func (r PoliciesVersionsCreateResponse) StatusCode() int {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.StatusCode
 	}
 	return 0
 }
 
-type V1PoliciesVersionsRetrieveResponse struct {
+type PoliciesVersionsRetrieveResponse struct {
 	Body         []byte
 	HTTPResponse *http.Response
 	JSON200      *PolicyVersion
 }
 
 // Status returns HTTPResponse.Status
-func (r V1PoliciesVersionsRetrieveResponse) Status() string {
+func (r PoliciesVersionsRetrieveResponse) Status() string {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.Status
 	}
@@ -5769,20 +5769,20 @@ func (r V1PoliciesVersionsRetrieveResponse) Status() string {
 }
 
 // StatusCode returns HTTPResponse.StatusCode
-func (r V1PoliciesVersionsRetrieveResponse) StatusCode() int {
+func (r PoliciesVersionsRetrieveResponse) StatusCode() int {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.StatusCode
 	}
 	return 0
 }
 
-type V1UsersCurrentUserRetrieveResponse struct {
+type UsersCurrentUserRetrieveResponse struct {
 	Body         []byte
 	HTTPResponse *http.Response
 }
 
 // Status returns HTTPResponse.Status
-func (r V1UsersCurrentUserRetrieveResponse) Status() string {
+func (r UsersCurrentUserRetrieveResponse) Status() string {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.Status
 	}
@@ -5790,627 +5790,627 @@ func (r V1UsersCurrentUserRetrieveResponse) Status() string {
 }
 
 // StatusCode returns HTTPResponse.StatusCode
-func (r V1UsersCurrentUserRetrieveResponse) StatusCode() int {
+func (r UsersCurrentUserRetrieveResponse) StatusCode() int {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.StatusCode
 	}
 	return 0
 }
 
-// V1AgentsListWithResponse request returning *V1AgentsListResponse
-func (c *ClientWithResponses) V1AgentsListWithResponse(ctx context.Context, params *V1AgentsListParams, reqEditors ...RequestEditorFn) (*V1AgentsListResponse, error) {
-	rsp, err := c.V1AgentsList(ctx, params, reqEditors...)
+// AgentsListWithResponse request returning *AgentsListResponse
+func (c *ClientWithResponses) AgentsListWithResponse(ctx context.Context, params *AgentsListParams, reqEditors ...RequestEditorFn) (*AgentsListResponse, error) {
+	rsp, err := c.AgentsList(ctx, params, reqEditors...)
 	if err != nil {
 		return nil, err
 	}
-	return ParseV1AgentsListResponse(rsp)
+	return ParseAgentsListResponse(rsp)
 }
 
-// V1AgentsCreateWithBodyWithResponse request with arbitrary body returning *V1AgentsCreateResponse
-func (c *ClientWithResponses) V1AgentsCreateWithBodyWithResponse(ctx context.Context, params *V1AgentsCreateParams, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*V1AgentsCreateResponse, error) {
-	rsp, err := c.V1AgentsCreateWithBody(ctx, params, contentType, body, reqEditors...)
+// AgentsCreateWithBodyWithResponse request with arbitrary body returning *AgentsCreateResponse
+func (c *ClientWithResponses) AgentsCreateWithBodyWithResponse(ctx context.Context, params *AgentsCreateParams, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*AgentsCreateResponse, error) {
+	rsp, err := c.AgentsCreateWithBody(ctx, params, contentType, body, reqEditors...)
 	if err != nil {
 		return nil, err
 	}
-	return ParseV1AgentsCreateResponse(rsp)
+	return ParseAgentsCreateResponse(rsp)
 }
 
-func (c *ClientWithResponses) V1AgentsCreateWithResponse(ctx context.Context, params *V1AgentsCreateParams, body V1AgentsCreateJSONRequestBody, reqEditors ...RequestEditorFn) (*V1AgentsCreateResponse, error) {
-	rsp, err := c.V1AgentsCreate(ctx, params, body, reqEditors...)
+func (c *ClientWithResponses) AgentsCreateWithResponse(ctx context.Context, params *AgentsCreateParams, body AgentsCreateJSONRequestBody, reqEditors ...RequestEditorFn) (*AgentsCreateResponse, error) {
+	rsp, err := c.AgentsCreate(ctx, params, body, reqEditors...)
 	if err != nil {
 		return nil, err
 	}
-	return ParseV1AgentsCreateResponse(rsp)
+	return ParseAgentsCreateResponse(rsp)
 }
 
-func (c *ClientWithResponses) V1AgentsCreateWithFormdataBodyWithResponse(ctx context.Context, params *V1AgentsCreateParams, body V1AgentsCreateFormdataRequestBody, reqEditors ...RequestEditorFn) (*V1AgentsCreateResponse, error) {
-	rsp, err := c.V1AgentsCreateWithFormdataBody(ctx, params, body, reqEditors...)
+func (c *ClientWithResponses) AgentsCreateWithFormdataBodyWithResponse(ctx context.Context, params *AgentsCreateParams, body AgentsCreateFormdataRequestBody, reqEditors ...RequestEditorFn) (*AgentsCreateResponse, error) {
+	rsp, err := c.AgentsCreateWithFormdataBody(ctx, params, body, reqEditors...)
 	if err != nil {
 		return nil, err
 	}
-	return ParseV1AgentsCreateResponse(rsp)
+	return ParseAgentsCreateResponse(rsp)
 }
 
-// V1AgentsJobsResultsCreateWithBodyWithResponse request with arbitrary body returning *V1AgentsJobsResultsCreateResponse
-func (c *ClientWithResponses) V1AgentsJobsResultsCreateWithBodyWithResponse(ctx context.Context, params *V1AgentsJobsResultsCreateParams, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*V1AgentsJobsResultsCreateResponse, error) {
-	rsp, err := c.V1AgentsJobsResultsCreateWithBody(ctx, params, contentType, body, reqEditors...)
+// AgentsJobsResultsCreateWithBodyWithResponse request with arbitrary body returning *AgentsJobsResultsCreateResponse
+func (c *ClientWithResponses) AgentsJobsResultsCreateWithBodyWithResponse(ctx context.Context, params *AgentsJobsResultsCreateParams, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*AgentsJobsResultsCreateResponse, error) {
+	rsp, err := c.AgentsJobsResultsCreateWithBody(ctx, params, contentType, body, reqEditors...)
 	if err != nil {
 		return nil, err
 	}
-	return ParseV1AgentsJobsResultsCreateResponse(rsp)
+	return ParseAgentsJobsResultsCreateResponse(rsp)
 }
 
-func (c *ClientWithResponses) V1AgentsJobsResultsCreateWithResponse(ctx context.Context, params *V1AgentsJobsResultsCreateParams, body V1AgentsJobsResultsCreateJSONRequestBody, reqEditors ...RequestEditorFn) (*V1AgentsJobsResultsCreateResponse, error) {
-	rsp, err := c.V1AgentsJobsResultsCreate(ctx, params, body, reqEditors...)
+func (c *ClientWithResponses) AgentsJobsResultsCreateWithResponse(ctx context.Context, params *AgentsJobsResultsCreateParams, body AgentsJobsResultsCreateJSONRequestBody, reqEditors ...RequestEditorFn) (*AgentsJobsResultsCreateResponse, error) {
+	rsp, err := c.AgentsJobsResultsCreate(ctx, params, body, reqEditors...)
 	if err != nil {
 		return nil, err
 	}
-	return ParseV1AgentsJobsResultsCreateResponse(rsp)
+	return ParseAgentsJobsResultsCreateResponse(rsp)
 }
 
-func (c *ClientWithResponses) V1AgentsJobsResultsCreateWithFormdataBodyWithResponse(ctx context.Context, params *V1AgentsJobsResultsCreateParams, body V1AgentsJobsResultsCreateFormdataRequestBody, reqEditors ...RequestEditorFn) (*V1AgentsJobsResultsCreateResponse, error) {
-	rsp, err := c.V1AgentsJobsResultsCreateWithFormdataBody(ctx, params, body, reqEditors...)
+func (c *ClientWithResponses) AgentsJobsResultsCreateWithFormdataBodyWithResponse(ctx context.Context, params *AgentsJobsResultsCreateParams, body AgentsJobsResultsCreateFormdataRequestBody, reqEditors ...RequestEditorFn) (*AgentsJobsResultsCreateResponse, error) {
+	rsp, err := c.AgentsJobsResultsCreateWithFormdataBody(ctx, params, body, reqEditors...)
 	if err != nil {
 		return nil, err
 	}
-	return ParseV1AgentsJobsResultsCreateResponse(rsp)
+	return ParseAgentsJobsResultsCreateResponse(rsp)
 }
 
-// V1AgentsJobsStatusesCreateWithBodyWithResponse request with arbitrary body returning *V1AgentsJobsStatusesCreateResponse
-func (c *ClientWithResponses) V1AgentsJobsStatusesCreateWithBodyWithResponse(ctx context.Context, params *V1AgentsJobsStatusesCreateParams, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*V1AgentsJobsStatusesCreateResponse, error) {
-	rsp, err := c.V1AgentsJobsStatusesCreateWithBody(ctx, params, contentType, body, reqEditors...)
+// AgentsJobsStatusesCreateWithBodyWithResponse request with arbitrary body returning *AgentsJobsStatusesCreateResponse
+func (c *ClientWithResponses) AgentsJobsStatusesCreateWithBodyWithResponse(ctx context.Context, params *AgentsJobsStatusesCreateParams, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*AgentsJobsStatusesCreateResponse, error) {
+	rsp, err := c.AgentsJobsStatusesCreateWithBody(ctx, params, contentType, body, reqEditors...)
 	if err != nil {
 		return nil, err
 	}
-	return ParseV1AgentsJobsStatusesCreateResponse(rsp)
+	return ParseAgentsJobsStatusesCreateResponse(rsp)
 }
 
-func (c *ClientWithResponses) V1AgentsJobsStatusesCreateWithResponse(ctx context.Context, params *V1AgentsJobsStatusesCreateParams, body V1AgentsJobsStatusesCreateJSONRequestBody, reqEditors ...RequestEditorFn) (*V1AgentsJobsStatusesCreateResponse, error) {
-	rsp, err := c.V1AgentsJobsStatusesCreate(ctx, params, body, reqEditors...)
+func (c *ClientWithResponses) AgentsJobsStatusesCreateWithResponse(ctx context.Context, params *AgentsJobsStatusesCreateParams, body AgentsJobsStatusesCreateJSONRequestBody, reqEditors ...RequestEditorFn) (*AgentsJobsStatusesCreateResponse, error) {
+	rsp, err := c.AgentsJobsStatusesCreate(ctx, params, body, reqEditors...)
 	if err != nil {
 		return nil, err
 	}
-	return ParseV1AgentsJobsStatusesCreateResponse(rsp)
+	return ParseAgentsJobsStatusesCreateResponse(rsp)
 }
 
-func (c *ClientWithResponses) V1AgentsJobsStatusesCreateWithFormdataBodyWithResponse(ctx context.Context, params *V1AgentsJobsStatusesCreateParams, body V1AgentsJobsStatusesCreateFormdataRequestBody, reqEditors ...RequestEditorFn) (*V1AgentsJobsStatusesCreateResponse, error) {
-	rsp, err := c.V1AgentsJobsStatusesCreateWithFormdataBody(ctx, params, body, reqEditors...)
+func (c *ClientWithResponses) AgentsJobsStatusesCreateWithFormdataBodyWithResponse(ctx context.Context, params *AgentsJobsStatusesCreateParams, body AgentsJobsStatusesCreateFormdataRequestBody, reqEditors ...RequestEditorFn) (*AgentsJobsStatusesCreateResponse, error) {
+	rsp, err := c.AgentsJobsStatusesCreateWithFormdataBody(ctx, params, body, reqEditors...)
 	if err != nil {
 		return nil, err
 	}
-	return ParseV1AgentsJobsStatusesCreateResponse(rsp)
+	return ParseAgentsJobsStatusesCreateResponse(rsp)
 }
 
-// V1AgentsJobsReferencesRetrieveWithResponse request returning *V1AgentsJobsReferencesRetrieveResponse
-func (c *ClientWithResponses) V1AgentsJobsReferencesRetrieveWithResponse(ctx context.Context, agentJobId openapi_types.UUID, resourceId string, params *V1AgentsJobsReferencesRetrieveParams, reqEditors ...RequestEditorFn) (*V1AgentsJobsReferencesRetrieveResponse, error) {
-	rsp, err := c.V1AgentsJobsReferencesRetrieve(ctx, agentJobId, resourceId, params, reqEditors...)
+// AgentsJobsReferencesRetrieveWithResponse request returning *AgentsJobsReferencesRetrieveResponse
+func (c *ClientWithResponses) AgentsJobsReferencesRetrieveWithResponse(ctx context.Context, agentJobId openapi_types.UUID, resourceId string, params *AgentsJobsReferencesRetrieveParams, reqEditors ...RequestEditorFn) (*AgentsJobsReferencesRetrieveResponse, error) {
+	rsp, err := c.AgentsJobsReferencesRetrieve(ctx, agentJobId, resourceId, params, reqEditors...)
 	if err != nil {
 		return nil, err
 	}
-	return ParseV1AgentsJobsReferencesRetrieveResponse(rsp)
+	return ParseAgentsJobsReferencesRetrieveResponse(rsp)
 }
 
-// V1AgentsJobsResultRetrieveWithResponse request returning *V1AgentsJobsResultRetrieveResponse
-func (c *ClientWithResponses) V1AgentsJobsResultRetrieveWithResponse(ctx context.Context, agentJobId openapi_types.UUID, params *V1AgentsJobsResultRetrieveParams, reqEditors ...RequestEditorFn) (*V1AgentsJobsResultRetrieveResponse, error) {
-	rsp, err := c.V1AgentsJobsResultRetrieve(ctx, agentJobId, params, reqEditors...)
+// AgentsJobsResultRetrieveWithResponse request returning *AgentsJobsResultRetrieveResponse
+func (c *ClientWithResponses) AgentsJobsResultRetrieveWithResponse(ctx context.Context, agentJobId openapi_types.UUID, params *AgentsJobsResultRetrieveParams, reqEditors ...RequestEditorFn) (*AgentsJobsResultRetrieveResponse, error) {
+	rsp, err := c.AgentsJobsResultRetrieve(ctx, agentJobId, params, reqEditors...)
 	if err != nil {
 		return nil, err
 	}
-	return ParseV1AgentsJobsResultRetrieveResponse(rsp)
+	return ParseAgentsJobsResultRetrieveResponse(rsp)
 }
 
-// V1AgentsJobsCancelCreateWithResponse request returning *V1AgentsJobsCancelCreateResponse
-func (c *ClientWithResponses) V1AgentsJobsCancelCreateWithResponse(ctx context.Context, jobId openapi_types.UUID, params *V1AgentsJobsCancelCreateParams, reqEditors ...RequestEditorFn) (*V1AgentsJobsCancelCreateResponse, error) {
-	rsp, err := c.V1AgentsJobsCancelCreate(ctx, jobId, params, reqEditors...)
+// AgentsJobsCancelCreateWithResponse request returning *AgentsJobsCancelCreateResponse
+func (c *ClientWithResponses) AgentsJobsCancelCreateWithResponse(ctx context.Context, jobId openapi_types.UUID, params *AgentsJobsCancelCreateParams, reqEditors ...RequestEditorFn) (*AgentsJobsCancelCreateResponse, error) {
+	rsp, err := c.AgentsJobsCancelCreate(ctx, jobId, params, reqEditors...)
 	if err != nil {
 		return nil, err
 	}
-	return ParseV1AgentsJobsCancelCreateResponse(rsp)
+	return ParseAgentsJobsCancelCreateResponse(rsp)
 }
 
-// V1AgentsJobsDeleteDataCreateWithResponse request returning *V1AgentsJobsDeleteDataCreateResponse
-func (c *ClientWithResponses) V1AgentsJobsDeleteDataCreateWithResponse(ctx context.Context, jobId openapi_types.UUID, params *V1AgentsJobsDeleteDataCreateParams, reqEditors ...RequestEditorFn) (*V1AgentsJobsDeleteDataCreateResponse, error) {
-	rsp, err := c.V1AgentsJobsDeleteDataCreate(ctx, jobId, params, reqEditors...)
+// AgentsJobsDeleteDataCreateWithResponse request returning *AgentsJobsDeleteDataCreateResponse
+func (c *ClientWithResponses) AgentsJobsDeleteDataCreateWithResponse(ctx context.Context, jobId openapi_types.UUID, params *AgentsJobsDeleteDataCreateParams, reqEditors ...RequestEditorFn) (*AgentsJobsDeleteDataCreateResponse, error) {
+	rsp, err := c.AgentsJobsDeleteDataCreate(ctx, jobId, params, reqEditors...)
 	if err != nil {
 		return nil, err
 	}
-	return ParseV1AgentsJobsDeleteDataCreateResponse(rsp)
+	return ParseAgentsJobsDeleteDataCreateResponse(rsp)
 }
 
-// V1AgentsJobsStatusRetrieveWithResponse request returning *V1AgentsJobsStatusRetrieveResponse
-func (c *ClientWithResponses) V1AgentsJobsStatusRetrieveWithResponse(ctx context.Context, jobId openapi_types.UUID, params *V1AgentsJobsStatusRetrieveParams, reqEditors ...RequestEditorFn) (*V1AgentsJobsStatusRetrieveResponse, error) {
-	rsp, err := c.V1AgentsJobsStatusRetrieve(ctx, jobId, params, reqEditors...)
+// AgentsJobsStatusRetrieveWithResponse request returning *AgentsJobsStatusRetrieveResponse
+func (c *ClientWithResponses) AgentsJobsStatusRetrieveWithResponse(ctx context.Context, jobId openapi_types.UUID, params *AgentsJobsStatusRetrieveParams, reqEditors ...RequestEditorFn) (*AgentsJobsStatusRetrieveResponse, error) {
+	rsp, err := c.AgentsJobsStatusRetrieve(ctx, jobId, params, reqEditors...)
 	if err != nil {
 		return nil, err
 	}
-	return ParseV1AgentsJobsStatusRetrieveResponse(rsp)
+	return ParseAgentsJobsStatusRetrieveResponse(rsp)
 }
 
-// AgentsRun2WithBodyWithResponse request with arbitrary body returning *AgentsRun2Response
-func (c *ClientWithResponses) AgentsRun2WithBodyWithResponse(ctx context.Context, agentId openapi_types.UUID, params *AgentsRun2Params, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*AgentsRun2Response, error) {
-	rsp, err := c.AgentsRun2WithBody(ctx, agentId, params, contentType, body, reqEditors...)
+// AgentsRunWithBodyWithResponse request with arbitrary body returning *AgentsRunResponse
+func (c *ClientWithResponses) AgentsRunWithBodyWithResponse(ctx context.Context, agentId openapi_types.UUID, params *AgentsRunParams, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*AgentsRunResponse, error) {
+	rsp, err := c.AgentsRunWithBody(ctx, agentId, params, contentType, body, reqEditors...)
 	if err != nil {
 		return nil, err
 	}
-	return ParseAgentsRun2Response(rsp)
+	return ParseAgentsRunResponse(rsp)
 }
 
-func (c *ClientWithResponses) AgentsRun2WithResponse(ctx context.Context, agentId openapi_types.UUID, params *AgentsRun2Params, body AgentsRun2JSONRequestBody, reqEditors ...RequestEditorFn) (*AgentsRun2Response, error) {
-	rsp, err := c.AgentsRun2(ctx, agentId, params, body, reqEditors...)
+func (c *ClientWithResponses) AgentsRunWithResponse(ctx context.Context, agentId openapi_types.UUID, params *AgentsRunParams, body AgentsRunJSONRequestBody, reqEditors ...RequestEditorFn) (*AgentsRunResponse, error) {
+	rsp, err := c.AgentsRun(ctx, agentId, params, body, reqEditors...)
 	if err != nil {
 		return nil, err
 	}
-	return ParseAgentsRun2Response(rsp)
+	return ParseAgentsRunResponse(rsp)
 }
 
-func (c *ClientWithResponses) AgentsRun2WithFormdataBodyWithResponse(ctx context.Context, agentId openapi_types.UUID, params *AgentsRun2Params, body AgentsRun2FormdataRequestBody, reqEditors ...RequestEditorFn) (*AgentsRun2Response, error) {
-	rsp, err := c.AgentsRun2WithFormdataBody(ctx, agentId, params, body, reqEditors...)
+func (c *ClientWithResponses) AgentsRunWithFormdataBodyWithResponse(ctx context.Context, agentId openapi_types.UUID, params *AgentsRunParams, body AgentsRunFormdataRequestBody, reqEditors ...RequestEditorFn) (*AgentsRunResponse, error) {
+	rsp, err := c.AgentsRunWithFormdataBody(ctx, agentId, params, body, reqEditors...)
 	if err != nil {
 		return nil, err
 	}
-	return ParseAgentsRun2Response(rsp)
+	return ParseAgentsRunResponse(rsp)
 }
 
-// V1AgentsRunAsyncCreateWithBodyWithResponse request with arbitrary body returning *V1AgentsRunAsyncCreateResponse
-func (c *ClientWithResponses) V1AgentsRunAsyncCreateWithBodyWithResponse(ctx context.Context, agentId openapi_types.UUID, params *V1AgentsRunAsyncCreateParams, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*V1AgentsRunAsyncCreateResponse, error) {
-	rsp, err := c.V1AgentsRunAsyncCreateWithBody(ctx, agentId, params, contentType, body, reqEditors...)
+// AgentsRunAsyncCreateWithBodyWithResponse request with arbitrary body returning *AgentsRunAsyncCreateResponse
+func (c *ClientWithResponses) AgentsRunAsyncCreateWithBodyWithResponse(ctx context.Context, agentId openapi_types.UUID, params *AgentsRunAsyncCreateParams, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*AgentsRunAsyncCreateResponse, error) {
+	rsp, err := c.AgentsRunAsyncCreateWithBody(ctx, agentId, params, contentType, body, reqEditors...)
 	if err != nil {
 		return nil, err
 	}
-	return ParseV1AgentsRunAsyncCreateResponse(rsp)
+	return ParseAgentsRunAsyncCreateResponse(rsp)
 }
 
-func (c *ClientWithResponses) V1AgentsRunAsyncCreateWithResponse(ctx context.Context, agentId openapi_types.UUID, params *V1AgentsRunAsyncCreateParams, body V1AgentsRunAsyncCreateJSONRequestBody, reqEditors ...RequestEditorFn) (*V1AgentsRunAsyncCreateResponse, error) {
-	rsp, err := c.V1AgentsRunAsyncCreate(ctx, agentId, params, body, reqEditors...)
+func (c *ClientWithResponses) AgentsRunAsyncCreateWithResponse(ctx context.Context, agentId openapi_types.UUID, params *AgentsRunAsyncCreateParams, body AgentsRunAsyncCreateJSONRequestBody, reqEditors ...RequestEditorFn) (*AgentsRunAsyncCreateResponse, error) {
+	rsp, err := c.AgentsRunAsyncCreate(ctx, agentId, params, body, reqEditors...)
 	if err != nil {
 		return nil, err
 	}
-	return ParseV1AgentsRunAsyncCreateResponse(rsp)
+	return ParseAgentsRunAsyncCreateResponse(rsp)
 }
 
-func (c *ClientWithResponses) V1AgentsRunAsyncCreateWithFormdataBodyWithResponse(ctx context.Context, agentId openapi_types.UUID, params *V1AgentsRunAsyncCreateParams, body V1AgentsRunAsyncCreateFormdataRequestBody, reqEditors ...RequestEditorFn) (*V1AgentsRunAsyncCreateResponse, error) {
-	rsp, err := c.V1AgentsRunAsyncCreateWithFormdataBody(ctx, agentId, params, body, reqEditors...)
+func (c *ClientWithResponses) AgentsRunAsyncCreateWithFormdataBodyWithResponse(ctx context.Context, agentId openapi_types.UUID, params *AgentsRunAsyncCreateParams, body AgentsRunAsyncCreateFormdataRequestBody, reqEditors ...RequestEditorFn) (*AgentsRunAsyncCreateResponse, error) {
+	rsp, err := c.AgentsRunAsyncCreateWithFormdataBody(ctx, agentId, params, body, reqEditors...)
 	if err != nil {
 		return nil, err
 	}
-	return ParseV1AgentsRunAsyncCreateResponse(rsp)
+	return ParseAgentsRunAsyncCreateResponse(rsp)
 }
 
-// AgentsRunAsyncMany5WithBodyWithResponse request with arbitrary body returning *AgentsRunAsyncMany5Response
-func (c *ClientWithResponses) AgentsRunAsyncMany5WithBodyWithResponse(ctx context.Context, agentId openapi_types.UUID, params *AgentsRunAsyncMany5Params, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*AgentsRunAsyncMany5Response, error) {
-	rsp, err := c.AgentsRunAsyncMany5WithBody(ctx, agentId, params, contentType, body, reqEditors...)
+// AgentsRunAsyncManyWithBodyWithResponse request with arbitrary body returning *AgentsRunAsyncManyResponse
+func (c *ClientWithResponses) AgentsRunAsyncManyWithBodyWithResponse(ctx context.Context, agentId openapi_types.UUID, params *AgentsRunAsyncManyParams, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*AgentsRunAsyncManyResponse, error) {
+	rsp, err := c.AgentsRunAsyncManyWithBody(ctx, agentId, params, contentType, body, reqEditors...)
 	if err != nil {
 		return nil, err
 	}
-	return ParseAgentsRunAsyncMany5Response(rsp)
+	return ParseAgentsRunAsyncManyResponse(rsp)
 }
 
-func (c *ClientWithResponses) AgentsRunAsyncMany5WithResponse(ctx context.Context, agentId openapi_types.UUID, params *AgentsRunAsyncMany5Params, body AgentsRunAsyncMany5JSONRequestBody, reqEditors ...RequestEditorFn) (*AgentsRunAsyncMany5Response, error) {
-	rsp, err := c.AgentsRunAsyncMany5(ctx, agentId, params, body, reqEditors...)
+func (c *ClientWithResponses) AgentsRunAsyncManyWithResponse(ctx context.Context, agentId openapi_types.UUID, params *AgentsRunAsyncManyParams, body AgentsRunAsyncManyJSONRequestBody, reqEditors ...RequestEditorFn) (*AgentsRunAsyncManyResponse, error) {
+	rsp, err := c.AgentsRunAsyncMany(ctx, agentId, params, body, reqEditors...)
 	if err != nil {
 		return nil, err
 	}
-	return ParseAgentsRunAsyncMany5Response(rsp)
+	return ParseAgentsRunAsyncManyResponse(rsp)
 }
 
-func (c *ClientWithResponses) AgentsRunAsyncMany5WithFormdataBodyWithResponse(ctx context.Context, agentId openapi_types.UUID, params *AgentsRunAsyncMany5Params, body AgentsRunAsyncMany5FormdataRequestBody, reqEditors ...RequestEditorFn) (*AgentsRunAsyncMany5Response, error) {
-	rsp, err := c.AgentsRunAsyncMany5WithFormdataBody(ctx, agentId, params, body, reqEditors...)
+func (c *ClientWithResponses) AgentsRunAsyncManyWithFormdataBodyWithResponse(ctx context.Context, agentId openapi_types.UUID, params *AgentsRunAsyncManyParams, body AgentsRunAsyncManyFormdataRequestBody, reqEditors ...RequestEditorFn) (*AgentsRunAsyncManyResponse, error) {
+	rsp, err := c.AgentsRunAsyncManyWithFormdataBody(ctx, agentId, params, body, reqEditors...)
 	if err != nil {
 		return nil, err
 	}
-	return ParseAgentsRunAsyncMany5Response(rsp)
+	return ParseAgentsRunAsyncManyResponse(rsp)
 }
 
-// AgentsRunVersion2WithBodyWithResponse request with arbitrary body returning *AgentsRunVersion2Response
-func (c *ClientWithResponses) AgentsRunVersion2WithBodyWithResponse(ctx context.Context, agentId openapi_types.UUID, agentVersionId openapi_types.UUID, params *AgentsRunVersion2Params, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*AgentsRunVersion2Response, error) {
-	rsp, err := c.AgentsRunVersion2WithBody(ctx, agentId, agentVersionId, params, contentType, body, reqEditors...)
+// AgentsRunVersionWithBodyWithResponse request with arbitrary body returning *AgentsRunVersionResponse
+func (c *ClientWithResponses) AgentsRunVersionWithBodyWithResponse(ctx context.Context, agentId openapi_types.UUID, agentVersionId openapi_types.UUID, params *AgentsRunVersionParams, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*AgentsRunVersionResponse, error) {
+	rsp, err := c.AgentsRunVersionWithBody(ctx, agentId, agentVersionId, params, contentType, body, reqEditors...)
 	if err != nil {
 		return nil, err
 	}
-	return ParseAgentsRunVersion2Response(rsp)
+	return ParseAgentsRunVersionResponse(rsp)
 }
 
-func (c *ClientWithResponses) AgentsRunVersion2WithResponse(ctx context.Context, agentId openapi_types.UUID, agentVersionId openapi_types.UUID, params *AgentsRunVersion2Params, body AgentsRunVersion2JSONRequestBody, reqEditors ...RequestEditorFn) (*AgentsRunVersion2Response, error) {
-	rsp, err := c.AgentsRunVersion2(ctx, agentId, agentVersionId, params, body, reqEditors...)
+func (c *ClientWithResponses) AgentsRunVersionWithResponse(ctx context.Context, agentId openapi_types.UUID, agentVersionId openapi_types.UUID, params *AgentsRunVersionParams, body AgentsRunVersionJSONRequestBody, reqEditors ...RequestEditorFn) (*AgentsRunVersionResponse, error) {
+	rsp, err := c.AgentsRunVersion(ctx, agentId, agentVersionId, params, body, reqEditors...)
 	if err != nil {
 		return nil, err
 	}
-	return ParseAgentsRunVersion2Response(rsp)
+	return ParseAgentsRunVersionResponse(rsp)
 }
 
-func (c *ClientWithResponses) AgentsRunVersion2WithFormdataBodyWithResponse(ctx context.Context, agentId openapi_types.UUID, agentVersionId openapi_types.UUID, params *AgentsRunVersion2Params, body AgentsRunVersion2FormdataRequestBody, reqEditors ...RequestEditorFn) (*AgentsRunVersion2Response, error) {
-	rsp, err := c.AgentsRunVersion2WithFormdataBody(ctx, agentId, agentVersionId, params, body, reqEditors...)
+func (c *ClientWithResponses) AgentsRunVersionWithFormdataBodyWithResponse(ctx context.Context, agentId openapi_types.UUID, agentVersionId openapi_types.UUID, params *AgentsRunVersionParams, body AgentsRunVersionFormdataRequestBody, reqEditors ...RequestEditorFn) (*AgentsRunVersionResponse, error) {
+	rsp, err := c.AgentsRunVersionWithFormdataBody(ctx, agentId, agentVersionId, params, body, reqEditors...)
 	if err != nil {
 		return nil, err
 	}
-	return ParseAgentsRunVersion2Response(rsp)
+	return ParseAgentsRunVersionResponse(rsp)
 }
 
-// V1AgentsRunVersionsAsyncCreateWithBodyWithResponse request with arbitrary body returning *V1AgentsRunVersionsAsyncCreateResponse
-func (c *ClientWithResponses) V1AgentsRunVersionsAsyncCreateWithBodyWithResponse(ctx context.Context, agentId openapi_types.UUID, agentVersionId openapi_types.UUID, params *V1AgentsRunVersionsAsyncCreateParams, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*V1AgentsRunVersionsAsyncCreateResponse, error) {
-	rsp, err := c.V1AgentsRunVersionsAsyncCreateWithBody(ctx, agentId, agentVersionId, params, contentType, body, reqEditors...)
+// AgentsRunVersionsAsyncCreateWithBodyWithResponse request with arbitrary body returning *AgentsRunVersionsAsyncCreateResponse
+func (c *ClientWithResponses) AgentsRunVersionsAsyncCreateWithBodyWithResponse(ctx context.Context, agentId openapi_types.UUID, agentVersionId openapi_types.UUID, params *AgentsRunVersionsAsyncCreateParams, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*AgentsRunVersionsAsyncCreateResponse, error) {
+	rsp, err := c.AgentsRunVersionsAsyncCreateWithBody(ctx, agentId, agentVersionId, params, contentType, body, reqEditors...)
 	if err != nil {
 		return nil, err
 	}
-	return ParseV1AgentsRunVersionsAsyncCreateResponse(rsp)
+	return ParseAgentsRunVersionsAsyncCreateResponse(rsp)
 }
 
-func (c *ClientWithResponses) V1AgentsRunVersionsAsyncCreateWithResponse(ctx context.Context, agentId openapi_types.UUID, agentVersionId openapi_types.UUID, params *V1AgentsRunVersionsAsyncCreateParams, body V1AgentsRunVersionsAsyncCreateJSONRequestBody, reqEditors ...RequestEditorFn) (*V1AgentsRunVersionsAsyncCreateResponse, error) {
-	rsp, err := c.V1AgentsRunVersionsAsyncCreate(ctx, agentId, agentVersionId, params, body, reqEditors...)
+func (c *ClientWithResponses) AgentsRunVersionsAsyncCreateWithResponse(ctx context.Context, agentId openapi_types.UUID, agentVersionId openapi_types.UUID, params *AgentsRunVersionsAsyncCreateParams, body AgentsRunVersionsAsyncCreateJSONRequestBody, reqEditors ...RequestEditorFn) (*AgentsRunVersionsAsyncCreateResponse, error) {
+	rsp, err := c.AgentsRunVersionsAsyncCreate(ctx, agentId, agentVersionId, params, body, reqEditors...)
 	if err != nil {
 		return nil, err
 	}
-	return ParseV1AgentsRunVersionsAsyncCreateResponse(rsp)
+	return ParseAgentsRunVersionsAsyncCreateResponse(rsp)
 }
 
-func (c *ClientWithResponses) V1AgentsRunVersionsAsyncCreateWithFormdataBodyWithResponse(ctx context.Context, agentId openapi_types.UUID, agentVersionId openapi_types.UUID, params *V1AgentsRunVersionsAsyncCreateParams, body V1AgentsRunVersionsAsyncCreateFormdataRequestBody, reqEditors ...RequestEditorFn) (*V1AgentsRunVersionsAsyncCreateResponse, error) {
-	rsp, err := c.V1AgentsRunVersionsAsyncCreateWithFormdataBody(ctx, agentId, agentVersionId, params, body, reqEditors...)
+func (c *ClientWithResponses) AgentsRunVersionsAsyncCreateWithFormdataBodyWithResponse(ctx context.Context, agentId openapi_types.UUID, agentVersionId openapi_types.UUID, params *AgentsRunVersionsAsyncCreateParams, body AgentsRunVersionsAsyncCreateFormdataRequestBody, reqEditors ...RequestEditorFn) (*AgentsRunVersionsAsyncCreateResponse, error) {
+	rsp, err := c.AgentsRunVersionsAsyncCreateWithFormdataBody(ctx, agentId, agentVersionId, params, body, reqEditors...)
 	if err != nil {
 		return nil, err
 	}
-	return ParseV1AgentsRunVersionsAsyncCreateResponse(rsp)
+	return ParseAgentsRunVersionsAsyncCreateResponse(rsp)
 }
 
-// V1AgentsDestroyWithResponse request returning *V1AgentsDestroyResponse
-func (c *ClientWithResponses) V1AgentsDestroyWithResponse(ctx context.Context, agentId openapi_types.UUID, params *V1AgentsDestroyParams, reqEditors ...RequestEditorFn) (*V1AgentsDestroyResponse, error) {
-	rsp, err := c.V1AgentsDestroy(ctx, agentId, params, reqEditors...)
+// AgentsDestroyWithResponse request returning *AgentsDestroyResponse
+func (c *ClientWithResponses) AgentsDestroyWithResponse(ctx context.Context, agentId openapi_types.UUID, params *AgentsDestroyParams, reqEditors ...RequestEditorFn) (*AgentsDestroyResponse, error) {
+	rsp, err := c.AgentsDestroy(ctx, agentId, params, reqEditors...)
 	if err != nil {
 		return nil, err
 	}
-	return ParseV1AgentsDestroyResponse(rsp)
+	return ParseAgentsDestroyResponse(rsp)
 }
 
-// V1AgentsRetrieveWithResponse request returning *V1AgentsRetrieveResponse
-func (c *ClientWithResponses) V1AgentsRetrieveWithResponse(ctx context.Context, agentId openapi_types.UUID, params *V1AgentsRetrieveParams, reqEditors ...RequestEditorFn) (*V1AgentsRetrieveResponse, error) {
-	rsp, err := c.V1AgentsRetrieve(ctx, agentId, params, reqEditors...)
+// AgentsRetrieveWithResponse request returning *AgentsRetrieveResponse
+func (c *ClientWithResponses) AgentsRetrieveWithResponse(ctx context.Context, agentId openapi_types.UUID, params *AgentsRetrieveParams, reqEditors ...RequestEditorFn) (*AgentsRetrieveResponse, error) {
+	rsp, err := c.AgentsRetrieve(ctx, agentId, params, reqEditors...)
 	if err != nil {
 		return nil, err
 	}
-	return ParseV1AgentsRetrieveResponse(rsp)
+	return ParseAgentsRetrieveResponse(rsp)
 }
 
-// V1AgentsPartialUpdateWithBodyWithResponse request with arbitrary body returning *V1AgentsPartialUpdateResponse
-func (c *ClientWithResponses) V1AgentsPartialUpdateWithBodyWithResponse(ctx context.Context, agentId openapi_types.UUID, params *V1AgentsPartialUpdateParams, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*V1AgentsPartialUpdateResponse, error) {
-	rsp, err := c.V1AgentsPartialUpdateWithBody(ctx, agentId, params, contentType, body, reqEditors...)
+// AgentsPartialUpdateWithBodyWithResponse request with arbitrary body returning *AgentsPartialUpdateResponse
+func (c *ClientWithResponses) AgentsPartialUpdateWithBodyWithResponse(ctx context.Context, agentId openapi_types.UUID, params *AgentsPartialUpdateParams, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*AgentsPartialUpdateResponse, error) {
+	rsp, err := c.AgentsPartialUpdateWithBody(ctx, agentId, params, contentType, body, reqEditors...)
 	if err != nil {
 		return nil, err
 	}
-	return ParseV1AgentsPartialUpdateResponse(rsp)
+	return ParseAgentsPartialUpdateResponse(rsp)
 }
 
-func (c *ClientWithResponses) V1AgentsPartialUpdateWithResponse(ctx context.Context, agentId openapi_types.UUID, params *V1AgentsPartialUpdateParams, body V1AgentsPartialUpdateJSONRequestBody, reqEditors ...RequestEditorFn) (*V1AgentsPartialUpdateResponse, error) {
-	rsp, err := c.V1AgentsPartialUpdate(ctx, agentId, params, body, reqEditors...)
+func (c *ClientWithResponses) AgentsPartialUpdateWithResponse(ctx context.Context, agentId openapi_types.UUID, params *AgentsPartialUpdateParams, body AgentsPartialUpdateJSONRequestBody, reqEditors ...RequestEditorFn) (*AgentsPartialUpdateResponse, error) {
+	rsp, err := c.AgentsPartialUpdate(ctx, agentId, params, body, reqEditors...)
 	if err != nil {
 		return nil, err
 	}
-	return ParseV1AgentsPartialUpdateResponse(rsp)
+	return ParseAgentsPartialUpdateResponse(rsp)
 }
 
-func (c *ClientWithResponses) V1AgentsPartialUpdateWithFormdataBodyWithResponse(ctx context.Context, agentId openapi_types.UUID, params *V1AgentsPartialUpdateParams, body V1AgentsPartialUpdateFormdataRequestBody, reqEditors ...RequestEditorFn) (*V1AgentsPartialUpdateResponse, error) {
-	rsp, err := c.V1AgentsPartialUpdateWithFormdataBody(ctx, agentId, params, body, reqEditors...)
+func (c *ClientWithResponses) AgentsPartialUpdateWithFormdataBodyWithResponse(ctx context.Context, agentId openapi_types.UUID, params *AgentsPartialUpdateParams, body AgentsPartialUpdateFormdataRequestBody, reqEditors ...RequestEditorFn) (*AgentsPartialUpdateResponse, error) {
+	rsp, err := c.AgentsPartialUpdateWithFormdataBody(ctx, agentId, params, body, reqEditors...)
 	if err != nil {
 		return nil, err
 	}
-	return ParseV1AgentsPartialUpdateResponse(rsp)
+	return ParseAgentsPartialUpdateResponse(rsp)
 }
 
-// V1AgentsUpdateWithBodyWithResponse request with arbitrary body returning *V1AgentsUpdateResponse
-func (c *ClientWithResponses) V1AgentsUpdateWithBodyWithResponse(ctx context.Context, agentId openapi_types.UUID, params *V1AgentsUpdateParams, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*V1AgentsUpdateResponse, error) {
-	rsp, err := c.V1AgentsUpdateWithBody(ctx, agentId, params, contentType, body, reqEditors...)
+// AgentsUpdateWithBodyWithResponse request with arbitrary body returning *AgentsUpdateResponse
+func (c *ClientWithResponses) AgentsUpdateWithBodyWithResponse(ctx context.Context, agentId openapi_types.UUID, params *AgentsUpdateParams, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*AgentsUpdateResponse, error) {
+	rsp, err := c.AgentsUpdateWithBody(ctx, agentId, params, contentType, body, reqEditors...)
 	if err != nil {
 		return nil, err
 	}
-	return ParseV1AgentsUpdateResponse(rsp)
+	return ParseAgentsUpdateResponse(rsp)
 }
 
-func (c *ClientWithResponses) V1AgentsUpdateWithResponse(ctx context.Context, agentId openapi_types.UUID, params *V1AgentsUpdateParams, body V1AgentsUpdateJSONRequestBody, reqEditors ...RequestEditorFn) (*V1AgentsUpdateResponse, error) {
-	rsp, err := c.V1AgentsUpdate(ctx, agentId, params, body, reqEditors...)
+func (c *ClientWithResponses) AgentsUpdateWithResponse(ctx context.Context, agentId openapi_types.UUID, params *AgentsUpdateParams, body AgentsUpdateJSONRequestBody, reqEditors ...RequestEditorFn) (*AgentsUpdateResponse, error) {
+	rsp, err := c.AgentsUpdate(ctx, agentId, params, body, reqEditors...)
 	if err != nil {
 		return nil, err
 	}
-	return ParseV1AgentsUpdateResponse(rsp)
+	return ParseAgentsUpdateResponse(rsp)
 }
 
-func (c *ClientWithResponses) V1AgentsUpdateWithFormdataBodyWithResponse(ctx context.Context, agentId openapi_types.UUID, params *V1AgentsUpdateParams, body V1AgentsUpdateFormdataRequestBody, reqEditors ...RequestEditorFn) (*V1AgentsUpdateResponse, error) {
-	rsp, err := c.V1AgentsUpdateWithFormdataBody(ctx, agentId, params, body, reqEditors...)
+func (c *ClientWithResponses) AgentsUpdateWithFormdataBodyWithResponse(ctx context.Context, agentId openapi_types.UUID, params *AgentsUpdateParams, body AgentsUpdateFormdataRequestBody, reqEditors ...RequestEditorFn) (*AgentsUpdateResponse, error) {
+	rsp, err := c.AgentsUpdateWithFormdataBody(ctx, agentId, params, body, reqEditors...)
 	if err != nil {
 		return nil, err
 	}
-	return ParseV1AgentsUpdateResponse(rsp)
+	return ParseAgentsUpdateResponse(rsp)
 }
 
-// V1AgentsDuplicateCreateWithResponse request returning *V1AgentsDuplicateCreateResponse
-func (c *ClientWithResponses) V1AgentsDuplicateCreateWithResponse(ctx context.Context, agentId openapi_types.UUID, params *V1AgentsDuplicateCreateParams, reqEditors ...RequestEditorFn) (*V1AgentsDuplicateCreateResponse, error) {
-	rsp, err := c.V1AgentsDuplicateCreate(ctx, agentId, params, reqEditors...)
+// AgentsDuplicateCreateWithResponse request returning *AgentsDuplicateCreateResponse
+func (c *ClientWithResponses) AgentsDuplicateCreateWithResponse(ctx context.Context, agentId openapi_types.UUID, params *AgentsDuplicateCreateParams, reqEditors ...RequestEditorFn) (*AgentsDuplicateCreateResponse, error) {
+	rsp, err := c.AgentsDuplicateCreate(ctx, agentId, params, reqEditors...)
 	if err != nil {
 		return nil, err
 	}
-	return ParseV1AgentsDuplicateCreateResponse(rsp)
+	return ParseAgentsDuplicateCreateResponse(rsp)
 }
 
-// V1AgentsJobsCancelAllCreateWithResponse request returning *V1AgentsJobsCancelAllCreateResponse
-func (c *ClientWithResponses) V1AgentsJobsCancelAllCreateWithResponse(ctx context.Context, agentId openapi_types.UUID, params *V1AgentsJobsCancelAllCreateParams, reqEditors ...RequestEditorFn) (*V1AgentsJobsCancelAllCreateResponse, error) {
-	rsp, err := c.V1AgentsJobsCancelAllCreate(ctx, agentId, params, reqEditors...)
+// AgentsJobsCancelAllCreateWithResponse request returning *AgentsJobsCancelAllCreateResponse
+func (c *ClientWithResponses) AgentsJobsCancelAllCreateWithResponse(ctx context.Context, agentId openapi_types.UUID, params *AgentsJobsCancelAllCreateParams, reqEditors ...RequestEditorFn) (*AgentsJobsCancelAllCreateResponse, error) {
+	rsp, err := c.AgentsJobsCancelAllCreate(ctx, agentId, params, reqEditors...)
 	if err != nil {
 		return nil, err
 	}
-	return ParseV1AgentsJobsCancelAllCreateResponse(rsp)
+	return ParseAgentsJobsCancelAllCreateResponse(rsp)
 }
 
-// V1AgentsVersionsListWithResponse request returning *V1AgentsVersionsListResponse
-func (c *ClientWithResponses) V1AgentsVersionsListWithResponse(ctx context.Context, agentId openapi_types.UUID, params *V1AgentsVersionsListParams, reqEditors ...RequestEditorFn) (*V1AgentsVersionsListResponse, error) {
-	rsp, err := c.V1AgentsVersionsList(ctx, agentId, params, reqEditors...)
+// AgentsVersionsListWithResponse request returning *AgentsVersionsListResponse
+func (c *ClientWithResponses) AgentsVersionsListWithResponse(ctx context.Context, agentId openapi_types.UUID, params *AgentsVersionsListParams, reqEditors ...RequestEditorFn) (*AgentsVersionsListResponse, error) {
+	rsp, err := c.AgentsVersionsList(ctx, agentId, params, reqEditors...)
 	if err != nil {
 		return nil, err
 	}
-	return ParseV1AgentsVersionsListResponse(rsp)
+	return ParseAgentsVersionsListResponse(rsp)
 }
 
-// V1AgentsVersionsCreateWithBodyWithResponse request with arbitrary body returning *V1AgentsVersionsCreateResponse
-func (c *ClientWithResponses) V1AgentsVersionsCreateWithBodyWithResponse(ctx context.Context, agentId openapi_types.UUID, params *V1AgentsVersionsCreateParams, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*V1AgentsVersionsCreateResponse, error) {
-	rsp, err := c.V1AgentsVersionsCreateWithBody(ctx, agentId, params, contentType, body, reqEditors...)
+// AgentsVersionsCreateWithBodyWithResponse request with arbitrary body returning *AgentsVersionsCreateResponse
+func (c *ClientWithResponses) AgentsVersionsCreateWithBodyWithResponse(ctx context.Context, agentId openapi_types.UUID, params *AgentsVersionsCreateParams, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*AgentsVersionsCreateResponse, error) {
+	rsp, err := c.AgentsVersionsCreateWithBody(ctx, agentId, params, contentType, body, reqEditors...)
 	if err != nil {
 		return nil, err
 	}
-	return ParseV1AgentsVersionsCreateResponse(rsp)
+	return ParseAgentsVersionsCreateResponse(rsp)
 }
 
-func (c *ClientWithResponses) V1AgentsVersionsCreateWithResponse(ctx context.Context, agentId openapi_types.UUID, params *V1AgentsVersionsCreateParams, body V1AgentsVersionsCreateJSONRequestBody, reqEditors ...RequestEditorFn) (*V1AgentsVersionsCreateResponse, error) {
-	rsp, err := c.V1AgentsVersionsCreate(ctx, agentId, params, body, reqEditors...)
+func (c *ClientWithResponses) AgentsVersionsCreateWithResponse(ctx context.Context, agentId openapi_types.UUID, params *AgentsVersionsCreateParams, body AgentsVersionsCreateJSONRequestBody, reqEditors ...RequestEditorFn) (*AgentsVersionsCreateResponse, error) {
+	rsp, err := c.AgentsVersionsCreate(ctx, agentId, params, body, reqEditors...)
 	if err != nil {
 		return nil, err
 	}
-	return ParseV1AgentsVersionsCreateResponse(rsp)
+	return ParseAgentsVersionsCreateResponse(rsp)
 }
 
-func (c *ClientWithResponses) V1AgentsVersionsCreateWithFormdataBodyWithResponse(ctx context.Context, agentId openapi_types.UUID, params *V1AgentsVersionsCreateParams, body V1AgentsVersionsCreateFormdataRequestBody, reqEditors ...RequestEditorFn) (*V1AgentsVersionsCreateResponse, error) {
-	rsp, err := c.V1AgentsVersionsCreateWithFormdataBody(ctx, agentId, params, body, reqEditors...)
+func (c *ClientWithResponses) AgentsVersionsCreateWithFormdataBodyWithResponse(ctx context.Context, agentId openapi_types.UUID, params *AgentsVersionsCreateParams, body AgentsVersionsCreateFormdataRequestBody, reqEditors ...RequestEditorFn) (*AgentsVersionsCreateResponse, error) {
+	rsp, err := c.AgentsVersionsCreateWithFormdataBody(ctx, agentId, params, body, reqEditors...)
 	if err != nil {
 		return nil, err
 	}
-	return ParseV1AgentsVersionsCreateResponse(rsp)
+	return ParseAgentsVersionsCreateResponse(rsp)
 }
 
-// V1AgentsVersionsCurrentRetrieveWithResponse request returning *V1AgentsVersionsCurrentRetrieveResponse
-func (c *ClientWithResponses) V1AgentsVersionsCurrentRetrieveWithResponse(ctx context.Context, agentId openapi_types.UUID, params *V1AgentsVersionsCurrentRetrieveParams, reqEditors ...RequestEditorFn) (*V1AgentsVersionsCurrentRetrieveResponse, error) {
-	rsp, err := c.V1AgentsVersionsCurrentRetrieve(ctx, agentId, params, reqEditors...)
+// AgentsVersionsCurrentRetrieveWithResponse request returning *AgentsVersionsCurrentRetrieveResponse
+func (c *ClientWithResponses) AgentsVersionsCurrentRetrieveWithResponse(ctx context.Context, agentId openapi_types.UUID, params *AgentsVersionsCurrentRetrieveParams, reqEditors ...RequestEditorFn) (*AgentsVersionsCurrentRetrieveResponse, error) {
+	rsp, err := c.AgentsVersionsCurrentRetrieve(ctx, agentId, params, reqEditors...)
 	if err != nil {
 		return nil, err
 	}
-	return ParseV1AgentsVersionsCurrentRetrieveResponse(rsp)
+	return ParseAgentsVersionsCurrentRetrieveResponse(rsp)
 }
 
-// V1AgentsVersionsDestroyWithResponse request returning *V1AgentsVersionsDestroyResponse
-func (c *ClientWithResponses) V1AgentsVersionsDestroyWithResponse(ctx context.Context, agentId openapi_types.UUID, agentVersionId openapi_types.UUID, params *V1AgentsVersionsDestroyParams, reqEditors ...RequestEditorFn) (*V1AgentsVersionsDestroyResponse, error) {
-	rsp, err := c.V1AgentsVersionsDestroy(ctx, agentId, agentVersionId, params, reqEditors...)
+// AgentsVersionsDestroyWithResponse request returning *AgentsVersionsDestroyResponse
+func (c *ClientWithResponses) AgentsVersionsDestroyWithResponse(ctx context.Context, agentId openapi_types.UUID, agentVersionId openapi_types.UUID, params *AgentsVersionsDestroyParams, reqEditors ...RequestEditorFn) (*AgentsVersionsDestroyResponse, error) {
+	rsp, err := c.AgentsVersionsDestroy(ctx, agentId, agentVersionId, params, reqEditors...)
 	if err != nil {
 		return nil, err
 	}
-	return ParseV1AgentsVersionsDestroyResponse(rsp)
+	return ParseAgentsVersionsDestroyResponse(rsp)
 }
 
-// V1AgentsVersionsRetrieveWithResponse request returning *V1AgentsVersionsRetrieveResponse
-func (c *ClientWithResponses) V1AgentsVersionsRetrieveWithResponse(ctx context.Context, agentId openapi_types.UUID, agentVersionId openapi_types.UUID, params *V1AgentsVersionsRetrieveParams, reqEditors ...RequestEditorFn) (*V1AgentsVersionsRetrieveResponse, error) {
-	rsp, err := c.V1AgentsVersionsRetrieve(ctx, agentId, agentVersionId, params, reqEditors...)
+// AgentsVersionsRetrieveWithResponse request returning *AgentsVersionsRetrieveResponse
+func (c *ClientWithResponses) AgentsVersionsRetrieveWithResponse(ctx context.Context, agentId openapi_types.UUID, agentVersionId openapi_types.UUID, params *AgentsVersionsRetrieveParams, reqEditors ...RequestEditorFn) (*AgentsVersionsRetrieveResponse, error) {
+	rsp, err := c.AgentsVersionsRetrieve(ctx, agentId, agentVersionId, params, reqEditors...)
 	if err != nil {
 		return nil, err
 	}
-	return ParseV1AgentsVersionsRetrieveResponse(rsp)
+	return ParseAgentsVersionsRetrieveResponse(rsp)
 }
 
-// V1AgentsVersionsPartialUpdateWithBodyWithResponse request with arbitrary body returning *V1AgentsVersionsPartialUpdateResponse
-func (c *ClientWithResponses) V1AgentsVersionsPartialUpdateWithBodyWithResponse(ctx context.Context, agentId openapi_types.UUID, agentVersionId openapi_types.UUID, params *V1AgentsVersionsPartialUpdateParams, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*V1AgentsVersionsPartialUpdateResponse, error) {
-	rsp, err := c.V1AgentsVersionsPartialUpdateWithBody(ctx, agentId, agentVersionId, params, contentType, body, reqEditors...)
+// AgentsVersionsPartialUpdateWithBodyWithResponse request with arbitrary body returning *AgentsVersionsPartialUpdateResponse
+func (c *ClientWithResponses) AgentsVersionsPartialUpdateWithBodyWithResponse(ctx context.Context, agentId openapi_types.UUID, agentVersionId openapi_types.UUID, params *AgentsVersionsPartialUpdateParams, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*AgentsVersionsPartialUpdateResponse, error) {
+	rsp, err := c.AgentsVersionsPartialUpdateWithBody(ctx, agentId, agentVersionId, params, contentType, body, reqEditors...)
 	if err != nil {
 		return nil, err
 	}
-	return ParseV1AgentsVersionsPartialUpdateResponse(rsp)
+	return ParseAgentsVersionsPartialUpdateResponse(rsp)
 }
 
-func (c *ClientWithResponses) V1AgentsVersionsPartialUpdateWithResponse(ctx context.Context, agentId openapi_types.UUID, agentVersionId openapi_types.UUID, params *V1AgentsVersionsPartialUpdateParams, body V1AgentsVersionsPartialUpdateJSONRequestBody, reqEditors ...RequestEditorFn) (*V1AgentsVersionsPartialUpdateResponse, error) {
-	rsp, err := c.V1AgentsVersionsPartialUpdate(ctx, agentId, agentVersionId, params, body, reqEditors...)
+func (c *ClientWithResponses) AgentsVersionsPartialUpdateWithResponse(ctx context.Context, agentId openapi_types.UUID, agentVersionId openapi_types.UUID, params *AgentsVersionsPartialUpdateParams, body AgentsVersionsPartialUpdateJSONRequestBody, reqEditors ...RequestEditorFn) (*AgentsVersionsPartialUpdateResponse, error) {
+	rsp, err := c.AgentsVersionsPartialUpdate(ctx, agentId, agentVersionId, params, body, reqEditors...)
 	if err != nil {
 		return nil, err
 	}
-	return ParseV1AgentsVersionsPartialUpdateResponse(rsp)
+	return ParseAgentsVersionsPartialUpdateResponse(rsp)
 }
 
-func (c *ClientWithResponses) V1AgentsVersionsPartialUpdateWithFormdataBodyWithResponse(ctx context.Context, agentId openapi_types.UUID, agentVersionId openapi_types.UUID, params *V1AgentsVersionsPartialUpdateParams, body V1AgentsVersionsPartialUpdateFormdataRequestBody, reqEditors ...RequestEditorFn) (*V1AgentsVersionsPartialUpdateResponse, error) {
-	rsp, err := c.V1AgentsVersionsPartialUpdateWithFormdataBody(ctx, agentId, agentVersionId, params, body, reqEditors...)
+func (c *ClientWithResponses) AgentsVersionsPartialUpdateWithFormdataBodyWithResponse(ctx context.Context, agentId openapi_types.UUID, agentVersionId openapi_types.UUID, params *AgentsVersionsPartialUpdateParams, body AgentsVersionsPartialUpdateFormdataRequestBody, reqEditors ...RequestEditorFn) (*AgentsVersionsPartialUpdateResponse, error) {
+	rsp, err := c.AgentsVersionsPartialUpdateWithFormdataBody(ctx, agentId, agentVersionId, params, body, reqEditors...)
 	if err != nil {
 		return nil, err
 	}
-	return ParseV1AgentsVersionsPartialUpdateResponse(rsp)
+	return ParseAgentsVersionsPartialUpdateResponse(rsp)
 }
 
-// V1AgentsVersionsUpdateWithBodyWithResponse request with arbitrary body returning *V1AgentsVersionsUpdateResponse
-func (c *ClientWithResponses) V1AgentsVersionsUpdateWithBodyWithResponse(ctx context.Context, agentId openapi_types.UUID, agentVersionId openapi_types.UUID, params *V1AgentsVersionsUpdateParams, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*V1AgentsVersionsUpdateResponse, error) {
-	rsp, err := c.V1AgentsVersionsUpdateWithBody(ctx, agentId, agentVersionId, params, contentType, body, reqEditors...)
+// AgentsVersionsUpdateWithBodyWithResponse request with arbitrary body returning *AgentsVersionsUpdateResponse
+func (c *ClientWithResponses) AgentsVersionsUpdateWithBodyWithResponse(ctx context.Context, agentId openapi_types.UUID, agentVersionId openapi_types.UUID, params *AgentsVersionsUpdateParams, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*AgentsVersionsUpdateResponse, error) {
+	rsp, err := c.AgentsVersionsUpdateWithBody(ctx, agentId, agentVersionId, params, contentType, body, reqEditors...)
 	if err != nil {
 		return nil, err
 	}
-	return ParseV1AgentsVersionsUpdateResponse(rsp)
+	return ParseAgentsVersionsUpdateResponse(rsp)
 }
 
-func (c *ClientWithResponses) V1AgentsVersionsUpdateWithResponse(ctx context.Context, agentId openapi_types.UUID, agentVersionId openapi_types.UUID, params *V1AgentsVersionsUpdateParams, body V1AgentsVersionsUpdateJSONRequestBody, reqEditors ...RequestEditorFn) (*V1AgentsVersionsUpdateResponse, error) {
-	rsp, err := c.V1AgentsVersionsUpdate(ctx, agentId, agentVersionId, params, body, reqEditors...)
+func (c *ClientWithResponses) AgentsVersionsUpdateWithResponse(ctx context.Context, agentId openapi_types.UUID, agentVersionId openapi_types.UUID, params *AgentsVersionsUpdateParams, body AgentsVersionsUpdateJSONRequestBody, reqEditors ...RequestEditorFn) (*AgentsVersionsUpdateResponse, error) {
+	rsp, err := c.AgentsVersionsUpdate(ctx, agentId, agentVersionId, params, body, reqEditors...)
 	if err != nil {
 		return nil, err
 	}
-	return ParseV1AgentsVersionsUpdateResponse(rsp)
+	return ParseAgentsVersionsUpdateResponse(rsp)
 }
 
-func (c *ClientWithResponses) V1AgentsVersionsUpdateWithFormdataBodyWithResponse(ctx context.Context, agentId openapi_types.UUID, agentVersionId openapi_types.UUID, params *V1AgentsVersionsUpdateParams, body V1AgentsVersionsUpdateFormdataRequestBody, reqEditors ...RequestEditorFn) (*V1AgentsVersionsUpdateResponse, error) {
-	rsp, err := c.V1AgentsVersionsUpdateWithFormdataBody(ctx, agentId, agentVersionId, params, body, reqEditors...)
+func (c *ClientWithResponses) AgentsVersionsUpdateWithFormdataBodyWithResponse(ctx context.Context, agentId openapi_types.UUID, agentVersionId openapi_types.UUID, params *AgentsVersionsUpdateParams, body AgentsVersionsUpdateFormdataRequestBody, reqEditors ...RequestEditorFn) (*AgentsVersionsUpdateResponse, error) {
+	rsp, err := c.AgentsVersionsUpdateWithFormdataBody(ctx, agentId, agentVersionId, params, body, reqEditors...)
 	if err != nil {
 		return nil, err
 	}
-	return ParseV1AgentsVersionsUpdateResponse(rsp)
+	return ParseAgentsVersionsUpdateResponse(rsp)
 }
 
-// V1PoliciesListWithResponse request returning *V1PoliciesListResponse
-func (c *ClientWithResponses) V1PoliciesListWithResponse(ctx context.Context, params *V1PoliciesListParams, reqEditors ...RequestEditorFn) (*V1PoliciesListResponse, error) {
-	rsp, err := c.V1PoliciesList(ctx, params, reqEditors...)
+// PoliciesListWithResponse request returning *PoliciesListResponse
+func (c *ClientWithResponses) PoliciesListWithResponse(ctx context.Context, params *PoliciesListParams, reqEditors ...RequestEditorFn) (*PoliciesListResponse, error) {
+	rsp, err := c.PoliciesList(ctx, params, reqEditors...)
 	if err != nil {
 		return nil, err
 	}
-	return ParseV1PoliciesListResponse(rsp)
+	return ParsePoliciesListResponse(rsp)
 }
 
-// V1PoliciesCreateWithBodyWithResponse request with arbitrary body returning *V1PoliciesCreateResponse
-func (c *ClientWithResponses) V1PoliciesCreateWithBodyWithResponse(ctx context.Context, params *V1PoliciesCreateParams, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*V1PoliciesCreateResponse, error) {
-	rsp, err := c.V1PoliciesCreateWithBody(ctx, params, contentType, body, reqEditors...)
+// PoliciesCreateWithBodyWithResponse request with arbitrary body returning *PoliciesCreateResponse
+func (c *ClientWithResponses) PoliciesCreateWithBodyWithResponse(ctx context.Context, params *PoliciesCreateParams, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*PoliciesCreateResponse, error) {
+	rsp, err := c.PoliciesCreateWithBody(ctx, params, contentType, body, reqEditors...)
 	if err != nil {
 		return nil, err
 	}
-	return ParseV1PoliciesCreateResponse(rsp)
+	return ParsePoliciesCreateResponse(rsp)
 }
 
-func (c *ClientWithResponses) V1PoliciesCreateWithResponse(ctx context.Context, params *V1PoliciesCreateParams, body V1PoliciesCreateJSONRequestBody, reqEditors ...RequestEditorFn) (*V1PoliciesCreateResponse, error) {
-	rsp, err := c.V1PoliciesCreate(ctx, params, body, reqEditors...)
+func (c *ClientWithResponses) PoliciesCreateWithResponse(ctx context.Context, params *PoliciesCreateParams, body PoliciesCreateJSONRequestBody, reqEditors ...RequestEditorFn) (*PoliciesCreateResponse, error) {
+	rsp, err := c.PoliciesCreate(ctx, params, body, reqEditors...)
 	if err != nil {
 		return nil, err
 	}
-	return ParseV1PoliciesCreateResponse(rsp)
+	return ParsePoliciesCreateResponse(rsp)
 }
 
-func (c *ClientWithResponses) V1PoliciesCreateWithFormdataBodyWithResponse(ctx context.Context, params *V1PoliciesCreateParams, body V1PoliciesCreateFormdataRequestBody, reqEditors ...RequestEditorFn) (*V1PoliciesCreateResponse, error) {
-	rsp, err := c.V1PoliciesCreateWithFormdataBody(ctx, params, body, reqEditors...)
+func (c *ClientWithResponses) PoliciesCreateWithFormdataBodyWithResponse(ctx context.Context, params *PoliciesCreateParams, body PoliciesCreateFormdataRequestBody, reqEditors ...RequestEditorFn) (*PoliciesCreateResponse, error) {
+	rsp, err := c.PoliciesCreateWithFormdataBody(ctx, params, body, reqEditors...)
 	if err != nil {
 		return nil, err
 	}
-	return ParseV1PoliciesCreateResponse(rsp)
+	return ParsePoliciesCreateResponse(rsp)
 }
 
-// V1PoliciesDestroyWithResponse request returning *V1PoliciesDestroyResponse
-func (c *ClientWithResponses) V1PoliciesDestroyWithResponse(ctx context.Context, id openapi_types.UUID, params *V1PoliciesDestroyParams, reqEditors ...RequestEditorFn) (*V1PoliciesDestroyResponse, error) {
-	rsp, err := c.V1PoliciesDestroy(ctx, id, params, reqEditors...)
+// PoliciesDestroyWithResponse request returning *PoliciesDestroyResponse
+func (c *ClientWithResponses) PoliciesDestroyWithResponse(ctx context.Context, id openapi_types.UUID, params *PoliciesDestroyParams, reqEditors ...RequestEditorFn) (*PoliciesDestroyResponse, error) {
+	rsp, err := c.PoliciesDestroy(ctx, id, params, reqEditors...)
 	if err != nil {
 		return nil, err
 	}
-	return ParseV1PoliciesDestroyResponse(rsp)
+	return ParsePoliciesDestroyResponse(rsp)
 }
 
-// V1PoliciesRetrieveWithResponse request returning *V1PoliciesRetrieveResponse
-func (c *ClientWithResponses) V1PoliciesRetrieveWithResponse(ctx context.Context, id openapi_types.UUID, params *V1PoliciesRetrieveParams, reqEditors ...RequestEditorFn) (*V1PoliciesRetrieveResponse, error) {
-	rsp, err := c.V1PoliciesRetrieve(ctx, id, params, reqEditors...)
+// PoliciesRetrieveWithResponse request returning *PoliciesRetrieveResponse
+func (c *ClientWithResponses) PoliciesRetrieveWithResponse(ctx context.Context, id openapi_types.UUID, params *PoliciesRetrieveParams, reqEditors ...RequestEditorFn) (*PoliciesRetrieveResponse, error) {
+	rsp, err := c.PoliciesRetrieve(ctx, id, params, reqEditors...)
 	if err != nil {
 		return nil, err
 	}
-	return ParseV1PoliciesRetrieveResponse(rsp)
+	return ParsePoliciesRetrieveResponse(rsp)
 }
 
-// V1PoliciesPartialUpdateWithBodyWithResponse request with arbitrary body returning *V1PoliciesPartialUpdateResponse
-func (c *ClientWithResponses) V1PoliciesPartialUpdateWithBodyWithResponse(ctx context.Context, id openapi_types.UUID, params *V1PoliciesPartialUpdateParams, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*V1PoliciesPartialUpdateResponse, error) {
-	rsp, err := c.V1PoliciesPartialUpdateWithBody(ctx, id, params, contentType, body, reqEditors...)
+// PoliciesPartialUpdateWithBodyWithResponse request with arbitrary body returning *PoliciesPartialUpdateResponse
+func (c *ClientWithResponses) PoliciesPartialUpdateWithBodyWithResponse(ctx context.Context, id openapi_types.UUID, params *PoliciesPartialUpdateParams, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*PoliciesPartialUpdateResponse, error) {
+	rsp, err := c.PoliciesPartialUpdateWithBody(ctx, id, params, contentType, body, reqEditors...)
 	if err != nil {
 		return nil, err
 	}
-	return ParseV1PoliciesPartialUpdateResponse(rsp)
+	return ParsePoliciesPartialUpdateResponse(rsp)
 }
 
-func (c *ClientWithResponses) V1PoliciesPartialUpdateWithResponse(ctx context.Context, id openapi_types.UUID, params *V1PoliciesPartialUpdateParams, body V1PoliciesPartialUpdateJSONRequestBody, reqEditors ...RequestEditorFn) (*V1PoliciesPartialUpdateResponse, error) {
-	rsp, err := c.V1PoliciesPartialUpdate(ctx, id, params, body, reqEditors...)
+func (c *ClientWithResponses) PoliciesPartialUpdateWithResponse(ctx context.Context, id openapi_types.UUID, params *PoliciesPartialUpdateParams, body PoliciesPartialUpdateJSONRequestBody, reqEditors ...RequestEditorFn) (*PoliciesPartialUpdateResponse, error) {
+	rsp, err := c.PoliciesPartialUpdate(ctx, id, params, body, reqEditors...)
 	if err != nil {
 		return nil, err
 	}
-	return ParseV1PoliciesPartialUpdateResponse(rsp)
+	return ParsePoliciesPartialUpdateResponse(rsp)
 }
 
-func (c *ClientWithResponses) V1PoliciesPartialUpdateWithFormdataBodyWithResponse(ctx context.Context, id openapi_types.UUID, params *V1PoliciesPartialUpdateParams, body V1PoliciesPartialUpdateFormdataRequestBody, reqEditors ...RequestEditorFn) (*V1PoliciesPartialUpdateResponse, error) {
-	rsp, err := c.V1PoliciesPartialUpdateWithFormdataBody(ctx, id, params, body, reqEditors...)
+func (c *ClientWithResponses) PoliciesPartialUpdateWithFormdataBodyWithResponse(ctx context.Context, id openapi_types.UUID, params *PoliciesPartialUpdateParams, body PoliciesPartialUpdateFormdataRequestBody, reqEditors ...RequestEditorFn) (*PoliciesPartialUpdateResponse, error) {
+	rsp, err := c.PoliciesPartialUpdateWithFormdataBody(ctx, id, params, body, reqEditors...)
 	if err != nil {
 		return nil, err
 	}
-	return ParseV1PoliciesPartialUpdateResponse(rsp)
+	return ParsePoliciesPartialUpdateResponse(rsp)
 }
 
-// V1PoliciesUpdateWithBodyWithResponse request with arbitrary body returning *V1PoliciesUpdateResponse
-func (c *ClientWithResponses) V1PoliciesUpdateWithBodyWithResponse(ctx context.Context, id openapi_types.UUID, params *V1PoliciesUpdateParams, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*V1PoliciesUpdateResponse, error) {
-	rsp, err := c.V1PoliciesUpdateWithBody(ctx, id, params, contentType, body, reqEditors...)
+// PoliciesUpdateWithBodyWithResponse request with arbitrary body returning *PoliciesUpdateResponse
+func (c *ClientWithResponses) PoliciesUpdateWithBodyWithResponse(ctx context.Context, id openapi_types.UUID, params *PoliciesUpdateParams, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*PoliciesUpdateResponse, error) {
+	rsp, err := c.PoliciesUpdateWithBody(ctx, id, params, contentType, body, reqEditors...)
 	if err != nil {
 		return nil, err
 	}
-	return ParseV1PoliciesUpdateResponse(rsp)
+	return ParsePoliciesUpdateResponse(rsp)
 }
 
-func (c *ClientWithResponses) V1PoliciesUpdateWithResponse(ctx context.Context, id openapi_types.UUID, params *V1PoliciesUpdateParams, body V1PoliciesUpdateJSONRequestBody, reqEditors ...RequestEditorFn) (*V1PoliciesUpdateResponse, error) {
-	rsp, err := c.V1PoliciesUpdate(ctx, id, params, body, reqEditors...)
+func (c *ClientWithResponses) PoliciesUpdateWithResponse(ctx context.Context, id openapi_types.UUID, params *PoliciesUpdateParams, body PoliciesUpdateJSONRequestBody, reqEditors ...RequestEditorFn) (*PoliciesUpdateResponse, error) {
+	rsp, err := c.PoliciesUpdate(ctx, id, params, body, reqEditors...)
 	if err != nil {
 		return nil, err
 	}
-	return ParseV1PoliciesUpdateResponse(rsp)
+	return ParsePoliciesUpdateResponse(rsp)
 }
 
-func (c *ClientWithResponses) V1PoliciesUpdateWithFormdataBodyWithResponse(ctx context.Context, id openapi_types.UUID, params *V1PoliciesUpdateParams, body V1PoliciesUpdateFormdataRequestBody, reqEditors ...RequestEditorFn) (*V1PoliciesUpdateResponse, error) {
-	rsp, err := c.V1PoliciesUpdateWithFormdataBody(ctx, id, params, body, reqEditors...)
+func (c *ClientWithResponses) PoliciesUpdateWithFormdataBodyWithResponse(ctx context.Context, id openapi_types.UUID, params *PoliciesUpdateParams, body PoliciesUpdateFormdataRequestBody, reqEditors ...RequestEditorFn) (*PoliciesUpdateResponse, error) {
+	rsp, err := c.PoliciesUpdateWithFormdataBody(ctx, id, params, body, reqEditors...)
 	if err != nil {
 		return nil, err
 	}
-	return ParseV1PoliciesUpdateResponse(rsp)
+	return ParsePoliciesUpdateResponse(rsp)
 }
 
-// V1PoliciesVersionsListWithResponse request returning *V1PoliciesVersionsListResponse
-func (c *ClientWithResponses) V1PoliciesVersionsListWithResponse(ctx context.Context, policyId openapi_types.UUID, params *V1PoliciesVersionsListParams, reqEditors ...RequestEditorFn) (*V1PoliciesVersionsListResponse, error) {
-	rsp, err := c.V1PoliciesVersionsList(ctx, policyId, params, reqEditors...)
+// PoliciesVersionsListWithResponse request returning *PoliciesVersionsListResponse
+func (c *ClientWithResponses) PoliciesVersionsListWithResponse(ctx context.Context, policyId openapi_types.UUID, params *PoliciesVersionsListParams, reqEditors ...RequestEditorFn) (*PoliciesVersionsListResponse, error) {
+	rsp, err := c.PoliciesVersionsList(ctx, policyId, params, reqEditors...)
 	if err != nil {
 		return nil, err
 	}
-	return ParseV1PoliciesVersionsListResponse(rsp)
+	return ParsePoliciesVersionsListResponse(rsp)
 }
 
-// V1PoliciesVersionsCreateWithBodyWithResponse request with arbitrary body returning *V1PoliciesVersionsCreateResponse
-func (c *ClientWithResponses) V1PoliciesVersionsCreateWithBodyWithResponse(ctx context.Context, policyId openapi_types.UUID, params *V1PoliciesVersionsCreateParams, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*V1PoliciesVersionsCreateResponse, error) {
-	rsp, err := c.V1PoliciesVersionsCreateWithBody(ctx, policyId, params, contentType, body, reqEditors...)
+// PoliciesVersionsCreateWithBodyWithResponse request with arbitrary body returning *PoliciesVersionsCreateResponse
+func (c *ClientWithResponses) PoliciesVersionsCreateWithBodyWithResponse(ctx context.Context, policyId openapi_types.UUID, params *PoliciesVersionsCreateParams, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*PoliciesVersionsCreateResponse, error) {
+	rsp, err := c.PoliciesVersionsCreateWithBody(ctx, policyId, params, contentType, body, reqEditors...)
 	if err != nil {
 		return nil, err
 	}
-	return ParseV1PoliciesVersionsCreateResponse(rsp)
+	return ParsePoliciesVersionsCreateResponse(rsp)
 }
 
-func (c *ClientWithResponses) V1PoliciesVersionsCreateWithResponse(ctx context.Context, policyId openapi_types.UUID, params *V1PoliciesVersionsCreateParams, body V1PoliciesVersionsCreateJSONRequestBody, reqEditors ...RequestEditorFn) (*V1PoliciesVersionsCreateResponse, error) {
-	rsp, err := c.V1PoliciesVersionsCreate(ctx, policyId, params, body, reqEditors...)
+func (c *ClientWithResponses) PoliciesVersionsCreateWithResponse(ctx context.Context, policyId openapi_types.UUID, params *PoliciesVersionsCreateParams, body PoliciesVersionsCreateJSONRequestBody, reqEditors ...RequestEditorFn) (*PoliciesVersionsCreateResponse, error) {
+	rsp, err := c.PoliciesVersionsCreate(ctx, policyId, params, body, reqEditors...)
 	if err != nil {
 		return nil, err
 	}
-	return ParseV1PoliciesVersionsCreateResponse(rsp)
+	return ParsePoliciesVersionsCreateResponse(rsp)
 }
 
-func (c *ClientWithResponses) V1PoliciesVersionsCreateWithFormdataBodyWithResponse(ctx context.Context, policyId openapi_types.UUID, params *V1PoliciesVersionsCreateParams, body V1PoliciesVersionsCreateFormdataRequestBody, reqEditors ...RequestEditorFn) (*V1PoliciesVersionsCreateResponse, error) {
-	rsp, err := c.V1PoliciesVersionsCreateWithFormdataBody(ctx, policyId, params, body, reqEditors...)
+func (c *ClientWithResponses) PoliciesVersionsCreateWithFormdataBodyWithResponse(ctx context.Context, policyId openapi_types.UUID, params *PoliciesVersionsCreateParams, body PoliciesVersionsCreateFormdataRequestBody, reqEditors ...RequestEditorFn) (*PoliciesVersionsCreateResponse, error) {
+	rsp, err := c.PoliciesVersionsCreateWithFormdataBody(ctx, policyId, params, body, reqEditors...)
 	if err != nil {
 		return nil, err
 	}
-	return ParseV1PoliciesVersionsCreateResponse(rsp)
+	return ParsePoliciesVersionsCreateResponse(rsp)
 }
 
-// V1PoliciesVersionsRetrieveWithResponse request returning *V1PoliciesVersionsRetrieveResponse
-func (c *ClientWithResponses) V1PoliciesVersionsRetrieveWithResponse(ctx context.Context, policyId openapi_types.UUID, versionId openapi_types.UUID, params *V1PoliciesVersionsRetrieveParams, reqEditors ...RequestEditorFn) (*V1PoliciesVersionsRetrieveResponse, error) {
-	rsp, err := c.V1PoliciesVersionsRetrieve(ctx, policyId, versionId, params, reqEditors...)
+// PoliciesVersionsRetrieveWithResponse request returning *PoliciesVersionsRetrieveResponse
+func (c *ClientWithResponses) PoliciesVersionsRetrieveWithResponse(ctx context.Context, policyId openapi_types.UUID, versionId openapi_types.UUID, params *PoliciesVersionsRetrieveParams, reqEditors ...RequestEditorFn) (*PoliciesVersionsRetrieveResponse, error) {
+	rsp, err := c.PoliciesVersionsRetrieve(ctx, policyId, versionId, params, reqEditors...)
 	if err != nil {
 		return nil, err
 	}
-	return ParseV1PoliciesVersionsRetrieveResponse(rsp)
+	return ParsePoliciesVersionsRetrieveResponse(rsp)
 }
 
-// V1UsersCurrentUserRetrieveWithResponse request returning *V1UsersCurrentUserRetrieveResponse
-func (c *ClientWithResponses) V1UsersCurrentUserRetrieveWithResponse(ctx context.Context, reqEditors ...RequestEditorFn) (*V1UsersCurrentUserRetrieveResponse, error) {
-	rsp, err := c.V1UsersCurrentUserRetrieve(ctx, reqEditors...)
+// UsersCurrentUserRetrieveWithResponse request returning *UsersCurrentUserRetrieveResponse
+func (c *ClientWithResponses) UsersCurrentUserRetrieveWithResponse(ctx context.Context, reqEditors ...RequestEditorFn) (*UsersCurrentUserRetrieveResponse, error) {
+	rsp, err := c.UsersCurrentUserRetrieve(ctx, reqEditors...)
 	if err != nil {
 		return nil, err
 	}
-	return ParseV1UsersCurrentUserRetrieveResponse(rsp)
+	return ParseUsersCurrentUserRetrieveResponse(rsp)
 }
 
-// ParseV1AgentsListResponse parses an HTTP response from a V1AgentsListWithResponse call
-func ParseV1AgentsListResponse(rsp *http.Response) (*V1AgentsListResponse, error) {
+// ParseAgentsListResponse parses an HTTP response from a AgentsListWithResponse call
+func ParseAgentsListResponse(rsp *http.Response) (*AgentsListResponse, error) {
 	bodyBytes, err := io.ReadAll(rsp.Body)
 	defer func() { _ = rsp.Body.Close() }()
 	if err != nil {
 		return nil, err
 	}
 
-	response := &V1AgentsListResponse{
+	response := &AgentsListResponse{
 		Body:         bodyBytes,
 		HTTPResponse: rsp,
 	}
@@ -6449,15 +6449,15 @@ func ParseV1AgentsListResponse(rsp *http.Response) (*V1AgentsListResponse, error
 	return response, nil
 }
 
-// ParseV1AgentsCreateResponse parses an HTTP response from a V1AgentsCreateWithResponse call
-func ParseV1AgentsCreateResponse(rsp *http.Response) (*V1AgentsCreateResponse, error) {
+// ParseAgentsCreateResponse parses an HTTP response from a AgentsCreateWithResponse call
+func ParseAgentsCreateResponse(rsp *http.Response) (*AgentsCreateResponse, error) {
 	bodyBytes, err := io.ReadAll(rsp.Body)
 	defer func() { _ = rsp.Body.Close() }()
 	if err != nil {
 		return nil, err
 	}
 
-	response := &V1AgentsCreateResponse{
+	response := &AgentsCreateResponse{
 		Body:         bodyBytes,
 		HTTPResponse: rsp,
 	}
@@ -6489,15 +6489,15 @@ func ParseV1AgentsCreateResponse(rsp *http.Response) (*V1AgentsCreateResponse, e
 	return response, nil
 }
 
-// ParseV1AgentsJobsResultsCreateResponse parses an HTTP response from a V1AgentsJobsResultsCreateWithResponse call
-func ParseV1AgentsJobsResultsCreateResponse(rsp *http.Response) (*V1AgentsJobsResultsCreateResponse, error) {
+// ParseAgentsJobsResultsCreateResponse parses an HTTP response from a AgentsJobsResultsCreateWithResponse call
+func ParseAgentsJobsResultsCreateResponse(rsp *http.Response) (*AgentsJobsResultsCreateResponse, error) {
 	bodyBytes, err := io.ReadAll(rsp.Body)
 	defer func() { _ = rsp.Body.Close() }()
 	if err != nil {
 		return nil, err
 	}
 
-	response := &V1AgentsJobsResultsCreateResponse{
+	response := &AgentsJobsResultsCreateResponse{
 		Body:         bodyBytes,
 		HTTPResponse: rsp,
 	}
@@ -6529,15 +6529,15 @@ func ParseV1AgentsJobsResultsCreateResponse(rsp *http.Response) (*V1AgentsJobsRe
 	return response, nil
 }
 
-// ParseV1AgentsJobsStatusesCreateResponse parses an HTTP response from a V1AgentsJobsStatusesCreateWithResponse call
-func ParseV1AgentsJobsStatusesCreateResponse(rsp *http.Response) (*V1AgentsJobsStatusesCreateResponse, error) {
+// ParseAgentsJobsStatusesCreateResponse parses an HTTP response from a AgentsJobsStatusesCreateWithResponse call
+func ParseAgentsJobsStatusesCreateResponse(rsp *http.Response) (*AgentsJobsStatusesCreateResponse, error) {
 	bodyBytes, err := io.ReadAll(rsp.Body)
 	defer func() { _ = rsp.Body.Close() }()
 	if err != nil {
 		return nil, err
 	}
 
-	response := &V1AgentsJobsStatusesCreateResponse{
+	response := &AgentsJobsStatusesCreateResponse{
 		Body:         bodyBytes,
 		HTTPResponse: rsp,
 	}
@@ -6569,15 +6569,15 @@ func ParseV1AgentsJobsStatusesCreateResponse(rsp *http.Response) (*V1AgentsJobsS
 	return response, nil
 }
 
-// ParseV1AgentsJobsReferencesRetrieveResponse parses an HTTP response from a V1AgentsJobsReferencesRetrieveWithResponse call
-func ParseV1AgentsJobsReferencesRetrieveResponse(rsp *http.Response) (*V1AgentsJobsReferencesRetrieveResponse, error) {
+// ParseAgentsJobsReferencesRetrieveResponse parses an HTTP response from a AgentsJobsReferencesRetrieveWithResponse call
+func ParseAgentsJobsReferencesRetrieveResponse(rsp *http.Response) (*AgentsJobsReferencesRetrieveResponse, error) {
 	bodyBytes, err := io.ReadAll(rsp.Body)
 	defer func() { _ = rsp.Body.Close() }()
 	if err != nil {
 		return nil, err
 	}
 
-	response := &V1AgentsJobsReferencesRetrieveResponse{
+	response := &AgentsJobsReferencesRetrieveResponse{
 		Body:         bodyBytes,
 		HTTPResponse: rsp,
 	}
@@ -6585,15 +6585,15 @@ func ParseV1AgentsJobsReferencesRetrieveResponse(rsp *http.Response) (*V1AgentsJ
 	return response, nil
 }
 
-// ParseV1AgentsJobsResultRetrieveResponse parses an HTTP response from a V1AgentsJobsResultRetrieveWithResponse call
-func ParseV1AgentsJobsResultRetrieveResponse(rsp *http.Response) (*V1AgentsJobsResultRetrieveResponse, error) {
+// ParseAgentsJobsResultRetrieveResponse parses an HTTP response from a AgentsJobsResultRetrieveWithResponse call
+func ParseAgentsJobsResultRetrieveResponse(rsp *http.Response) (*AgentsJobsResultRetrieveResponse, error) {
 	bodyBytes, err := io.ReadAll(rsp.Body)
 	defer func() { _ = rsp.Body.Close() }()
 	if err != nil {
 		return nil, err
 	}
 
-	response := &V1AgentsJobsResultRetrieveResponse{
+	response := &AgentsJobsResultRetrieveResponse{
 		Body:         bodyBytes,
 		HTTPResponse: rsp,
 	}
@@ -6632,15 +6632,15 @@ func ParseV1AgentsJobsResultRetrieveResponse(rsp *http.Response) (*V1AgentsJobsR
 	return response, nil
 }
 
-// ParseV1AgentsJobsCancelCreateResponse parses an HTTP response from a V1AgentsJobsCancelCreateWithResponse call
-func ParseV1AgentsJobsCancelCreateResponse(rsp *http.Response) (*V1AgentsJobsCancelCreateResponse, error) {
+// ParseAgentsJobsCancelCreateResponse parses an HTTP response from a AgentsJobsCancelCreateWithResponse call
+func ParseAgentsJobsCancelCreateResponse(rsp *http.Response) (*AgentsJobsCancelCreateResponse, error) {
 	bodyBytes, err := io.ReadAll(rsp.Body)
 	defer func() { _ = rsp.Body.Close() }()
 	if err != nil {
 		return nil, err
 	}
 
-	response := &V1AgentsJobsCancelCreateResponse{
+	response := &AgentsJobsCancelCreateResponse{
 		Body:         bodyBytes,
 		HTTPResponse: rsp,
 	}
@@ -6665,15 +6665,15 @@ func ParseV1AgentsJobsCancelCreateResponse(rsp *http.Response) (*V1AgentsJobsCan
 	return response, nil
 }
 
-// ParseV1AgentsJobsDeleteDataCreateResponse parses an HTTP response from a V1AgentsJobsDeleteDataCreateWithResponse call
-func ParseV1AgentsJobsDeleteDataCreateResponse(rsp *http.Response) (*V1AgentsJobsDeleteDataCreateResponse, error) {
+// ParseAgentsJobsDeleteDataCreateResponse parses an HTTP response from a AgentsJobsDeleteDataCreateWithResponse call
+func ParseAgentsJobsDeleteDataCreateResponse(rsp *http.Response) (*AgentsJobsDeleteDataCreateResponse, error) {
 	bodyBytes, err := io.ReadAll(rsp.Body)
 	defer func() { _ = rsp.Body.Close() }()
 	if err != nil {
 		return nil, err
 	}
 
-	response := &V1AgentsJobsDeleteDataCreateResponse{
+	response := &AgentsJobsDeleteDataCreateResponse{
 		Body:         bodyBytes,
 		HTTPResponse: rsp,
 	}
@@ -6719,15 +6719,15 @@ func ParseV1AgentsJobsDeleteDataCreateResponse(rsp *http.Response) (*V1AgentsJob
 	return response, nil
 }
 
-// ParseV1AgentsJobsStatusRetrieveResponse parses an HTTP response from a V1AgentsJobsStatusRetrieveWithResponse call
-func ParseV1AgentsJobsStatusRetrieveResponse(rsp *http.Response) (*V1AgentsJobsStatusRetrieveResponse, error) {
+// ParseAgentsJobsStatusRetrieveResponse parses an HTTP response from a AgentsJobsStatusRetrieveWithResponse call
+func ParseAgentsJobsStatusRetrieveResponse(rsp *http.Response) (*AgentsJobsStatusRetrieveResponse, error) {
 	bodyBytes, err := io.ReadAll(rsp.Body)
 	defer func() { _ = rsp.Body.Close() }()
 	if err != nil {
 		return nil, err
 	}
 
-	response := &V1AgentsJobsStatusRetrieveResponse{
+	response := &AgentsJobsStatusRetrieveResponse{
 		Body:         bodyBytes,
 		HTTPResponse: rsp,
 	}
@@ -6759,15 +6759,15 @@ func ParseV1AgentsJobsStatusRetrieveResponse(rsp *http.Response) (*V1AgentsJobsS
 	return response, nil
 }
 
-// ParseAgentsRun2Response parses an HTTP response from a AgentsRun2WithResponse call
-func ParseAgentsRun2Response(rsp *http.Response) (*AgentsRun2Response, error) {
+// ParseAgentsRunResponse parses an HTTP response from a AgentsRunWithResponse call
+func ParseAgentsRunResponse(rsp *http.Response) (*AgentsRunResponse, error) {
 	bodyBytes, err := io.ReadAll(rsp.Body)
 	defer func() { _ = rsp.Body.Close() }()
 	if err != nil {
 		return nil, err
 	}
 
-	response := &AgentsRun2Response{
+	response := &AgentsRunResponse{
 		Body:         bodyBytes,
 		HTTPResponse: rsp,
 	}
@@ -6813,15 +6813,15 @@ func ParseAgentsRun2Response(rsp *http.Response) (*AgentsRun2Response, error) {
 	return response, nil
 }
 
-// ParseV1AgentsRunAsyncCreateResponse parses an HTTP response from a V1AgentsRunAsyncCreateWithResponse call
-func ParseV1AgentsRunAsyncCreateResponse(rsp *http.Response) (*V1AgentsRunAsyncCreateResponse, error) {
+// ParseAgentsRunAsyncCreateResponse parses an HTTP response from a AgentsRunAsyncCreateWithResponse call
+func ParseAgentsRunAsyncCreateResponse(rsp *http.Response) (*AgentsRunAsyncCreateResponse, error) {
 	bodyBytes, err := io.ReadAll(rsp.Body)
 	defer func() { _ = rsp.Body.Close() }()
 	if err != nil {
 		return nil, err
 	}
 
-	response := &V1AgentsRunAsyncCreateResponse{
+	response := &AgentsRunAsyncCreateResponse{
 		Body:         bodyBytes,
 		HTTPResponse: rsp,
 	}
@@ -6874,15 +6874,15 @@ func ParseV1AgentsRunAsyncCreateResponse(rsp *http.Response) (*V1AgentsRunAsyncC
 	return response, nil
 }
 
-// ParseAgentsRunAsyncMany5Response parses an HTTP response from a AgentsRunAsyncMany5WithResponse call
-func ParseAgentsRunAsyncMany5Response(rsp *http.Response) (*AgentsRunAsyncMany5Response, error) {
+// ParseAgentsRunAsyncManyResponse parses an HTTP response from a AgentsRunAsyncManyWithResponse call
+func ParseAgentsRunAsyncManyResponse(rsp *http.Response) (*AgentsRunAsyncManyResponse, error) {
 	bodyBytes, err := io.ReadAll(rsp.Body)
 	defer func() { _ = rsp.Body.Close() }()
 	if err != nil {
 		return nil, err
 	}
 
-	response := &AgentsRunAsyncMany5Response{
+	response := &AgentsRunAsyncManyResponse{
 		Body:         bodyBytes,
 		HTTPResponse: rsp,
 	}
@@ -6928,15 +6928,15 @@ func ParseAgentsRunAsyncMany5Response(rsp *http.Response) (*AgentsRunAsyncMany5R
 	return response, nil
 }
 
-// ParseAgentsRunVersion2Response parses an HTTP response from a AgentsRunVersion2WithResponse call
-func ParseAgentsRunVersion2Response(rsp *http.Response) (*AgentsRunVersion2Response, error) {
+// ParseAgentsRunVersionResponse parses an HTTP response from a AgentsRunVersionWithResponse call
+func ParseAgentsRunVersionResponse(rsp *http.Response) (*AgentsRunVersionResponse, error) {
 	bodyBytes, err := io.ReadAll(rsp.Body)
 	defer func() { _ = rsp.Body.Close() }()
 	if err != nil {
 		return nil, err
 	}
 
-	response := &AgentsRunVersion2Response{
+	response := &AgentsRunVersionResponse{
 		Body:         bodyBytes,
 		HTTPResponse: rsp,
 	}
@@ -6982,15 +6982,15 @@ func ParseAgentsRunVersion2Response(rsp *http.Response) (*AgentsRunVersion2Respo
 	return response, nil
 }
 
-// ParseV1AgentsRunVersionsAsyncCreateResponse parses an HTTP response from a V1AgentsRunVersionsAsyncCreateWithResponse call
-func ParseV1AgentsRunVersionsAsyncCreateResponse(rsp *http.Response) (*V1AgentsRunVersionsAsyncCreateResponse, error) {
+// ParseAgentsRunVersionsAsyncCreateResponse parses an HTTP response from a AgentsRunVersionsAsyncCreateWithResponse call
+func ParseAgentsRunVersionsAsyncCreateResponse(rsp *http.Response) (*AgentsRunVersionsAsyncCreateResponse, error) {
 	bodyBytes, err := io.ReadAll(rsp.Body)
 	defer func() { _ = rsp.Body.Close() }()
 	if err != nil {
 		return nil, err
 	}
 
-	response := &V1AgentsRunVersionsAsyncCreateResponse{
+	response := &AgentsRunVersionsAsyncCreateResponse{
 		Body:         bodyBytes,
 		HTTPResponse: rsp,
 	}
@@ -7043,15 +7043,15 @@ func ParseV1AgentsRunVersionsAsyncCreateResponse(rsp *http.Response) (*V1AgentsR
 	return response, nil
 }
 
-// ParseV1AgentsDestroyResponse parses an HTTP response from a V1AgentsDestroyWithResponse call
-func ParseV1AgentsDestroyResponse(rsp *http.Response) (*V1AgentsDestroyResponse, error) {
+// ParseAgentsDestroyResponse parses an HTTP response from a AgentsDestroyWithResponse call
+func ParseAgentsDestroyResponse(rsp *http.Response) (*AgentsDestroyResponse, error) {
 	bodyBytes, err := io.ReadAll(rsp.Body)
 	defer func() { _ = rsp.Body.Close() }()
 	if err != nil {
 		return nil, err
 	}
 
-	response := &V1AgentsDestroyResponse{
+	response := &AgentsDestroyResponse{
 		Body:         bodyBytes,
 		HTTPResponse: rsp,
 	}
@@ -7083,15 +7083,15 @@ func ParseV1AgentsDestroyResponse(rsp *http.Response) (*V1AgentsDestroyResponse,
 	return response, nil
 }
 
-// ParseV1AgentsRetrieveResponse parses an HTTP response from a V1AgentsRetrieveWithResponse call
-func ParseV1AgentsRetrieveResponse(rsp *http.Response) (*V1AgentsRetrieveResponse, error) {
+// ParseAgentsRetrieveResponse parses an HTTP response from a AgentsRetrieveWithResponse call
+func ParseAgentsRetrieveResponse(rsp *http.Response) (*AgentsRetrieveResponse, error) {
 	bodyBytes, err := io.ReadAll(rsp.Body)
 	defer func() { _ = rsp.Body.Close() }()
 	if err != nil {
 		return nil, err
 	}
 
-	response := &V1AgentsRetrieveResponse{
+	response := &AgentsRetrieveResponse{
 		Body:         bodyBytes,
 		HTTPResponse: rsp,
 	}
@@ -7123,62 +7123,15 @@ func ParseV1AgentsRetrieveResponse(rsp *http.Response) (*V1AgentsRetrieveRespons
 	return response, nil
 }
 
-// ParseV1AgentsPartialUpdateResponse parses an HTTP response from a V1AgentsPartialUpdateWithResponse call
-func ParseV1AgentsPartialUpdateResponse(rsp *http.Response) (*V1AgentsPartialUpdateResponse, error) {
+// ParseAgentsPartialUpdateResponse parses an HTTP response from a AgentsPartialUpdateWithResponse call
+func ParseAgentsPartialUpdateResponse(rsp *http.Response) (*AgentsPartialUpdateResponse, error) {
 	bodyBytes, err := io.ReadAll(rsp.Body)
 	defer func() { _ = rsp.Body.Close() }()
 	if err != nil {
 		return nil, err
 	}
 
-	response := &V1AgentsPartialUpdateResponse{
-		Body:         bodyBytes,
-		HTTPResponse: rsp,
-	}
-
-	switch {
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
-		var dest BaseAgent
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSON200 = &dest
-
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 400:
-		var dest ErrorResponse
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSON400 = &dest
-
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 403:
-		var dest ErrorResponse
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSON403 = &dest
-
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 404:
-		var dest ErrorResponse
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSON404 = &dest
-
-	}
-
-	return response, nil
-}
-
-// ParseV1AgentsUpdateResponse parses an HTTP response from a V1AgentsUpdateWithResponse call
-func ParseV1AgentsUpdateResponse(rsp *http.Response) (*V1AgentsUpdateResponse, error) {
-	bodyBytes, err := io.ReadAll(rsp.Body)
-	defer func() { _ = rsp.Body.Close() }()
-	if err != nil {
-		return nil, err
-	}
-
-	response := &V1AgentsUpdateResponse{
+	response := &AgentsPartialUpdateResponse{
 		Body:         bodyBytes,
 		HTTPResponse: rsp,
 	}
@@ -7217,15 +7170,62 @@ func ParseV1AgentsUpdateResponse(rsp *http.Response) (*V1AgentsUpdateResponse, e
 	return response, nil
 }
 
-// ParseV1AgentsDuplicateCreateResponse parses an HTTP response from a V1AgentsDuplicateCreateWithResponse call
-func ParseV1AgentsDuplicateCreateResponse(rsp *http.Response) (*V1AgentsDuplicateCreateResponse, error) {
+// ParseAgentsUpdateResponse parses an HTTP response from a AgentsUpdateWithResponse call
+func ParseAgentsUpdateResponse(rsp *http.Response) (*AgentsUpdateResponse, error) {
 	bodyBytes, err := io.ReadAll(rsp.Body)
 	defer func() { _ = rsp.Body.Close() }()
 	if err != nil {
 		return nil, err
 	}
 
-	response := &V1AgentsDuplicateCreateResponse{
+	response := &AgentsUpdateResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest BaseAgent
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 400:
+		var dest ErrorResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON400 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 403:
+		var dest ErrorResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON403 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 404:
+		var dest ErrorResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON404 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseAgentsDuplicateCreateResponse parses an HTTP response from a AgentsDuplicateCreateWithResponse call
+func ParseAgentsDuplicateCreateResponse(rsp *http.Response) (*AgentsDuplicateCreateResponse, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &AgentsDuplicateCreateResponse{
 		Body:         bodyBytes,
 		HTTPResponse: rsp,
 	}
@@ -7257,15 +7257,15 @@ func ParseV1AgentsDuplicateCreateResponse(rsp *http.Response) (*V1AgentsDuplicat
 	return response, nil
 }
 
-// ParseV1AgentsJobsCancelAllCreateResponse parses an HTTP response from a V1AgentsJobsCancelAllCreateWithResponse call
-func ParseV1AgentsJobsCancelAllCreateResponse(rsp *http.Response) (*V1AgentsJobsCancelAllCreateResponse, error) {
+// ParseAgentsJobsCancelAllCreateResponse parses an HTTP response from a AgentsJobsCancelAllCreateWithResponse call
+func ParseAgentsJobsCancelAllCreateResponse(rsp *http.Response) (*AgentsJobsCancelAllCreateResponse, error) {
 	bodyBytes, err := io.ReadAll(rsp.Body)
 	defer func() { _ = rsp.Body.Close() }()
 	if err != nil {
 		return nil, err
 	}
 
-	response := &V1AgentsJobsCancelAllCreateResponse{
+	response := &AgentsJobsCancelAllCreateResponse{
 		Body:         bodyBytes,
 		HTTPResponse: rsp,
 	}
@@ -7290,15 +7290,15 @@ func ParseV1AgentsJobsCancelAllCreateResponse(rsp *http.Response) (*V1AgentsJobs
 	return response, nil
 }
 
-// ParseV1AgentsVersionsListResponse parses an HTTP response from a V1AgentsVersionsListWithResponse call
-func ParseV1AgentsVersionsListResponse(rsp *http.Response) (*V1AgentsVersionsListResponse, error) {
+// ParseAgentsVersionsListResponse parses an HTTP response from a AgentsVersionsListWithResponse call
+func ParseAgentsVersionsListResponse(rsp *http.Response) (*AgentsVersionsListResponse, error) {
 	bodyBytes, err := io.ReadAll(rsp.Body)
 	defer func() { _ = rsp.Body.Close() }()
 	if err != nil {
 		return nil, err
 	}
 
-	response := &V1AgentsVersionsListResponse{
+	response := &AgentsVersionsListResponse{
 		Body:         bodyBytes,
 		HTTPResponse: rsp,
 	}
@@ -7330,15 +7330,15 @@ func ParseV1AgentsVersionsListResponse(rsp *http.Response) (*V1AgentsVersionsLis
 	return response, nil
 }
 
-// ParseV1AgentsVersionsCreateResponse parses an HTTP response from a V1AgentsVersionsCreateWithResponse call
-func ParseV1AgentsVersionsCreateResponse(rsp *http.Response) (*V1AgentsVersionsCreateResponse, error) {
+// ParseAgentsVersionsCreateResponse parses an HTTP response from a AgentsVersionsCreateWithResponse call
+func ParseAgentsVersionsCreateResponse(rsp *http.Response) (*AgentsVersionsCreateResponse, error) {
 	bodyBytes, err := io.ReadAll(rsp.Body)
 	defer func() { _ = rsp.Body.Close() }()
 	if err != nil {
 		return nil, err
 	}
 
-	response := &V1AgentsVersionsCreateResponse{
+	response := &AgentsVersionsCreateResponse{
 		Body:         bodyBytes,
 		HTTPResponse: rsp,
 	}
@@ -7377,15 +7377,15 @@ func ParseV1AgentsVersionsCreateResponse(rsp *http.Response) (*V1AgentsVersionsC
 	return response, nil
 }
 
-// ParseV1AgentsVersionsCurrentRetrieveResponse parses an HTTP response from a V1AgentsVersionsCurrentRetrieveWithResponse call
-func ParseV1AgentsVersionsCurrentRetrieveResponse(rsp *http.Response) (*V1AgentsVersionsCurrentRetrieveResponse, error) {
+// ParseAgentsVersionsCurrentRetrieveResponse parses an HTTP response from a AgentsVersionsCurrentRetrieveWithResponse call
+func ParseAgentsVersionsCurrentRetrieveResponse(rsp *http.Response) (*AgentsVersionsCurrentRetrieveResponse, error) {
 	bodyBytes, err := io.ReadAll(rsp.Body)
 	defer func() { _ = rsp.Body.Close() }()
 	if err != nil {
 		return nil, err
 	}
 
-	response := &V1AgentsVersionsCurrentRetrieveResponse{
+	response := &AgentsVersionsCurrentRetrieveResponse{
 		Body:         bodyBytes,
 		HTTPResponse: rsp,
 	}
@@ -7417,15 +7417,15 @@ func ParseV1AgentsVersionsCurrentRetrieveResponse(rsp *http.Response) (*V1Agents
 	return response, nil
 }
 
-// ParseV1AgentsVersionsDestroyResponse parses an HTTP response from a V1AgentsVersionsDestroyWithResponse call
-func ParseV1AgentsVersionsDestroyResponse(rsp *http.Response) (*V1AgentsVersionsDestroyResponse, error) {
+// ParseAgentsVersionsDestroyResponse parses an HTTP response from a AgentsVersionsDestroyWithResponse call
+func ParseAgentsVersionsDestroyResponse(rsp *http.Response) (*AgentsVersionsDestroyResponse, error) {
 	bodyBytes, err := io.ReadAll(rsp.Body)
 	defer func() { _ = rsp.Body.Close() }()
 	if err != nil {
 		return nil, err
 	}
 
-	response := &V1AgentsVersionsDestroyResponse{
+	response := &AgentsVersionsDestroyResponse{
 		Body:         bodyBytes,
 		HTTPResponse: rsp,
 	}
@@ -7450,15 +7450,15 @@ func ParseV1AgentsVersionsDestroyResponse(rsp *http.Response) (*V1AgentsVersions
 	return response, nil
 }
 
-// ParseV1AgentsVersionsRetrieveResponse parses an HTTP response from a V1AgentsVersionsRetrieveWithResponse call
-func ParseV1AgentsVersionsRetrieveResponse(rsp *http.Response) (*V1AgentsVersionsRetrieveResponse, error) {
+// ParseAgentsVersionsRetrieveResponse parses an HTTP response from a AgentsVersionsRetrieveWithResponse call
+func ParseAgentsVersionsRetrieveResponse(rsp *http.Response) (*AgentsVersionsRetrieveResponse, error) {
 	bodyBytes, err := io.ReadAll(rsp.Body)
 	defer func() { _ = rsp.Body.Close() }()
 	if err != nil {
 		return nil, err
 	}
 
-	response := &V1AgentsVersionsRetrieveResponse{
+	response := &AgentsVersionsRetrieveResponse{
 		Body:         bodyBytes,
 		HTTPResponse: rsp,
 	}
@@ -7490,15 +7490,15 @@ func ParseV1AgentsVersionsRetrieveResponse(rsp *http.Response) (*V1AgentsVersion
 	return response, nil
 }
 
-// ParseV1AgentsVersionsPartialUpdateResponse parses an HTTP response from a V1AgentsVersionsPartialUpdateWithResponse call
-func ParseV1AgentsVersionsPartialUpdateResponse(rsp *http.Response) (*V1AgentsVersionsPartialUpdateResponse, error) {
+// ParseAgentsVersionsPartialUpdateResponse parses an HTTP response from a AgentsVersionsPartialUpdateWithResponse call
+func ParseAgentsVersionsPartialUpdateResponse(rsp *http.Response) (*AgentsVersionsPartialUpdateResponse, error) {
 	bodyBytes, err := io.ReadAll(rsp.Body)
 	defer func() { _ = rsp.Body.Close() }()
 	if err != nil {
 		return nil, err
 	}
 
-	response := &V1AgentsVersionsPartialUpdateResponse{
+	response := &AgentsVersionsPartialUpdateResponse{
 		Body:         bodyBytes,
 		HTTPResponse: rsp,
 	}
@@ -7523,15 +7523,15 @@ func ParseV1AgentsVersionsPartialUpdateResponse(rsp *http.Response) (*V1AgentsVe
 	return response, nil
 }
 
-// ParseV1AgentsVersionsUpdateResponse parses an HTTP response from a V1AgentsVersionsUpdateWithResponse call
-func ParseV1AgentsVersionsUpdateResponse(rsp *http.Response) (*V1AgentsVersionsUpdateResponse, error) {
+// ParseAgentsVersionsUpdateResponse parses an HTTP response from a AgentsVersionsUpdateWithResponse call
+func ParseAgentsVersionsUpdateResponse(rsp *http.Response) (*AgentsVersionsUpdateResponse, error) {
 	bodyBytes, err := io.ReadAll(rsp.Body)
 	defer func() { _ = rsp.Body.Close() }()
 	if err != nil {
 		return nil, err
 	}
 
-	response := &V1AgentsVersionsUpdateResponse{
+	response := &AgentsVersionsUpdateResponse{
 		Body:         bodyBytes,
 		HTTPResponse: rsp,
 	}
@@ -7556,15 +7556,15 @@ func ParseV1AgentsVersionsUpdateResponse(rsp *http.Response) (*V1AgentsVersionsU
 	return response, nil
 }
 
-// ParseV1PoliciesListResponse parses an HTTP response from a V1PoliciesListWithResponse call
-func ParseV1PoliciesListResponse(rsp *http.Response) (*V1PoliciesListResponse, error) {
+// ParsePoliciesListResponse parses an HTTP response from a PoliciesListWithResponse call
+func ParsePoliciesListResponse(rsp *http.Response) (*PoliciesListResponse, error) {
 	bodyBytes, err := io.ReadAll(rsp.Body)
 	defer func() { _ = rsp.Body.Close() }()
 	if err != nil {
 		return nil, err
 	}
 
-	response := &V1PoliciesListResponse{
+	response := &PoliciesListResponse{
 		Body:         bodyBytes,
 		HTTPResponse: rsp,
 	}
@@ -7582,15 +7582,15 @@ func ParseV1PoliciesListResponse(rsp *http.Response) (*V1PoliciesListResponse, e
 	return response, nil
 }
 
-// ParseV1PoliciesCreateResponse parses an HTTP response from a V1PoliciesCreateWithResponse call
-func ParseV1PoliciesCreateResponse(rsp *http.Response) (*V1PoliciesCreateResponse, error) {
+// ParsePoliciesCreateResponse parses an HTTP response from a PoliciesCreateWithResponse call
+func ParsePoliciesCreateResponse(rsp *http.Response) (*PoliciesCreateResponse, error) {
 	bodyBytes, err := io.ReadAll(rsp.Body)
 	defer func() { _ = rsp.Body.Close() }()
 	if err != nil {
 		return nil, err
 	}
 
-	response := &V1PoliciesCreateResponse{
+	response := &PoliciesCreateResponse{
 		Body:         bodyBytes,
 		HTTPResponse: rsp,
 	}
@@ -7608,15 +7608,15 @@ func ParseV1PoliciesCreateResponse(rsp *http.Response) (*V1PoliciesCreateRespons
 	return response, nil
 }
 
-// ParseV1PoliciesDestroyResponse parses an HTTP response from a V1PoliciesDestroyWithResponse call
-func ParseV1PoliciesDestroyResponse(rsp *http.Response) (*V1PoliciesDestroyResponse, error) {
+// ParsePoliciesDestroyResponse parses an HTTP response from a PoliciesDestroyWithResponse call
+func ParsePoliciesDestroyResponse(rsp *http.Response) (*PoliciesDestroyResponse, error) {
 	bodyBytes, err := io.ReadAll(rsp.Body)
 	defer func() { _ = rsp.Body.Close() }()
 	if err != nil {
 		return nil, err
 	}
 
-	response := &V1PoliciesDestroyResponse{
+	response := &PoliciesDestroyResponse{
 		Body:         bodyBytes,
 		HTTPResponse: rsp,
 	}
@@ -7624,15 +7624,15 @@ func ParseV1PoliciesDestroyResponse(rsp *http.Response) (*V1PoliciesDestroyRespo
 	return response, nil
 }
 
-// ParseV1PoliciesRetrieveResponse parses an HTTP response from a V1PoliciesRetrieveWithResponse call
-func ParseV1PoliciesRetrieveResponse(rsp *http.Response) (*V1PoliciesRetrieveResponse, error) {
+// ParsePoliciesRetrieveResponse parses an HTTP response from a PoliciesRetrieveWithResponse call
+func ParsePoliciesRetrieveResponse(rsp *http.Response) (*PoliciesRetrieveResponse, error) {
 	bodyBytes, err := io.ReadAll(rsp.Body)
 	defer func() { _ = rsp.Body.Close() }()
 	if err != nil {
 		return nil, err
 	}
 
-	response := &V1PoliciesRetrieveResponse{
+	response := &PoliciesRetrieveResponse{
 		Body:         bodyBytes,
 		HTTPResponse: rsp,
 	}
@@ -7650,15 +7650,15 @@ func ParseV1PoliciesRetrieveResponse(rsp *http.Response) (*V1PoliciesRetrieveRes
 	return response, nil
 }
 
-// ParseV1PoliciesPartialUpdateResponse parses an HTTP response from a V1PoliciesPartialUpdateWithResponse call
-func ParseV1PoliciesPartialUpdateResponse(rsp *http.Response) (*V1PoliciesPartialUpdateResponse, error) {
+// ParsePoliciesPartialUpdateResponse parses an HTTP response from a PoliciesPartialUpdateWithResponse call
+func ParsePoliciesPartialUpdateResponse(rsp *http.Response) (*PoliciesPartialUpdateResponse, error) {
 	bodyBytes, err := io.ReadAll(rsp.Body)
 	defer func() { _ = rsp.Body.Close() }()
 	if err != nil {
 		return nil, err
 	}
 
-	response := &V1PoliciesPartialUpdateResponse{
+	response := &PoliciesPartialUpdateResponse{
 		Body:         bodyBytes,
 		HTTPResponse: rsp,
 	}
@@ -7676,15 +7676,15 @@ func ParseV1PoliciesPartialUpdateResponse(rsp *http.Response) (*V1PoliciesPartia
 	return response, nil
 }
 
-// ParseV1PoliciesUpdateResponse parses an HTTP response from a V1PoliciesUpdateWithResponse call
-func ParseV1PoliciesUpdateResponse(rsp *http.Response) (*V1PoliciesUpdateResponse, error) {
+// ParsePoliciesUpdateResponse parses an HTTP response from a PoliciesUpdateWithResponse call
+func ParsePoliciesUpdateResponse(rsp *http.Response) (*PoliciesUpdateResponse, error) {
 	bodyBytes, err := io.ReadAll(rsp.Body)
 	defer func() { _ = rsp.Body.Close() }()
 	if err != nil {
 		return nil, err
 	}
 
-	response := &V1PoliciesUpdateResponse{
+	response := &PoliciesUpdateResponse{
 		Body:         bodyBytes,
 		HTTPResponse: rsp,
 	}
@@ -7702,15 +7702,15 @@ func ParseV1PoliciesUpdateResponse(rsp *http.Response) (*V1PoliciesUpdateRespons
 	return response, nil
 }
 
-// ParseV1PoliciesVersionsListResponse parses an HTTP response from a V1PoliciesVersionsListWithResponse call
-func ParseV1PoliciesVersionsListResponse(rsp *http.Response) (*V1PoliciesVersionsListResponse, error) {
+// ParsePoliciesVersionsListResponse parses an HTTP response from a PoliciesVersionsListWithResponse call
+func ParsePoliciesVersionsListResponse(rsp *http.Response) (*PoliciesVersionsListResponse, error) {
 	bodyBytes, err := io.ReadAll(rsp.Body)
 	defer func() { _ = rsp.Body.Close() }()
 	if err != nil {
 		return nil, err
 	}
 
-	response := &V1PoliciesVersionsListResponse{
+	response := &PoliciesVersionsListResponse{
 		Body:         bodyBytes,
 		HTTPResponse: rsp,
 	}
@@ -7728,15 +7728,15 @@ func ParseV1PoliciesVersionsListResponse(rsp *http.Response) (*V1PoliciesVersion
 	return response, nil
 }
 
-// ParseV1PoliciesVersionsCreateResponse parses an HTTP response from a V1PoliciesVersionsCreateWithResponse call
-func ParseV1PoliciesVersionsCreateResponse(rsp *http.Response) (*V1PoliciesVersionsCreateResponse, error) {
+// ParsePoliciesVersionsCreateResponse parses an HTTP response from a PoliciesVersionsCreateWithResponse call
+func ParsePoliciesVersionsCreateResponse(rsp *http.Response) (*PoliciesVersionsCreateResponse, error) {
 	bodyBytes, err := io.ReadAll(rsp.Body)
 	defer func() { _ = rsp.Body.Close() }()
 	if err != nil {
 		return nil, err
 	}
 
-	response := &V1PoliciesVersionsCreateResponse{
+	response := &PoliciesVersionsCreateResponse{
 		Body:         bodyBytes,
 		HTTPResponse: rsp,
 	}
@@ -7754,15 +7754,15 @@ func ParseV1PoliciesVersionsCreateResponse(rsp *http.Response) (*V1PoliciesVersi
 	return response, nil
 }
 
-// ParseV1PoliciesVersionsRetrieveResponse parses an HTTP response from a V1PoliciesVersionsRetrieveWithResponse call
-func ParseV1PoliciesVersionsRetrieveResponse(rsp *http.Response) (*V1PoliciesVersionsRetrieveResponse, error) {
+// ParsePoliciesVersionsRetrieveResponse parses an HTTP response from a PoliciesVersionsRetrieveWithResponse call
+func ParsePoliciesVersionsRetrieveResponse(rsp *http.Response) (*PoliciesVersionsRetrieveResponse, error) {
 	bodyBytes, err := io.ReadAll(rsp.Body)
 	defer func() { _ = rsp.Body.Close() }()
 	if err != nil {
 		return nil, err
 	}
 
-	response := &V1PoliciesVersionsRetrieveResponse{
+	response := &PoliciesVersionsRetrieveResponse{
 		Body:         bodyBytes,
 		HTTPResponse: rsp,
 	}
@@ -7780,15 +7780,15 @@ func ParseV1PoliciesVersionsRetrieveResponse(rsp *http.Response) (*V1PoliciesVer
 	return response, nil
 }
 
-// ParseV1UsersCurrentUserRetrieveResponse parses an HTTP response from a V1UsersCurrentUserRetrieveWithResponse call
-func ParseV1UsersCurrentUserRetrieveResponse(rsp *http.Response) (*V1UsersCurrentUserRetrieveResponse, error) {
+// ParseUsersCurrentUserRetrieveResponse parses an HTTP response from a UsersCurrentUserRetrieveWithResponse call
+func ParseUsersCurrentUserRetrieveResponse(rsp *http.Response) (*UsersCurrentUserRetrieveResponse, error) {
 	bodyBytes, err := io.ReadAll(rsp.Body)
 	defer func() { _ = rsp.Body.Close() }()
 	if err != nil {
 		return nil, err
 	}
 
-	response := &V1UsersCurrentUserRetrieveResponse{
+	response := &UsersCurrentUserRetrieveResponse{
 		Body:         bodyBytes,
 		HTTPResponse: rsp,
 	}
