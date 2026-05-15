@@ -725,155 +725,53 @@ type PoliciesVersionsRetrieveParams struct {
 // AgentsCreateJSONRequestBody defines body for AgentsCreate for application/json ContentType.
 type AgentsCreateJSONRequestBody = BaseAgentCreateRequest
 
-// AgentsCreateFormdataRequestBody defines body for AgentsCreate for application/x-www-form-urlencoded ContentType.
-type AgentsCreateFormdataRequestBody = BaseAgentCreateRequest
-
-// AgentsCreateMultipartRequestBody defines body for AgentsCreate for multipart/form-data ContentType.
-type AgentsCreateMultipartRequestBody = BaseAgentCreateRequest
-
 // AgentsJobsResultsCreateJSONRequestBody defines body for AgentsJobsResultsCreate for application/json ContentType.
 type AgentsJobsResultsCreateJSONRequestBody = AgentJobResultManyRequestRequest
-
-// AgentsJobsResultsCreateFormdataRequestBody defines body for AgentsJobsResultsCreate for application/x-www-form-urlencoded ContentType.
-type AgentsJobsResultsCreateFormdataRequestBody = AgentJobResultManyRequestRequest
-
-// AgentsJobsResultsCreateMultipartRequestBody defines body for AgentsJobsResultsCreate for multipart/form-data ContentType.
-type AgentsJobsResultsCreateMultipartRequestBody = AgentJobResultManyRequestRequest
 
 // AgentsJobsStatusesCreateJSONRequestBody defines body for AgentsJobsStatusesCreate for application/json ContentType.
 type AgentsJobsStatusesCreateJSONRequestBody = AgentJobStatusManyRequestRequest
 
-// AgentsJobsStatusesCreateFormdataRequestBody defines body for AgentsJobsStatusesCreate for application/x-www-form-urlencoded ContentType.
-type AgentsJobsStatusesCreateFormdataRequestBody = AgentJobStatusManyRequestRequest
-
-// AgentsJobsStatusesCreateMultipartRequestBody defines body for AgentsJobsStatusesCreate for multipart/form-data ContentType.
-type AgentsJobsStatusesCreateMultipartRequestBody = AgentJobStatusManyRequestRequest
-
 // AgentsRunJSONRequestBody defines body for AgentsRun for application/json ContentType.
 type AgentsRunJSONRequestBody = AgentExecutionRequestRequest
-
-// AgentsRunFormdataRequestBody defines body for AgentsRun for application/x-www-form-urlencoded ContentType.
-type AgentsRunFormdataRequestBody = AgentExecutionRequestRequest
-
-// AgentsRunMultipartRequestBody defines body for AgentsRun for multipart/form-data ContentType.
-type AgentsRunMultipartRequestBody = AgentExecutionRequestRequest
 
 // AgentsRunAsyncCreateJSONRequestBody defines body for AgentsRunAsyncCreate for application/json ContentType.
 type AgentsRunAsyncCreateJSONRequestBody = AgentExecutionRequestRequest
 
-// AgentsRunAsyncCreateFormdataRequestBody defines body for AgentsRunAsyncCreate for application/x-www-form-urlencoded ContentType.
-type AgentsRunAsyncCreateFormdataRequestBody = AgentExecutionRequestRequest
-
-// AgentsRunAsyncCreateMultipartRequestBody defines body for AgentsRunAsyncCreate for multipart/form-data ContentType.
-type AgentsRunAsyncCreateMultipartRequestBody = AgentExecutionRequestRequest
-
 // AgentsRunAsyncManyJSONRequestBody defines body for AgentsRunAsyncMany for application/json ContentType.
 type AgentsRunAsyncManyJSONRequestBody = AgentRunAsyncManyRequestRequest
-
-// AgentsRunAsyncManyFormdataRequestBody defines body for AgentsRunAsyncMany for application/x-www-form-urlencoded ContentType.
-type AgentsRunAsyncManyFormdataRequestBody = AgentRunAsyncManyRequestRequest
-
-// AgentsRunAsyncManyMultipartRequestBody defines body for AgentsRunAsyncMany for multipart/form-data ContentType.
-type AgentsRunAsyncManyMultipartRequestBody = AgentRunAsyncManyRequestRequest
 
 // AgentsRunVersionJSONRequestBody defines body for AgentsRunVersion for application/json ContentType.
 type AgentsRunVersionJSONRequestBody = AgentExecutionRequestRequest
 
-// AgentsRunVersionFormdataRequestBody defines body for AgentsRunVersion for application/x-www-form-urlencoded ContentType.
-type AgentsRunVersionFormdataRequestBody = AgentExecutionRequestRequest
-
-// AgentsRunVersionMultipartRequestBody defines body for AgentsRunVersion for multipart/form-data ContentType.
-type AgentsRunVersionMultipartRequestBody = AgentExecutionRequestRequest
-
 // AgentsRunVersionsAsyncCreateJSONRequestBody defines body for AgentsRunVersionsAsyncCreate for application/json ContentType.
 type AgentsRunVersionsAsyncCreateJSONRequestBody = AgentExecutionRequestRequest
-
-// AgentsRunVersionsAsyncCreateFormdataRequestBody defines body for AgentsRunVersionsAsyncCreate for application/x-www-form-urlencoded ContentType.
-type AgentsRunVersionsAsyncCreateFormdataRequestBody = AgentExecutionRequestRequest
-
-// AgentsRunVersionsAsyncCreateMultipartRequestBody defines body for AgentsRunVersionsAsyncCreate for multipart/form-data ContentType.
-type AgentsRunVersionsAsyncCreateMultipartRequestBody = AgentExecutionRequestRequest
 
 // AgentsPartialUpdateJSONRequestBody defines body for AgentsPartialUpdate for application/json ContentType.
 type AgentsPartialUpdateJSONRequestBody = PatchedBaseAgentUpdateRequest
 
-// AgentsPartialUpdateFormdataRequestBody defines body for AgentsPartialUpdate for application/x-www-form-urlencoded ContentType.
-type AgentsPartialUpdateFormdataRequestBody = PatchedBaseAgentUpdateRequest
-
-// AgentsPartialUpdateMultipartRequestBody defines body for AgentsPartialUpdate for multipart/form-data ContentType.
-type AgentsPartialUpdateMultipartRequestBody = PatchedBaseAgentUpdateRequest
-
 // AgentsUpdateJSONRequestBody defines body for AgentsUpdate for application/json ContentType.
 type AgentsUpdateJSONRequestBody = BaseAgentUpdateRequest
-
-// AgentsUpdateFormdataRequestBody defines body for AgentsUpdate for application/x-www-form-urlencoded ContentType.
-type AgentsUpdateFormdataRequestBody = BaseAgentUpdateRequest
-
-// AgentsUpdateMultipartRequestBody defines body for AgentsUpdate for multipart/form-data ContentType.
-type AgentsUpdateMultipartRequestBody = BaseAgentUpdateRequest
 
 // AgentsVersionsCreateJSONRequestBody defines body for AgentsVersionsCreate for application/json ContentType.
 type AgentsVersionsCreateJSONRequestBody = AgentVersionCreateRequest
 
-// AgentsVersionsCreateFormdataRequestBody defines body for AgentsVersionsCreate for application/x-www-form-urlencoded ContentType.
-type AgentsVersionsCreateFormdataRequestBody = AgentVersionCreateRequest
-
-// AgentsVersionsCreateMultipartRequestBody defines body for AgentsVersionsCreate for multipart/form-data ContentType.
-type AgentsVersionsCreateMultipartRequestBody = AgentVersionCreateRequest
-
 // AgentsVersionsPartialUpdateJSONRequestBody defines body for AgentsVersionsPartialUpdate for application/json ContentType.
 type AgentsVersionsPartialUpdateJSONRequestBody = PatchedPatchedAgentVersionUpdateRequestRequest
-
-// AgentsVersionsPartialUpdateFormdataRequestBody defines body for AgentsVersionsPartialUpdate for application/x-www-form-urlencoded ContentType.
-type AgentsVersionsPartialUpdateFormdataRequestBody = PatchedPatchedAgentVersionUpdateRequestRequest
-
-// AgentsVersionsPartialUpdateMultipartRequestBody defines body for AgentsVersionsPartialUpdate for multipart/form-data ContentType.
-type AgentsVersionsPartialUpdateMultipartRequestBody = PatchedPatchedAgentVersionUpdateRequestRequest
 
 // AgentsVersionsUpdateJSONRequestBody defines body for AgentsVersionsUpdate for application/json ContentType.
 type AgentsVersionsUpdateJSONRequestBody = AgentVersionUpdateRequestRequest
 
-// AgentsVersionsUpdateFormdataRequestBody defines body for AgentsVersionsUpdate for application/x-www-form-urlencoded ContentType.
-type AgentsVersionsUpdateFormdataRequestBody = AgentVersionUpdateRequestRequest
-
-// AgentsVersionsUpdateMultipartRequestBody defines body for AgentsVersionsUpdate for multipart/form-data ContentType.
-type AgentsVersionsUpdateMultipartRequestBody = AgentVersionUpdateRequestRequest
-
 // PoliciesCreateJSONRequestBody defines body for PoliciesCreate for application/json ContentType.
 type PoliciesCreateJSONRequestBody = CreatePolicyRequest
-
-// PoliciesCreateFormdataRequestBody defines body for PoliciesCreate for application/x-www-form-urlencoded ContentType.
-type PoliciesCreateFormdataRequestBody = CreatePolicyRequest
-
-// PoliciesCreateMultipartRequestBody defines body for PoliciesCreate for multipart/form-data ContentType.
-type PoliciesCreateMultipartRequestBody = CreatePolicyRequest
 
 // PoliciesPartialUpdateJSONRequestBody defines body for PoliciesPartialUpdate for application/json ContentType.
 type PoliciesPartialUpdateJSONRequestBody = PatchedUpdatePolicyRequest
 
-// PoliciesPartialUpdateFormdataRequestBody defines body for PoliciesPartialUpdate for application/x-www-form-urlencoded ContentType.
-type PoliciesPartialUpdateFormdataRequestBody = PatchedUpdatePolicyRequest
-
-// PoliciesPartialUpdateMultipartRequestBody defines body for PoliciesPartialUpdate for multipart/form-data ContentType.
-type PoliciesPartialUpdateMultipartRequestBody = PatchedUpdatePolicyRequest
-
 // PoliciesUpdateJSONRequestBody defines body for PoliciesUpdate for application/json ContentType.
 type PoliciesUpdateJSONRequestBody = UpdatePolicyRequest
 
-// PoliciesUpdateFormdataRequestBody defines body for PoliciesUpdate for application/x-www-form-urlencoded ContentType.
-type PoliciesUpdateFormdataRequestBody = UpdatePolicyRequest
-
-// PoliciesUpdateMultipartRequestBody defines body for PoliciesUpdate for multipart/form-data ContentType.
-type PoliciesUpdateMultipartRequestBody = UpdatePolicyRequest
-
 // PoliciesVersionsCreateJSONRequestBody defines body for PoliciesVersionsCreate for application/json ContentType.
 type PoliciesVersionsCreateJSONRequestBody = CreatePolicyVersionRequest
-
-// PoliciesVersionsCreateFormdataRequestBody defines body for PoliciesVersionsCreate for application/x-www-form-urlencoded ContentType.
-type PoliciesVersionsCreateFormdataRequestBody = CreatePolicyVersionRequest
-
-// PoliciesVersionsCreateMultipartRequestBody defines body for PoliciesVersionsCreate for multipart/form-data ContentType.
-type PoliciesVersionsCreateMultipartRequestBody = CreatePolicyVersionRequest
 
 // RequestEditorFn  is the function signature for the RequestEditor callback function
 type RequestEditorFn func(ctx context.Context, req *http.Request) error
@@ -956,21 +854,15 @@ type ClientInterface interface {
 
 	AgentsCreate(ctx context.Context, params *AgentsCreateParams, body AgentsCreateJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
 
-	AgentsCreateWithFormdataBody(ctx context.Context, params *AgentsCreateParams, body AgentsCreateFormdataRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
-
 	// AgentsJobsResultsCreateWithBody request with any body
 	AgentsJobsResultsCreateWithBody(ctx context.Context, params *AgentsJobsResultsCreateParams, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
 
 	AgentsJobsResultsCreate(ctx context.Context, params *AgentsJobsResultsCreateParams, body AgentsJobsResultsCreateJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
 
-	AgentsJobsResultsCreateWithFormdataBody(ctx context.Context, params *AgentsJobsResultsCreateParams, body AgentsJobsResultsCreateFormdataRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
-
 	// AgentsJobsStatusesCreateWithBody request with any body
 	AgentsJobsStatusesCreateWithBody(ctx context.Context, params *AgentsJobsStatusesCreateParams, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
 
 	AgentsJobsStatusesCreate(ctx context.Context, params *AgentsJobsStatusesCreateParams, body AgentsJobsStatusesCreateJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
-
-	AgentsJobsStatusesCreateWithFormdataBody(ctx context.Context, params *AgentsJobsStatusesCreateParams, body AgentsJobsStatusesCreateFormdataRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
 
 	// AgentsJobsReferencesRetrieve request
 	AgentsJobsReferencesRetrieve(ctx context.Context, agentJobId openapi_types.UUID, resourceId string, params *AgentsJobsReferencesRetrieveParams, reqEditors ...RequestEditorFn) (*http.Response, error)
@@ -992,35 +884,25 @@ type ClientInterface interface {
 
 	AgentsRun(ctx context.Context, agentId openapi_types.UUID, params *AgentsRunParams, body AgentsRunJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
 
-	AgentsRunWithFormdataBody(ctx context.Context, agentId openapi_types.UUID, params *AgentsRunParams, body AgentsRunFormdataRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
-
 	// AgentsRunAsyncCreateWithBody request with any body
 	AgentsRunAsyncCreateWithBody(ctx context.Context, agentId openapi_types.UUID, params *AgentsRunAsyncCreateParams, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
 
 	AgentsRunAsyncCreate(ctx context.Context, agentId openapi_types.UUID, params *AgentsRunAsyncCreateParams, body AgentsRunAsyncCreateJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
-
-	AgentsRunAsyncCreateWithFormdataBody(ctx context.Context, agentId openapi_types.UUID, params *AgentsRunAsyncCreateParams, body AgentsRunAsyncCreateFormdataRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
 
 	// AgentsRunAsyncManyWithBody request with any body
 	AgentsRunAsyncManyWithBody(ctx context.Context, agentId openapi_types.UUID, params *AgentsRunAsyncManyParams, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
 
 	AgentsRunAsyncMany(ctx context.Context, agentId openapi_types.UUID, params *AgentsRunAsyncManyParams, body AgentsRunAsyncManyJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
 
-	AgentsRunAsyncManyWithFormdataBody(ctx context.Context, agentId openapi_types.UUID, params *AgentsRunAsyncManyParams, body AgentsRunAsyncManyFormdataRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
-
 	// AgentsRunVersionWithBody request with any body
 	AgentsRunVersionWithBody(ctx context.Context, agentId openapi_types.UUID, agentVersionId openapi_types.UUID, params *AgentsRunVersionParams, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
 
 	AgentsRunVersion(ctx context.Context, agentId openapi_types.UUID, agentVersionId openapi_types.UUID, params *AgentsRunVersionParams, body AgentsRunVersionJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
 
-	AgentsRunVersionWithFormdataBody(ctx context.Context, agentId openapi_types.UUID, agentVersionId openapi_types.UUID, params *AgentsRunVersionParams, body AgentsRunVersionFormdataRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
-
 	// AgentsRunVersionsAsyncCreateWithBody request with any body
 	AgentsRunVersionsAsyncCreateWithBody(ctx context.Context, agentId openapi_types.UUID, agentVersionId openapi_types.UUID, params *AgentsRunVersionsAsyncCreateParams, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
 
 	AgentsRunVersionsAsyncCreate(ctx context.Context, agentId openapi_types.UUID, agentVersionId openapi_types.UUID, params *AgentsRunVersionsAsyncCreateParams, body AgentsRunVersionsAsyncCreateJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
-
-	AgentsRunVersionsAsyncCreateWithFormdataBody(ctx context.Context, agentId openapi_types.UUID, agentVersionId openapi_types.UUID, params *AgentsRunVersionsAsyncCreateParams, body AgentsRunVersionsAsyncCreateFormdataRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
 
 	// AgentsDestroy request
 	AgentsDestroy(ctx context.Context, agentId openapi_types.UUID, params *AgentsDestroyParams, reqEditors ...RequestEditorFn) (*http.Response, error)
@@ -1033,14 +915,10 @@ type ClientInterface interface {
 
 	AgentsPartialUpdate(ctx context.Context, agentId openapi_types.UUID, params *AgentsPartialUpdateParams, body AgentsPartialUpdateJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
 
-	AgentsPartialUpdateWithFormdataBody(ctx context.Context, agentId openapi_types.UUID, params *AgentsPartialUpdateParams, body AgentsPartialUpdateFormdataRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
-
 	// AgentsUpdateWithBody request with any body
 	AgentsUpdateWithBody(ctx context.Context, agentId openapi_types.UUID, params *AgentsUpdateParams, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
 
 	AgentsUpdate(ctx context.Context, agentId openapi_types.UUID, params *AgentsUpdateParams, body AgentsUpdateJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
-
-	AgentsUpdateWithFormdataBody(ctx context.Context, agentId openapi_types.UUID, params *AgentsUpdateParams, body AgentsUpdateFormdataRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
 
 	// AgentsDuplicateCreate request
 	AgentsDuplicateCreate(ctx context.Context, agentId openapi_types.UUID, params *AgentsDuplicateCreateParams, reqEditors ...RequestEditorFn) (*http.Response, error)
@@ -1056,8 +934,6 @@ type ClientInterface interface {
 
 	AgentsVersionsCreate(ctx context.Context, agentId openapi_types.UUID, params *AgentsVersionsCreateParams, body AgentsVersionsCreateJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
 
-	AgentsVersionsCreateWithFormdataBody(ctx context.Context, agentId openapi_types.UUID, params *AgentsVersionsCreateParams, body AgentsVersionsCreateFormdataRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
-
 	// AgentsVersionsCurrentRetrieve request
 	AgentsVersionsCurrentRetrieve(ctx context.Context, agentId openapi_types.UUID, params *AgentsVersionsCurrentRetrieveParams, reqEditors ...RequestEditorFn) (*http.Response, error)
 
@@ -1072,14 +948,10 @@ type ClientInterface interface {
 
 	AgentsVersionsPartialUpdate(ctx context.Context, agentId openapi_types.UUID, agentVersionId openapi_types.UUID, params *AgentsVersionsPartialUpdateParams, body AgentsVersionsPartialUpdateJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
 
-	AgentsVersionsPartialUpdateWithFormdataBody(ctx context.Context, agentId openapi_types.UUID, agentVersionId openapi_types.UUID, params *AgentsVersionsPartialUpdateParams, body AgentsVersionsPartialUpdateFormdataRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
-
 	// AgentsVersionsUpdateWithBody request with any body
 	AgentsVersionsUpdateWithBody(ctx context.Context, agentId openapi_types.UUID, agentVersionId openapi_types.UUID, params *AgentsVersionsUpdateParams, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
 
 	AgentsVersionsUpdate(ctx context.Context, agentId openapi_types.UUID, agentVersionId openapi_types.UUID, params *AgentsVersionsUpdateParams, body AgentsVersionsUpdateJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
-
-	AgentsVersionsUpdateWithFormdataBody(ctx context.Context, agentId openapi_types.UUID, agentVersionId openapi_types.UUID, params *AgentsVersionsUpdateParams, body AgentsVersionsUpdateFormdataRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
 
 	// PoliciesList request
 	PoliciesList(ctx context.Context, params *PoliciesListParams, reqEditors ...RequestEditorFn) (*http.Response, error)
@@ -1088,8 +960,6 @@ type ClientInterface interface {
 	PoliciesCreateWithBody(ctx context.Context, params *PoliciesCreateParams, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
 
 	PoliciesCreate(ctx context.Context, params *PoliciesCreateParams, body PoliciesCreateJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
-
-	PoliciesCreateWithFormdataBody(ctx context.Context, params *PoliciesCreateParams, body PoliciesCreateFormdataRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
 
 	// PoliciesDestroy request
 	PoliciesDestroy(ctx context.Context, id openapi_types.UUID, params *PoliciesDestroyParams, reqEditors ...RequestEditorFn) (*http.Response, error)
@@ -1102,14 +972,10 @@ type ClientInterface interface {
 
 	PoliciesPartialUpdate(ctx context.Context, id openapi_types.UUID, params *PoliciesPartialUpdateParams, body PoliciesPartialUpdateJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
 
-	PoliciesPartialUpdateWithFormdataBody(ctx context.Context, id openapi_types.UUID, params *PoliciesPartialUpdateParams, body PoliciesPartialUpdateFormdataRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
-
 	// PoliciesUpdateWithBody request with any body
 	PoliciesUpdateWithBody(ctx context.Context, id openapi_types.UUID, params *PoliciesUpdateParams, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
 
 	PoliciesUpdate(ctx context.Context, id openapi_types.UUID, params *PoliciesUpdateParams, body PoliciesUpdateJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
-
-	PoliciesUpdateWithFormdataBody(ctx context.Context, id openapi_types.UUID, params *PoliciesUpdateParams, body PoliciesUpdateFormdataRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
 
 	// PoliciesVersionsList request
 	PoliciesVersionsList(ctx context.Context, policyId openapi_types.UUID, params *PoliciesVersionsListParams, reqEditors ...RequestEditorFn) (*http.Response, error)
@@ -1118,8 +984,6 @@ type ClientInterface interface {
 	PoliciesVersionsCreateWithBody(ctx context.Context, policyId openapi_types.UUID, params *PoliciesVersionsCreateParams, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
 
 	PoliciesVersionsCreate(ctx context.Context, policyId openapi_types.UUID, params *PoliciesVersionsCreateParams, body PoliciesVersionsCreateJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
-
-	PoliciesVersionsCreateWithFormdataBody(ctx context.Context, policyId openapi_types.UUID, params *PoliciesVersionsCreateParams, body PoliciesVersionsCreateFormdataRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
 
 	// PoliciesVersionsRetrieve request
 	PoliciesVersionsRetrieve(ctx context.Context, policyId openapi_types.UUID, versionId openapi_types.UUID, params *PoliciesVersionsRetrieveParams, reqEditors ...RequestEditorFn) (*http.Response, error)
@@ -1164,18 +1028,6 @@ func (c *Client) AgentsCreate(ctx context.Context, params *AgentsCreateParams, b
 	return c.Client.Do(req)
 }
 
-func (c *Client) AgentsCreateWithFormdataBody(ctx context.Context, params *AgentsCreateParams, body AgentsCreateFormdataRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
-	req, err := NewAgentsCreateRequestWithFormdataBody(c.Server, params, body)
-	if err != nil {
-		return nil, err
-	}
-	req = req.WithContext(ctx)
-	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
-		return nil, err
-	}
-	return c.Client.Do(req)
-}
-
 func (c *Client) AgentsJobsResultsCreateWithBody(ctx context.Context, params *AgentsJobsResultsCreateParams, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error) {
 	req, err := NewAgentsJobsResultsCreateRequestWithBody(c.Server, params, contentType, body)
 	if err != nil {
@@ -1200,18 +1052,6 @@ func (c *Client) AgentsJobsResultsCreate(ctx context.Context, params *AgentsJobs
 	return c.Client.Do(req)
 }
 
-func (c *Client) AgentsJobsResultsCreateWithFormdataBody(ctx context.Context, params *AgentsJobsResultsCreateParams, body AgentsJobsResultsCreateFormdataRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
-	req, err := NewAgentsJobsResultsCreateRequestWithFormdataBody(c.Server, params, body)
-	if err != nil {
-		return nil, err
-	}
-	req = req.WithContext(ctx)
-	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
-		return nil, err
-	}
-	return c.Client.Do(req)
-}
-
 func (c *Client) AgentsJobsStatusesCreateWithBody(ctx context.Context, params *AgentsJobsStatusesCreateParams, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error) {
 	req, err := NewAgentsJobsStatusesCreateRequestWithBody(c.Server, params, contentType, body)
 	if err != nil {
@@ -1226,18 +1066,6 @@ func (c *Client) AgentsJobsStatusesCreateWithBody(ctx context.Context, params *A
 
 func (c *Client) AgentsJobsStatusesCreate(ctx context.Context, params *AgentsJobsStatusesCreateParams, body AgentsJobsStatusesCreateJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
 	req, err := NewAgentsJobsStatusesCreateRequest(c.Server, params, body)
-	if err != nil {
-		return nil, err
-	}
-	req = req.WithContext(ctx)
-	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
-		return nil, err
-	}
-	return c.Client.Do(req)
-}
-
-func (c *Client) AgentsJobsStatusesCreateWithFormdataBody(ctx context.Context, params *AgentsJobsStatusesCreateParams, body AgentsJobsStatusesCreateFormdataRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
-	req, err := NewAgentsJobsStatusesCreateRequestWithFormdataBody(c.Server, params, body)
 	if err != nil {
 		return nil, err
 	}
@@ -1332,18 +1160,6 @@ func (c *Client) AgentsRun(ctx context.Context, agentId openapi_types.UUID, para
 	return c.Client.Do(req)
 }
 
-func (c *Client) AgentsRunWithFormdataBody(ctx context.Context, agentId openapi_types.UUID, params *AgentsRunParams, body AgentsRunFormdataRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
-	req, err := NewAgentsRunRequestWithFormdataBody(c.Server, agentId, params, body)
-	if err != nil {
-		return nil, err
-	}
-	req = req.WithContext(ctx)
-	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
-		return nil, err
-	}
-	return c.Client.Do(req)
-}
-
 func (c *Client) AgentsRunAsyncCreateWithBody(ctx context.Context, agentId openapi_types.UUID, params *AgentsRunAsyncCreateParams, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error) {
 	req, err := NewAgentsRunAsyncCreateRequestWithBody(c.Server, agentId, params, contentType, body)
 	if err != nil {
@@ -1358,18 +1174,6 @@ func (c *Client) AgentsRunAsyncCreateWithBody(ctx context.Context, agentId opena
 
 func (c *Client) AgentsRunAsyncCreate(ctx context.Context, agentId openapi_types.UUID, params *AgentsRunAsyncCreateParams, body AgentsRunAsyncCreateJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
 	req, err := NewAgentsRunAsyncCreateRequest(c.Server, agentId, params, body)
-	if err != nil {
-		return nil, err
-	}
-	req = req.WithContext(ctx)
-	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
-		return nil, err
-	}
-	return c.Client.Do(req)
-}
-
-func (c *Client) AgentsRunAsyncCreateWithFormdataBody(ctx context.Context, agentId openapi_types.UUID, params *AgentsRunAsyncCreateParams, body AgentsRunAsyncCreateFormdataRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
-	req, err := NewAgentsRunAsyncCreateRequestWithFormdataBody(c.Server, agentId, params, body)
 	if err != nil {
 		return nil, err
 	}
@@ -1404,18 +1208,6 @@ func (c *Client) AgentsRunAsyncMany(ctx context.Context, agentId openapi_types.U
 	return c.Client.Do(req)
 }
 
-func (c *Client) AgentsRunAsyncManyWithFormdataBody(ctx context.Context, agentId openapi_types.UUID, params *AgentsRunAsyncManyParams, body AgentsRunAsyncManyFormdataRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
-	req, err := NewAgentsRunAsyncManyRequestWithFormdataBody(c.Server, agentId, params, body)
-	if err != nil {
-		return nil, err
-	}
-	req = req.WithContext(ctx)
-	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
-		return nil, err
-	}
-	return c.Client.Do(req)
-}
-
 func (c *Client) AgentsRunVersionWithBody(ctx context.Context, agentId openapi_types.UUID, agentVersionId openapi_types.UUID, params *AgentsRunVersionParams, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error) {
 	req, err := NewAgentsRunVersionRequestWithBody(c.Server, agentId, agentVersionId, params, contentType, body)
 	if err != nil {
@@ -1440,18 +1232,6 @@ func (c *Client) AgentsRunVersion(ctx context.Context, agentId openapi_types.UUI
 	return c.Client.Do(req)
 }
 
-func (c *Client) AgentsRunVersionWithFormdataBody(ctx context.Context, agentId openapi_types.UUID, agentVersionId openapi_types.UUID, params *AgentsRunVersionParams, body AgentsRunVersionFormdataRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
-	req, err := NewAgentsRunVersionRequestWithFormdataBody(c.Server, agentId, agentVersionId, params, body)
-	if err != nil {
-		return nil, err
-	}
-	req = req.WithContext(ctx)
-	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
-		return nil, err
-	}
-	return c.Client.Do(req)
-}
-
 func (c *Client) AgentsRunVersionsAsyncCreateWithBody(ctx context.Context, agentId openapi_types.UUID, agentVersionId openapi_types.UUID, params *AgentsRunVersionsAsyncCreateParams, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error) {
 	req, err := NewAgentsRunVersionsAsyncCreateRequestWithBody(c.Server, agentId, agentVersionId, params, contentType, body)
 	if err != nil {
@@ -1466,18 +1246,6 @@ func (c *Client) AgentsRunVersionsAsyncCreateWithBody(ctx context.Context, agent
 
 func (c *Client) AgentsRunVersionsAsyncCreate(ctx context.Context, agentId openapi_types.UUID, agentVersionId openapi_types.UUID, params *AgentsRunVersionsAsyncCreateParams, body AgentsRunVersionsAsyncCreateJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
 	req, err := NewAgentsRunVersionsAsyncCreateRequest(c.Server, agentId, agentVersionId, params, body)
-	if err != nil {
-		return nil, err
-	}
-	req = req.WithContext(ctx)
-	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
-		return nil, err
-	}
-	return c.Client.Do(req)
-}
-
-func (c *Client) AgentsRunVersionsAsyncCreateWithFormdataBody(ctx context.Context, agentId openapi_types.UUID, agentVersionId openapi_types.UUID, params *AgentsRunVersionsAsyncCreateParams, body AgentsRunVersionsAsyncCreateFormdataRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
-	req, err := NewAgentsRunVersionsAsyncCreateRequestWithFormdataBody(c.Server, agentId, agentVersionId, params, body)
 	if err != nil {
 		return nil, err
 	}
@@ -1536,18 +1304,6 @@ func (c *Client) AgentsPartialUpdate(ctx context.Context, agentId openapi_types.
 	return c.Client.Do(req)
 }
 
-func (c *Client) AgentsPartialUpdateWithFormdataBody(ctx context.Context, agentId openapi_types.UUID, params *AgentsPartialUpdateParams, body AgentsPartialUpdateFormdataRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
-	req, err := NewAgentsPartialUpdateRequestWithFormdataBody(c.Server, agentId, params, body)
-	if err != nil {
-		return nil, err
-	}
-	req = req.WithContext(ctx)
-	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
-		return nil, err
-	}
-	return c.Client.Do(req)
-}
-
 func (c *Client) AgentsUpdateWithBody(ctx context.Context, agentId openapi_types.UUID, params *AgentsUpdateParams, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error) {
 	req, err := NewAgentsUpdateRequestWithBody(c.Server, agentId, params, contentType, body)
 	if err != nil {
@@ -1562,18 +1318,6 @@ func (c *Client) AgentsUpdateWithBody(ctx context.Context, agentId openapi_types
 
 func (c *Client) AgentsUpdate(ctx context.Context, agentId openapi_types.UUID, params *AgentsUpdateParams, body AgentsUpdateJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
 	req, err := NewAgentsUpdateRequest(c.Server, agentId, params, body)
-	if err != nil {
-		return nil, err
-	}
-	req = req.WithContext(ctx)
-	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
-		return nil, err
-	}
-	return c.Client.Do(req)
-}
-
-func (c *Client) AgentsUpdateWithFormdataBody(ctx context.Context, agentId openapi_types.UUID, params *AgentsUpdateParams, body AgentsUpdateFormdataRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
-	req, err := NewAgentsUpdateRequestWithFormdataBody(c.Server, agentId, params, body)
 	if err != nil {
 		return nil, err
 	}
@@ -1644,18 +1388,6 @@ func (c *Client) AgentsVersionsCreate(ctx context.Context, agentId openapi_types
 	return c.Client.Do(req)
 }
 
-func (c *Client) AgentsVersionsCreateWithFormdataBody(ctx context.Context, agentId openapi_types.UUID, params *AgentsVersionsCreateParams, body AgentsVersionsCreateFormdataRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
-	req, err := NewAgentsVersionsCreateRequestWithFormdataBody(c.Server, agentId, params, body)
-	if err != nil {
-		return nil, err
-	}
-	req = req.WithContext(ctx)
-	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
-		return nil, err
-	}
-	return c.Client.Do(req)
-}
-
 func (c *Client) AgentsVersionsCurrentRetrieve(ctx context.Context, agentId openapi_types.UUID, params *AgentsVersionsCurrentRetrieveParams, reqEditors ...RequestEditorFn) (*http.Response, error) {
 	req, err := NewAgentsVersionsCurrentRetrieveRequest(c.Server, agentId, params)
 	if err != nil {
@@ -1716,18 +1448,6 @@ func (c *Client) AgentsVersionsPartialUpdate(ctx context.Context, agentId openap
 	return c.Client.Do(req)
 }
 
-func (c *Client) AgentsVersionsPartialUpdateWithFormdataBody(ctx context.Context, agentId openapi_types.UUID, agentVersionId openapi_types.UUID, params *AgentsVersionsPartialUpdateParams, body AgentsVersionsPartialUpdateFormdataRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
-	req, err := NewAgentsVersionsPartialUpdateRequestWithFormdataBody(c.Server, agentId, agentVersionId, params, body)
-	if err != nil {
-		return nil, err
-	}
-	req = req.WithContext(ctx)
-	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
-		return nil, err
-	}
-	return c.Client.Do(req)
-}
-
 func (c *Client) AgentsVersionsUpdateWithBody(ctx context.Context, agentId openapi_types.UUID, agentVersionId openapi_types.UUID, params *AgentsVersionsUpdateParams, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error) {
 	req, err := NewAgentsVersionsUpdateRequestWithBody(c.Server, agentId, agentVersionId, params, contentType, body)
 	if err != nil {
@@ -1742,18 +1462,6 @@ func (c *Client) AgentsVersionsUpdateWithBody(ctx context.Context, agentId opena
 
 func (c *Client) AgentsVersionsUpdate(ctx context.Context, agentId openapi_types.UUID, agentVersionId openapi_types.UUID, params *AgentsVersionsUpdateParams, body AgentsVersionsUpdateJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
 	req, err := NewAgentsVersionsUpdateRequest(c.Server, agentId, agentVersionId, params, body)
-	if err != nil {
-		return nil, err
-	}
-	req = req.WithContext(ctx)
-	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
-		return nil, err
-	}
-	return c.Client.Do(req)
-}
-
-func (c *Client) AgentsVersionsUpdateWithFormdataBody(ctx context.Context, agentId openapi_types.UUID, agentVersionId openapi_types.UUID, params *AgentsVersionsUpdateParams, body AgentsVersionsUpdateFormdataRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
-	req, err := NewAgentsVersionsUpdateRequestWithFormdataBody(c.Server, agentId, agentVersionId, params, body)
 	if err != nil {
 		return nil, err
 	}
@@ -1790,18 +1498,6 @@ func (c *Client) PoliciesCreateWithBody(ctx context.Context, params *PoliciesCre
 
 func (c *Client) PoliciesCreate(ctx context.Context, params *PoliciesCreateParams, body PoliciesCreateJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
 	req, err := NewPoliciesCreateRequest(c.Server, params, body)
-	if err != nil {
-		return nil, err
-	}
-	req = req.WithContext(ctx)
-	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
-		return nil, err
-	}
-	return c.Client.Do(req)
-}
-
-func (c *Client) PoliciesCreateWithFormdataBody(ctx context.Context, params *PoliciesCreateParams, body PoliciesCreateFormdataRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
-	req, err := NewPoliciesCreateRequestWithFormdataBody(c.Server, params, body)
 	if err != nil {
 		return nil, err
 	}
@@ -1860,18 +1556,6 @@ func (c *Client) PoliciesPartialUpdate(ctx context.Context, id openapi_types.UUI
 	return c.Client.Do(req)
 }
 
-func (c *Client) PoliciesPartialUpdateWithFormdataBody(ctx context.Context, id openapi_types.UUID, params *PoliciesPartialUpdateParams, body PoliciesPartialUpdateFormdataRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
-	req, err := NewPoliciesPartialUpdateRequestWithFormdataBody(c.Server, id, params, body)
-	if err != nil {
-		return nil, err
-	}
-	req = req.WithContext(ctx)
-	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
-		return nil, err
-	}
-	return c.Client.Do(req)
-}
-
 func (c *Client) PoliciesUpdateWithBody(ctx context.Context, id openapi_types.UUID, params *PoliciesUpdateParams, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error) {
 	req, err := NewPoliciesUpdateRequestWithBody(c.Server, id, params, contentType, body)
 	if err != nil {
@@ -1886,18 +1570,6 @@ func (c *Client) PoliciesUpdateWithBody(ctx context.Context, id openapi_types.UU
 
 func (c *Client) PoliciesUpdate(ctx context.Context, id openapi_types.UUID, params *PoliciesUpdateParams, body PoliciesUpdateJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
 	req, err := NewPoliciesUpdateRequest(c.Server, id, params, body)
-	if err != nil {
-		return nil, err
-	}
-	req = req.WithContext(ctx)
-	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
-		return nil, err
-	}
-	return c.Client.Do(req)
-}
-
-func (c *Client) PoliciesUpdateWithFormdataBody(ctx context.Context, id openapi_types.UUID, params *PoliciesUpdateParams, body PoliciesUpdateFormdataRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
-	req, err := NewPoliciesUpdateRequestWithFormdataBody(c.Server, id, params, body)
 	if err != nil {
 		return nil, err
 	}
@@ -1934,18 +1606,6 @@ func (c *Client) PoliciesVersionsCreateWithBody(ctx context.Context, policyId op
 
 func (c *Client) PoliciesVersionsCreate(ctx context.Context, policyId openapi_types.UUID, params *PoliciesVersionsCreateParams, body PoliciesVersionsCreateJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
 	req, err := NewPoliciesVersionsCreateRequest(c.Server, policyId, params, body)
-	if err != nil {
-		return nil, err
-	}
-	req = req.WithContext(ctx)
-	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
-		return nil, err
-	}
-	return c.Client.Do(req)
-}
-
-func (c *Client) PoliciesVersionsCreateWithFormdataBody(ctx context.Context, policyId openapi_types.UUID, params *PoliciesVersionsCreateParams, body PoliciesVersionsCreateFormdataRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
-	req, err := NewPoliciesVersionsCreateRequestWithFormdataBody(c.Server, policyId, params, body)
 	if err != nil {
 		return nil, err
 	}
@@ -2164,17 +1824,6 @@ func NewAgentsCreateRequest(server string, params *AgentsCreateParams, body Agen
 	return NewAgentsCreateRequestWithBody(server, params, "application/json", bodyReader)
 }
 
-// NewAgentsCreateRequestWithFormdataBody calls the generic AgentsCreate builder with application/x-www-form-urlencoded body
-func NewAgentsCreateRequestWithFormdataBody(server string, params *AgentsCreateParams, body AgentsCreateFormdataRequestBody) (*http.Request, error) {
-	var bodyReader io.Reader
-	bodyStr, err := runtime.MarshalForm(body, nil)
-	if err != nil {
-		return nil, err
-	}
-	bodyReader = strings.NewReader(bodyStr.Encode())
-	return NewAgentsCreateRequestWithBody(server, params, "application/x-www-form-urlencoded", bodyReader)
-}
-
 // NewAgentsCreateRequestWithBody generates requests for AgentsCreate with any type of body
 func NewAgentsCreateRequestWithBody(server string, params *AgentsCreateParams, contentType string, body io.Reader) (*http.Request, error) {
 	var err error
@@ -2237,17 +1886,6 @@ func NewAgentsJobsResultsCreateRequest(server string, params *AgentsJobsResultsC
 	return NewAgentsJobsResultsCreateRequestWithBody(server, params, "application/json", bodyReader)
 }
 
-// NewAgentsJobsResultsCreateRequestWithFormdataBody calls the generic AgentsJobsResultsCreate builder with application/x-www-form-urlencoded body
-func NewAgentsJobsResultsCreateRequestWithFormdataBody(server string, params *AgentsJobsResultsCreateParams, body AgentsJobsResultsCreateFormdataRequestBody) (*http.Request, error) {
-	var bodyReader io.Reader
-	bodyStr, err := runtime.MarshalForm(body, nil)
-	if err != nil {
-		return nil, err
-	}
-	bodyReader = strings.NewReader(bodyStr.Encode())
-	return NewAgentsJobsResultsCreateRequestWithBody(server, params, "application/x-www-form-urlencoded", bodyReader)
-}
-
 // NewAgentsJobsResultsCreateRequestWithBody generates requests for AgentsJobsResultsCreate with any type of body
 func NewAgentsJobsResultsCreateRequestWithBody(server string, params *AgentsJobsResultsCreateParams, contentType string, body io.Reader) (*http.Request, error) {
 	var err error
@@ -2308,17 +1946,6 @@ func NewAgentsJobsStatusesCreateRequest(server string, params *AgentsJobsStatuse
 	}
 	bodyReader = bytes.NewReader(buf)
 	return NewAgentsJobsStatusesCreateRequestWithBody(server, params, "application/json", bodyReader)
-}
-
-// NewAgentsJobsStatusesCreateRequestWithFormdataBody calls the generic AgentsJobsStatusesCreate builder with application/x-www-form-urlencoded body
-func NewAgentsJobsStatusesCreateRequestWithFormdataBody(server string, params *AgentsJobsStatusesCreateParams, body AgentsJobsStatusesCreateFormdataRequestBody) (*http.Request, error) {
-	var bodyReader io.Reader
-	bodyStr, err := runtime.MarshalForm(body, nil)
-	if err != nil {
-		return nil, err
-	}
-	bodyReader = strings.NewReader(bodyStr.Encode())
-	return NewAgentsJobsStatusesCreateRequestWithBody(server, params, "application/x-www-form-urlencoded", bodyReader)
 }
 
 // NewAgentsJobsStatusesCreateRequestWithBody generates requests for AgentsJobsStatusesCreate with any type of body
@@ -2670,17 +2297,6 @@ func NewAgentsRunRequest(server string, agentId openapi_types.UUID, params *Agen
 	return NewAgentsRunRequestWithBody(server, agentId, params, "application/json", bodyReader)
 }
 
-// NewAgentsRunRequestWithFormdataBody calls the generic AgentsRun builder with application/x-www-form-urlencoded body
-func NewAgentsRunRequestWithFormdataBody(server string, agentId openapi_types.UUID, params *AgentsRunParams, body AgentsRunFormdataRequestBody) (*http.Request, error) {
-	var bodyReader io.Reader
-	bodyStr, err := runtime.MarshalForm(body, nil)
-	if err != nil {
-		return nil, err
-	}
-	bodyReader = strings.NewReader(bodyStr.Encode())
-	return NewAgentsRunRequestWithBody(server, agentId, params, "application/x-www-form-urlencoded", bodyReader)
-}
-
 // NewAgentsRunRequestWithBody generates requests for AgentsRun with any type of body
 func NewAgentsRunRequestWithBody(server string, agentId openapi_types.UUID, params *AgentsRunParams, contentType string, body io.Reader) (*http.Request, error) {
 	var err error
@@ -2748,17 +2364,6 @@ func NewAgentsRunAsyncCreateRequest(server string, agentId openapi_types.UUID, p
 	}
 	bodyReader = bytes.NewReader(buf)
 	return NewAgentsRunAsyncCreateRequestWithBody(server, agentId, params, "application/json", bodyReader)
-}
-
-// NewAgentsRunAsyncCreateRequestWithFormdataBody calls the generic AgentsRunAsyncCreate builder with application/x-www-form-urlencoded body
-func NewAgentsRunAsyncCreateRequestWithFormdataBody(server string, agentId openapi_types.UUID, params *AgentsRunAsyncCreateParams, body AgentsRunAsyncCreateFormdataRequestBody) (*http.Request, error) {
-	var bodyReader io.Reader
-	bodyStr, err := runtime.MarshalForm(body, nil)
-	if err != nil {
-		return nil, err
-	}
-	bodyReader = strings.NewReader(bodyStr.Encode())
-	return NewAgentsRunAsyncCreateRequestWithBody(server, agentId, params, "application/x-www-form-urlencoded", bodyReader)
 }
 
 // NewAgentsRunAsyncCreateRequestWithBody generates requests for AgentsRunAsyncCreate with any type of body
@@ -2830,17 +2435,6 @@ func NewAgentsRunAsyncManyRequest(server string, agentId openapi_types.UUID, par
 	return NewAgentsRunAsyncManyRequestWithBody(server, agentId, params, "application/json", bodyReader)
 }
 
-// NewAgentsRunAsyncManyRequestWithFormdataBody calls the generic AgentsRunAsyncMany builder with application/x-www-form-urlencoded body
-func NewAgentsRunAsyncManyRequestWithFormdataBody(server string, agentId openapi_types.UUID, params *AgentsRunAsyncManyParams, body AgentsRunAsyncManyFormdataRequestBody) (*http.Request, error) {
-	var bodyReader io.Reader
-	bodyStr, err := runtime.MarshalForm(body, nil)
-	if err != nil {
-		return nil, err
-	}
-	bodyReader = strings.NewReader(bodyStr.Encode())
-	return NewAgentsRunAsyncManyRequestWithBody(server, agentId, params, "application/x-www-form-urlencoded", bodyReader)
-}
-
 // NewAgentsRunAsyncManyRequestWithBody generates requests for AgentsRunAsyncMany with any type of body
 func NewAgentsRunAsyncManyRequestWithBody(server string, agentId openapi_types.UUID, params *AgentsRunAsyncManyParams, contentType string, body io.Reader) (*http.Request, error) {
 	var err error
@@ -2908,17 +2502,6 @@ func NewAgentsRunVersionRequest(server string, agentId openapi_types.UUID, agent
 	}
 	bodyReader = bytes.NewReader(buf)
 	return NewAgentsRunVersionRequestWithBody(server, agentId, agentVersionId, params, "application/json", bodyReader)
-}
-
-// NewAgentsRunVersionRequestWithFormdataBody calls the generic AgentsRunVersion builder with application/x-www-form-urlencoded body
-func NewAgentsRunVersionRequestWithFormdataBody(server string, agentId openapi_types.UUID, agentVersionId openapi_types.UUID, params *AgentsRunVersionParams, body AgentsRunVersionFormdataRequestBody) (*http.Request, error) {
-	var bodyReader io.Reader
-	bodyStr, err := runtime.MarshalForm(body, nil)
-	if err != nil {
-		return nil, err
-	}
-	bodyReader = strings.NewReader(bodyStr.Encode())
-	return NewAgentsRunVersionRequestWithBody(server, agentId, agentVersionId, params, "application/x-www-form-urlencoded", bodyReader)
 }
 
 // NewAgentsRunVersionRequestWithBody generates requests for AgentsRunVersion with any type of body
@@ -2995,17 +2578,6 @@ func NewAgentsRunVersionsAsyncCreateRequest(server string, agentId openapi_types
 	}
 	bodyReader = bytes.NewReader(buf)
 	return NewAgentsRunVersionsAsyncCreateRequestWithBody(server, agentId, agentVersionId, params, "application/json", bodyReader)
-}
-
-// NewAgentsRunVersionsAsyncCreateRequestWithFormdataBody calls the generic AgentsRunVersionsAsyncCreate builder with application/x-www-form-urlencoded body
-func NewAgentsRunVersionsAsyncCreateRequestWithFormdataBody(server string, agentId openapi_types.UUID, agentVersionId openapi_types.UUID, params *AgentsRunVersionsAsyncCreateParams, body AgentsRunVersionsAsyncCreateFormdataRequestBody) (*http.Request, error) {
-	var bodyReader io.Reader
-	bodyStr, err := runtime.MarshalForm(body, nil)
-	if err != nil {
-		return nil, err
-	}
-	bodyReader = strings.NewReader(bodyStr.Encode())
-	return NewAgentsRunVersionsAsyncCreateRequestWithBody(server, agentId, agentVersionId, params, "application/x-www-form-urlencoded", bodyReader)
 }
 
 // NewAgentsRunVersionsAsyncCreateRequestWithBody generates requests for AgentsRunVersionsAsyncCreate with any type of body
@@ -3196,17 +2768,6 @@ func NewAgentsPartialUpdateRequest(server string, agentId openapi_types.UUID, pa
 	return NewAgentsPartialUpdateRequestWithBody(server, agentId, params, "application/json", bodyReader)
 }
 
-// NewAgentsPartialUpdateRequestWithFormdataBody calls the generic AgentsPartialUpdate builder with application/x-www-form-urlencoded body
-func NewAgentsPartialUpdateRequestWithFormdataBody(server string, agentId openapi_types.UUID, params *AgentsPartialUpdateParams, body AgentsPartialUpdateFormdataRequestBody) (*http.Request, error) {
-	var bodyReader io.Reader
-	bodyStr, err := runtime.MarshalForm(body, nil)
-	if err != nil {
-		return nil, err
-	}
-	bodyReader = strings.NewReader(bodyStr.Encode())
-	return NewAgentsPartialUpdateRequestWithBody(server, agentId, params, "application/x-www-form-urlencoded", bodyReader)
-}
-
 // NewAgentsPartialUpdateRequestWithBody generates requests for AgentsPartialUpdate with any type of body
 func NewAgentsPartialUpdateRequestWithBody(server string, agentId openapi_types.UUID, params *AgentsPartialUpdateParams, contentType string, body io.Reader) (*http.Request, error) {
 	var err error
@@ -3274,17 +2835,6 @@ func NewAgentsUpdateRequest(server string, agentId openapi_types.UUID, params *A
 	}
 	bodyReader = bytes.NewReader(buf)
 	return NewAgentsUpdateRequestWithBody(server, agentId, params, "application/json", bodyReader)
-}
-
-// NewAgentsUpdateRequestWithFormdataBody calls the generic AgentsUpdate builder with application/x-www-form-urlencoded body
-func NewAgentsUpdateRequestWithFormdataBody(server string, agentId openapi_types.UUID, params *AgentsUpdateParams, body AgentsUpdateFormdataRequestBody) (*http.Request, error) {
-	var bodyReader io.Reader
-	bodyStr, err := runtime.MarshalForm(body, nil)
-	if err != nil {
-		return nil, err
-	}
-	bodyReader = strings.NewReader(bodyStr.Encode())
-	return NewAgentsUpdateRequestWithBody(server, agentId, params, "application/x-www-form-urlencoded", bodyReader)
 }
 
 // NewAgentsUpdateRequestWithBody generates requests for AgentsUpdate with any type of body
@@ -3522,17 +3072,6 @@ func NewAgentsVersionsCreateRequest(server string, agentId openapi_types.UUID, p
 	}
 	bodyReader = bytes.NewReader(buf)
 	return NewAgentsVersionsCreateRequestWithBody(server, agentId, params, "application/json", bodyReader)
-}
-
-// NewAgentsVersionsCreateRequestWithFormdataBody calls the generic AgentsVersionsCreate builder with application/x-www-form-urlencoded body
-func NewAgentsVersionsCreateRequestWithFormdataBody(server string, agentId openapi_types.UUID, params *AgentsVersionsCreateParams, body AgentsVersionsCreateFormdataRequestBody) (*http.Request, error) {
-	var bodyReader io.Reader
-	bodyStr, err := runtime.MarshalForm(body, nil)
-	if err != nil {
-		return nil, err
-	}
-	bodyReader = strings.NewReader(bodyStr.Encode())
-	return NewAgentsVersionsCreateRequestWithBody(server, agentId, params, "application/x-www-form-urlencoded", bodyReader)
 }
 
 // NewAgentsVersionsCreateRequestWithBody generates requests for AgentsVersionsCreate with any type of body
@@ -3818,17 +3357,6 @@ func NewAgentsVersionsPartialUpdateRequest(server string, agentId openapi_types.
 	return NewAgentsVersionsPartialUpdateRequestWithBody(server, agentId, agentVersionId, params, "application/json", bodyReader)
 }
 
-// NewAgentsVersionsPartialUpdateRequestWithFormdataBody calls the generic AgentsVersionsPartialUpdate builder with application/x-www-form-urlencoded body
-func NewAgentsVersionsPartialUpdateRequestWithFormdataBody(server string, agentId openapi_types.UUID, agentVersionId openapi_types.UUID, params *AgentsVersionsPartialUpdateParams, body AgentsVersionsPartialUpdateFormdataRequestBody) (*http.Request, error) {
-	var bodyReader io.Reader
-	bodyStr, err := runtime.MarshalForm(body, nil)
-	if err != nil {
-		return nil, err
-	}
-	bodyReader = strings.NewReader(bodyStr.Encode())
-	return NewAgentsVersionsPartialUpdateRequestWithBody(server, agentId, agentVersionId, params, "application/x-www-form-urlencoded", bodyReader)
-}
-
 // NewAgentsVersionsPartialUpdateRequestWithBody generates requests for AgentsVersionsPartialUpdate with any type of body
 func NewAgentsVersionsPartialUpdateRequestWithBody(server string, agentId openapi_types.UUID, agentVersionId openapi_types.UUID, params *AgentsVersionsPartialUpdateParams, contentType string, body io.Reader) (*http.Request, error) {
 	var err error
@@ -3903,17 +3431,6 @@ func NewAgentsVersionsUpdateRequest(server string, agentId openapi_types.UUID, a
 	}
 	bodyReader = bytes.NewReader(buf)
 	return NewAgentsVersionsUpdateRequestWithBody(server, agentId, agentVersionId, params, "application/json", bodyReader)
-}
-
-// NewAgentsVersionsUpdateRequestWithFormdataBody calls the generic AgentsVersionsUpdate builder with application/x-www-form-urlencoded body
-func NewAgentsVersionsUpdateRequestWithFormdataBody(server string, agentId openapi_types.UUID, agentVersionId openapi_types.UUID, params *AgentsVersionsUpdateParams, body AgentsVersionsUpdateFormdataRequestBody) (*http.Request, error) {
-	var bodyReader io.Reader
-	bodyStr, err := runtime.MarshalForm(body, nil)
-	if err != nil {
-		return nil, err
-	}
-	bodyReader = strings.NewReader(bodyStr.Encode())
-	return NewAgentsVersionsUpdateRequestWithBody(server, agentId, agentVersionId, params, "application/x-www-form-urlencoded", bodyReader)
 }
 
 // NewAgentsVersionsUpdateRequestWithBody generates requests for AgentsVersionsUpdate with any type of body
@@ -4105,17 +3622,6 @@ func NewPoliciesCreateRequest(server string, params *PoliciesCreateParams, body 
 	return NewPoliciesCreateRequestWithBody(server, params, "application/json", bodyReader)
 }
 
-// NewPoliciesCreateRequestWithFormdataBody calls the generic PoliciesCreate builder with application/x-www-form-urlencoded body
-func NewPoliciesCreateRequestWithFormdataBody(server string, params *PoliciesCreateParams, body PoliciesCreateFormdataRequestBody) (*http.Request, error) {
-	var bodyReader io.Reader
-	bodyStr, err := runtime.MarshalForm(body, nil)
-	if err != nil {
-		return nil, err
-	}
-	bodyReader = strings.NewReader(bodyStr.Encode())
-	return NewPoliciesCreateRequestWithBody(server, params, "application/x-www-form-urlencoded", bodyReader)
-}
-
 // NewPoliciesCreateRequestWithBody generates requests for PoliciesCreate with any type of body
 func NewPoliciesCreateRequestWithBody(server string, params *PoliciesCreateParams, contentType string, body io.Reader) (*http.Request, error) {
 	var err error
@@ -4290,17 +3796,6 @@ func NewPoliciesPartialUpdateRequest(server string, id openapi_types.UUID, param
 	return NewPoliciesPartialUpdateRequestWithBody(server, id, params, "application/json", bodyReader)
 }
 
-// NewPoliciesPartialUpdateRequestWithFormdataBody calls the generic PoliciesPartialUpdate builder with application/x-www-form-urlencoded body
-func NewPoliciesPartialUpdateRequestWithFormdataBody(server string, id openapi_types.UUID, params *PoliciesPartialUpdateParams, body PoliciesPartialUpdateFormdataRequestBody) (*http.Request, error) {
-	var bodyReader io.Reader
-	bodyStr, err := runtime.MarshalForm(body, nil)
-	if err != nil {
-		return nil, err
-	}
-	bodyReader = strings.NewReader(bodyStr.Encode())
-	return NewPoliciesPartialUpdateRequestWithBody(server, id, params, "application/x-www-form-urlencoded", bodyReader)
-}
-
 // NewPoliciesPartialUpdateRequestWithBody generates requests for PoliciesPartialUpdate with any type of body
 func NewPoliciesPartialUpdateRequestWithBody(server string, id openapi_types.UUID, params *PoliciesPartialUpdateParams, contentType string, body io.Reader) (*http.Request, error) {
 	var err error
@@ -4368,17 +3863,6 @@ func NewPoliciesUpdateRequest(server string, id openapi_types.UUID, params *Poli
 	}
 	bodyReader = bytes.NewReader(buf)
 	return NewPoliciesUpdateRequestWithBody(server, id, params, "application/json", bodyReader)
-}
-
-// NewPoliciesUpdateRequestWithFormdataBody calls the generic PoliciesUpdate builder with application/x-www-form-urlencoded body
-func NewPoliciesUpdateRequestWithFormdataBody(server string, id openapi_types.UUID, params *PoliciesUpdateParams, body PoliciesUpdateFormdataRequestBody) (*http.Request, error) {
-	var bodyReader io.Reader
-	bodyStr, err := runtime.MarshalForm(body, nil)
-	if err != nil {
-		return nil, err
-	}
-	bodyReader = strings.NewReader(bodyStr.Encode())
-	return NewPoliciesUpdateRequestWithBody(server, id, params, "application/x-www-form-urlencoded", bodyReader)
 }
 
 // NewPoliciesUpdateRequestWithBody generates requests for PoliciesUpdate with any type of body
@@ -4536,17 +4020,6 @@ func NewPoliciesVersionsCreateRequest(server string, policyId openapi_types.UUID
 	}
 	bodyReader = bytes.NewReader(buf)
 	return NewPoliciesVersionsCreateRequestWithBody(server, policyId, params, "application/json", bodyReader)
-}
-
-// NewPoliciesVersionsCreateRequestWithFormdataBody calls the generic PoliciesVersionsCreate builder with application/x-www-form-urlencoded body
-func NewPoliciesVersionsCreateRequestWithFormdataBody(server string, policyId openapi_types.UUID, params *PoliciesVersionsCreateParams, body PoliciesVersionsCreateFormdataRequestBody) (*http.Request, error) {
-	var bodyReader io.Reader
-	bodyStr, err := runtime.MarshalForm(body, nil)
-	if err != nil {
-		return nil, err
-	}
-	bodyReader = strings.NewReader(bodyStr.Encode())
-	return NewPoliciesVersionsCreateRequestWithBody(server, policyId, params, "application/x-www-form-urlencoded", bodyReader)
 }
 
 // NewPoliciesVersionsCreateRequestWithBody generates requests for PoliciesVersionsCreate with any type of body
@@ -4748,21 +4221,15 @@ type ClientWithResponsesInterface interface {
 
 	AgentsCreateWithResponse(ctx context.Context, params *AgentsCreateParams, body AgentsCreateJSONRequestBody, reqEditors ...RequestEditorFn) (*AgentsCreateResponse, error)
 
-	AgentsCreateWithFormdataBodyWithResponse(ctx context.Context, params *AgentsCreateParams, body AgentsCreateFormdataRequestBody, reqEditors ...RequestEditorFn) (*AgentsCreateResponse, error)
-
 	// AgentsJobsResultsCreateWithBodyWithResponse request with any body
 	AgentsJobsResultsCreateWithBodyWithResponse(ctx context.Context, params *AgentsJobsResultsCreateParams, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*AgentsJobsResultsCreateResponse, error)
 
 	AgentsJobsResultsCreateWithResponse(ctx context.Context, params *AgentsJobsResultsCreateParams, body AgentsJobsResultsCreateJSONRequestBody, reqEditors ...RequestEditorFn) (*AgentsJobsResultsCreateResponse, error)
 
-	AgentsJobsResultsCreateWithFormdataBodyWithResponse(ctx context.Context, params *AgentsJobsResultsCreateParams, body AgentsJobsResultsCreateFormdataRequestBody, reqEditors ...RequestEditorFn) (*AgentsJobsResultsCreateResponse, error)
-
 	// AgentsJobsStatusesCreateWithBodyWithResponse request with any body
 	AgentsJobsStatusesCreateWithBodyWithResponse(ctx context.Context, params *AgentsJobsStatusesCreateParams, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*AgentsJobsStatusesCreateResponse, error)
 
 	AgentsJobsStatusesCreateWithResponse(ctx context.Context, params *AgentsJobsStatusesCreateParams, body AgentsJobsStatusesCreateJSONRequestBody, reqEditors ...RequestEditorFn) (*AgentsJobsStatusesCreateResponse, error)
-
-	AgentsJobsStatusesCreateWithFormdataBodyWithResponse(ctx context.Context, params *AgentsJobsStatusesCreateParams, body AgentsJobsStatusesCreateFormdataRequestBody, reqEditors ...RequestEditorFn) (*AgentsJobsStatusesCreateResponse, error)
 
 	// AgentsJobsReferencesRetrieveWithResponse request
 	AgentsJobsReferencesRetrieveWithResponse(ctx context.Context, agentJobId openapi_types.UUID, resourceId string, params *AgentsJobsReferencesRetrieveParams, reqEditors ...RequestEditorFn) (*AgentsJobsReferencesRetrieveResponse, error)
@@ -4784,35 +4251,25 @@ type ClientWithResponsesInterface interface {
 
 	AgentsRunWithResponse(ctx context.Context, agentId openapi_types.UUID, params *AgentsRunParams, body AgentsRunJSONRequestBody, reqEditors ...RequestEditorFn) (*AgentsRunResponse, error)
 
-	AgentsRunWithFormdataBodyWithResponse(ctx context.Context, agentId openapi_types.UUID, params *AgentsRunParams, body AgentsRunFormdataRequestBody, reqEditors ...RequestEditorFn) (*AgentsRunResponse, error)
-
 	// AgentsRunAsyncCreateWithBodyWithResponse request with any body
 	AgentsRunAsyncCreateWithBodyWithResponse(ctx context.Context, agentId openapi_types.UUID, params *AgentsRunAsyncCreateParams, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*AgentsRunAsyncCreateResponse, error)
 
 	AgentsRunAsyncCreateWithResponse(ctx context.Context, agentId openapi_types.UUID, params *AgentsRunAsyncCreateParams, body AgentsRunAsyncCreateJSONRequestBody, reqEditors ...RequestEditorFn) (*AgentsRunAsyncCreateResponse, error)
-
-	AgentsRunAsyncCreateWithFormdataBodyWithResponse(ctx context.Context, agentId openapi_types.UUID, params *AgentsRunAsyncCreateParams, body AgentsRunAsyncCreateFormdataRequestBody, reqEditors ...RequestEditorFn) (*AgentsRunAsyncCreateResponse, error)
 
 	// AgentsRunAsyncManyWithBodyWithResponse request with any body
 	AgentsRunAsyncManyWithBodyWithResponse(ctx context.Context, agentId openapi_types.UUID, params *AgentsRunAsyncManyParams, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*AgentsRunAsyncManyResponse, error)
 
 	AgentsRunAsyncManyWithResponse(ctx context.Context, agentId openapi_types.UUID, params *AgentsRunAsyncManyParams, body AgentsRunAsyncManyJSONRequestBody, reqEditors ...RequestEditorFn) (*AgentsRunAsyncManyResponse, error)
 
-	AgentsRunAsyncManyWithFormdataBodyWithResponse(ctx context.Context, agentId openapi_types.UUID, params *AgentsRunAsyncManyParams, body AgentsRunAsyncManyFormdataRequestBody, reqEditors ...RequestEditorFn) (*AgentsRunAsyncManyResponse, error)
-
 	// AgentsRunVersionWithBodyWithResponse request with any body
 	AgentsRunVersionWithBodyWithResponse(ctx context.Context, agentId openapi_types.UUID, agentVersionId openapi_types.UUID, params *AgentsRunVersionParams, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*AgentsRunVersionResponse, error)
 
 	AgentsRunVersionWithResponse(ctx context.Context, agentId openapi_types.UUID, agentVersionId openapi_types.UUID, params *AgentsRunVersionParams, body AgentsRunVersionJSONRequestBody, reqEditors ...RequestEditorFn) (*AgentsRunVersionResponse, error)
 
-	AgentsRunVersionWithFormdataBodyWithResponse(ctx context.Context, agentId openapi_types.UUID, agentVersionId openapi_types.UUID, params *AgentsRunVersionParams, body AgentsRunVersionFormdataRequestBody, reqEditors ...RequestEditorFn) (*AgentsRunVersionResponse, error)
-
 	// AgentsRunVersionsAsyncCreateWithBodyWithResponse request with any body
 	AgentsRunVersionsAsyncCreateWithBodyWithResponse(ctx context.Context, agentId openapi_types.UUID, agentVersionId openapi_types.UUID, params *AgentsRunVersionsAsyncCreateParams, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*AgentsRunVersionsAsyncCreateResponse, error)
 
 	AgentsRunVersionsAsyncCreateWithResponse(ctx context.Context, agentId openapi_types.UUID, agentVersionId openapi_types.UUID, params *AgentsRunVersionsAsyncCreateParams, body AgentsRunVersionsAsyncCreateJSONRequestBody, reqEditors ...RequestEditorFn) (*AgentsRunVersionsAsyncCreateResponse, error)
-
-	AgentsRunVersionsAsyncCreateWithFormdataBodyWithResponse(ctx context.Context, agentId openapi_types.UUID, agentVersionId openapi_types.UUID, params *AgentsRunVersionsAsyncCreateParams, body AgentsRunVersionsAsyncCreateFormdataRequestBody, reqEditors ...RequestEditorFn) (*AgentsRunVersionsAsyncCreateResponse, error)
 
 	// AgentsDestroyWithResponse request
 	AgentsDestroyWithResponse(ctx context.Context, agentId openapi_types.UUID, params *AgentsDestroyParams, reqEditors ...RequestEditorFn) (*AgentsDestroyResponse, error)
@@ -4825,14 +4282,10 @@ type ClientWithResponsesInterface interface {
 
 	AgentsPartialUpdateWithResponse(ctx context.Context, agentId openapi_types.UUID, params *AgentsPartialUpdateParams, body AgentsPartialUpdateJSONRequestBody, reqEditors ...RequestEditorFn) (*AgentsPartialUpdateResponse, error)
 
-	AgentsPartialUpdateWithFormdataBodyWithResponse(ctx context.Context, agentId openapi_types.UUID, params *AgentsPartialUpdateParams, body AgentsPartialUpdateFormdataRequestBody, reqEditors ...RequestEditorFn) (*AgentsPartialUpdateResponse, error)
-
 	// AgentsUpdateWithBodyWithResponse request with any body
 	AgentsUpdateWithBodyWithResponse(ctx context.Context, agentId openapi_types.UUID, params *AgentsUpdateParams, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*AgentsUpdateResponse, error)
 
 	AgentsUpdateWithResponse(ctx context.Context, agentId openapi_types.UUID, params *AgentsUpdateParams, body AgentsUpdateJSONRequestBody, reqEditors ...RequestEditorFn) (*AgentsUpdateResponse, error)
-
-	AgentsUpdateWithFormdataBodyWithResponse(ctx context.Context, agentId openapi_types.UUID, params *AgentsUpdateParams, body AgentsUpdateFormdataRequestBody, reqEditors ...RequestEditorFn) (*AgentsUpdateResponse, error)
 
 	// AgentsDuplicateCreateWithResponse request
 	AgentsDuplicateCreateWithResponse(ctx context.Context, agentId openapi_types.UUID, params *AgentsDuplicateCreateParams, reqEditors ...RequestEditorFn) (*AgentsDuplicateCreateResponse, error)
@@ -4848,8 +4301,6 @@ type ClientWithResponsesInterface interface {
 
 	AgentsVersionsCreateWithResponse(ctx context.Context, agentId openapi_types.UUID, params *AgentsVersionsCreateParams, body AgentsVersionsCreateJSONRequestBody, reqEditors ...RequestEditorFn) (*AgentsVersionsCreateResponse, error)
 
-	AgentsVersionsCreateWithFormdataBodyWithResponse(ctx context.Context, agentId openapi_types.UUID, params *AgentsVersionsCreateParams, body AgentsVersionsCreateFormdataRequestBody, reqEditors ...RequestEditorFn) (*AgentsVersionsCreateResponse, error)
-
 	// AgentsVersionsCurrentRetrieveWithResponse request
 	AgentsVersionsCurrentRetrieveWithResponse(ctx context.Context, agentId openapi_types.UUID, params *AgentsVersionsCurrentRetrieveParams, reqEditors ...RequestEditorFn) (*AgentsVersionsCurrentRetrieveResponse, error)
 
@@ -4864,14 +4315,10 @@ type ClientWithResponsesInterface interface {
 
 	AgentsVersionsPartialUpdateWithResponse(ctx context.Context, agentId openapi_types.UUID, agentVersionId openapi_types.UUID, params *AgentsVersionsPartialUpdateParams, body AgentsVersionsPartialUpdateJSONRequestBody, reqEditors ...RequestEditorFn) (*AgentsVersionsPartialUpdateResponse, error)
 
-	AgentsVersionsPartialUpdateWithFormdataBodyWithResponse(ctx context.Context, agentId openapi_types.UUID, agentVersionId openapi_types.UUID, params *AgentsVersionsPartialUpdateParams, body AgentsVersionsPartialUpdateFormdataRequestBody, reqEditors ...RequestEditorFn) (*AgentsVersionsPartialUpdateResponse, error)
-
 	// AgentsVersionsUpdateWithBodyWithResponse request with any body
 	AgentsVersionsUpdateWithBodyWithResponse(ctx context.Context, agentId openapi_types.UUID, agentVersionId openapi_types.UUID, params *AgentsVersionsUpdateParams, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*AgentsVersionsUpdateResponse, error)
 
 	AgentsVersionsUpdateWithResponse(ctx context.Context, agentId openapi_types.UUID, agentVersionId openapi_types.UUID, params *AgentsVersionsUpdateParams, body AgentsVersionsUpdateJSONRequestBody, reqEditors ...RequestEditorFn) (*AgentsVersionsUpdateResponse, error)
-
-	AgentsVersionsUpdateWithFormdataBodyWithResponse(ctx context.Context, agentId openapi_types.UUID, agentVersionId openapi_types.UUID, params *AgentsVersionsUpdateParams, body AgentsVersionsUpdateFormdataRequestBody, reqEditors ...RequestEditorFn) (*AgentsVersionsUpdateResponse, error)
 
 	// PoliciesListWithResponse request
 	PoliciesListWithResponse(ctx context.Context, params *PoliciesListParams, reqEditors ...RequestEditorFn) (*PoliciesListResponse, error)
@@ -4880,8 +4327,6 @@ type ClientWithResponsesInterface interface {
 	PoliciesCreateWithBodyWithResponse(ctx context.Context, params *PoliciesCreateParams, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*PoliciesCreateResponse, error)
 
 	PoliciesCreateWithResponse(ctx context.Context, params *PoliciesCreateParams, body PoliciesCreateJSONRequestBody, reqEditors ...RequestEditorFn) (*PoliciesCreateResponse, error)
-
-	PoliciesCreateWithFormdataBodyWithResponse(ctx context.Context, params *PoliciesCreateParams, body PoliciesCreateFormdataRequestBody, reqEditors ...RequestEditorFn) (*PoliciesCreateResponse, error)
 
 	// PoliciesDestroyWithResponse request
 	PoliciesDestroyWithResponse(ctx context.Context, id openapi_types.UUID, params *PoliciesDestroyParams, reqEditors ...RequestEditorFn) (*PoliciesDestroyResponse, error)
@@ -4894,14 +4339,10 @@ type ClientWithResponsesInterface interface {
 
 	PoliciesPartialUpdateWithResponse(ctx context.Context, id openapi_types.UUID, params *PoliciesPartialUpdateParams, body PoliciesPartialUpdateJSONRequestBody, reqEditors ...RequestEditorFn) (*PoliciesPartialUpdateResponse, error)
 
-	PoliciesPartialUpdateWithFormdataBodyWithResponse(ctx context.Context, id openapi_types.UUID, params *PoliciesPartialUpdateParams, body PoliciesPartialUpdateFormdataRequestBody, reqEditors ...RequestEditorFn) (*PoliciesPartialUpdateResponse, error)
-
 	// PoliciesUpdateWithBodyWithResponse request with any body
 	PoliciesUpdateWithBodyWithResponse(ctx context.Context, id openapi_types.UUID, params *PoliciesUpdateParams, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*PoliciesUpdateResponse, error)
 
 	PoliciesUpdateWithResponse(ctx context.Context, id openapi_types.UUID, params *PoliciesUpdateParams, body PoliciesUpdateJSONRequestBody, reqEditors ...RequestEditorFn) (*PoliciesUpdateResponse, error)
-
-	PoliciesUpdateWithFormdataBodyWithResponse(ctx context.Context, id openapi_types.UUID, params *PoliciesUpdateParams, body PoliciesUpdateFormdataRequestBody, reqEditors ...RequestEditorFn) (*PoliciesUpdateResponse, error)
 
 	// PoliciesVersionsListWithResponse request
 	PoliciesVersionsListWithResponse(ctx context.Context, policyId openapi_types.UUID, params *PoliciesVersionsListParams, reqEditors ...RequestEditorFn) (*PoliciesVersionsListResponse, error)
@@ -4910,8 +4351,6 @@ type ClientWithResponsesInterface interface {
 	PoliciesVersionsCreateWithBodyWithResponse(ctx context.Context, policyId openapi_types.UUID, params *PoliciesVersionsCreateParams, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*PoliciesVersionsCreateResponse, error)
 
 	PoliciesVersionsCreateWithResponse(ctx context.Context, policyId openapi_types.UUID, params *PoliciesVersionsCreateParams, body PoliciesVersionsCreateJSONRequestBody, reqEditors ...RequestEditorFn) (*PoliciesVersionsCreateResponse, error)
-
-	PoliciesVersionsCreateWithFormdataBodyWithResponse(ctx context.Context, policyId openapi_types.UUID, params *PoliciesVersionsCreateParams, body PoliciesVersionsCreateFormdataRequestBody, reqEditors ...RequestEditorFn) (*PoliciesVersionsCreateResponse, error)
 
 	// PoliciesVersionsRetrieveWithResponse request
 	PoliciesVersionsRetrieveWithResponse(ctx context.Context, policyId openapi_types.UUID, versionId openapi_types.UUID, params *PoliciesVersionsRetrieveParams, reqEditors ...RequestEditorFn) (*PoliciesVersionsRetrieveResponse, error)
@@ -5823,14 +5262,6 @@ func (c *ClientWithResponses) AgentsCreateWithResponse(ctx context.Context, para
 	return ParseAgentsCreateResponse(rsp)
 }
 
-func (c *ClientWithResponses) AgentsCreateWithFormdataBodyWithResponse(ctx context.Context, params *AgentsCreateParams, body AgentsCreateFormdataRequestBody, reqEditors ...RequestEditorFn) (*AgentsCreateResponse, error) {
-	rsp, err := c.AgentsCreateWithFormdataBody(ctx, params, body, reqEditors...)
-	if err != nil {
-		return nil, err
-	}
-	return ParseAgentsCreateResponse(rsp)
-}
-
 // AgentsJobsResultsCreateWithBodyWithResponse request with arbitrary body returning *AgentsJobsResultsCreateResponse
 func (c *ClientWithResponses) AgentsJobsResultsCreateWithBodyWithResponse(ctx context.Context, params *AgentsJobsResultsCreateParams, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*AgentsJobsResultsCreateResponse, error) {
 	rsp, err := c.AgentsJobsResultsCreateWithBody(ctx, params, contentType, body, reqEditors...)
@@ -5848,14 +5279,6 @@ func (c *ClientWithResponses) AgentsJobsResultsCreateWithResponse(ctx context.Co
 	return ParseAgentsJobsResultsCreateResponse(rsp)
 }
 
-func (c *ClientWithResponses) AgentsJobsResultsCreateWithFormdataBodyWithResponse(ctx context.Context, params *AgentsJobsResultsCreateParams, body AgentsJobsResultsCreateFormdataRequestBody, reqEditors ...RequestEditorFn) (*AgentsJobsResultsCreateResponse, error) {
-	rsp, err := c.AgentsJobsResultsCreateWithFormdataBody(ctx, params, body, reqEditors...)
-	if err != nil {
-		return nil, err
-	}
-	return ParseAgentsJobsResultsCreateResponse(rsp)
-}
-
 // AgentsJobsStatusesCreateWithBodyWithResponse request with arbitrary body returning *AgentsJobsStatusesCreateResponse
 func (c *ClientWithResponses) AgentsJobsStatusesCreateWithBodyWithResponse(ctx context.Context, params *AgentsJobsStatusesCreateParams, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*AgentsJobsStatusesCreateResponse, error) {
 	rsp, err := c.AgentsJobsStatusesCreateWithBody(ctx, params, contentType, body, reqEditors...)
@@ -5867,14 +5290,6 @@ func (c *ClientWithResponses) AgentsJobsStatusesCreateWithBodyWithResponse(ctx c
 
 func (c *ClientWithResponses) AgentsJobsStatusesCreateWithResponse(ctx context.Context, params *AgentsJobsStatusesCreateParams, body AgentsJobsStatusesCreateJSONRequestBody, reqEditors ...RequestEditorFn) (*AgentsJobsStatusesCreateResponse, error) {
 	rsp, err := c.AgentsJobsStatusesCreate(ctx, params, body, reqEditors...)
-	if err != nil {
-		return nil, err
-	}
-	return ParseAgentsJobsStatusesCreateResponse(rsp)
-}
-
-func (c *ClientWithResponses) AgentsJobsStatusesCreateWithFormdataBodyWithResponse(ctx context.Context, params *AgentsJobsStatusesCreateParams, body AgentsJobsStatusesCreateFormdataRequestBody, reqEditors ...RequestEditorFn) (*AgentsJobsStatusesCreateResponse, error) {
-	rsp, err := c.AgentsJobsStatusesCreateWithFormdataBody(ctx, params, body, reqEditors...)
 	if err != nil {
 		return nil, err
 	}
@@ -5943,14 +5358,6 @@ func (c *ClientWithResponses) AgentsRunWithResponse(ctx context.Context, agentId
 	return ParseAgentsRunResponse(rsp)
 }
 
-func (c *ClientWithResponses) AgentsRunWithFormdataBodyWithResponse(ctx context.Context, agentId openapi_types.UUID, params *AgentsRunParams, body AgentsRunFormdataRequestBody, reqEditors ...RequestEditorFn) (*AgentsRunResponse, error) {
-	rsp, err := c.AgentsRunWithFormdataBody(ctx, agentId, params, body, reqEditors...)
-	if err != nil {
-		return nil, err
-	}
-	return ParseAgentsRunResponse(rsp)
-}
-
 // AgentsRunAsyncCreateWithBodyWithResponse request with arbitrary body returning *AgentsRunAsyncCreateResponse
 func (c *ClientWithResponses) AgentsRunAsyncCreateWithBodyWithResponse(ctx context.Context, agentId openapi_types.UUID, params *AgentsRunAsyncCreateParams, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*AgentsRunAsyncCreateResponse, error) {
 	rsp, err := c.AgentsRunAsyncCreateWithBody(ctx, agentId, params, contentType, body, reqEditors...)
@@ -5962,14 +5369,6 @@ func (c *ClientWithResponses) AgentsRunAsyncCreateWithBodyWithResponse(ctx conte
 
 func (c *ClientWithResponses) AgentsRunAsyncCreateWithResponse(ctx context.Context, agentId openapi_types.UUID, params *AgentsRunAsyncCreateParams, body AgentsRunAsyncCreateJSONRequestBody, reqEditors ...RequestEditorFn) (*AgentsRunAsyncCreateResponse, error) {
 	rsp, err := c.AgentsRunAsyncCreate(ctx, agentId, params, body, reqEditors...)
-	if err != nil {
-		return nil, err
-	}
-	return ParseAgentsRunAsyncCreateResponse(rsp)
-}
-
-func (c *ClientWithResponses) AgentsRunAsyncCreateWithFormdataBodyWithResponse(ctx context.Context, agentId openapi_types.UUID, params *AgentsRunAsyncCreateParams, body AgentsRunAsyncCreateFormdataRequestBody, reqEditors ...RequestEditorFn) (*AgentsRunAsyncCreateResponse, error) {
-	rsp, err := c.AgentsRunAsyncCreateWithFormdataBody(ctx, agentId, params, body, reqEditors...)
 	if err != nil {
 		return nil, err
 	}
@@ -5993,14 +5392,6 @@ func (c *ClientWithResponses) AgentsRunAsyncManyWithResponse(ctx context.Context
 	return ParseAgentsRunAsyncManyResponse(rsp)
 }
 
-func (c *ClientWithResponses) AgentsRunAsyncManyWithFormdataBodyWithResponse(ctx context.Context, agentId openapi_types.UUID, params *AgentsRunAsyncManyParams, body AgentsRunAsyncManyFormdataRequestBody, reqEditors ...RequestEditorFn) (*AgentsRunAsyncManyResponse, error) {
-	rsp, err := c.AgentsRunAsyncManyWithFormdataBody(ctx, agentId, params, body, reqEditors...)
-	if err != nil {
-		return nil, err
-	}
-	return ParseAgentsRunAsyncManyResponse(rsp)
-}
-
 // AgentsRunVersionWithBodyWithResponse request with arbitrary body returning *AgentsRunVersionResponse
 func (c *ClientWithResponses) AgentsRunVersionWithBodyWithResponse(ctx context.Context, agentId openapi_types.UUID, agentVersionId openapi_types.UUID, params *AgentsRunVersionParams, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*AgentsRunVersionResponse, error) {
 	rsp, err := c.AgentsRunVersionWithBody(ctx, agentId, agentVersionId, params, contentType, body, reqEditors...)
@@ -6018,14 +5409,6 @@ func (c *ClientWithResponses) AgentsRunVersionWithResponse(ctx context.Context, 
 	return ParseAgentsRunVersionResponse(rsp)
 }
 
-func (c *ClientWithResponses) AgentsRunVersionWithFormdataBodyWithResponse(ctx context.Context, agentId openapi_types.UUID, agentVersionId openapi_types.UUID, params *AgentsRunVersionParams, body AgentsRunVersionFormdataRequestBody, reqEditors ...RequestEditorFn) (*AgentsRunVersionResponse, error) {
-	rsp, err := c.AgentsRunVersionWithFormdataBody(ctx, agentId, agentVersionId, params, body, reqEditors...)
-	if err != nil {
-		return nil, err
-	}
-	return ParseAgentsRunVersionResponse(rsp)
-}
-
 // AgentsRunVersionsAsyncCreateWithBodyWithResponse request with arbitrary body returning *AgentsRunVersionsAsyncCreateResponse
 func (c *ClientWithResponses) AgentsRunVersionsAsyncCreateWithBodyWithResponse(ctx context.Context, agentId openapi_types.UUID, agentVersionId openapi_types.UUID, params *AgentsRunVersionsAsyncCreateParams, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*AgentsRunVersionsAsyncCreateResponse, error) {
 	rsp, err := c.AgentsRunVersionsAsyncCreateWithBody(ctx, agentId, agentVersionId, params, contentType, body, reqEditors...)
@@ -6037,14 +5420,6 @@ func (c *ClientWithResponses) AgentsRunVersionsAsyncCreateWithBodyWithResponse(c
 
 func (c *ClientWithResponses) AgentsRunVersionsAsyncCreateWithResponse(ctx context.Context, agentId openapi_types.UUID, agentVersionId openapi_types.UUID, params *AgentsRunVersionsAsyncCreateParams, body AgentsRunVersionsAsyncCreateJSONRequestBody, reqEditors ...RequestEditorFn) (*AgentsRunVersionsAsyncCreateResponse, error) {
 	rsp, err := c.AgentsRunVersionsAsyncCreate(ctx, agentId, agentVersionId, params, body, reqEditors...)
-	if err != nil {
-		return nil, err
-	}
-	return ParseAgentsRunVersionsAsyncCreateResponse(rsp)
-}
-
-func (c *ClientWithResponses) AgentsRunVersionsAsyncCreateWithFormdataBodyWithResponse(ctx context.Context, agentId openapi_types.UUID, agentVersionId openapi_types.UUID, params *AgentsRunVersionsAsyncCreateParams, body AgentsRunVersionsAsyncCreateFormdataRequestBody, reqEditors ...RequestEditorFn) (*AgentsRunVersionsAsyncCreateResponse, error) {
-	rsp, err := c.AgentsRunVersionsAsyncCreateWithFormdataBody(ctx, agentId, agentVersionId, params, body, reqEditors...)
 	if err != nil {
 		return nil, err
 	}
@@ -6086,14 +5461,6 @@ func (c *ClientWithResponses) AgentsPartialUpdateWithResponse(ctx context.Contex
 	return ParseAgentsPartialUpdateResponse(rsp)
 }
 
-func (c *ClientWithResponses) AgentsPartialUpdateWithFormdataBodyWithResponse(ctx context.Context, agentId openapi_types.UUID, params *AgentsPartialUpdateParams, body AgentsPartialUpdateFormdataRequestBody, reqEditors ...RequestEditorFn) (*AgentsPartialUpdateResponse, error) {
-	rsp, err := c.AgentsPartialUpdateWithFormdataBody(ctx, agentId, params, body, reqEditors...)
-	if err != nil {
-		return nil, err
-	}
-	return ParseAgentsPartialUpdateResponse(rsp)
-}
-
 // AgentsUpdateWithBodyWithResponse request with arbitrary body returning *AgentsUpdateResponse
 func (c *ClientWithResponses) AgentsUpdateWithBodyWithResponse(ctx context.Context, agentId openapi_types.UUID, params *AgentsUpdateParams, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*AgentsUpdateResponse, error) {
 	rsp, err := c.AgentsUpdateWithBody(ctx, agentId, params, contentType, body, reqEditors...)
@@ -6105,14 +5472,6 @@ func (c *ClientWithResponses) AgentsUpdateWithBodyWithResponse(ctx context.Conte
 
 func (c *ClientWithResponses) AgentsUpdateWithResponse(ctx context.Context, agentId openapi_types.UUID, params *AgentsUpdateParams, body AgentsUpdateJSONRequestBody, reqEditors ...RequestEditorFn) (*AgentsUpdateResponse, error) {
 	rsp, err := c.AgentsUpdate(ctx, agentId, params, body, reqEditors...)
-	if err != nil {
-		return nil, err
-	}
-	return ParseAgentsUpdateResponse(rsp)
-}
-
-func (c *ClientWithResponses) AgentsUpdateWithFormdataBodyWithResponse(ctx context.Context, agentId openapi_types.UUID, params *AgentsUpdateParams, body AgentsUpdateFormdataRequestBody, reqEditors ...RequestEditorFn) (*AgentsUpdateResponse, error) {
-	rsp, err := c.AgentsUpdateWithFormdataBody(ctx, agentId, params, body, reqEditors...)
 	if err != nil {
 		return nil, err
 	}
@@ -6163,14 +5522,6 @@ func (c *ClientWithResponses) AgentsVersionsCreateWithResponse(ctx context.Conte
 	return ParseAgentsVersionsCreateResponse(rsp)
 }
 
-func (c *ClientWithResponses) AgentsVersionsCreateWithFormdataBodyWithResponse(ctx context.Context, agentId openapi_types.UUID, params *AgentsVersionsCreateParams, body AgentsVersionsCreateFormdataRequestBody, reqEditors ...RequestEditorFn) (*AgentsVersionsCreateResponse, error) {
-	rsp, err := c.AgentsVersionsCreateWithFormdataBody(ctx, agentId, params, body, reqEditors...)
-	if err != nil {
-		return nil, err
-	}
-	return ParseAgentsVersionsCreateResponse(rsp)
-}
-
 // AgentsVersionsCurrentRetrieveWithResponse request returning *AgentsVersionsCurrentRetrieveResponse
 func (c *ClientWithResponses) AgentsVersionsCurrentRetrieveWithResponse(ctx context.Context, agentId openapi_types.UUID, params *AgentsVersionsCurrentRetrieveParams, reqEditors ...RequestEditorFn) (*AgentsVersionsCurrentRetrieveResponse, error) {
 	rsp, err := c.AgentsVersionsCurrentRetrieve(ctx, agentId, params, reqEditors...)
@@ -6215,14 +5566,6 @@ func (c *ClientWithResponses) AgentsVersionsPartialUpdateWithResponse(ctx contex
 	return ParseAgentsVersionsPartialUpdateResponse(rsp)
 }
 
-func (c *ClientWithResponses) AgentsVersionsPartialUpdateWithFormdataBodyWithResponse(ctx context.Context, agentId openapi_types.UUID, agentVersionId openapi_types.UUID, params *AgentsVersionsPartialUpdateParams, body AgentsVersionsPartialUpdateFormdataRequestBody, reqEditors ...RequestEditorFn) (*AgentsVersionsPartialUpdateResponse, error) {
-	rsp, err := c.AgentsVersionsPartialUpdateWithFormdataBody(ctx, agentId, agentVersionId, params, body, reqEditors...)
-	if err != nil {
-		return nil, err
-	}
-	return ParseAgentsVersionsPartialUpdateResponse(rsp)
-}
-
 // AgentsVersionsUpdateWithBodyWithResponse request with arbitrary body returning *AgentsVersionsUpdateResponse
 func (c *ClientWithResponses) AgentsVersionsUpdateWithBodyWithResponse(ctx context.Context, agentId openapi_types.UUID, agentVersionId openapi_types.UUID, params *AgentsVersionsUpdateParams, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*AgentsVersionsUpdateResponse, error) {
 	rsp, err := c.AgentsVersionsUpdateWithBody(ctx, agentId, agentVersionId, params, contentType, body, reqEditors...)
@@ -6234,14 +5577,6 @@ func (c *ClientWithResponses) AgentsVersionsUpdateWithBodyWithResponse(ctx conte
 
 func (c *ClientWithResponses) AgentsVersionsUpdateWithResponse(ctx context.Context, agentId openapi_types.UUID, agentVersionId openapi_types.UUID, params *AgentsVersionsUpdateParams, body AgentsVersionsUpdateJSONRequestBody, reqEditors ...RequestEditorFn) (*AgentsVersionsUpdateResponse, error) {
 	rsp, err := c.AgentsVersionsUpdate(ctx, agentId, agentVersionId, params, body, reqEditors...)
-	if err != nil {
-		return nil, err
-	}
-	return ParseAgentsVersionsUpdateResponse(rsp)
-}
-
-func (c *ClientWithResponses) AgentsVersionsUpdateWithFormdataBodyWithResponse(ctx context.Context, agentId openapi_types.UUID, agentVersionId openapi_types.UUID, params *AgentsVersionsUpdateParams, body AgentsVersionsUpdateFormdataRequestBody, reqEditors ...RequestEditorFn) (*AgentsVersionsUpdateResponse, error) {
-	rsp, err := c.AgentsVersionsUpdateWithFormdataBody(ctx, agentId, agentVersionId, params, body, reqEditors...)
 	if err != nil {
 		return nil, err
 	}
@@ -6268,14 +5603,6 @@ func (c *ClientWithResponses) PoliciesCreateWithBodyWithResponse(ctx context.Con
 
 func (c *ClientWithResponses) PoliciesCreateWithResponse(ctx context.Context, params *PoliciesCreateParams, body PoliciesCreateJSONRequestBody, reqEditors ...RequestEditorFn) (*PoliciesCreateResponse, error) {
 	rsp, err := c.PoliciesCreate(ctx, params, body, reqEditors...)
-	if err != nil {
-		return nil, err
-	}
-	return ParsePoliciesCreateResponse(rsp)
-}
-
-func (c *ClientWithResponses) PoliciesCreateWithFormdataBodyWithResponse(ctx context.Context, params *PoliciesCreateParams, body PoliciesCreateFormdataRequestBody, reqEditors ...RequestEditorFn) (*PoliciesCreateResponse, error) {
-	rsp, err := c.PoliciesCreateWithFormdataBody(ctx, params, body, reqEditors...)
 	if err != nil {
 		return nil, err
 	}
@@ -6317,14 +5644,6 @@ func (c *ClientWithResponses) PoliciesPartialUpdateWithResponse(ctx context.Cont
 	return ParsePoliciesPartialUpdateResponse(rsp)
 }
 
-func (c *ClientWithResponses) PoliciesPartialUpdateWithFormdataBodyWithResponse(ctx context.Context, id openapi_types.UUID, params *PoliciesPartialUpdateParams, body PoliciesPartialUpdateFormdataRequestBody, reqEditors ...RequestEditorFn) (*PoliciesPartialUpdateResponse, error) {
-	rsp, err := c.PoliciesPartialUpdateWithFormdataBody(ctx, id, params, body, reqEditors...)
-	if err != nil {
-		return nil, err
-	}
-	return ParsePoliciesPartialUpdateResponse(rsp)
-}
-
 // PoliciesUpdateWithBodyWithResponse request with arbitrary body returning *PoliciesUpdateResponse
 func (c *ClientWithResponses) PoliciesUpdateWithBodyWithResponse(ctx context.Context, id openapi_types.UUID, params *PoliciesUpdateParams, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*PoliciesUpdateResponse, error) {
 	rsp, err := c.PoliciesUpdateWithBody(ctx, id, params, contentType, body, reqEditors...)
@@ -6336,14 +5655,6 @@ func (c *ClientWithResponses) PoliciesUpdateWithBodyWithResponse(ctx context.Con
 
 func (c *ClientWithResponses) PoliciesUpdateWithResponse(ctx context.Context, id openapi_types.UUID, params *PoliciesUpdateParams, body PoliciesUpdateJSONRequestBody, reqEditors ...RequestEditorFn) (*PoliciesUpdateResponse, error) {
 	rsp, err := c.PoliciesUpdate(ctx, id, params, body, reqEditors...)
-	if err != nil {
-		return nil, err
-	}
-	return ParsePoliciesUpdateResponse(rsp)
-}
-
-func (c *ClientWithResponses) PoliciesUpdateWithFormdataBodyWithResponse(ctx context.Context, id openapi_types.UUID, params *PoliciesUpdateParams, body PoliciesUpdateFormdataRequestBody, reqEditors ...RequestEditorFn) (*PoliciesUpdateResponse, error) {
-	rsp, err := c.PoliciesUpdateWithFormdataBody(ctx, id, params, body, reqEditors...)
 	if err != nil {
 		return nil, err
 	}
@@ -6370,14 +5681,6 @@ func (c *ClientWithResponses) PoliciesVersionsCreateWithBodyWithResponse(ctx con
 
 func (c *ClientWithResponses) PoliciesVersionsCreateWithResponse(ctx context.Context, policyId openapi_types.UUID, params *PoliciesVersionsCreateParams, body PoliciesVersionsCreateJSONRequestBody, reqEditors ...RequestEditorFn) (*PoliciesVersionsCreateResponse, error) {
 	rsp, err := c.PoliciesVersionsCreate(ctx, policyId, params, body, reqEditors...)
-	if err != nil {
-		return nil, err
-	}
-	return ParsePoliciesVersionsCreateResponse(rsp)
-}
-
-func (c *ClientWithResponses) PoliciesVersionsCreateWithFormdataBodyWithResponse(ctx context.Context, policyId openapi_types.UUID, params *PoliciesVersionsCreateParams, body PoliciesVersionsCreateFormdataRequestBody, reqEditors ...RequestEditorFn) (*PoliciesVersionsCreateResponse, error) {
-	rsp, err := c.PoliciesVersionsCreateWithFormdataBody(ctx, policyId, params, body, reqEditors...)
 	if err != nil {
 		return nil, err
 	}

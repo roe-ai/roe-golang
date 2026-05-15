@@ -106,12 +106,6 @@ paths:
           application/json:
             schema:
               $ref: '#/components/schemas/BaseAgentCreateRequest'
-          application/x-www-form-urlencoded:
-            schema:
-              $ref: '#/components/schemas/BaseAgentCreateRequest'
-          multipart/form-data:
-            schema:
-              $ref: '#/components/schemas/BaseAgentCreateRequest'
         required: true
       responses:
         '201':
@@ -232,12 +226,6 @@ paths:
           application/json:
             schema:
               $ref: '#/components/schemas/BaseAgentUpdateRequest'
-          application/x-www-form-urlencoded:
-            schema:
-              $ref: '#/components/schemas/BaseAgentUpdateRequest'
-          multipart/form-data:
-            schema:
-              $ref: '#/components/schemas/BaseAgentUpdateRequest'
       responses:
         '200':
           content:
@@ -290,12 +278,6 @@ paths:
       requestBody:
         content:
           application/json:
-            schema:
-              $ref: '#/components/schemas/PatchedBaseAgentUpdateRequest'
-          application/x-www-form-urlencoded:
-            schema:
-              $ref: '#/components/schemas/PatchedBaseAgentUpdateRequest'
-          multipart/form-data:
             schema:
               $ref: '#/components/schemas/PatchedBaseAgentUpdateRequest'
       responses:
@@ -541,12 +523,6 @@ paths:
           application/json:
             schema:
               $ref: '#/components/schemas/AgentVersionCreateRequest'
-          application/x-www-form-urlencoded:
-            schema:
-              $ref: '#/components/schemas/AgentVersionCreateRequest'
-          multipart/form-data:
-            schema:
-              $ref: '#/components/schemas/AgentVersionCreateRequest'
         required: true
       responses:
         '201':
@@ -683,12 +659,6 @@ paths:
           application/json:
             schema:
               $ref: '#/components/schemas/AgentVersionUpdateRequestRequest'
-          application/x-www-form-urlencoded:
-            schema:
-              $ref: '#/components/schemas/AgentVersionUpdateRequestRequest'
-          multipart/form-data:
-            schema:
-              $ref: '#/components/schemas/AgentVersionUpdateRequestRequest'
       responses:
         '200':
           description: Agent version updated successfully.
@@ -739,12 +709,6 @@ paths:
       requestBody:
         content:
           application/json:
-            schema:
-              $ref: '#/components/schemas/PatchedPatchedAgentVersionUpdateRequestRequest'
-          application/x-www-form-urlencoded:
-            schema:
-              $ref: '#/components/schemas/PatchedPatchedAgentVersionUpdateRequestRequest'
-          multipart/form-data:
             schema:
               $ref: '#/components/schemas/PatchedPatchedAgentVersionUpdateRequestRequest'
       responses:
@@ -1171,12 +1135,6 @@ paths:
           application/json:
             schema:
               $ref: '#/components/schemas/AgentJobResultManyRequestRequest'
-          application/x-www-form-urlencoded:
-            schema:
-              $ref: '#/components/schemas/AgentJobResultManyRequestRequest'
-          multipart/form-data:
-            schema:
-              $ref: '#/components/schemas/AgentJobResultManyRequestRequest'
         required: true
       responses:
         '200':
@@ -1218,12 +1176,6 @@ paths:
       requestBody:
         content:
           application/json:
-            schema:
-              $ref: '#/components/schemas/AgentJobStatusManyRequestRequest'
-          application/x-www-form-urlencoded:
-            schema:
-              $ref: '#/components/schemas/AgentJobStatusManyRequestRequest'
-          multipart/form-data:
             schema:
               $ref: '#/components/schemas/AgentJobStatusManyRequestRequest'
         required: true
@@ -1283,12 +1235,6 @@ paths:
       requestBody:
         content:
           application/json:
-            schema:
-              $ref: '#/components/schemas/AgentExecutionRequestRequest'
-          application/x-www-form-urlencoded:
-            schema:
-              $ref: '#/components/schemas/AgentExecutionRequestRequest'
-          multipart/form-data:
             schema:
               $ref: '#/components/schemas/AgentExecutionRequestRequest'
       responses:
@@ -1351,12 +1297,6 @@ paths:
       requestBody:
         content:
           application/json:
-            schema:
-              $ref: '#/components/schemas/AgentExecutionRequestRequest'
-          application/x-www-form-urlencoded:
-            schema:
-              $ref: '#/components/schemas/AgentExecutionRequestRequest'
-          multipart/form-data:
             schema:
               $ref: '#/components/schemas/AgentExecutionRequestRequest'
       responses:
@@ -1448,12 +1388,6 @@ paths:
       requestBody:
         content:
           application/json:
-            schema:
-              $ref: '#/components/schemas/AgentRunAsyncManyRequestRequest'
-          application/x-www-form-urlencoded:
-            schema:
-              $ref: '#/components/schemas/AgentRunAsyncManyRequestRequest'
-          multipart/form-data:
             schema:
               $ref: '#/components/schemas/AgentRunAsyncManyRequestRequest'
         required: true
@@ -1557,12 +1491,6 @@ paths:
           application/json:
             schema:
               $ref: '#/components/schemas/AgentExecutionRequestRequest'
-          application/x-www-form-urlencoded:
-            schema:
-              $ref: '#/components/schemas/AgentExecutionRequestRequest'
-          multipart/form-data:
-            schema:
-              $ref: '#/components/schemas/AgentExecutionRequestRequest'
       responses:
         '200':
           content:
@@ -1629,12 +1557,6 @@ paths:
       requestBody:
         content:
           application/json:
-            schema:
-              $ref: '#/components/schemas/AgentExecutionRequestRequest'
-          application/x-www-form-urlencoded:
-            schema:
-              $ref: '#/components/schemas/AgentExecutionRequestRequest'
-          multipart/form-data:
             schema:
               $ref: '#/components/schemas/AgentExecutionRequestRequest'
       responses:
@@ -1757,12 +1679,6 @@ paths:
           application/json:
             schema:
               $ref: '#/components/schemas/CreatePolicyRequest'
-          application/x-www-form-urlencoded:
-            schema:
-              $ref: '#/components/schemas/CreatePolicyRequest'
-          multipart/form-data:
-            schema:
-              $ref: '#/components/schemas/CreatePolicyRequest'
         required: true
       responses:
         '201':
@@ -1835,12 +1751,6 @@ paths:
           application/json:
             schema:
               $ref: '#/components/schemas/UpdatePolicyRequest'
-          application/x-www-form-urlencoded:
-            schema:
-              $ref: '#/components/schemas/UpdatePolicyRequest'
-          multipart/form-data:
-            schema:
-              $ref: '#/components/schemas/UpdatePolicyRequest'
         required: true
       responses:
         '200':
@@ -1873,12 +1783,6 @@ paths:
       requestBody:
         content:
           application/json:
-            schema:
-              $ref: '#/components/schemas/PatchedUpdatePolicyRequest'
-          application/x-www-form-urlencoded:
-            schema:
-              $ref: '#/components/schemas/PatchedUpdatePolicyRequest'
-          multipart/form-data:
             schema:
               $ref: '#/components/schemas/PatchedUpdatePolicyRequest'
       responses:
@@ -1979,12 +1883,6 @@ paths:
       requestBody:
         content:
           application/json:
-            schema:
-              $ref: '#/components/schemas/CreatePolicyVersionRequest'
-          application/x-www-form-urlencoded:
-            schema:
-              $ref: '#/components/schemas/CreatePolicyVersionRequest'
-          multipart/form-data:
             schema:
               $ref: '#/components/schemas/CreatePolicyVersionRequest'
         required: true
