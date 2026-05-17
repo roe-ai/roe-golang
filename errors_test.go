@@ -372,7 +372,10 @@ func TestAPIErrorHeadersPreserved_RetryAfterHTTPDate(t *testing.T) {
 	date := "Wed, 21 Oct 2025 07:28:00 GMT"
 	h := http.Header{"Retry-After": []string{date}}
 	err := apiErrorFromResponse(http.StatusTooManyRequests, []byte(`{}`), h, "")
-	rl := err.(*RateLimitError)
+	rl, ok := err.(*RateLimitError)
+	if !ok {
+		t.Fatalf("expected *RateLimitError, got %T", err)
+	}
 	if got := rl.Headers.Get("Retry-After"); got != date {
 		t.Errorf("Headers.Get(Retry-After) = %q, want %q", got, date)
 	}
@@ -381,7 +384,10 @@ func TestAPIErrorHeadersPreserved_RetryAfterHTTPDate(t *testing.T) {
 func TestAPIError404HeadersPreserved(t *testing.T) {
 	h := http.Header{"X-Request-Id": []string{"abc"}}
 	err := apiErrorFromResponse(http.StatusNotFound, []byte(`{}`), h, "")
-	nf := err.(*NotFoundError)
+	nf, ok := err.(*NotFoundError)
+	if !ok {
+		t.Fatalf("expected *NotFoundError, got %T", err)
+	}
 	if got := nf.Headers.Get("X-Request-Id"); got != "abc" {
 		t.Errorf("Headers.Get(X-Request-Id) = %q, want %q", got, "abc")
 	}
@@ -390,7 +396,10 @@ func TestAPIError404HeadersPreserved(t *testing.T) {
 func TestAPIError500HeadersPreserved(t *testing.T) {
 	h := http.Header{"X-Trace": []string{"t1"}}
 	err := apiErrorFromResponse(http.StatusInternalServerError, []byte(`{}`), h, "")
-	se := err.(*ServerError)
+	se, ok := err.(*ServerError)
+	if !ok {
+		t.Fatalf("expected *ServerError, got %T", err)
+	}
 	if got := se.Headers.Get("X-Trace"); got != "t1" {
 		t.Errorf("Headers.Get(X-Trace) = %q, want %q", got, "t1")
 	}
@@ -400,7 +409,10 @@ func TestAPIErrorNilHeadersSafe(t *testing.T) {
 	// nil http.Header is valid in Go stdlib — Get on nil returns "". Verify
 	// no panic and Headers is propagated as nil.
 	err := apiErrorFromResponse(http.StatusInternalServerError, []byte(`{}`), nil, "")
-	se := err.(*ServerError)
+	se, ok := err.(*ServerError)
+	if !ok {
+		t.Fatalf("expected *ServerError, got %T", err)
+	}
 	if se.Headers != nil {
 		t.Errorf("expected nil Headers, got %v", se.Headers)
 	}
