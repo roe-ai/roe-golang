@@ -172,6 +172,19 @@ The full hierarchy is `BadRequestError` (400), `AuthenticationError` (401),
 (404), `RateLimitError` (429), and `ServerError` (5xx) — all embedding
 `*APIError`.
 
+`*APIError` also carries `Headers http.Header` from the upstream response.
+Use `Headers.Get(name)` (case-insensitive) to read `Retry-After` on 429s
+or your request-id header for support tickets:
+
+```go
+var rl *roe.RateLimitError
+if errors.As(err, &rl) {
+    if v := rl.Headers.Get("Retry-After"); v != "" {
+        // parse v as seconds or HTTP-date and back off
+    }
+}
+```
+
 `job.Wait(...)` does not return a typed error for agent-side failures —
 instead the returned result reports `result.Failed() == true` with
 `result.ErrorMessage` populated. Transport / HTTP errors hit the typed

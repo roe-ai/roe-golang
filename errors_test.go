@@ -351,3 +351,72 @@ func findSubstring(s, substr string) bool {
 
 // Ensure time import is used
 var _ = time.Second
+
+func TestAPIErrorHeadersPreserved_RetryAfterSeconds(t *testing.T) {
+	h := http.Header{"Retry-After": []string{"7"}}
+	err := apiErrorFromResponse(http.StatusTooManyRequests, []byte(`{"detail":"throttled"}`), h, "")
+	rl, ok := err.(*RateLimitError)
+	if !ok {
+		t.Fatalf("expected *RateLimitError, got %T", err)
+	}
+	if got := rl.Headers.Get("Retry-After"); got != "7" {
+		t.Errorf("Headers.Get(Retry-After) = %q, want %q", got, "7")
+	}
+	// Case-insensitive lookup also works because http.Header.Get canonicalises.
+	if got := rl.Headers.Get("retry-after"); got != "7" {
+		t.Errorf("case-insensitive lookup failed: got %q, want %q", got, "7")
+	}
+}
+
+func TestAPIErrorHeadersPreserved_RetryAfterHTTPDate(t *testing.T) {
+	date := "Wed, 21 Oct 2025 07:28:00 GMT"
+	h := http.Header{"Retry-After": []string{date}}
+	err := apiErrorFromResponse(http.StatusTooManyRequests, []byte(`{}`), h, "")
+	rl, ok := err.(*RateLimitError)
+	if !ok {
+		t.Fatalf("expected *RateLimitError, got %T", err)
+	}
+	if got := rl.Headers.Get("Retry-After"); got != date {
+		t.Errorf("Headers.Get(Retry-After) = %q, want %q", got, date)
+	}
+}
+
+func TestAPIError404HeadersPreserved(t *testing.T) {
+	h := http.Header{"X-Request-Id": []string{"abc"}}
+	err := apiErrorFromResponse(http.StatusNotFound, []byte(`{}`), h, "")
+	nf, ok := err.(*NotFoundError)
+	if !ok {
+		t.Fatalf("expected *NotFoundError, got %T", err)
+	}
+	if got := nf.Headers.Get("X-Request-Id"); got != "abc" {
+		t.Errorf("Headers.Get(X-Request-Id) = %q, want %q", got, "abc")
+	}
+}
+
+func TestAPIError500HeadersPreserved(t *testing.T) {
+	h := http.Header{"X-Trace": []string{"t1"}}
+	err := apiErrorFromResponse(http.StatusInternalServerError, []byte(`{}`), h, "")
+	se, ok := err.(*ServerError)
+	if !ok {
+		t.Fatalf("expected *ServerError, got %T", err)
+	}
+	if got := se.Headers.Get("X-Trace"); got != "t1" {
+		t.Errorf("Headers.Get(X-Trace) = %q, want %q", got, "t1")
+	}
+}
+
+func TestAPIErrorNilHeadersSafe(t *testing.T) {
+	// nil http.Header is valid in Go stdlib — Get on nil returns "". Verify
+	// no panic and Headers is propagated as nil.
+	err := apiErrorFromResponse(http.StatusInternalServerError, []byte(`{}`), nil, "")
+	se, ok := err.(*ServerError)
+	if !ok {
+		t.Fatalf("expected *ServerError, got %T", err)
+	}
+	if se.Headers != nil {
+		t.Errorf("expected nil Headers, got %v", se.Headers)
+	}
+	if got := se.Headers.Get("X-Anything"); got != "" {
+		t.Errorf("expected empty string from nil Header.Get, got %q", got)
+	}
+}
