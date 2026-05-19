@@ -15,6 +15,7 @@ type (
 	// API surfaces.
 	Auth               = root.Auth
 	AgentsAPI          = root.AgentsAPI
+	DiscoveryAPI       = root.DiscoveryAPI
 	AgentVersionsAPI   = root.AgentVersionsAPI
 	AgentJobsAPI       = root.AgentJobsAPI
 	ListVersionsParams = root.ListVersionsParams
@@ -23,6 +24,7 @@ type (
 
 	// Models/results.
 	AgentInputDefinition = root.AgentInputDefinition
+	AgentEngineTypeList  = root.AgentEngineTypeList
 	UserInfo             = root.UserInfo
 	BaseAgent            = root.BaseAgent
 	AgentVersion         = root.AgentVersion
@@ -41,6 +43,9 @@ type (
 	JobDataDeleteResponse = root.JobDataDeleteResponse
 	Policy                = root.Policy
 	PolicyVersion         = root.PolicyVersion
+	SupportedLLMModel     = root.SupportedLLMModel
+	SupportedLLMModelList = root.SupportedLLMModelList
+	TemporalWorkflow      = root.TemporalWorkflow
 
 	// File uploads.
 	FileUpload = root.FileUpload

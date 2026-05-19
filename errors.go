@@ -16,12 +16,18 @@ var (
 )
 
 // APIError represents an error returned by the Roe API.
+//
+// Headers carries the raw http.Header from the upstream response so callers
+// can read Retry-After (and other header-borne contracts) symmetrically with
+// net/http. Always use Headers.Get(name) for lookups — http.Header stores
+// keys in canonical MIME case ("Retry-After"), and Get is case-insensitive.
 type APIError struct {
 	StatusCode int
 	Message    string
 	Body       []byte
 	RequestID  string
 	Details    map[string]any
+	Headers    http.Header
 }
 
 func (e *APIError) Error() string {
@@ -59,6 +65,7 @@ func apiErrorFromResponse(status int, body []byte, headers http.Header, requestI
 		Body:       body,
 		RequestID:  requestID,
 		Details:    details,
+		Headers:    headers,
 	}
 
 	switch status {
