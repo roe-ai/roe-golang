@@ -22,7 +22,7 @@ func (d *DiscoveryAPI) ListAgentEngineTypes() (AgentEngineTypeList, error) {
 // ListAgentEngineTypesWithContext returns agent engine types with a caller-supplied context.
 func (d *DiscoveryAPI) ListAgentEngineTypesWithContext(ctx context.Context) (AgentEngineTypeList, error) {
 	var resp AgentEngineTypeList
-	if err := d.httpClient.getWithContext(ctx, "/v1/discovery/agent-engine-types/", nil, &resp); err != nil {
+	if err := d.httpClient.getWithContext(ctx, "/v1/agents/types/", nil, &resp); err != nil {
 		return AgentEngineTypeList{}, err
 	}
 	return resp, nil
@@ -40,7 +40,7 @@ func (d *DiscoveryAPI) ListSupportedModelsWithContext(ctx context.Context, capab
 		query["capability"] = capability
 	}
 	var resp SupportedLLMModelList
-	if err := d.httpClient.getWithContext(ctx, "/v1/discovery/supported-models/", query, &resp); err != nil {
+	if err := d.httpClient.getWithContext(ctx, "/v1/agents/models/", query, &resp); err != nil {
 		return SupportedLLMModelList{}, err
 	}
 	return resp, nil

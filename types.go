@@ -14,7 +14,6 @@ type (
 	AgentEngineTypeList   = generated.AgentEngineTypeList
 	SupportedLLMModel     = generated.SupportedLLMModel
 	SupportedLLMModelList = generated.SupportedLLMModelList
-	TemporalWorkflow      = generated.TemporalWorkflow
 )
 
 // AgentInputDefinition describes an agent input.

@@ -42,7 +42,7 @@ type AgentEngineTypeList struct {
 	EngineTypes []string `json:"engine_types"`
 
 	// Engines Production agent engine metadata, including descriptions, input schemas, and default engine_config values
-	Engines []TemporalWorkflow `json:"engines"`
+	Engines []map[string]interface{} `json:"engines"`
 
 	// TotalCount Number of engine types returned
 	TotalCount int `json:"total_count"`
@@ -476,42 +476,6 @@ type SupportedLLMModelList struct {
 	TotalCount  int    `json:"total_count"`
 }
 
-// TemporalWorkflow Serializer for Temporal Workflow engine information.
-//
-// Matches the shape returned by fetch_all_temporal_workflows() in
-// agents/services/temporal_service.py.
-type TemporalWorkflow struct {
-	// Category The workflow category
-	Category string `json:"category"`
-
-	// ClassId Unique class identifier for this workflow
-	ClassId string `json:"class_id"`
-
-	// DefaultValues Default values for the workflow input fields
-	DefaultValues interface{} `json:"default_values"`
-
-	// Description Detailed description of what the workflow does
-	Description string `json:"description"`
-
-	// DisplayName Human-readable name of the workflow
-	DisplayName string `json:"display_name"`
-
-	// FormType The form type that determines which frontend create form to render
-	FormType string `json:"form_type"`
-
-	// InputSchema Pydantic JSON Schema describing the workflow's input model
-	InputSchema interface{} `json:"input_schema"`
-
-	// Summary Brief summary of the workflow's capabilities
-	Summary string `json:"summary"`
-
-	// Type Engine type discriminator, always 'temporal_workflow'
-	Type string `json:"type"`
-
-	// WorkflowType The temporal workflow type identifier
-	WorkflowType string `json:"workflow_type"`
-}
-
 // UpdatePolicy Serializer for updating policy metadata (name, description)
 type UpdatePolicy struct {
 	CreatedAt        *time.Time          `json:"created_at,omitempty"`
@@ -614,6 +578,12 @@ type AgentsJobsDeleteDataCreateParams struct {
 type AgentsJobsStatusRetrieveParams struct {
 	// OrganizationId Organization ID. This is required for access control. It can be provided via query or request body depending on the endpoint.
 	OrganizationId *openapi_types.UUID `form:"organization_id,omitempty" json:"organization_id,omitempty"`
+}
+
+// DiscoverySupportedModelsListParams defines parameters for DiscoverySupportedModelsList.
+type DiscoverySupportedModelsListParams struct {
+	// Capability Optional capability filter: image, audio, or video (text-capable models are always included)
+	Capability *string `form:"capability,omitempty" json:"capability,omitempty"`
 }
 
 // AgentsRunParams defines parameters for AgentsRun.
@@ -728,12 +698,6 @@ type AgentsVersionsPartialUpdateParams struct {
 type AgentsVersionsUpdateParams struct {
 	// OrganizationId Organization ID. This is required for access control. It can be provided via query or request body depending on the endpoint.
 	OrganizationId *openapi_types.UUID `form:"organization_id,omitempty" json:"organization_id,omitempty"`
-}
-
-// DiscoverySupportedModelsListParams defines parameters for DiscoverySupportedModelsList.
-type DiscoverySupportedModelsListParams struct {
-	// Capability Optional capability filter: text, image, audio, or video
-	Capability *string `form:"capability,omitempty" json:"capability,omitempty"`
 }
 
 // PoliciesListParams defines parameters for PoliciesList.
@@ -965,6 +929,9 @@ type ClientInterface interface {
 	// AgentsJobsStatusRetrieve request
 	AgentsJobsStatusRetrieve(ctx context.Context, jobId openapi_types.UUID, params *AgentsJobsStatusRetrieveParams, reqEditors ...RequestEditorFn) (*http.Response, error)
 
+	// DiscoverySupportedModelsList request
+	DiscoverySupportedModelsList(ctx context.Context, params *DiscoverySupportedModelsListParams, reqEditors ...RequestEditorFn) (*http.Response, error)
+
 	// AgentsRunWithBody request with any body
 	AgentsRunWithBody(ctx context.Context, agentId openapi_types.UUID, params *AgentsRunParams, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
 
@@ -989,6 +956,9 @@ type ClientInterface interface {
 	AgentsRunVersionsAsyncCreateWithBody(ctx context.Context, agentId openapi_types.UUID, agentVersionId openapi_types.UUID, params *AgentsRunVersionsAsyncCreateParams, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
 
 	AgentsRunVersionsAsyncCreate(ctx context.Context, agentId openapi_types.UUID, agentVersionId openapi_types.UUID, params *AgentsRunVersionsAsyncCreateParams, body AgentsRunVersionsAsyncCreateJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// DiscoveryAgentEngineTypesList request
+	DiscoveryAgentEngineTypesList(ctx context.Context, reqEditors ...RequestEditorFn) (*http.Response, error)
 
 	// AgentsDestroy request
 	AgentsDestroy(ctx context.Context, agentId openapi_types.UUID, params *AgentsDestroyParams, reqEditors ...RequestEditorFn) (*http.Response, error)
@@ -1038,12 +1008,6 @@ type ClientInterface interface {
 	AgentsVersionsUpdateWithBody(ctx context.Context, agentId openapi_types.UUID, agentVersionId openapi_types.UUID, params *AgentsVersionsUpdateParams, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
 
 	AgentsVersionsUpdate(ctx context.Context, agentId openapi_types.UUID, agentVersionId openapi_types.UUID, params *AgentsVersionsUpdateParams, body AgentsVersionsUpdateJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
-
-	// DiscoveryAgentEngineTypesList request
-	DiscoveryAgentEngineTypesList(ctx context.Context, reqEditors ...RequestEditorFn) (*http.Response, error)
-
-	// DiscoverySupportedModelsList request
-	DiscoverySupportedModelsList(ctx context.Context, params *DiscoverySupportedModelsListParams, reqEditors ...RequestEditorFn) (*http.Response, error)
 
 	// PoliciesList request
 	PoliciesList(ctx context.Context, params *PoliciesListParams, reqEditors ...RequestEditorFn) (*http.Response, error)
@@ -1228,6 +1192,18 @@ func (c *Client) AgentsJobsStatusRetrieve(ctx context.Context, jobId openapi_typ
 	return c.Client.Do(req)
 }
 
+func (c *Client) DiscoverySupportedModelsList(ctx context.Context, params *DiscoverySupportedModelsListParams, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewDiscoverySupportedModelsListRequest(c.Server, params)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
 func (c *Client) AgentsRunWithBody(ctx context.Context, agentId openapi_types.UUID, params *AgentsRunParams, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error) {
 	req, err := NewAgentsRunRequestWithBody(c.Server, agentId, params, contentType, body)
 	if err != nil {
@@ -1338,6 +1314,18 @@ func (c *Client) AgentsRunVersionsAsyncCreateWithBody(ctx context.Context, agent
 
 func (c *Client) AgentsRunVersionsAsyncCreate(ctx context.Context, agentId openapi_types.UUID, agentVersionId openapi_types.UUID, params *AgentsRunVersionsAsyncCreateParams, body AgentsRunVersionsAsyncCreateJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
 	req, err := NewAgentsRunVersionsAsyncCreateRequest(c.Server, agentId, agentVersionId, params, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) DiscoveryAgentEngineTypesList(ctx context.Context, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewDiscoveryAgentEngineTypesListRequest(c.Server)
 	if err != nil {
 		return nil, err
 	}
@@ -1554,30 +1542,6 @@ func (c *Client) AgentsVersionsUpdateWithBody(ctx context.Context, agentId opena
 
 func (c *Client) AgentsVersionsUpdate(ctx context.Context, agentId openapi_types.UUID, agentVersionId openapi_types.UUID, params *AgentsVersionsUpdateParams, body AgentsVersionsUpdateJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
 	req, err := NewAgentsVersionsUpdateRequest(c.Server, agentId, agentVersionId, params, body)
-	if err != nil {
-		return nil, err
-	}
-	req = req.WithContext(ctx)
-	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
-		return nil, err
-	}
-	return c.Client.Do(req)
-}
-
-func (c *Client) DiscoveryAgentEngineTypesList(ctx context.Context, reqEditors ...RequestEditorFn) (*http.Response, error) {
-	req, err := NewDiscoveryAgentEngineTypesListRequest(c.Server)
-	if err != nil {
-		return nil, err
-	}
-	req = req.WithContext(ctx)
-	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
-		return nil, err
-	}
-	return c.Client.Do(req)
-}
-
-func (c *Client) DiscoverySupportedModelsList(ctx context.Context, params *DiscoverySupportedModelsListParams, reqEditors ...RequestEditorFn) (*http.Response, error) {
-	req, err := NewDiscoverySupportedModelsListRequest(c.Server, params)
 	if err != nil {
 		return nil, err
 	}
@@ -2402,6 +2366,55 @@ func NewAgentsJobsStatusRetrieveRequest(server string, jobId openapi_types.UUID,
 	return req, nil
 }
 
+// NewDiscoverySupportedModelsListRequest generates requests for DiscoverySupportedModelsList
+func NewDiscoverySupportedModelsListRequest(server string, params *DiscoverySupportedModelsListParams) (*http.Request, error) {
+	var err error
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/v1/agents/models/")
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	if params != nil {
+		queryValues := queryURL.Query()
+
+		if params.Capability != nil {
+
+			if queryFrag, err := runtime.StyleParamWithOptions("form", true, "capability", *params.Capability, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationQuery, Type: "string", Format: ""}); err != nil {
+				return nil, err
+			} else if parsed, err := url.ParseQuery(queryFrag); err != nil {
+				return nil, err
+			} else {
+				for k, v := range parsed {
+					for _, v2 := range v {
+						queryValues.Add(k, v2)
+					}
+				}
+			}
+
+		}
+
+		queryURL.RawQuery = queryValues.Encode()
+	}
+
+	req, err := http.NewRequest("GET", queryURL.String(), nil)
+	if err != nil {
+		return nil, err
+	}
+
+	return req, nil
+}
+
 // NewAgentsRunRequest calls the generic AgentsRun builder with application/json body
 func NewAgentsRunRequest(server string, agentId openapi_types.UUID, params *AgentsRunParams, body AgentsRunJSONRequestBody) (*http.Request, error) {
 	var bodyReader io.Reader
@@ -2757,6 +2770,33 @@ func NewAgentsRunVersionsAsyncCreateRequestWithBody(server string, agentId opena
 	}
 
 	req.Header.Add("Content-Type", contentType)
+
+	return req, nil
+}
+
+// NewDiscoveryAgentEngineTypesListRequest generates requests for DiscoveryAgentEngineTypesList
+func NewDiscoveryAgentEngineTypesListRequest(server string) (*http.Request, error) {
+	var err error
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/v1/agents/types/")
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest("GET", queryURL.String(), nil)
+	if err != nil {
+		return nil, err
+	}
 
 	return req, nil
 }
@@ -3614,82 +3654,6 @@ func NewAgentsVersionsUpdateRequestWithBody(server string, agentId openapi_types
 	return req, nil
 }
 
-// NewDiscoveryAgentEngineTypesListRequest generates requests for DiscoveryAgentEngineTypesList
-func NewDiscoveryAgentEngineTypesListRequest(server string) (*http.Request, error) {
-	var err error
-
-	serverURL, err := url.Parse(server)
-	if err != nil {
-		return nil, err
-	}
-
-	operationPath := fmt.Sprintf("/v1/discovery/agent-engine-types/")
-	if operationPath[0] == '/' {
-		operationPath = "." + operationPath
-	}
-
-	queryURL, err := serverURL.Parse(operationPath)
-	if err != nil {
-		return nil, err
-	}
-
-	req, err := http.NewRequest("GET", queryURL.String(), nil)
-	if err != nil {
-		return nil, err
-	}
-
-	return req, nil
-}
-
-// NewDiscoverySupportedModelsListRequest generates requests for DiscoverySupportedModelsList
-func NewDiscoverySupportedModelsListRequest(server string, params *DiscoverySupportedModelsListParams) (*http.Request, error) {
-	var err error
-
-	serverURL, err := url.Parse(server)
-	if err != nil {
-		return nil, err
-	}
-
-	operationPath := fmt.Sprintf("/v1/discovery/supported-models/")
-	if operationPath[0] == '/' {
-		operationPath = "." + operationPath
-	}
-
-	queryURL, err := serverURL.Parse(operationPath)
-	if err != nil {
-		return nil, err
-	}
-
-	if params != nil {
-		queryValues := queryURL.Query()
-
-		if params.Capability != nil {
-
-			if queryFrag, err := runtime.StyleParamWithOptions("form", true, "capability", *params.Capability, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationQuery, Type: "string", Format: ""}); err != nil {
-				return nil, err
-			} else if parsed, err := url.ParseQuery(queryFrag); err != nil {
-				return nil, err
-			} else {
-				for k, v := range parsed {
-					for _, v2 := range v {
-						queryValues.Add(k, v2)
-					}
-				}
-			}
-
-		}
-
-		queryURL.RawQuery = queryValues.Encode()
-	}
-
-	req, err := http.NewRequest("GET", queryURL.String(), nil)
-	if err != nil {
-		return nil, err
-	}
-
-	return req, nil
-}
-
 // NewPoliciesListRequest generates requests for PoliciesList
 func NewPoliciesListRequest(server string, params *PoliciesListParams) (*http.Request, error) {
 	var err error
@@ -4438,6 +4402,9 @@ type ClientWithResponsesInterface interface {
 	// AgentsJobsStatusRetrieveWithResponse request
 	AgentsJobsStatusRetrieveWithResponse(ctx context.Context, jobId openapi_types.UUID, params *AgentsJobsStatusRetrieveParams, reqEditors ...RequestEditorFn) (*AgentsJobsStatusRetrieveResponse, error)
 
+	// DiscoverySupportedModelsListWithResponse request
+	DiscoverySupportedModelsListWithResponse(ctx context.Context, params *DiscoverySupportedModelsListParams, reqEditors ...RequestEditorFn) (*DiscoverySupportedModelsListResponse, error)
+
 	// AgentsRunWithBodyWithResponse request with any body
 	AgentsRunWithBodyWithResponse(ctx context.Context, agentId openapi_types.UUID, params *AgentsRunParams, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*AgentsRunResponse, error)
 
@@ -4462,6 +4429,9 @@ type ClientWithResponsesInterface interface {
 	AgentsRunVersionsAsyncCreateWithBodyWithResponse(ctx context.Context, agentId openapi_types.UUID, agentVersionId openapi_types.UUID, params *AgentsRunVersionsAsyncCreateParams, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*AgentsRunVersionsAsyncCreateResponse, error)
 
 	AgentsRunVersionsAsyncCreateWithResponse(ctx context.Context, agentId openapi_types.UUID, agentVersionId openapi_types.UUID, params *AgentsRunVersionsAsyncCreateParams, body AgentsRunVersionsAsyncCreateJSONRequestBody, reqEditors ...RequestEditorFn) (*AgentsRunVersionsAsyncCreateResponse, error)
+
+	// DiscoveryAgentEngineTypesListWithResponse request
+	DiscoveryAgentEngineTypesListWithResponse(ctx context.Context, reqEditors ...RequestEditorFn) (*DiscoveryAgentEngineTypesListResponse, error)
 
 	// AgentsDestroyWithResponse request
 	AgentsDestroyWithResponse(ctx context.Context, agentId openapi_types.UUID, params *AgentsDestroyParams, reqEditors ...RequestEditorFn) (*AgentsDestroyResponse, error)
@@ -4511,12 +4481,6 @@ type ClientWithResponsesInterface interface {
 	AgentsVersionsUpdateWithBodyWithResponse(ctx context.Context, agentId openapi_types.UUID, agentVersionId openapi_types.UUID, params *AgentsVersionsUpdateParams, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*AgentsVersionsUpdateResponse, error)
 
 	AgentsVersionsUpdateWithResponse(ctx context.Context, agentId openapi_types.UUID, agentVersionId openapi_types.UUID, params *AgentsVersionsUpdateParams, body AgentsVersionsUpdateJSONRequestBody, reqEditors ...RequestEditorFn) (*AgentsVersionsUpdateResponse, error)
-
-	// DiscoveryAgentEngineTypesListWithResponse request
-	DiscoveryAgentEngineTypesListWithResponse(ctx context.Context, reqEditors ...RequestEditorFn) (*DiscoveryAgentEngineTypesListResponse, error)
-
-	// DiscoverySupportedModelsListWithResponse request
-	DiscoverySupportedModelsListWithResponse(ctx context.Context, params *DiscoverySupportedModelsListParams, reqEditors ...RequestEditorFn) (*DiscoverySupportedModelsListResponse, error)
 
 	// PoliciesListWithResponse request
 	PoliciesListWithResponse(ctx context.Context, params *PoliciesListParams, reqEditors ...RequestEditorFn) (*PoliciesListResponse, error)
@@ -4773,6 +4737,28 @@ func (r AgentsJobsStatusRetrieveResponse) StatusCode() int {
 	return 0
 }
 
+type DiscoverySupportedModelsListResponse struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	JSON200      *SupportedLLMModelList
+}
+
+// Status returns HTTPResponse.Status
+func (r DiscoverySupportedModelsListResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r DiscoverySupportedModelsListResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
 type AgentsRunResponse struct {
 	Body         []byte
 	HTTPResponse *http.Response
@@ -4899,6 +4885,28 @@ func (r AgentsRunVersionsAsyncCreateResponse) Status() string {
 
 // StatusCode returns HTTPResponse.StatusCode
 func (r AgentsRunVersionsAsyncCreateResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+type DiscoveryAgentEngineTypesListResponse struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	JSON200      *AgentEngineTypeList
+}
+
+// Status returns HTTPResponse.Status
+func (r DiscoveryAgentEngineTypesListResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r DiscoveryAgentEngineTypesListResponse) StatusCode() int {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.StatusCode
 	}
@@ -5210,50 +5218,6 @@ func (r AgentsVersionsUpdateResponse) Status() string {
 
 // StatusCode returns HTTPResponse.StatusCode
 func (r AgentsVersionsUpdateResponse) StatusCode() int {
-	if r.HTTPResponse != nil {
-		return r.HTTPResponse.StatusCode
-	}
-	return 0
-}
-
-type DiscoveryAgentEngineTypesListResponse struct {
-	Body         []byte
-	HTTPResponse *http.Response
-	JSON200      *AgentEngineTypeList
-}
-
-// Status returns HTTPResponse.Status
-func (r DiscoveryAgentEngineTypesListResponse) Status() string {
-	if r.HTTPResponse != nil {
-		return r.HTTPResponse.Status
-	}
-	return http.StatusText(0)
-}
-
-// StatusCode returns HTTPResponse.StatusCode
-func (r DiscoveryAgentEngineTypesListResponse) StatusCode() int {
-	if r.HTTPResponse != nil {
-		return r.HTTPResponse.StatusCode
-	}
-	return 0
-}
-
-type DiscoverySupportedModelsListResponse struct {
-	Body         []byte
-	HTTPResponse *http.Response
-	JSON200      *SupportedLLMModelList
-}
-
-// Status returns HTTPResponse.Status
-func (r DiscoverySupportedModelsListResponse) Status() string {
-	if r.HTTPResponse != nil {
-		return r.HTTPResponse.Status
-	}
-	return http.StatusText(0)
-}
-
-// StatusCode returns HTTPResponse.StatusCode
-func (r DiscoverySupportedModelsListResponse) StatusCode() int {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.StatusCode
 	}
@@ -5583,6 +5547,15 @@ func (c *ClientWithResponses) AgentsJobsStatusRetrieveWithResponse(ctx context.C
 	return ParseAgentsJobsStatusRetrieveResponse(rsp)
 }
 
+// DiscoverySupportedModelsListWithResponse request returning *DiscoverySupportedModelsListResponse
+func (c *ClientWithResponses) DiscoverySupportedModelsListWithResponse(ctx context.Context, params *DiscoverySupportedModelsListParams, reqEditors ...RequestEditorFn) (*DiscoverySupportedModelsListResponse, error) {
+	rsp, err := c.DiscoverySupportedModelsList(ctx, params, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseDiscoverySupportedModelsListResponse(rsp)
+}
+
 // AgentsRunWithBodyWithResponse request with arbitrary body returning *AgentsRunResponse
 func (c *ClientWithResponses) AgentsRunWithBodyWithResponse(ctx context.Context, agentId openapi_types.UUID, params *AgentsRunParams, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*AgentsRunResponse, error) {
 	rsp, err := c.AgentsRunWithBody(ctx, agentId, params, contentType, body, reqEditors...)
@@ -5666,6 +5639,15 @@ func (c *ClientWithResponses) AgentsRunVersionsAsyncCreateWithResponse(ctx conte
 		return nil, err
 	}
 	return ParseAgentsRunVersionsAsyncCreateResponse(rsp)
+}
+
+// DiscoveryAgentEngineTypesListWithResponse request returning *DiscoveryAgentEngineTypesListResponse
+func (c *ClientWithResponses) DiscoveryAgentEngineTypesListWithResponse(ctx context.Context, reqEditors ...RequestEditorFn) (*DiscoveryAgentEngineTypesListResponse, error) {
+	rsp, err := c.DiscoveryAgentEngineTypesList(ctx, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseDiscoveryAgentEngineTypesListResponse(rsp)
 }
 
 // AgentsDestroyWithResponse request returning *AgentsDestroyResponse
@@ -5823,24 +5805,6 @@ func (c *ClientWithResponses) AgentsVersionsUpdateWithResponse(ctx context.Conte
 		return nil, err
 	}
 	return ParseAgentsVersionsUpdateResponse(rsp)
-}
-
-// DiscoveryAgentEngineTypesListWithResponse request returning *DiscoveryAgentEngineTypesListResponse
-func (c *ClientWithResponses) DiscoveryAgentEngineTypesListWithResponse(ctx context.Context, reqEditors ...RequestEditorFn) (*DiscoveryAgentEngineTypesListResponse, error) {
-	rsp, err := c.DiscoveryAgentEngineTypesList(ctx, reqEditors...)
-	if err != nil {
-		return nil, err
-	}
-	return ParseDiscoveryAgentEngineTypesListResponse(rsp)
-}
-
-// DiscoverySupportedModelsListWithResponse request returning *DiscoverySupportedModelsListResponse
-func (c *ClientWithResponses) DiscoverySupportedModelsListWithResponse(ctx context.Context, params *DiscoverySupportedModelsListParams, reqEditors ...RequestEditorFn) (*DiscoverySupportedModelsListResponse, error) {
-	rsp, err := c.DiscoverySupportedModelsList(ctx, params, reqEditors...)
-	if err != nil {
-		return nil, err
-	}
-	return ParseDiscoverySupportedModelsListResponse(rsp)
 }
 
 // PoliciesListWithResponse request returning *PoliciesListResponse
@@ -6322,6 +6286,32 @@ func ParseAgentsJobsStatusRetrieveResponse(rsp *http.Response) (*AgentsJobsStatu
 	return response, nil
 }
 
+// ParseDiscoverySupportedModelsListResponse parses an HTTP response from a DiscoverySupportedModelsListWithResponse call
+func ParseDiscoverySupportedModelsListResponse(rsp *http.Response) (*DiscoverySupportedModelsListResponse, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &DiscoverySupportedModelsListResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest SupportedLLMModelList
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	}
+
+	return response, nil
+}
+
 // ParseAgentsRunResponse parses an HTTP response from a AgentsRunWithResponse call
 func ParseAgentsRunResponse(rsp *http.Response) (*AgentsRunResponse, error) {
 	bodyBytes, err := io.ReadAll(rsp.Body)
@@ -6600,6 +6590,32 @@ func ParseAgentsRunVersionsAsyncCreateResponse(rsp *http.Response) (*AgentsRunVe
 			return nil, err
 		}
 		response.JSON500 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseDiscoveryAgentEngineTypesListResponse parses an HTTP response from a DiscoveryAgentEngineTypesListWithResponse call
+func ParseDiscoveryAgentEngineTypesListResponse(rsp *http.Response) (*DiscoveryAgentEngineTypesListResponse, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &DiscoveryAgentEngineTypesListResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest AgentEngineTypeList
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
 
 	}
 
@@ -7113,58 +7129,6 @@ func ParseAgentsVersionsUpdateResponse(rsp *http.Response) (*AgentsVersionsUpdat
 			return nil, err
 		}
 		response.JSON404 = &dest
-
-	}
-
-	return response, nil
-}
-
-// ParseDiscoveryAgentEngineTypesListResponse parses an HTTP response from a DiscoveryAgentEngineTypesListWithResponse call
-func ParseDiscoveryAgentEngineTypesListResponse(rsp *http.Response) (*DiscoveryAgentEngineTypesListResponse, error) {
-	bodyBytes, err := io.ReadAll(rsp.Body)
-	defer func() { _ = rsp.Body.Close() }()
-	if err != nil {
-		return nil, err
-	}
-
-	response := &DiscoveryAgentEngineTypesListResponse{
-		Body:         bodyBytes,
-		HTTPResponse: rsp,
-	}
-
-	switch {
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
-		var dest AgentEngineTypeList
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSON200 = &dest
-
-	}
-
-	return response, nil
-}
-
-// ParseDiscoverySupportedModelsListResponse parses an HTTP response from a DiscoverySupportedModelsListWithResponse call
-func ParseDiscoverySupportedModelsListResponse(rsp *http.Response) (*DiscoverySupportedModelsListResponse, error) {
-	bodyBytes, err := io.ReadAll(rsp.Body)
-	defer func() { _ = rsp.Body.Close() }()
-	if err != nil {
-		return nil, err
-	}
-
-	response := &DiscoverySupportedModelsListResponse{
-		Body:         bodyBytes,
-		HTTPResponse: rsp,
-	}
-
-	switch {
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
-		var dest SupportedLLMModelList
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSON200 = &dest
 
 	}
 

@@ -45,7 +45,6 @@ type (
 	PolicyVersion         = root.PolicyVersion
 	SupportedLLMModel     = root.SupportedLLMModel
 	SupportedLLMModelList = root.SupportedLLMModelList
-	TemporalWorkflow      = root.TemporalWorkflow
 
 	// File uploads.
 	FileUpload = root.FileUpload
