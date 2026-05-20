@@ -16,6 +16,7 @@ type RoeClient struct {
 
 	Agents   *AgentsAPI
 	Policies *PoliciesAPI
+	Tables   *TablesAPI
 }
 
 // NewClient constructs a RoeClient using parameters or environment fallbacks.
@@ -42,6 +43,7 @@ func NewClientWithConfig(cfg Config) (*RoeClient, error) {
 	httpClient := newHTTPClient(cfg, auth)
 	agentsAPI := newAgentsAPI(cfg, httpClient)
 	policiesAPI := newPoliciesAPI(cfg, httpClient)
+	tablesAPI := newTablesAPI(cfg, httpClient)
 
 	return &RoeClient{
 		Config:   cfg,
@@ -49,6 +51,7 @@ func NewClientWithConfig(cfg Config) (*RoeClient, error) {
 		http:     httpClient,
 		Agents:   agentsAPI,
 		Policies: policiesAPI,
+		Tables:   tablesAPI,
 	}, nil
 }
 

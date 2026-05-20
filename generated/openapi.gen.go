@@ -432,6 +432,33 @@ type PolicyVersionCreatedBy struct {
 	Id          *int                 `json:"id,omitempty"`
 }
 
+// TableUploadRequest Serializer for public CSV table uploads.
+type TableUploadRequest struct {
+	// File CSV file to upload
+	File openapi_types.File `json:"file"`
+
+	// OrganizationId Optional organization ID. Organization API keys are already scoped to one organization; if supplied, this must match that organization.
+	OrganizationId *openapi_types.UUID `json:"organization_id,omitempty"`
+
+	// TableName Name of the Roe table to create from the uploaded CSV
+	TableName string `json:"table_name"`
+
+	// WithHeaders Whether the first row of the CSV contains column headers
+	WithHeaders *bool `json:"with_headers,omitempty"`
+}
+
+// TableUploadResponse Response payload for a public CSV table upload.
+type TableUploadResponse struct {
+	// OrganizationId Organization that owns the table
+	OrganizationId openapi_types.UUID `json:"organization_id"`
+
+	// Summary ClickHouse import summary for the uploaded file
+	Summary interface{} `json:"summary,omitempty"`
+
+	// TableName Created Roe table name
+	TableName string `json:"table_name"`
+}
+
 // UpdatePolicy Serializer for updating policy metadata (name, description)
 type UpdatePolicy struct {
 	CreatedAt        *time.Time          `json:"created_at,omitempty"`
@@ -773,6 +800,9 @@ type PoliciesUpdateJSONRequestBody = UpdatePolicyRequest
 // PoliciesVersionsCreateJSONRequestBody defines body for PoliciesVersionsCreate for application/json ContentType.
 type PoliciesVersionsCreateJSONRequestBody = CreatePolicyVersionRequest
 
+// UploadTableMultipartRequestBody defines body for UploadTable for multipart/form-data ContentType.
+type UploadTableMultipartRequestBody = TableUploadRequest
+
 // RequestEditorFn  is the function signature for the RequestEditor callback function
 type RequestEditorFn func(ctx context.Context, req *http.Request) error
 
@@ -987,6 +1017,9 @@ type ClientInterface interface {
 
 	// PoliciesVersionsRetrieve request
 	PoliciesVersionsRetrieve(ctx context.Context, policyId openapi_types.UUID, versionId openapi_types.UUID, params *PoliciesVersionsRetrieveParams, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// UploadTableWithBody request with any body
+	UploadTableWithBody(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
 
 	// UsersCurrentUserRetrieve request
 	UsersCurrentUserRetrieve(ctx context.Context, reqEditors ...RequestEditorFn) (*http.Response, error)
@@ -1618,6 +1651,18 @@ func (c *Client) PoliciesVersionsCreate(ctx context.Context, policyId openapi_ty
 
 func (c *Client) PoliciesVersionsRetrieve(ctx context.Context, policyId openapi_types.UUID, versionId openapi_types.UUID, params *PoliciesVersionsRetrieveParams, reqEditors ...RequestEditorFn) (*http.Response, error) {
 	req, err := NewPoliciesVersionsRetrieveRequest(c.Server, policyId, versionId, params)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) UploadTableWithBody(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewUploadTableRequestWithBody(c.Server, contentType, body)
 	if err != nil {
 		return nil, err
 	}
@@ -4143,6 +4188,35 @@ func NewPoliciesVersionsRetrieveRequest(server string, policyId openapi_types.UU
 	return req, nil
 }
 
+// NewUploadTableRequestWithBody generates requests for UploadTable with any type of body
+func NewUploadTableRequestWithBody(server string, contentType string, body io.Reader) (*http.Request, error) {
+	var err error
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/v1/tables/upload/")
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest("POST", queryURL.String(), body)
+	if err != nil {
+		return nil, err
+	}
+
+	req.Header.Add("Content-Type", contentType)
+
+	return req, nil
+}
+
 // NewUsersCurrentUserRetrieveRequest generates requests for UsersCurrentUserRetrieve
 func NewUsersCurrentUserRetrieveRequest(server string) (*http.Request, error) {
 	var err error
@@ -4354,6 +4428,9 @@ type ClientWithResponsesInterface interface {
 
 	// PoliciesVersionsRetrieveWithResponse request
 	PoliciesVersionsRetrieveWithResponse(ctx context.Context, policyId openapi_types.UUID, versionId openapi_types.UUID, params *PoliciesVersionsRetrieveParams, reqEditors ...RequestEditorFn) (*PoliciesVersionsRetrieveResponse, error)
+
+	// UploadTableWithBodyWithResponse request with any body
+	UploadTableWithBodyWithResponse(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*UploadTableResponse, error)
 
 	// UsersCurrentUserRetrieveWithResponse request
 	UsersCurrentUserRetrieveWithResponse(ctx context.Context, reqEditors ...RequestEditorFn) (*UsersCurrentUserRetrieveResponse, error)
@@ -5215,6 +5292,29 @@ func (r PoliciesVersionsRetrieveResponse) StatusCode() int {
 	return 0
 }
 
+type UploadTableResponse struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	JSON201      *TableUploadResponse
+	JSON400      *ErrorResponse
+}
+
+// Status returns HTTPResponse.Status
+func (r UploadTableResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r UploadTableResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
 type UsersCurrentUserRetrieveResponse struct {
 	Body         []byte
 	HTTPResponse *http.Response
@@ -5694,6 +5794,15 @@ func (c *ClientWithResponses) PoliciesVersionsRetrieveWithResponse(ctx context.C
 		return nil, err
 	}
 	return ParsePoliciesVersionsRetrieveResponse(rsp)
+}
+
+// UploadTableWithBodyWithResponse request with arbitrary body returning *UploadTableResponse
+func (c *ClientWithResponses) UploadTableWithBodyWithResponse(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*UploadTableResponse, error) {
+	rsp, err := c.UploadTableWithBody(ctx, contentType, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseUploadTableResponse(rsp)
 }
 
 // UsersCurrentUserRetrieveWithResponse request returning *UsersCurrentUserRetrieveResponse
@@ -7077,6 +7186,39 @@ func ParsePoliciesVersionsRetrieveResponse(rsp *http.Response) (*PoliciesVersion
 			return nil, err
 		}
 		response.JSON200 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseUploadTableResponse parses an HTTP response from a UploadTableWithResponse call
+func ParseUploadTableResponse(rsp *http.Response) (*UploadTableResponse, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &UploadTableResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 201:
+		var dest TableUploadResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON201 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 400:
+		var dest ErrorResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON400 = &dest
 
 	}
 
