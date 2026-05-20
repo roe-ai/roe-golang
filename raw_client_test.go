@@ -6,7 +6,7 @@ import (
 	"net/http/httptest"
 	"testing"
 
-	"github.com/roe-ai/roe-golang/generated"
+	"github.com/roe-ai/roe-golang/v2/generated"
 )
 
 // Verifies client.Raw() returns a generated client wired with the same base

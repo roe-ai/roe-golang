@@ -1,4 +1,4 @@
-module github.com/roe-ai/roe-golang
+module github.com/roe-ai/roe-golang/v2
 
 go 1.24.0
 

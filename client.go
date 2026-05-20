@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"net/http"
 
-	"github.com/roe-ai/roe-golang/generated"
+	"github.com/roe-ai/roe-golang/v2/generated"
 )
 
 // RoeClient is the main entrypoint.

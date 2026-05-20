@@ -2,15 +2,19 @@
 
 Go SDK for the [Roe AI](https://www.roe-ai.com/) API.
 
+> **v2.0.0 — import path change.** The module path is now
+> `github.com/roe-ai/roe-golang/v2`. Update your imports and reinstall (see
+> [Installation](#installation) below). No API surface changes vs. 1.0.80 — see
+> [CHANGELOG.md](CHANGELOG.md) for the full migration note.
+
 > **v1.0.0** — The Go SDK uses an `oapi-codegen`-generated client; ergonomic
 > wrappers on `Agents` (with `Agents.Jobs` and `Agents.Versions`) and `Policies`
-> (with `Policies.Versions`) remain. Highlights and migration notes across
-> releases live in **[CHANGELOG.md](CHANGELOG.md)**.
+> (with `Policies.Versions`) remain.
 
 ## Installation
 
 ```bash
-go get github.com/roe-ai/roe-golang
+go get github.com/roe-ai/roe-golang/v2@v2.0.0
 ```
 
 Requires Go 1.24+
@@ -26,7 +30,7 @@ import (
     "os"
     "time"
 
-    roe "github.com/roe-ai/roe-golang"
+    roe "github.com/roe-ai/roe-golang/v2"
 )
 
 func main() {
@@ -82,7 +86,7 @@ import (
     "log"
     "net/http"
 
-    "github.com/roe-ai/roe-golang/generated"
+    "github.com/roe-ai/roe-golang/v2/generated"
 )
 
 raw, err := client.Raw()
@@ -156,7 +160,7 @@ import (
     "errors"
     "log"
 
-    roe "github.com/roe-ai/roe-golang"
+    roe "github.com/roe-ai/roe-golang/v2"
 )
 
 _, err := client.Agents.Retrieve("00000000-0000-0000-0000-000000000000")
@@ -191,7 +195,7 @@ import (
     "os"
     "time"
 
-    roe "github.com/roe-ai/roe-golang"
+    roe "github.com/roe-ai/roe-golang/v2"
 )
 
 func main() {

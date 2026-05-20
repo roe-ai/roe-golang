@@ -7,7 +7,7 @@ import (
 	"log"
 	"os"
 
-	"github.com/roe-ai/roe-golang"
+	"github.com/roe-ai/roe-golang/v2"
 )
 
 func main() {
