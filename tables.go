@@ -23,10 +23,14 @@ func newTablesAPI(cfg Config, httpClient *httpClient) *TablesAPI {
 }
 
 // TableUploadResult is the parsed response from a successful upload.
+//
+// Summary is typed as `any` (matching the generated TableUploadResponse) so
+// a future backend change that returns a non-object summary (null, string,
+// array) does not break Unmarshal.
 type TableUploadResult struct {
-	TableName      string         `json:"table_name"`
-	OrganizationID string         `json:"organization_id"`
-	Summary        map[string]any `json:"summary,omitempty"`
+	TableName      string `json:"table_name"`
+	OrganizationID string `json:"organization_id"`
+	Summary        any    `json:"summary,omitempty"`
 }
 
 // TableUploadOptions controls optional upload parameters.
@@ -37,7 +41,12 @@ type TableUploadOptions struct {
 	OrganizationID string
 }
 
-// Upload uploads a CSV file (path or FileUpload) and creates a Roe table.
+// Upload uploads a CSV file (path or Reader) and creates a Roe table.
+//
+// FileUpload.URL is not supported on this surface — pass Path or Reader.
+// Adding URL fetch here would couple the SDK to whatever fetcher the
+// caller wants (auth, SSRF protections, retry policy); a caller who
+// already has a URL should download it themselves and hand us a Reader.
 func (t *TablesAPI) Upload(tableName string, file FileUpload, opts *TableUploadOptions) (TableUploadResult, error) {
 	return t.UploadWithContext(context.Background(), tableName, file, opts)
 }
@@ -67,10 +76,16 @@ func (t *TablesAPI) UploadWithContext(ctx context.Context, tableName string, fil
 
 	body := &bytes.Buffer{}
 	writer := multipart.NewWriter(body)
-	_ = writer.WriteField("table_name", tableName)
-	_ = writer.WriteField("with_headers", fmt.Sprintf("%t", withHeaders))
+	if err := writer.WriteField("table_name", tableName); err != nil {
+		return TableUploadResult{}, fmt.Errorf("write table_name field: %w", err)
+	}
+	if err := writer.WriteField("with_headers", fmt.Sprintf("%t", withHeaders)); err != nil {
+		return TableUploadResult{}, fmt.Errorf("write with_headers field: %w", err)
+	}
 	if orgID != "" {
-		_ = writer.WriteField("organization_id", orgID)
+		if err := writer.WriteField("organization_id", orgID); err != nil {
+			return TableUploadResult{}, fmt.Errorf("write organization_id field: %w", err)
+		}
 	}
 
 	h := make(textproto.MIMEHeader)
