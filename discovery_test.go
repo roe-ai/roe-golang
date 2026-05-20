@@ -128,6 +128,11 @@ func TestDiscoveryListAgentEngineTypesParsesPublicEnginePayload(t *testing.T) {
 
 func TestDiscoveryListSupportedModelsParsesPayload(t *testing.T) {
 	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		// Greptile P2: guard that an empty capability is not forwarded as
+		// `?capability=`, which a future refactor could accidentally introduce.
+		if r.URL.Query().Has("capability") {
+			t.Errorf("expected no capability query param, got %q", r.URL.Query().Get("capability"))
+		}
 		_ = json.NewEncoder(w).Encode(map[string]any{
 			"models": []map[string]any{
 				{

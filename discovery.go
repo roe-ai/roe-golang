@@ -35,9 +35,9 @@ func (d *DiscoveryAPI) ListSupportedModels(capability string) (SupportedLLMModel
 
 // ListSupportedModelsWithContext returns supported models with a caller-supplied context.
 func (d *DiscoveryAPI) ListSupportedModelsWithContext(ctx context.Context, capability string) (SupportedLLMModelList, error) {
-	query := map[string]string{}
+	var query map[string]string
 	if capability != "" {
-		query["capability"] = capability
+		query = map[string]string{"capability": capability}
 	}
 	var resp SupportedLLMModelList
 	if err := d.httpClient.getWithContext(ctx, "/v1/agents/models/", query, &resp); err != nil {
