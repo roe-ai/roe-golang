@@ -14,7 +14,7 @@ Go SDK for the [Roe AI](https://www.roe-ai.com/) API.
 ## Installation
 
 ```bash
-go get github.com/roe-ai/roe-golang/v2@v2.0.0
+go get github.com/roe-ai/roe-golang/v2@latest
 ```
 
 Requires Go 1.24+
