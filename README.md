@@ -121,6 +121,19 @@ those symbols track the upstream OpenAPI `operationId` and may change across
 releases, so check the `generated` package godoc for the current surface
 rather than aliasing symbol names in your own code.
 
+<!-- ROE-SDK:GENERATED-FRIENDLY-APIS:START -->
+## Generated Friendly APIs
+
+This block is synced from `roe-main/roe-sdk/sdk_contract.yml` during SDK fan-out.
+
+```go
+engines, err := client.Discovery.ListAgentEngineTypes()
+models, err := client.Discovery.ListSupportedModels("text")
+
+upload, err := client.Tables.Upload("customers", roe.FileUpload{Path: "customers.csv"}, true)
+```
+<!-- ROE-SDK:GENERATED-FRIENDLY-APIS:END -->
+
 ## Job Result Inspection
 
 After waiting for a job, you can inspect its outcome using status helpers:

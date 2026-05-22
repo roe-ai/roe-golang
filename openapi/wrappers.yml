@@ -1,0 +1,37 @@
+# Friendly Go SDK facades generated after the raw OpenAPI client.
+# Generated from sdk_contract.yml by `uv run python -m roe_sdk sync-contract`.
+# The release fan-out copies this file into roe-golang/openapi/wrappers.yml.
+
+apis:
+  discovery:
+    struct_name: DiscoveryAPI
+    field_name: Discovery
+    docstring: API for discovering valid agent engine types and model IDs.
+    operations:
+    - kind: simple
+      method_name: ListAgentEngineTypes
+      docstring: Return production engine_class_id values accepted by agent creation.
+      path: /v1/agents/types/
+      return_type: generated.AgentEngineTypeList
+    - kind: simple
+      method_name: ListSupportedModels
+      docstring: Return non-deprecated model IDs accepted in engine_config.model.
+      path: /v1/agents/models/
+      return_type: generated.SupportedLLMModelList
+      parameters:
+      - name: capability
+        wire_name: capability
+        go_type: string
+        optional: true
+        omit_when_empty: true
+  tables:
+    struct_name: TablesAPI
+    field_name: Tables
+    docstring: API for uploading CSV files into Roe tables.
+    operations:
+    - kind: table_upload
+      method_name: Upload
+      docstring: Upload a CSV file and create a Roe table.
+      path: /v1/tables/upload/
+      return_type: generated.TableUploadResponse
+      body_type: generated.TableUploadRequest
