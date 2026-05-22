@@ -6,6 +6,8 @@ Go SDK for the [Roe AI](https://www.roe-ai.com/) API.
 > `github.com/roe-ai/roe-golang/v2`. Update your imports and reinstall (see
 > [Installation](#installation) below). No API surface changes vs. 1.0.80 — see
 > [CHANGELOG.md](CHANGELOG.md) for the full migration note.
+> The shared SDK release logic bumps patch versions only: `2.0.9` becomes
+> `2.0.10`, not `2.1.0`, unless the policy is intentionally changed.
 
 > **v1.0.0** — The Go SDK uses an `oapi-codegen`-generated client; ergonomic
 > wrappers on `Agents` (with `Agents.Jobs` and `Agents.Versions`) and `Policies`
