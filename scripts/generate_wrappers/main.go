@@ -8,6 +8,7 @@ import (
 	"sort"
 	"strings"
 
+	"golang.org/x/mod/modfile"
 	"gopkg.in/yaml.v3"
 )
 
@@ -56,11 +57,13 @@ type readmeBlocks struct {
 func main() {
 	root, err := repoRoot()
 	must(err)
+	modulePath, err := readModulePath(root)
+	must(err)
 
 	spec := readContract(filepath.Join(root, "openapi", "wrappers.yml"))
 	writeGeneratedAPIs(root, spec)
 	for apiName, api := range spec.APIs {
-		writeAPI(root, apiName, api)
+		writeAPI(root, modulePath, apiName, api)
 	}
 	syncReadmeBlock(root)
 	fmt.Printf("Generated %d friendly API wrapper modules from openapi/wrappers.yml\n", len(spec.APIs))
@@ -71,7 +74,30 @@ func repoRoot() (string, error) {
 	if err != nil {
 		return "", err
 	}
-	return wd, nil
+	for {
+		if _, err := os.Stat(filepath.Join(wd, "go.mod")); err == nil {
+			return wd, nil
+		} else if !os.IsNotExist(err) {
+			return "", err
+		}
+		parent := filepath.Dir(wd)
+		if parent == wd {
+			return "", fmt.Errorf("could not find go.mod from %s or any parent directory", wd)
+		}
+		wd = parent
+	}
+}
+
+func readModulePath(root string) (string, error) {
+	data, err := os.ReadFile(filepath.Join(root, "go.mod"))
+	if err != nil {
+		return "", err
+	}
+	modulePath := modfile.ModulePath(data)
+	if modulePath == "" {
+		return "", fmt.Errorf("go.mod must declare a module path")
+	}
+	return modulePath, nil
 }
 
 func readContract(path string) contract {
@@ -109,12 +135,16 @@ func writeGeneratedAPIs(root string, spec contract) {
 	writeFile(root, "generated_apis.go", buf.Bytes())
 }
 
-func writeAPI(root, apiName string, api apiSpec) {
+func writeAPI(root, modulePath, apiName string, api apiSpec) {
 	var buf bytes.Buffer
 	writeHeader(&buf)
 	buf.WriteString("import (\n")
-	buf.WriteString("\t\"context\"\n\n")
-	buf.WriteString("\t\"github.com/roe-ai/roe-golang/v2/generated\"\n")
+	buf.WriteString("\t\"context\"\n")
+	if apiNeedsFmt(api) {
+		buf.WriteString("\t\"fmt\"\n")
+	}
+	buf.WriteString("\n")
+	fmt.Fprintf(&buf, "\t%q\n", modulePath+"/generated")
 	buf.WriteString(")\n\n")
 
 	fmt.Fprintf(&buf, "// %s %s\n", api.StructName, sentence(api.Docstring))
@@ -201,13 +231,39 @@ func writeQueryMap(buf *bytes.Buffer, params []parameter) {
 			wireName = param.Name
 		}
 		if param.OmitWhenEmpty {
-			fmt.Fprintf(buf, "\tif %s != \"\" {\n", param.Name)
-			fmt.Fprintf(buf, "\t\tquery[%q] = %s\n", wireName, param.Name)
+			condition, err := omitWhenEmptyCondition(param)
+			must(err)
+			fmt.Fprintf(buf, "\tif %s {\n", condition)
+			fmt.Fprintf(buf, "\t\tquery[%q] = fmt.Sprint(%s)\n", wireName, param.Name)
 			buf.WriteString("\t}\n")
 		} else {
-			fmt.Fprintf(buf, "\tquery[%q] = %s\n", wireName, param.Name)
+			fmt.Fprintf(buf, "\tquery[%q] = fmt.Sprint(%s)\n", wireName, param.Name)
 		}
 	}
+}
+
+func omitWhenEmptyCondition(param parameter) (string, error) {
+	switch param.GoType {
+	case "string":
+		return fmt.Sprintf("%s != \"\"", param.Name), nil
+	case "bool":
+		return param.Name, nil
+	case "int", "int8", "int16", "int32", "int64",
+		"uint", "uint8", "uint16", "uint32", "uint64", "uintptr",
+		"float32", "float64":
+		return fmt.Sprintf("%s != 0", param.Name), nil
+	default:
+		return "", fmt.Errorf("%s has omit_when_empty with unsupported go_type %q", param.Name, param.GoType)
+	}
+}
+
+func apiNeedsFmt(api apiSpec) bool {
+	for _, op := range api.Operations {
+		if len(op.Parameters) > 0 {
+			return true
+		}
+	}
+	return false
 }
 
 func goParams(params []parameter) string {

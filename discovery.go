@@ -3,6 +3,7 @@ package roe
 
 import (
 	"context"
+	"fmt"
 
 	"github.com/roe-ai/roe-golang/v2/generated"
 )
@@ -41,7 +42,7 @@ func (a *DiscoveryAPI) ListSupportedModels(capability string) (generated.Support
 func (a *DiscoveryAPI) ListSupportedModelsWithContext(ctx context.Context, capability string) (generated.SupportedLLMModelList, error) {
 	query := map[string]string{}
 	if capability != "" {
-		query["capability"] = capability
+		query["capability"] = fmt.Sprint(capability)
 	}
 	var resp generated.SupportedLLMModelList
 	if err := a.httpClient.getWithContext(ctx, "/v1/agents/models/", query, &resp); err != nil {
