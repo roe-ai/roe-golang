@@ -9,7 +9,7 @@ import (
 	"os"
 	"time"
 
-	"github.com/roe-ai/roe-golang/v2"
+	"github.com/roe-ai/roe-golang"
 )
 
 func main() {

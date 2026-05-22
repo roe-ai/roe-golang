@@ -30,7 +30,7 @@ jobs:
         env:
           TAG_NAME: ${{ github.ref_name }}
         run: |
-          URL="https://proxy.golang.org/github.com/roe-ai/roe-golang/v2/@v/${TAG_NAME}.info"
+          URL="https://proxy.golang.org/github.com/roe-ai/roe-golang/@v/${TAG_NAME}.info"
           for i in 1 2 3 4 5; do
             if curl -sf "$URL"; then
               echo "Proxy warmed on attempt $i"

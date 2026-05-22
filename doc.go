@@ -2,7 +2,7 @@
 //
 // # Installation
 //
-//	go get github.com/roe-ai/roe-golang/v2@latest
+//	go get github.com/roe-ai/roe-golang@latest
 //
 // # Quick Start
 //
@@ -16,7 +16,7 @@
 //		"os"
 //		"time"
 //
-//		roe "github.com/roe-ai/roe-golang/v2"
+//		roe "github.com/roe-ai/roe-golang"
 //	)
 //
 //	func main() {

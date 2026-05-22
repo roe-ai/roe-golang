@@ -1,6 +1,6 @@
 package roe
 
-import root "github.com/roe-ai/roe-golang/v2"
+import root "github.com/roe-ai/roe-golang"
 
 type (
 	// Core client/config.

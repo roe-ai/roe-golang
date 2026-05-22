@@ -4,7 +4,7 @@ package roe
 import (
 	"context"
 
-	"github.com/roe-ai/roe-golang/v2/generated"
+	"github.com/roe-ai/roe-golang/generated"
 )
 
 // TablesAPI API for uploading CSV files into Roe tables.

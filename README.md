@@ -2,12 +2,10 @@
 
 Go SDK for the [Roe AI](https://www.roe-ai.com/) API.
 
-> **v2.0.0 — import path change.** The module path is now
-> `github.com/roe-ai/roe-golang/v2`. Update your imports and reinstall (see
-> [Installation](#installation) below). No API surface changes vs. 1.0.80 — see
-> [CHANGELOG.md](CHANGELOG.md) for the full migration note.
-> The shared SDK release logic bumps patch versions only: `2.0.9` becomes
-> `2.0.10`, not `2.1.0`, unless the policy is intentionally changed.
+> **v1.0.82** — Version synchronization across roe-python / roe-typescript /
+> roe-golang. No Go module import-path migration; the SDK stays on
+> `github.com/roe-ai/roe-golang` while the public SDK packages share a single
+> 1.0.x patch counter driven by the SDK OpenAPI spec.
 
 > **v1.0.0** — The Go SDK uses an `oapi-codegen`-generated client; ergonomic
 > wrappers on `Agents` (with `Agents.Jobs` and `Agents.Versions`) and `Policies`
@@ -16,7 +14,7 @@ Go SDK for the [Roe AI](https://www.roe-ai.com/) API.
 ## Installation
 
 ```bash
-go get github.com/roe-ai/roe-golang/v2@latest
+go get github.com/roe-ai/roe-golang@latest
 ```
 
 Requires Go 1.24+
@@ -32,7 +30,7 @@ import (
     "os"
     "time"
 
-    roe "github.com/roe-ai/roe-golang/v2"
+    roe "github.com/roe-ai/roe-golang"
 )
 
 func main() {
@@ -88,7 +86,7 @@ import (
     "log"
     "net/http"
 
-    "github.com/roe-ai/roe-golang/v2/generated"
+    "github.com/roe-ai/roe-golang/generated"
 )
 
 raw, err := client.Raw()
@@ -175,7 +173,7 @@ import (
     "errors"
     "log"
 
-    roe "github.com/roe-ai/roe-golang/v2"
+    roe "github.com/roe-ai/roe-golang"
 )
 
 _, err := client.Agents.Retrieve("00000000-0000-0000-0000-000000000000")
@@ -210,7 +208,7 @@ import (
     "os"
     "time"
 
-    roe "github.com/roe-ai/roe-golang/v2"
+    roe "github.com/roe-ai/roe-golang"
 )
 
 func main() {

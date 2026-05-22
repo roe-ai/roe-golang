@@ -5,7 +5,7 @@ import (
 	"context"
 	"fmt"
 
-	"github.com/roe-ai/roe-golang/v2/generated"
+	"github.com/roe-ai/roe-golang/generated"
 )
 
 // DiscoveryAPI API for discovering valid agent engine types and model IDs.

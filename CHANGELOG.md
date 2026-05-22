@@ -5,30 +5,17 @@ All notable changes to the Roe AI Go SDK will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [2.0.0] - 2026-05-20
+## [1.0.82] - 2026-05-22
+
+### Added
+- Generated friendly wrappers for discovery and table upload:
+  `client.Discovery.ListAgentEngineTypes(...)`,
+  `client.Discovery.ListSupportedModels(...)`, and `client.Tables.Upload(...)`.
 
 ### Changed
-- **Module path migration (BREAKING).** The Go module path is now
-  `github.com/roe-ai/roe-golang/v2`. Customers must update their imports:
-
-  ```diff
-  - import "github.com/roe-ai/roe-golang"
-  + import "github.com/roe-ai/roe-golang/v2"
-  ```
-
-  And reinstall:
-
-  ```bash
-  go get github.com/roe-ai/roe-golang/v2@v2.0.0
-  ```
-
-  This is required by Go's
-  [module versioning rules](https://go.dev/doc/modules/version-numbers#v2-go-modules)
-  for majors ≥ 2. No API surface changes vs. 1.0.80 — only the import path.
-
 - Versions are now synchronized across roe-python (`roe-ai`), roe-typescript,
-  roe-golang, and roe-mcp. All four packages share a single patch counter,
-  driven by the SDK OpenAPI spec via the roe-main release pipeline.
+  and roe-golang. The public SDKs share a single 1.0.x patch counter driven by
+  the SDK OpenAPI spec via the roe-main release pipeline.
 
 ## [1.0.0] - 2025-12-29
 
