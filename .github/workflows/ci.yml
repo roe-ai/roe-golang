@@ -82,4 +82,14 @@ jobs:
         run: bash scripts/generate-sdk
 
       - name: Check for codegen drift
-        run: git diff --exit-code -- generated/openapi.gen.go
+        run: |
+          git diff --exit-code -- \
+            README.md \
+            client.go \
+            discovery.go \
+            generated/openapi.gen.go \
+            generated_apis.go \
+            openapi/openapi.yml \
+            openapi/wrappers.yml \
+            openapi/readme_blocks.yml \
+            tables.go

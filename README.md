@@ -2,15 +2,19 @@
 
 Go SDK for the [Roe AI](https://www.roe-ai.com/) API.
 
+> **v1.0.802** — Version synchronization across roe-python / roe-typescript /
+> roe-golang. No Go module import-path migration; the SDK stays on
+> `github.com/roe-ai/roe-golang` while the public SDK packages share a single
+> 1.0.x patch counter driven by the SDK OpenAPI spec.
+
 > **v1.0.0** — The Go SDK uses an `oapi-codegen`-generated client; ergonomic
 > wrappers on `Agents` (with `Agents.Jobs` and `Agents.Versions`) and `Policies`
-> (with `Policies.Versions`) remain. Highlights and migration notes across
-> releases live in **[CHANGELOG.md](CHANGELOG.md)**.
+> (with `Policies.Versions`) remain.
 
 ## Installation
 
 ```bash
-go get github.com/roe-ai/roe-golang
+go get github.com/roe-ai/roe-golang@latest
 ```
 
 Requires Go 1.24+
@@ -116,6 +120,19 @@ For typed responses, call the named generated method off `raw` directly —
 those symbols track the upstream OpenAPI `operationId` and may change across
 releases, so check the `generated` package godoc for the current surface
 rather than aliasing symbol names in your own code.
+
+<!-- ROE-SDK:GENERATED-FRIENDLY-APIS:START -->
+## Generated Friendly APIs
+
+This block is synced from `roe-main/roe-sdk/sdk_contract.yml` during SDK fan-out.
+
+```go
+engines, err := client.Discovery.ListAgentEngineTypes()
+models, err := client.Discovery.ListSupportedModels("text")
+
+upload, err := client.Tables.Upload("customers", roe.FileUpload{Path: "customers.csv"}, true)
+```
+<!-- ROE-SDK:GENERATED-FRIENDLY-APIS:END -->
 
 ## Job Result Inspection
 

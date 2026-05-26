@@ -13,6 +13,7 @@ type RoeClient struct {
 	Config Config
 	auth   Auth
 	http   *httpClient
+	*generatedAPIs
 
 	Agents   *AgentsAPI
 	Policies *PoliciesAPI
@@ -42,13 +43,15 @@ func NewClientWithConfig(cfg Config) (*RoeClient, error) {
 	httpClient := newHTTPClient(cfg, auth)
 	agentsAPI := newAgentsAPI(cfg, httpClient)
 	policiesAPI := newPoliciesAPI(cfg, httpClient)
+	generatedAPIs := newGeneratedAPIs(cfg, httpClient)
 
 	return &RoeClient{
-		Config:   cfg,
-		auth:     auth,
-		http:     httpClient,
-		Agents:   agentsAPI,
-		Policies: policiesAPI,
+		Config:        cfg,
+		auth:          auth,
+		http:          httpClient,
+		generatedAPIs: generatedAPIs,
+		Agents:        agentsAPI,
+		Policies:      policiesAPI,
 	}, nil
 }
 

@@ -8,4 +8,5 @@ trap 'rm -f "$GENERATED_SPEC"' EXIT
 cd "$ROOT_DIR"
 
 go generate ./generated/...
-gofmt -w generated/openapi.gen.go
+go run ./scripts/generate_wrappers
+gofmt -w generated/openapi.gen.go generated_apis.go discovery.go tables.go
