@@ -2,7 +2,7 @@
 //
 // # Installation
 //
-//	go get github.com/roe-ai/roe-golang@v1.0.80
+//	go get github.com/roe-ai/roe-golang@v1.0.81
 //
 // # Quick Start
 //
