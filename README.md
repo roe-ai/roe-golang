@@ -2,7 +2,7 @@
 
 Go SDK for the [Roe AI](https://www.roe-ai.com/) API.
 
-> **v1.0.82** — Version synchronization across roe-python / roe-typescript /
+> **v1.0.802** — Version synchronization across roe-python / roe-typescript /
 > roe-golang. No Go module import-path migration; the SDK stays on
 > `github.com/roe-ai/roe-golang` while the public SDK packages share a single
 > 1.0.x patch counter driven by the SDK OpenAPI spec.
