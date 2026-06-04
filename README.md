@@ -1,6 +1,6 @@
-# Roe AI Go SDK
+# Roe Go SDK
 
-Go SDK for the [Roe AI](https://www.roe-ai.com/) API.
+Go SDK for the [Roe](https://www.roe-ai.com/) API.
 
 > **v1.0.802** — Version synchronization across roe-python / roe-typescript /
 > roe-golang. No Go module import-path migration; the SDK stays on
@@ -527,6 +527,6 @@ client.Policies.Versions.Create(policyID, content, versionName, baseVersionID)
 
 ## Links
 
-- [Roe AI](https://www.roe-ai.com/)
+- [Roe](https://www.roe-ai.com/)
 - [API Docs](https://docs.roe-ai.com)
 - [Examples](examples/)

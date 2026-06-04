@@ -1,4 +1,4 @@
-// Package roe is the official Go SDK for the Roe AI API.
+// Package roe is the official Go SDK for the Roe API.
 //
 // # Installation
 //
@@ -64,7 +64,7 @@
 //
 // # Environment Variables
 //
-//   - ROE_API_KEY: Your Roe AI API key
+//   - ROE_API_KEY: Your Roe API key
 //   - ROE_ORGANIZATION_ID: Your organization UUID
 //   - ROE_BASE_URL: Optional API base URL (defaults to https://api.roe-ai.com)
 //   - ROE_TIMEOUT_SECONDS: Optional request timeout (defaults to 60s)
