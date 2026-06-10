@@ -18,6 +18,81 @@ import (
 	openapi_types "github.com/oapi-codegen/runtime/types"
 )
 
+// Defines values for ConnectorTypeEnum.
+const (
+	CheckoutCom    ConnectorTypeEnum = "checkout_com"
+	CustomApi      ConnectorTypeEnum = "custom_api"
+	GoogleDrive    ConnectorTypeEnum = "google_drive"
+	Intercom       ConnectorTypeEnum = "intercom"
+	LexisNexis     ConnectorTypeEnum = "lexis_nexis"
+	Plaid          ConnectorTypeEnum = "plaid"
+	S3             ConnectorTypeEnum = "s3"
+	Salesforce     ConnectorTypeEnum = "salesforce"
+	Sardine        ConnectorTypeEnum = "sardine"
+	Sharepoint     ConnectorTypeEnum = "sharepoint"
+	Snowflake      ConnectorTypeEnum = "snowflake"
+	Socure         ConnectorTypeEnum = "socure"
+	Stripe         ConnectorTypeEnum = "stripe"
+	WebApplication ConnectorTypeEnum = "web_application"
+	Zendesk        ConnectorTypeEnum = "zendesk"
+)
+
+// Valid indicates whether the value is a known member of the ConnectorTypeEnum enum.
+func (e ConnectorTypeEnum) Valid() bool {
+	switch e {
+	case CheckoutCom:
+		return true
+	case CustomApi:
+		return true
+	case GoogleDrive:
+		return true
+	case Intercom:
+		return true
+	case LexisNexis:
+		return true
+	case Plaid:
+		return true
+	case S3:
+		return true
+	case Salesforce:
+		return true
+	case Sardine:
+		return true
+	case Sharepoint:
+		return true
+	case Snowflake:
+		return true
+	case Socure:
+		return true
+	case Stripe:
+		return true
+	case WebApplication:
+		return true
+	case Zendesk:
+		return true
+	default:
+		return false
+	}
+}
+
+// Defines values for StatusEnum.
+const (
+	Active StatusEnum = "active"
+	Error  StatusEnum = "error"
+)
+
+// Valid indicates whether the value is a known member of the StatusEnum enum.
+func (e StatusEnum) Valid() bool {
+	switch e {
+	case Active:
+		return true
+	case Error:
+		return true
+	default:
+		return false
+	}
+}
+
 // AgentDatum defines model for AgentDatum.
 type AgentDatum struct {
 	// Cost The cost of the agent job execution
@@ -220,10 +295,10 @@ type AgentVersionCreateRequest struct {
 	Description *string `json:"description,omitempty"`
 
 	// EngineConfig Engine configuration as a dictionary of string key-value pairs.
-	EngineConfig interface{} `json:"engine_config"`
+	EngineConfig interface{} `json:"engine_config,omitempty"`
 
 	// InputDefinitions List of input definitions for this agent version.
-	InputDefinitions interface{} `json:"input_definitions"`
+	InputDefinitions interface{} `json:"input_definitions,omitempty"`
 
 	// VersionName Version name for the agent version. Defaults to 'unnamed version' if not provided.
 	VersionName *string `json:"version_name,omitempty"`
@@ -275,16 +350,16 @@ type BaseAgentCreateRequest struct {
 	EngineClassId string `json:"engine_class_id"`
 
 	// EngineConfig Engine configuration for the first version.
-	EngineConfig interface{} `json:"engine_config"`
+	EngineConfig interface{} `json:"engine_config,omitempty"`
 
 	// InputDefinitions Input definitions for the first version.
-	InputDefinitions interface{} `json:"input_definitions"`
+	InputDefinitions interface{} `json:"input_definitions,omitempty"`
 
 	// Name Name of the base agent.
 	Name string `json:"name"`
 
-	// OrganizationId Organization ID where the agent belongs.
-	OrganizationId openapi_types.UUID `json:"organization_id"`
+	// OrganizationId Optional. Ignored by the API — the organization is derived from the authenticated API key/token. Accepted for backwards compatibility.
+	OrganizationId *openapi_types.UUID `json:"organization_id,omitempty"`
 
 	// VersionName Name of the first version.
 	VersionName *string `json:"version_name,omitempty"`
@@ -300,6 +375,129 @@ type BaseAgentUpdateRequest struct {
 
 	// Name New name for the agent. Must not be empty if provided.
 	Name *string `json:"name,omitempty"`
+}
+
+// Connection Serializer for Connection model.
+// Returns:
+// - config: Non-sensitive config from DB
+// - auth_config: Actual auth credentials from Secrets Manager (not the internal reference)
+type Connection struct {
+	AuthConfig *map[string]interface{} `json:"auth_config,omitempty"`
+	Config     interface{}             `json:"config,omitempty"`
+
+	// ConnectorDisplayName Get the display name for the connector type.
+	ConnectorDisplayName *string             `json:"connector_display_name,omitempty"`
+	ConnectorType        string              `json:"connector_type"`
+	CreatedAt            *time.Time          `json:"created_at,omitempty"`
+	Description          *string             `json:"description,omitempty"`
+	Id                   *openapi_types.UUID `json:"id,omitempty"`
+	Name                 string              `json:"name"`
+	Organization         openapi_types.UUID  `json:"organization"`
+
+	// Status * `active` - Active
+	// * `error` - Error
+	Status    *StatusEnum `json:"status,omitempty"`
+	UpdatedAt *time.Time  `json:"updated_at,omitempty"`
+	User      *int        `json:"user,omitempty"`
+}
+
+// ConnectionList Lightweight serializer for listing connections.
+// Only returns metadata, no auth_config (avoids Secrets Manager calls).
+type ConnectionList struct {
+	Config interface{} `json:"config,omitempty"`
+
+	// ConnectorDisplayName Get the display name for the connector type.
+	ConnectorDisplayName *string             `json:"connector_display_name,omitempty"`
+	ConnectorType        string              `json:"connector_type"`
+	CreatedAt            *time.Time          `json:"created_at,omitempty"`
+	Description          *string             `json:"description,omitempty"`
+	Id                   *openapi_types.UUID `json:"id,omitempty"`
+	Name                 string              `json:"name"`
+	Organization         openapi_types.UUID  `json:"organization"`
+
+	// Status * `active` - Active
+	// * `error` - Error
+	Status    *StatusEnum `json:"status,omitempty"`
+	UpdatedAt *time.Time  `json:"updated_at,omitempty"`
+	User      *int        `json:"user,omitempty"`
+}
+
+// ConnectionRequest Serializer for Connection model.
+// Returns:
+// - config: Non-sensitive config from DB
+// - auth_config: Actual auth credentials from Secrets Manager (not the internal reference)
+type ConnectionRequest struct {
+	Config        interface{}        `json:"config,omitempty"`
+	ConnectorType string             `json:"connector_type"`
+	Description   *string            `json:"description,omitempty"`
+	Name          string             `json:"name"`
+	Organization  openapi_types.UUID `json:"organization"`
+
+	// Status * `active` - Active
+	// * `error` - Error
+	Status *StatusEnum `json:"status,omitempty"`
+}
+
+// ConnectorListResponse defines model for ConnectorListResponse.
+type ConnectorListResponse struct {
+	Connectors []ConnectorMetadata `json:"connectors"`
+}
+
+// ConnectorMetadata Serializer for connector metadata.
+type ConnectorMetadata struct {
+	AuthSchema           interface{} `json:"auth_schema"`
+	Category             string      `json:"category"`
+	ConfigSchema         interface{} `json:"config_schema"`
+	DeliveryConfigSchema interface{} `json:"delivery_config_schema"`
+	Description          string      `json:"description"`
+	DisplayName          string      `json:"display_name"`
+	Icon                 string      `json:"icon"`
+	Id                   string      `json:"id"`
+	SupportsDelivery     bool        `json:"supports_delivery"`
+}
+
+// ConnectorTypeEnum * `snowflake` - SNOWFLAKE
+// * `s3` - S3
+// * `sharepoint` - SHAREPOINT
+// * `zendesk` - ZENDESK
+// * `google_drive` - GOOGLE_DRIVE
+// * `salesforce` - SALESFORCE
+// * `web_application` - WEB_APPLICATION
+// * `custom_api` - CUSTOM_API
+// * `lexis_nexis` - LEXIS_NEXIS
+// * `sardine` - SARDINE
+// * `intercom` - INTERCOM
+// * `stripe` - STRIPE
+// * `plaid` - PLAID
+// * `checkout_com` - CHECKOUT_COM
+// * `socure` - SOCURE
+type ConnectorTypeEnum string
+
+// CreateConnectionRequest Serializer for creating connections.
+// Accepts full config, splits into config (DB) and auth (Secrets Manager).
+type CreateConnectionRequest struct {
+	AuthConfig *map[string]interface{} `json:"auth_config,omitempty"`
+	Config     map[string]interface{}  `json:"config"`
+
+	// ConnectorType * `snowflake` - SNOWFLAKE
+	// * `s3` - S3
+	// * `sharepoint` - SHAREPOINT
+	// * `zendesk` - ZENDESK
+	// * `google_drive` - GOOGLE_DRIVE
+	// * `salesforce` - SALESFORCE
+	// * `web_application` - WEB_APPLICATION
+	// * `custom_api` - CUSTOM_API
+	// * `lexis_nexis` - LEXIS_NEXIS
+	// * `sardine` - SARDINE
+	// * `intercom` - INTERCOM
+	// * `stripe` - STRIPE
+	// * `plaid` - PLAID
+	// * `checkout_com` - CHECKOUT_COM
+	// * `socure` - SOCURE
+	ConnectorType  ConnectorTypeEnum   `json:"connector_type"`
+	Description    *string             `json:"description,omitempty"`
+	Name           string              `json:"name"`
+	OrganizationId *openapi_types.UUID `json:"organization_id,omitempty"`
 }
 
 // CreatePolicy Serializer for creating a new policy with initial version
@@ -343,6 +541,20 @@ type CreatePolicyVersionRequest struct {
 	VersionName *string `json:"version_name,omitempty"`
 }
 
+// DuplicateConnectionExisting Identifying summary of the existing connection that triggered a 409.
+type DuplicateConnectionExisting struct {
+	Id   openapi_types.UUID `json:"id"`
+	Name string             `json:"name"`
+}
+
+// DuplicateConnectionResponse Body of the 409 response when create/update hits a strict-identity duplicate.
+type DuplicateConnectionResponse struct {
+	Error string `json:"error"`
+
+	// ExistingConnection Identifying summary of the existing connection that triggered a 409.
+	ExistingConnection DuplicateConnectionExisting `json:"existing_connection"`
+}
+
 // ErrorResponse defines model for ErrorResponse.
 type ErrorResponse struct {
 	// Message Error message
@@ -363,6 +575,14 @@ type PaginatedBaseAgentList struct {
 	Next     *string     `json:"next,omitempty"`
 	Previous *string     `json:"previous,omitempty"`
 	Results  []BaseAgent `json:"results"`
+}
+
+// PaginatedConnectionListList defines model for PaginatedConnectionListList.
+type PaginatedConnectionListList struct {
+	Count    int              `json:"count"`
+	Next     *string          `json:"next,omitempty"`
+	Previous *string          `json:"previous,omitempty"`
+	Results  []ConnectionList `json:"results"`
 }
 
 // PaginatedPolicyList defines model for PaginatedPolicyList.
@@ -400,6 +620,26 @@ type PatchedPatchedAgentVersionUpdateRequestRequest struct {
 
 	// VersionName New version name for the agent version.
 	VersionName *string `json:"version_name,omitempty"`
+}
+
+// PatchedUpdateConnectionRequest Serializer for updating connections.
+//
+// Cross-state Pydantic validation (config + auth) lives in the view's
+// “update()“ method now -- see “connections.views.
+// ConnectionRetrieveUpdateDestroyView.update“. That path is the single
+// source of truth for canonical validation + write, mirrors the create
+// path's “service.create_connection_with_secrets“, AND correctly
+// handles the SM-fetch-failure case for the unchanged-auth branch
+// (returns 502 / opportunistic backfill instead of silently corrupting
+// the fingerprint by hashing “{}“). Re-running the same validation
+// here would (a) double the work, (b) bypass the SM-failure semantics,
+// and (c) leak Pydantic field/value details through DRF's generic 400
+// handler. The serializer only does shape checks.
+type PatchedUpdateConnectionRequest struct {
+	AuthConfig  *map[string]interface{} `json:"auth_config,omitempty"`
+	Config      *map[string]interface{} `json:"config,omitempty"`
+	Description *string                 `json:"description,omitempty"`
+	Name        *string                 `json:"name,omitempty"`
 }
 
 // PatchedUpdatePolicyRequest Serializer for updating policy metadata (name, description)
@@ -444,6 +684,10 @@ type PolicyVersionCreatedBy struct {
 	Id          *int                 `json:"id,omitempty"`
 }
 
+// StatusEnum * `active` - Active
+// * `error` - Error
+type StatusEnum string
+
 // SupportedLLMModel Serializer for tenant-agnostic supported LLM metadata.
 type SupportedLLMModel struct {
 	// Capabilities Input capabilities supported by this model
@@ -476,6 +720,94 @@ type SupportedLLMModelList struct {
 	TotalCount  int    `json:"total_count"`
 }
 
+// Table Serializer for table information.
+type Table struct {
+	// Columns List of columns in the table
+	Columns []TableColumn `json:"columns"`
+
+	// Name Name of the table
+	Name string `json:"name"`
+}
+
+// TableColumn Serializer for table column information.
+type TableColumn struct {
+	// Name Name of the column
+	Name string `json:"name"`
+
+	// Type Type of the column (e.g., String, UInt64)
+	Type string `json:"type"`
+}
+
+// TableDescribeResponse Response payload for describing a public Roe table.
+type TableDescribeResponse struct {
+	// Columns List of columns in the table
+	Columns []TableColumn `json:"columns"`
+
+	// RowCount Total row count if ClickHouse can determine it from metadata without scanning the table
+	RowCount *int `json:"row_count"`
+
+	// TableName Name of the table
+	TableName string `json:"table_name"`
+
+	// UpdatedAt Latest ClickHouse table metadata modification timestamp if available
+	UpdatedAt *time.Time `json:"updated_at"`
+}
+
+// TableListResponse Response payload for listing public Roe tables.
+type TableListResponse struct {
+	Results []Table `json:"results"`
+
+	// Total Total number of tables returned
+	Total int `json:"total"`
+}
+
+// TablePreviewResponse Response payload for previewing a public Roe table.
+type TablePreviewResponse struct {
+	// Columns List of columns in the table
+	Columns []TableColumn `json:"columns"`
+
+	// RowCount Number of sample rows returned
+	RowCount int `json:"row_count"`
+
+	// Rows Sample rows keyed by column name
+	Rows []map[string]interface{} `json:"rows"`
+
+	// TableName Name of the table
+	TableName string `json:"table_name"`
+}
+
+// TableQueryRequestRequest Request payload for running a public Roe table query.
+type TableQueryRequestRequest struct {
+	// Limit Maximum rows returned. Defaults to 1000; maximum 1000.
+	Limit *int `json:"limit,omitempty"`
+
+	// Sql Single read-only ClickHouse SELECT or WITH ... SELECT query.
+	Sql string `json:"sql"`
+}
+
+// TableQueryResultResponse Response payload for polling or fetching a public Roe table query.
+type TableQueryResultResponse struct {
+	Columns         *[]map[string]interface{} `json:"columns,omitempty"`
+	Error           *string                   `json:"error,omitempty"`
+	ExecutionTimeMs *float64                  `json:"execution_time_ms,omitempty"`
+	RowCount        *int                      `json:"row_count,omitempty"`
+
+	// Rows Rows keyed by column name. When truncated is true, an oversized cell may be returned as a shortened string even if the original ClickHouse value was a nested object or array.
+	Rows         *[]map[string]interface{} `json:"rows,omitempty"`
+	Status       string                    `json:"status"`
+	TableQueryId openapi_types.UUID        `json:"table_query_id"`
+
+	// Truncated True when the result hit the row limit, backend result byte cap, or an individual huge cell was shortened. In truncated responses, any oversized cell may be represented as a string regardless of its original ClickHouse type.
+	Truncated *bool `json:"truncated,omitempty"`
+}
+
+// TableQuerySubmitResponse Response payload for submitting a public Roe table query.
+type TableQuerySubmitResponse struct {
+	CreatedAt    time.Time          `json:"created_at"`
+	Status       string             `json:"status"`
+	TableQueryId openapi_types.UUID `json:"table_query_id"`
+}
+
 // TableUploadRequest Serializer for public CSV table uploads.
 type TableUploadRequest struct {
 	// File CSV file to upload
@@ -487,7 +819,7 @@ type TableUploadRequest struct {
 	// TableName Name of the Roe table to create from the uploaded CSV
 	TableName string `json:"table_name"`
 
-	// WithHeaders Whether the first row of the CSV contains column headers
+	// WithHeaders If true, the first CSV row contains column headers and is not inserted as data; if false, every row is inserted as data and columns are named column_1, column_2, etc.
 	WithHeaders *bool `json:"with_headers,omitempty"`
 }
 
@@ -501,6 +833,56 @@ type TableUploadResponse struct {
 
 	// TableName Created Roe table name
 	TableName string `json:"table_name"`
+}
+
+// TestConnection Serializer for connection test response.
+type TestConnection struct {
+	Message  string    `json:"message"`
+	Success  bool      `json:"success"`
+	TestedAt time.Time `json:"tested_at"`
+}
+
+// TestConnectionCredentialsRequest Serializer for testing connector credentials without saving a connection.
+type TestConnectionCredentialsRequest struct {
+	AuthConfig *map[string]interface{} `json:"auth_config,omitempty"`
+	Config     map[string]interface{}  `json:"config"`
+
+	// ConnectorType * `snowflake` - SNOWFLAKE
+	// * `s3` - S3
+	// * `sharepoint` - SHAREPOINT
+	// * `zendesk` - ZENDESK
+	// * `google_drive` - GOOGLE_DRIVE
+	// * `salesforce` - SALESFORCE
+	// * `web_application` - WEB_APPLICATION
+	// * `custom_api` - CUSTOM_API
+	// * `lexis_nexis` - LEXIS_NEXIS
+	// * `sardine` - SARDINE
+	// * `intercom` - INTERCOM
+	// * `stripe` - STRIPE
+	// * `plaid` - PLAID
+	// * `checkout_com` - CHECKOUT_COM
+	// * `socure` - SOCURE
+	ConnectorType ConnectorTypeEnum `json:"connector_type"`
+}
+
+// UpdateConnection Serializer for updating connections.
+//
+// Cross-state Pydantic validation (config + auth) lives in the view's
+// “update()“ method now -- see “connections.views.
+// ConnectionRetrieveUpdateDestroyView.update“. That path is the single
+// source of truth for canonical validation + write, mirrors the create
+// path's “service.create_connection_with_secrets“, AND correctly
+// handles the SM-fetch-failure case for the unchanged-auth branch
+// (returns 502 / opportunistic backfill instead of silently corrupting
+// the fingerprint by hashing “{}“). Re-running the same validation
+// here would (a) double the work, (b) bypass the SM-failure semantics,
+// and (c) leak Pydantic field/value details through DRF's generic 400
+// handler. The serializer only does shape checks.
+type UpdateConnection struct {
+	AuthConfig  *map[string]interface{} `json:"auth_config,omitempty"`
+	Config      *map[string]interface{} `json:"config,omitempty"`
+	Description *string                 `json:"description,omitempty"`
+	Name        *string                 `json:"name,omitempty"`
 }
 
 // UpdatePolicy Serializer for updating policy metadata (name, description)
@@ -727,6 +1109,60 @@ type AgentsVersionsUpdateParams struct {
 	OrganizationId *openapi_types.UUID `form:"organization_id,omitempty" json:"organization_id,omitempty"`
 }
 
+// ConnectionsListParams defines parameters for ConnectionsList.
+type ConnectionsListParams struct {
+	// ConnectorType Filter by connector type (e.g., 'snowflake', 'postgres')
+	ConnectorType *string `form:"connector_type,omitempty" json:"connector_type,omitempty"`
+
+	// OrganizationId Organization ID to list connections from. Required for JWT auth; inferred from API key when using an Organization API Key.
+	OrganizationId *openapi_types.UUID `form:"organization_id,omitempty" json:"organization_id,omitempty"`
+
+	// Page A page number within the paginated result set.
+	Page *int `form:"page,omitempty" json:"page,omitempty"`
+
+	// PageSize Number of results to return per page.
+	PageSize *int `form:"page_size,omitempty" json:"page_size,omitempty"`
+
+	// Search Search connections by name, description, or ID (case-insensitive)
+	Search *string `form:"search,omitempty" json:"search,omitempty"`
+}
+
+// ConnectionsCreateParams defines parameters for ConnectionsCreate.
+type ConnectionsCreateParams struct {
+	// OrganizationId Organization ID. This is required for access control. It can be provided via query or request body depending on the endpoint.
+	OrganizationId *openapi_types.UUID `form:"organization_id,omitempty" json:"organization_id,omitempty"`
+}
+
+// ConnectionsDestroyParams defines parameters for ConnectionsDestroy.
+type ConnectionsDestroyParams struct {
+	// OrganizationId Organization ID. This is required for access control. It can be provided via query or request body depending on the endpoint.
+	OrganizationId *openapi_types.UUID `form:"organization_id,omitempty" json:"organization_id,omitempty"`
+}
+
+// ConnectionsRetrieveParams defines parameters for ConnectionsRetrieve.
+type ConnectionsRetrieveParams struct {
+	// OrganizationId Organization ID. This is required for access control. It can be provided via query or request body depending on the endpoint.
+	OrganizationId *openapi_types.UUID `form:"organization_id,omitempty" json:"organization_id,omitempty"`
+}
+
+// ConnectionsPartialUpdateParams defines parameters for ConnectionsPartialUpdate.
+type ConnectionsPartialUpdateParams struct {
+	// OrganizationId Organization ID. This is required for access control. It can be provided via query or request body depending on the endpoint.
+	OrganizationId *openapi_types.UUID `form:"organization_id,omitempty" json:"organization_id,omitempty"`
+}
+
+// ConnectionsUpdateParams defines parameters for ConnectionsUpdate.
+type ConnectionsUpdateParams struct {
+	// OrganizationId Organization ID. This is required for access control. It can be provided via query or request body depending on the endpoint.
+	OrganizationId *openapi_types.UUID `form:"organization_id,omitempty" json:"organization_id,omitempty"`
+}
+
+// ConnectionsTestCreateParams defines parameters for ConnectionsTestCreate.
+type ConnectionsTestCreateParams struct {
+	// OrganizationId Organization ID. This is required for access control. It can be provided via query or request body depending on the endpoint.
+	OrganizationId *openapi_types.UUID `form:"organization_id,omitempty" json:"organization_id,omitempty"`
+}
+
 // PoliciesListParams defines parameters for PoliciesList.
 type PoliciesListParams struct {
 	// Ordering Which field to use when ordering the results.
@@ -799,6 +1235,12 @@ type PoliciesVersionsRetrieveParams struct {
 	OrganizationId *openapi_types.UUID `form:"organization_id,omitempty" json:"organization_id,omitempty"`
 }
 
+// TablesPreviewRetrieveParams defines parameters for TablesPreviewRetrieve.
+type TablesPreviewRetrieveParams struct {
+	// Limit Maximum number of sample rows to return. Use 0 to return only table and column metadata without reading sample rows.
+	Limit *int `form:"limit,omitempty" json:"limit,omitempty"`
+}
+
 // AgentsCreateJSONRequestBody defines body for AgentsCreate for application/json ContentType.
 type AgentsCreateJSONRequestBody = BaseAgentCreateRequest
 
@@ -838,6 +1280,18 @@ type AgentsVersionsPartialUpdateJSONRequestBody = PatchedPatchedAgentVersionUpda
 // AgentsVersionsUpdateJSONRequestBody defines body for AgentsVersionsUpdate for application/json ContentType.
 type AgentsVersionsUpdateJSONRequestBody = AgentVersionUpdateRequestRequest
 
+// ConnectionsCreateJSONRequestBody defines body for ConnectionsCreate for application/json ContentType.
+type ConnectionsCreateJSONRequestBody = CreateConnectionRequest
+
+// ConnectionsTestCredentialsCreateJSONRequestBody defines body for ConnectionsTestCredentialsCreate for application/json ContentType.
+type ConnectionsTestCredentialsCreateJSONRequestBody = TestConnectionCredentialsRequest
+
+// ConnectionsPartialUpdateJSONRequestBody defines body for ConnectionsPartialUpdate for application/json ContentType.
+type ConnectionsPartialUpdateJSONRequestBody = PatchedUpdateConnectionRequest
+
+// ConnectionsUpdateJSONRequestBody defines body for ConnectionsUpdate for application/json ContentType.
+type ConnectionsUpdateJSONRequestBody = ConnectionRequest
+
 // PoliciesCreateJSONRequestBody defines body for PoliciesCreate for application/json ContentType.
 type PoliciesCreateJSONRequestBody = CreatePolicyRequest
 
@@ -849,6 +1303,9 @@ type PoliciesUpdateJSONRequestBody = UpdatePolicyRequest
 
 // PoliciesVersionsCreateJSONRequestBody defines body for PoliciesVersionsCreate for application/json ContentType.
 type PoliciesVersionsCreateJSONRequestBody = CreatePolicyVersionRequest
+
+// TablesQueryCreateJSONRequestBody defines body for TablesQueryCreate for application/json ContentType.
+type TablesQueryCreateJSONRequestBody = TableQueryRequestRequest
 
 // UploadTableMultipartRequestBody defines body for UploadTable for multipart/form-data ContentType.
 type UploadTableMultipartRequestBody = TableUploadRequest
@@ -1039,6 +1496,44 @@ type ClientInterface interface {
 
 	AgentsVersionsUpdate(ctx context.Context, agentId openapi_types.UUID, agentVersionId openapi_types.UUID, params *AgentsVersionsUpdateParams, body AgentsVersionsUpdateJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
 
+	// ConnectionsList request
+	ConnectionsList(ctx context.Context, params *ConnectionsListParams, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// ConnectionsCreateWithBody request with any body
+	ConnectionsCreateWithBody(ctx context.Context, params *ConnectionsCreateParams, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	ConnectionsCreate(ctx context.Context, params *ConnectionsCreateParams, body ConnectionsCreateJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// ConnectionsTestCredentialsCreateWithBody request with any body
+	ConnectionsTestCredentialsCreateWithBody(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	ConnectionsTestCredentialsCreate(ctx context.Context, body ConnectionsTestCredentialsCreateJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// ConnectionsDestroy request
+	ConnectionsDestroy(ctx context.Context, id openapi_types.UUID, params *ConnectionsDestroyParams, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// ConnectionsRetrieve request
+	ConnectionsRetrieve(ctx context.Context, id openapi_types.UUID, params *ConnectionsRetrieveParams, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// ConnectionsPartialUpdateWithBody request with any body
+	ConnectionsPartialUpdateWithBody(ctx context.Context, id openapi_types.UUID, params *ConnectionsPartialUpdateParams, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	ConnectionsPartialUpdate(ctx context.Context, id openapi_types.UUID, params *ConnectionsPartialUpdateParams, body ConnectionsPartialUpdateJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// ConnectionsUpdateWithBody request with any body
+	ConnectionsUpdateWithBody(ctx context.Context, id openapi_types.UUID, params *ConnectionsUpdateParams, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	ConnectionsUpdate(ctx context.Context, id openapi_types.UUID, params *ConnectionsUpdateParams, body ConnectionsUpdateJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// ConnectionsTestCreate request
+	ConnectionsTestCreate(ctx context.Context, id openapi_types.UUID, params *ConnectionsTestCreateParams, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// ConnectorsRetrieve request
+	ConnectorsRetrieve(ctx context.Context, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// ConnectorsRetrieve2 request
+	ConnectorsRetrieve2(ctx context.Context, connectorType string, reqEditors ...RequestEditorFn) (*http.Response, error)
+
 	// PoliciesList request
 	PoliciesList(ctx context.Context, params *PoliciesListParams, reqEditors ...RequestEditorFn) (*http.Response, error)
 
@@ -1074,8 +1569,28 @@ type ClientInterface interface {
 	// PoliciesVersionsRetrieve request
 	PoliciesVersionsRetrieve(ctx context.Context, policyId openapi_types.UUID, versionId openapi_types.UUID, params *PoliciesVersionsRetrieveParams, reqEditors ...RequestEditorFn) (*http.Response, error)
 
+	// TablesList request
+	TablesList(ctx context.Context, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// TablesQueryCreateWithBody request with any body
+	TablesQueryCreateWithBody(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	TablesQueryCreate(ctx context.Context, body TablesQueryCreateJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// TablesQueryResultRetrieve request
+	TablesQueryResultRetrieve(ctx context.Context, tableQueryId openapi_types.UUID, reqEditors ...RequestEditorFn) (*http.Response, error)
+
 	// UploadTableWithBody request with any body
 	UploadTableWithBody(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// TablesDestroy request
+	TablesDestroy(ctx context.Context, tableName string, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// TablesDescribeRetrieve request
+	TablesDescribeRetrieve(ctx context.Context, tableName string, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// TablesPreviewRetrieve request
+	TablesPreviewRetrieve(ctx context.Context, tableName string, params *TablesPreviewRetrieveParams, reqEditors ...RequestEditorFn) (*http.Response, error)
 
 	// UsersCurrentUserRetrieve request
 	UsersCurrentUserRetrieve(ctx context.Context, reqEditors ...RequestEditorFn) (*http.Response, error)
@@ -1585,6 +2100,174 @@ func (c *Client) AgentsVersionsUpdate(ctx context.Context, agentId openapi_types
 	return c.Client.Do(req)
 }
 
+func (c *Client) ConnectionsList(ctx context.Context, params *ConnectionsListParams, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewConnectionsListRequest(c.Server, params)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) ConnectionsCreateWithBody(ctx context.Context, params *ConnectionsCreateParams, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewConnectionsCreateRequestWithBody(c.Server, params, contentType, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) ConnectionsCreate(ctx context.Context, params *ConnectionsCreateParams, body ConnectionsCreateJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewConnectionsCreateRequest(c.Server, params, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) ConnectionsTestCredentialsCreateWithBody(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewConnectionsTestCredentialsCreateRequestWithBody(c.Server, contentType, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) ConnectionsTestCredentialsCreate(ctx context.Context, body ConnectionsTestCredentialsCreateJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewConnectionsTestCredentialsCreateRequest(c.Server, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) ConnectionsDestroy(ctx context.Context, id openapi_types.UUID, params *ConnectionsDestroyParams, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewConnectionsDestroyRequest(c.Server, id, params)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) ConnectionsRetrieve(ctx context.Context, id openapi_types.UUID, params *ConnectionsRetrieveParams, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewConnectionsRetrieveRequest(c.Server, id, params)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) ConnectionsPartialUpdateWithBody(ctx context.Context, id openapi_types.UUID, params *ConnectionsPartialUpdateParams, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewConnectionsPartialUpdateRequestWithBody(c.Server, id, params, contentType, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) ConnectionsPartialUpdate(ctx context.Context, id openapi_types.UUID, params *ConnectionsPartialUpdateParams, body ConnectionsPartialUpdateJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewConnectionsPartialUpdateRequest(c.Server, id, params, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) ConnectionsUpdateWithBody(ctx context.Context, id openapi_types.UUID, params *ConnectionsUpdateParams, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewConnectionsUpdateRequestWithBody(c.Server, id, params, contentType, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) ConnectionsUpdate(ctx context.Context, id openapi_types.UUID, params *ConnectionsUpdateParams, body ConnectionsUpdateJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewConnectionsUpdateRequest(c.Server, id, params, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) ConnectionsTestCreate(ctx context.Context, id openapi_types.UUID, params *ConnectionsTestCreateParams, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewConnectionsTestCreateRequest(c.Server, id, params)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) ConnectorsRetrieve(ctx context.Context, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewConnectorsRetrieveRequest(c.Server)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) ConnectorsRetrieve2(ctx context.Context, connectorType string, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewConnectorsRetrieve2Request(c.Server, connectorType)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
 func (c *Client) PoliciesList(ctx context.Context, params *PoliciesListParams, reqEditors ...RequestEditorFn) (*http.Response, error) {
 	req, err := NewPoliciesListRequest(c.Server, params)
 	if err != nil {
@@ -1741,8 +2424,92 @@ func (c *Client) PoliciesVersionsRetrieve(ctx context.Context, policyId openapi_
 	return c.Client.Do(req)
 }
 
+func (c *Client) TablesList(ctx context.Context, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewTablesListRequest(c.Server)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) TablesQueryCreateWithBody(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewTablesQueryCreateRequestWithBody(c.Server, contentType, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) TablesQueryCreate(ctx context.Context, body TablesQueryCreateJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewTablesQueryCreateRequest(c.Server, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) TablesQueryResultRetrieve(ctx context.Context, tableQueryId openapi_types.UUID, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewTablesQueryResultRetrieveRequest(c.Server, tableQueryId)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
 func (c *Client) UploadTableWithBody(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error) {
 	req, err := NewUploadTableRequestWithBody(c.Server, contentType, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) TablesDestroy(ctx context.Context, tableName string, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewTablesDestroyRequest(c.Server, tableName)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) TablesDescribeRetrieve(ctx context.Context, tableName string, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewTablesDescribeRetrieveRequest(c.Server, tableName)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) TablesPreviewRetrieve(ctx context.Context, tableName string, params *TablesPreviewRetrieveParams, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewTablesPreviewRetrieveRequest(c.Server, tableName, params)
 	if err != nil {
 		return nil, err
 	}
@@ -3699,6 +4466,588 @@ func NewAgentsVersionsUpdateRequestWithBody(server string, agentId openapi_types
 	return req, nil
 }
 
+// NewConnectionsListRequest generates requests for ConnectionsList
+func NewConnectionsListRequest(server string, params *ConnectionsListParams) (*http.Request, error) {
+	var err error
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/v1/connections/")
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	if params != nil {
+		queryValues := queryURL.Query()
+
+		if params.ConnectorType != nil {
+
+			if queryFrag, err := runtime.StyleParamWithOptions("form", true, "connector_type", *params.ConnectorType, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationQuery, Type: "string", Format: ""}); err != nil {
+				return nil, err
+			} else if parsed, err := url.ParseQuery(queryFrag); err != nil {
+				return nil, err
+			} else {
+				for k, v := range parsed {
+					for _, v2 := range v {
+						queryValues.Add(k, v2)
+					}
+				}
+			}
+
+		}
+
+		if params.OrganizationId != nil {
+
+			if queryFrag, err := runtime.StyleParamWithOptions("form", true, "organization_id", *params.OrganizationId, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationQuery, Type: "string", Format: "uuid"}); err != nil {
+				return nil, err
+			} else if parsed, err := url.ParseQuery(queryFrag); err != nil {
+				return nil, err
+			} else {
+				for k, v := range parsed {
+					for _, v2 := range v {
+						queryValues.Add(k, v2)
+					}
+				}
+			}
+
+		}
+
+		if params.Page != nil {
+
+			if queryFrag, err := runtime.StyleParamWithOptions("form", true, "page", *params.Page, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationQuery, Type: "integer", Format: ""}); err != nil {
+				return nil, err
+			} else if parsed, err := url.ParseQuery(queryFrag); err != nil {
+				return nil, err
+			} else {
+				for k, v := range parsed {
+					for _, v2 := range v {
+						queryValues.Add(k, v2)
+					}
+				}
+			}
+
+		}
+
+		if params.PageSize != nil {
+
+			if queryFrag, err := runtime.StyleParamWithOptions("form", true, "page_size", *params.PageSize, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationQuery, Type: "integer", Format: ""}); err != nil {
+				return nil, err
+			} else if parsed, err := url.ParseQuery(queryFrag); err != nil {
+				return nil, err
+			} else {
+				for k, v := range parsed {
+					for _, v2 := range v {
+						queryValues.Add(k, v2)
+					}
+				}
+			}
+
+		}
+
+		if params.Search != nil {
+
+			if queryFrag, err := runtime.StyleParamWithOptions("form", true, "search", *params.Search, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationQuery, Type: "string", Format: ""}); err != nil {
+				return nil, err
+			} else if parsed, err := url.ParseQuery(queryFrag); err != nil {
+				return nil, err
+			} else {
+				for k, v := range parsed {
+					for _, v2 := range v {
+						queryValues.Add(k, v2)
+					}
+				}
+			}
+
+		}
+
+		queryURL.RawQuery = queryValues.Encode()
+	}
+
+	req, err := http.NewRequest("GET", queryURL.String(), nil)
+	if err != nil {
+		return nil, err
+	}
+
+	return req, nil
+}
+
+// NewConnectionsCreateRequest calls the generic ConnectionsCreate builder with application/json body
+func NewConnectionsCreateRequest(server string, params *ConnectionsCreateParams, body ConnectionsCreateJSONRequestBody) (*http.Request, error) {
+	var bodyReader io.Reader
+	buf, err := json.Marshal(body)
+	if err != nil {
+		return nil, err
+	}
+	bodyReader = bytes.NewReader(buf)
+	return NewConnectionsCreateRequestWithBody(server, params, "application/json", bodyReader)
+}
+
+// NewConnectionsCreateRequestWithBody generates requests for ConnectionsCreate with any type of body
+func NewConnectionsCreateRequestWithBody(server string, params *ConnectionsCreateParams, contentType string, body io.Reader) (*http.Request, error) {
+	var err error
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/v1/connections/")
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	if params != nil {
+		queryValues := queryURL.Query()
+
+		if params.OrganizationId != nil {
+
+			if queryFrag, err := runtime.StyleParamWithOptions("form", true, "organization_id", *params.OrganizationId, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationQuery, Type: "string", Format: "uuid"}); err != nil {
+				return nil, err
+			} else if parsed, err := url.ParseQuery(queryFrag); err != nil {
+				return nil, err
+			} else {
+				for k, v := range parsed {
+					for _, v2 := range v {
+						queryValues.Add(k, v2)
+					}
+				}
+			}
+
+		}
+
+		queryURL.RawQuery = queryValues.Encode()
+	}
+
+	req, err := http.NewRequest("POST", queryURL.String(), body)
+	if err != nil {
+		return nil, err
+	}
+
+	req.Header.Add("Content-Type", contentType)
+
+	return req, nil
+}
+
+// NewConnectionsTestCredentialsCreateRequest calls the generic ConnectionsTestCredentialsCreate builder with application/json body
+func NewConnectionsTestCredentialsCreateRequest(server string, body ConnectionsTestCredentialsCreateJSONRequestBody) (*http.Request, error) {
+	var bodyReader io.Reader
+	buf, err := json.Marshal(body)
+	if err != nil {
+		return nil, err
+	}
+	bodyReader = bytes.NewReader(buf)
+	return NewConnectionsTestCredentialsCreateRequestWithBody(server, "application/json", bodyReader)
+}
+
+// NewConnectionsTestCredentialsCreateRequestWithBody generates requests for ConnectionsTestCredentialsCreate with any type of body
+func NewConnectionsTestCredentialsCreateRequestWithBody(server string, contentType string, body io.Reader) (*http.Request, error) {
+	var err error
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/v1/connections/test-credentials/")
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest("POST", queryURL.String(), body)
+	if err != nil {
+		return nil, err
+	}
+
+	req.Header.Add("Content-Type", contentType)
+
+	return req, nil
+}
+
+// NewConnectionsDestroyRequest generates requests for ConnectionsDestroy
+func NewConnectionsDestroyRequest(server string, id openapi_types.UUID, params *ConnectionsDestroyParams) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithOptions("simple", false, "id", id, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationPath, Type: "string", Format: "uuid"})
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/v1/connections/%s/", pathParam0)
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	if params != nil {
+		queryValues := queryURL.Query()
+
+		if params.OrganizationId != nil {
+
+			if queryFrag, err := runtime.StyleParamWithOptions("form", true, "organization_id", *params.OrganizationId, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationQuery, Type: "string", Format: "uuid"}); err != nil {
+				return nil, err
+			} else if parsed, err := url.ParseQuery(queryFrag); err != nil {
+				return nil, err
+			} else {
+				for k, v := range parsed {
+					for _, v2 := range v {
+						queryValues.Add(k, v2)
+					}
+				}
+			}
+
+		}
+
+		queryURL.RawQuery = queryValues.Encode()
+	}
+
+	req, err := http.NewRequest("DELETE", queryURL.String(), nil)
+	if err != nil {
+		return nil, err
+	}
+
+	return req, nil
+}
+
+// NewConnectionsRetrieveRequest generates requests for ConnectionsRetrieve
+func NewConnectionsRetrieveRequest(server string, id openapi_types.UUID, params *ConnectionsRetrieveParams) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithOptions("simple", false, "id", id, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationPath, Type: "string", Format: "uuid"})
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/v1/connections/%s/", pathParam0)
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	if params != nil {
+		queryValues := queryURL.Query()
+
+		if params.OrganizationId != nil {
+
+			if queryFrag, err := runtime.StyleParamWithOptions("form", true, "organization_id", *params.OrganizationId, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationQuery, Type: "string", Format: "uuid"}); err != nil {
+				return nil, err
+			} else if parsed, err := url.ParseQuery(queryFrag); err != nil {
+				return nil, err
+			} else {
+				for k, v := range parsed {
+					for _, v2 := range v {
+						queryValues.Add(k, v2)
+					}
+				}
+			}
+
+		}
+
+		queryURL.RawQuery = queryValues.Encode()
+	}
+
+	req, err := http.NewRequest("GET", queryURL.String(), nil)
+	if err != nil {
+		return nil, err
+	}
+
+	return req, nil
+}
+
+// NewConnectionsPartialUpdateRequest calls the generic ConnectionsPartialUpdate builder with application/json body
+func NewConnectionsPartialUpdateRequest(server string, id openapi_types.UUID, params *ConnectionsPartialUpdateParams, body ConnectionsPartialUpdateJSONRequestBody) (*http.Request, error) {
+	var bodyReader io.Reader
+	buf, err := json.Marshal(body)
+	if err != nil {
+		return nil, err
+	}
+	bodyReader = bytes.NewReader(buf)
+	return NewConnectionsPartialUpdateRequestWithBody(server, id, params, "application/json", bodyReader)
+}
+
+// NewConnectionsPartialUpdateRequestWithBody generates requests for ConnectionsPartialUpdate with any type of body
+func NewConnectionsPartialUpdateRequestWithBody(server string, id openapi_types.UUID, params *ConnectionsPartialUpdateParams, contentType string, body io.Reader) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithOptions("simple", false, "id", id, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationPath, Type: "string", Format: "uuid"})
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/v1/connections/%s/", pathParam0)
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	if params != nil {
+		queryValues := queryURL.Query()
+
+		if params.OrganizationId != nil {
+
+			if queryFrag, err := runtime.StyleParamWithOptions("form", true, "organization_id", *params.OrganizationId, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationQuery, Type: "string", Format: "uuid"}); err != nil {
+				return nil, err
+			} else if parsed, err := url.ParseQuery(queryFrag); err != nil {
+				return nil, err
+			} else {
+				for k, v := range parsed {
+					for _, v2 := range v {
+						queryValues.Add(k, v2)
+					}
+				}
+			}
+
+		}
+
+		queryURL.RawQuery = queryValues.Encode()
+	}
+
+	req, err := http.NewRequest("PATCH", queryURL.String(), body)
+	if err != nil {
+		return nil, err
+	}
+
+	req.Header.Add("Content-Type", contentType)
+
+	return req, nil
+}
+
+// NewConnectionsUpdateRequest calls the generic ConnectionsUpdate builder with application/json body
+func NewConnectionsUpdateRequest(server string, id openapi_types.UUID, params *ConnectionsUpdateParams, body ConnectionsUpdateJSONRequestBody) (*http.Request, error) {
+	var bodyReader io.Reader
+	buf, err := json.Marshal(body)
+	if err != nil {
+		return nil, err
+	}
+	bodyReader = bytes.NewReader(buf)
+	return NewConnectionsUpdateRequestWithBody(server, id, params, "application/json", bodyReader)
+}
+
+// NewConnectionsUpdateRequestWithBody generates requests for ConnectionsUpdate with any type of body
+func NewConnectionsUpdateRequestWithBody(server string, id openapi_types.UUID, params *ConnectionsUpdateParams, contentType string, body io.Reader) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithOptions("simple", false, "id", id, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationPath, Type: "string", Format: "uuid"})
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/v1/connections/%s/", pathParam0)
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	if params != nil {
+		queryValues := queryURL.Query()
+
+		if params.OrganizationId != nil {
+
+			if queryFrag, err := runtime.StyleParamWithOptions("form", true, "organization_id", *params.OrganizationId, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationQuery, Type: "string", Format: "uuid"}); err != nil {
+				return nil, err
+			} else if parsed, err := url.ParseQuery(queryFrag); err != nil {
+				return nil, err
+			} else {
+				for k, v := range parsed {
+					for _, v2 := range v {
+						queryValues.Add(k, v2)
+					}
+				}
+			}
+
+		}
+
+		queryURL.RawQuery = queryValues.Encode()
+	}
+
+	req, err := http.NewRequest("PUT", queryURL.String(), body)
+	if err != nil {
+		return nil, err
+	}
+
+	req.Header.Add("Content-Type", contentType)
+
+	return req, nil
+}
+
+// NewConnectionsTestCreateRequest generates requests for ConnectionsTestCreate
+func NewConnectionsTestCreateRequest(server string, id openapi_types.UUID, params *ConnectionsTestCreateParams) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithOptions("simple", false, "id", id, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationPath, Type: "string", Format: "uuid"})
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/v1/connections/%s/test/", pathParam0)
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	if params != nil {
+		queryValues := queryURL.Query()
+
+		if params.OrganizationId != nil {
+
+			if queryFrag, err := runtime.StyleParamWithOptions("form", true, "organization_id", *params.OrganizationId, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationQuery, Type: "string", Format: "uuid"}); err != nil {
+				return nil, err
+			} else if parsed, err := url.ParseQuery(queryFrag); err != nil {
+				return nil, err
+			} else {
+				for k, v := range parsed {
+					for _, v2 := range v {
+						queryValues.Add(k, v2)
+					}
+				}
+			}
+
+		}
+
+		queryURL.RawQuery = queryValues.Encode()
+	}
+
+	req, err := http.NewRequest("POST", queryURL.String(), nil)
+	if err != nil {
+		return nil, err
+	}
+
+	return req, nil
+}
+
+// NewConnectorsRetrieveRequest generates requests for ConnectorsRetrieve
+func NewConnectorsRetrieveRequest(server string) (*http.Request, error) {
+	var err error
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/v1/connectors/")
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest("GET", queryURL.String(), nil)
+	if err != nil {
+		return nil, err
+	}
+
+	return req, nil
+}
+
+// NewConnectorsRetrieve2Request generates requests for ConnectorsRetrieve2
+func NewConnectorsRetrieve2Request(server string, connectorType string) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithOptions("simple", false, "connector_type", connectorType, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationPath, Type: "string", Format: ""})
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/v1/connectors/%s/", pathParam0)
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest("GET", queryURL.String(), nil)
+	if err != nil {
+		return nil, err
+	}
+
+	return req, nil
+}
+
 // NewPoliciesListRequest generates requests for PoliciesList
 func NewPoliciesListRequest(server string, params *PoliciesListParams) (*http.Request, error) {
 	var err error
@@ -4344,6 +5693,107 @@ func NewPoliciesVersionsRetrieveRequest(server string, policyId openapi_types.UU
 	return req, nil
 }
 
+// NewTablesListRequest generates requests for TablesList
+func NewTablesListRequest(server string) (*http.Request, error) {
+	var err error
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/v1/tables/")
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest("GET", queryURL.String(), nil)
+	if err != nil {
+		return nil, err
+	}
+
+	return req, nil
+}
+
+// NewTablesQueryCreateRequest calls the generic TablesQueryCreate builder with application/json body
+func NewTablesQueryCreateRequest(server string, body TablesQueryCreateJSONRequestBody) (*http.Request, error) {
+	var bodyReader io.Reader
+	buf, err := json.Marshal(body)
+	if err != nil {
+		return nil, err
+	}
+	bodyReader = bytes.NewReader(buf)
+	return NewTablesQueryCreateRequestWithBody(server, "application/json", bodyReader)
+}
+
+// NewTablesQueryCreateRequestWithBody generates requests for TablesQueryCreate with any type of body
+func NewTablesQueryCreateRequestWithBody(server string, contentType string, body io.Reader) (*http.Request, error) {
+	var err error
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/v1/tables/query/")
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest("POST", queryURL.String(), body)
+	if err != nil {
+		return nil, err
+	}
+
+	req.Header.Add("Content-Type", contentType)
+
+	return req, nil
+}
+
+// NewTablesQueryResultRetrieveRequest generates requests for TablesQueryResultRetrieve
+func NewTablesQueryResultRetrieveRequest(server string, tableQueryId openapi_types.UUID) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithOptions("simple", false, "table_query_id", tableQueryId, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationPath, Type: "string", Format: "uuid"})
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/v1/tables/query/%s/result/", pathParam0)
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest("GET", queryURL.String(), nil)
+	if err != nil {
+		return nil, err
+	}
+
+	return req, nil
+}
+
 // NewUploadTableRequestWithBody generates requests for UploadTable with any type of body
 func NewUploadTableRequestWithBody(server string, contentType string, body io.Reader) (*http.Request, error) {
 	var err error
@@ -4369,6 +5819,130 @@ func NewUploadTableRequestWithBody(server string, contentType string, body io.Re
 	}
 
 	req.Header.Add("Content-Type", contentType)
+
+	return req, nil
+}
+
+// NewTablesDestroyRequest generates requests for TablesDestroy
+func NewTablesDestroyRequest(server string, tableName string) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithOptions("simple", false, "table_name", tableName, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationPath, Type: "string", Format: ""})
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/v1/tables/%s/", pathParam0)
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest("DELETE", queryURL.String(), nil)
+	if err != nil {
+		return nil, err
+	}
+
+	return req, nil
+}
+
+// NewTablesDescribeRetrieveRequest generates requests for TablesDescribeRetrieve
+func NewTablesDescribeRetrieveRequest(server string, tableName string) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithOptions("simple", false, "table_name", tableName, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationPath, Type: "string", Format: ""})
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/v1/tables/%s/describe/", pathParam0)
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest("GET", queryURL.String(), nil)
+	if err != nil {
+		return nil, err
+	}
+
+	return req, nil
+}
+
+// NewTablesPreviewRetrieveRequest generates requests for TablesPreviewRetrieve
+func NewTablesPreviewRetrieveRequest(server string, tableName string, params *TablesPreviewRetrieveParams) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithOptions("simple", false, "table_name", tableName, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationPath, Type: "string", Format: ""})
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/v1/tables/%s/preview/", pathParam0)
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	if params != nil {
+		queryValues := queryURL.Query()
+
+		if params.Limit != nil {
+
+			if queryFrag, err := runtime.StyleParamWithOptions("form", true, "limit", *params.Limit, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationQuery, Type: "integer", Format: ""}); err != nil {
+				return nil, err
+			} else if parsed, err := url.ParseQuery(queryFrag); err != nil {
+				return nil, err
+			} else {
+				for k, v := range parsed {
+					for _, v2 := range v {
+						queryValues.Add(k, v2)
+					}
+				}
+			}
+
+		}
+
+		queryURL.RawQuery = queryValues.Encode()
+	}
+
+	req, err := http.NewRequest("GET", queryURL.String(), nil)
+	if err != nil {
+		return nil, err
+	}
 
 	return req, nil
 }
@@ -4556,6 +6130,44 @@ type ClientWithResponsesInterface interface {
 
 	AgentsVersionsUpdateWithResponse(ctx context.Context, agentId openapi_types.UUID, agentVersionId openapi_types.UUID, params *AgentsVersionsUpdateParams, body AgentsVersionsUpdateJSONRequestBody, reqEditors ...RequestEditorFn) (*AgentsVersionsUpdateResponse, error)
 
+	// ConnectionsListWithResponse request
+	ConnectionsListWithResponse(ctx context.Context, params *ConnectionsListParams, reqEditors ...RequestEditorFn) (*ConnectionsListResponse, error)
+
+	// ConnectionsCreateWithBodyWithResponse request with any body
+	ConnectionsCreateWithBodyWithResponse(ctx context.Context, params *ConnectionsCreateParams, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*ConnectionsCreateResponse, error)
+
+	ConnectionsCreateWithResponse(ctx context.Context, params *ConnectionsCreateParams, body ConnectionsCreateJSONRequestBody, reqEditors ...RequestEditorFn) (*ConnectionsCreateResponse, error)
+
+	// ConnectionsTestCredentialsCreateWithBodyWithResponse request with any body
+	ConnectionsTestCredentialsCreateWithBodyWithResponse(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*ConnectionsTestCredentialsCreateResponse, error)
+
+	ConnectionsTestCredentialsCreateWithResponse(ctx context.Context, body ConnectionsTestCredentialsCreateJSONRequestBody, reqEditors ...RequestEditorFn) (*ConnectionsTestCredentialsCreateResponse, error)
+
+	// ConnectionsDestroyWithResponse request
+	ConnectionsDestroyWithResponse(ctx context.Context, id openapi_types.UUID, params *ConnectionsDestroyParams, reqEditors ...RequestEditorFn) (*ConnectionsDestroyResponse, error)
+
+	// ConnectionsRetrieveWithResponse request
+	ConnectionsRetrieveWithResponse(ctx context.Context, id openapi_types.UUID, params *ConnectionsRetrieveParams, reqEditors ...RequestEditorFn) (*ConnectionsRetrieveResponse, error)
+
+	// ConnectionsPartialUpdateWithBodyWithResponse request with any body
+	ConnectionsPartialUpdateWithBodyWithResponse(ctx context.Context, id openapi_types.UUID, params *ConnectionsPartialUpdateParams, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*ConnectionsPartialUpdateResponse, error)
+
+	ConnectionsPartialUpdateWithResponse(ctx context.Context, id openapi_types.UUID, params *ConnectionsPartialUpdateParams, body ConnectionsPartialUpdateJSONRequestBody, reqEditors ...RequestEditorFn) (*ConnectionsPartialUpdateResponse, error)
+
+	// ConnectionsUpdateWithBodyWithResponse request with any body
+	ConnectionsUpdateWithBodyWithResponse(ctx context.Context, id openapi_types.UUID, params *ConnectionsUpdateParams, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*ConnectionsUpdateResponse, error)
+
+	ConnectionsUpdateWithResponse(ctx context.Context, id openapi_types.UUID, params *ConnectionsUpdateParams, body ConnectionsUpdateJSONRequestBody, reqEditors ...RequestEditorFn) (*ConnectionsUpdateResponse, error)
+
+	// ConnectionsTestCreateWithResponse request
+	ConnectionsTestCreateWithResponse(ctx context.Context, id openapi_types.UUID, params *ConnectionsTestCreateParams, reqEditors ...RequestEditorFn) (*ConnectionsTestCreateResponse, error)
+
+	// ConnectorsRetrieveWithResponse request
+	ConnectorsRetrieveWithResponse(ctx context.Context, reqEditors ...RequestEditorFn) (*ConnectorsRetrieveResponse, error)
+
+	// ConnectorsRetrieve2WithResponse request
+	ConnectorsRetrieve2WithResponse(ctx context.Context, connectorType string, reqEditors ...RequestEditorFn) (*ConnectorsRetrieve2Response, error)
+
 	// PoliciesListWithResponse request
 	PoliciesListWithResponse(ctx context.Context, params *PoliciesListParams, reqEditors ...RequestEditorFn) (*PoliciesListResponse, error)
 
@@ -4591,8 +6203,28 @@ type ClientWithResponsesInterface interface {
 	// PoliciesVersionsRetrieveWithResponse request
 	PoliciesVersionsRetrieveWithResponse(ctx context.Context, policyId openapi_types.UUID, versionId openapi_types.UUID, params *PoliciesVersionsRetrieveParams, reqEditors ...RequestEditorFn) (*PoliciesVersionsRetrieveResponse, error)
 
+	// TablesListWithResponse request
+	TablesListWithResponse(ctx context.Context, reqEditors ...RequestEditorFn) (*TablesListResponse, error)
+
+	// TablesQueryCreateWithBodyWithResponse request with any body
+	TablesQueryCreateWithBodyWithResponse(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*TablesQueryCreateResponse, error)
+
+	TablesQueryCreateWithResponse(ctx context.Context, body TablesQueryCreateJSONRequestBody, reqEditors ...RequestEditorFn) (*TablesQueryCreateResponse, error)
+
+	// TablesQueryResultRetrieveWithResponse request
+	TablesQueryResultRetrieveWithResponse(ctx context.Context, tableQueryId openapi_types.UUID, reqEditors ...RequestEditorFn) (*TablesQueryResultRetrieveResponse, error)
+
 	// UploadTableWithBodyWithResponse request with any body
 	UploadTableWithBodyWithResponse(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*UploadTableResponse, error)
+
+	// TablesDestroyWithResponse request
+	TablesDestroyWithResponse(ctx context.Context, tableName string, reqEditors ...RequestEditorFn) (*TablesDestroyResponse, error)
+
+	// TablesDescribeRetrieveWithResponse request
+	TablesDescribeRetrieveWithResponse(ctx context.Context, tableName string, reqEditors ...RequestEditorFn) (*TablesDescribeRetrieveResponse, error)
+
+	// TablesPreviewRetrieveWithResponse request
+	TablesPreviewRetrieveWithResponse(ctx context.Context, tableName string, params *TablesPreviewRetrieveParams, reqEditors ...RequestEditorFn) (*TablesPreviewRetrieveResponse, error)
 
 	// UsersCurrentUserRetrieveWithResponse request
 	UsersCurrentUserRetrieveWithResponse(ctx context.Context, reqEditors ...RequestEditorFn) (*UsersCurrentUserRetrieveResponse, error)
@@ -5301,6 +6933,229 @@ func (r AgentsVersionsUpdateResponse) StatusCode() int {
 	return 0
 }
 
+type ConnectionsListResponse struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	JSON200      *PaginatedConnectionListList
+}
+
+// Status returns HTTPResponse.Status
+func (r ConnectionsListResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r ConnectionsListResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+type ConnectionsCreateResponse struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	JSON201      *Connection
+	JSON400      *ErrorResponse
+	JSON409      *DuplicateConnectionResponse
+}
+
+// Status returns HTTPResponse.Status
+func (r ConnectionsCreateResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r ConnectionsCreateResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+type ConnectionsTestCredentialsCreateResponse struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	JSON200      *TestConnection
+	JSON400      *TestConnection
+}
+
+// Status returns HTTPResponse.Status
+func (r ConnectionsTestCredentialsCreateResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r ConnectionsTestCredentialsCreateResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+type ConnectionsDestroyResponse struct {
+	Body         []byte
+	HTTPResponse *http.Response
+}
+
+// Status returns HTTPResponse.Status
+func (r ConnectionsDestroyResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r ConnectionsDestroyResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+type ConnectionsRetrieveResponse struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	JSON200      *Connection
+}
+
+// Status returns HTTPResponse.Status
+func (r ConnectionsRetrieveResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r ConnectionsRetrieveResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+type ConnectionsPartialUpdateResponse struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	JSON200      *UpdateConnection
+}
+
+// Status returns HTTPResponse.Status
+func (r ConnectionsPartialUpdateResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r ConnectionsPartialUpdateResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+type ConnectionsUpdateResponse struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	JSON200      *Connection
+}
+
+// Status returns HTTPResponse.Status
+func (r ConnectionsUpdateResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r ConnectionsUpdateResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+type ConnectionsTestCreateResponse struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	JSON200      *TestConnection
+	JSON400      *TestConnection
+}
+
+// Status returns HTTPResponse.Status
+func (r ConnectionsTestCreateResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r ConnectionsTestCreateResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+type ConnectorsRetrieveResponse struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	JSON200      *ConnectorListResponse
+}
+
+// Status returns HTTPResponse.Status
+func (r ConnectorsRetrieveResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r ConnectorsRetrieveResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+type ConnectorsRetrieve2Response struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	JSON200      *ConnectorMetadata
+}
+
+// Status returns HTTPResponse.Status
+func (r ConnectorsRetrieve2Response) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r ConnectorsRetrieve2Response) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
 type PoliciesListResponse struct {
 	Body         []byte
 	HTTPResponse *http.Response
@@ -5498,6 +7353,73 @@ func (r PoliciesVersionsRetrieveResponse) StatusCode() int {
 	return 0
 }
 
+type TablesListResponse struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	JSON200      *TableListResponse
+	JSON400      *ErrorResponse
+}
+
+// Status returns HTTPResponse.Status
+func (r TablesListResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r TablesListResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+type TablesQueryCreateResponse struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	JSON202      *TableQuerySubmitResponse
+}
+
+// Status returns HTTPResponse.Status
+func (r TablesQueryCreateResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r TablesQueryCreateResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+type TablesQueryResultRetrieveResponse struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	JSON200      *TableQueryResultResponse
+}
+
+// Status returns HTTPResponse.Status
+func (r TablesQueryResultRetrieveResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r TablesQueryResultRetrieveResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
 type UploadTableResponse struct {
 	Body         []byte
 	HTTPResponse *http.Response
@@ -5515,6 +7437,74 @@ func (r UploadTableResponse) Status() string {
 
 // StatusCode returns HTTPResponse.StatusCode
 func (r UploadTableResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+type TablesDestroyResponse struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	JSON400      *ErrorResponse
+}
+
+// Status returns HTTPResponse.Status
+func (r TablesDestroyResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r TablesDestroyResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+type TablesDescribeRetrieveResponse struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	JSON200      *TableDescribeResponse
+	JSON400      *ErrorResponse
+}
+
+// Status returns HTTPResponse.Status
+func (r TablesDescribeRetrieveResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r TablesDescribeRetrieveResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+type TablesPreviewRetrieveResponse struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	JSON200      *TablePreviewResponse
+	JSON400      *ErrorResponse
+}
+
+// Status returns HTTPResponse.Status
+func (r TablesPreviewRetrieveResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r TablesPreviewRetrieveResponse) StatusCode() int {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.StatusCode
 	}
@@ -5907,6 +7897,128 @@ func (c *ClientWithResponses) AgentsVersionsUpdateWithResponse(ctx context.Conte
 	return ParseAgentsVersionsUpdateResponse(rsp)
 }
 
+// ConnectionsListWithResponse request returning *ConnectionsListResponse
+func (c *ClientWithResponses) ConnectionsListWithResponse(ctx context.Context, params *ConnectionsListParams, reqEditors ...RequestEditorFn) (*ConnectionsListResponse, error) {
+	rsp, err := c.ConnectionsList(ctx, params, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseConnectionsListResponse(rsp)
+}
+
+// ConnectionsCreateWithBodyWithResponse request with arbitrary body returning *ConnectionsCreateResponse
+func (c *ClientWithResponses) ConnectionsCreateWithBodyWithResponse(ctx context.Context, params *ConnectionsCreateParams, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*ConnectionsCreateResponse, error) {
+	rsp, err := c.ConnectionsCreateWithBody(ctx, params, contentType, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseConnectionsCreateResponse(rsp)
+}
+
+func (c *ClientWithResponses) ConnectionsCreateWithResponse(ctx context.Context, params *ConnectionsCreateParams, body ConnectionsCreateJSONRequestBody, reqEditors ...RequestEditorFn) (*ConnectionsCreateResponse, error) {
+	rsp, err := c.ConnectionsCreate(ctx, params, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseConnectionsCreateResponse(rsp)
+}
+
+// ConnectionsTestCredentialsCreateWithBodyWithResponse request with arbitrary body returning *ConnectionsTestCredentialsCreateResponse
+func (c *ClientWithResponses) ConnectionsTestCredentialsCreateWithBodyWithResponse(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*ConnectionsTestCredentialsCreateResponse, error) {
+	rsp, err := c.ConnectionsTestCredentialsCreateWithBody(ctx, contentType, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseConnectionsTestCredentialsCreateResponse(rsp)
+}
+
+func (c *ClientWithResponses) ConnectionsTestCredentialsCreateWithResponse(ctx context.Context, body ConnectionsTestCredentialsCreateJSONRequestBody, reqEditors ...RequestEditorFn) (*ConnectionsTestCredentialsCreateResponse, error) {
+	rsp, err := c.ConnectionsTestCredentialsCreate(ctx, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseConnectionsTestCredentialsCreateResponse(rsp)
+}
+
+// ConnectionsDestroyWithResponse request returning *ConnectionsDestroyResponse
+func (c *ClientWithResponses) ConnectionsDestroyWithResponse(ctx context.Context, id openapi_types.UUID, params *ConnectionsDestroyParams, reqEditors ...RequestEditorFn) (*ConnectionsDestroyResponse, error) {
+	rsp, err := c.ConnectionsDestroy(ctx, id, params, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseConnectionsDestroyResponse(rsp)
+}
+
+// ConnectionsRetrieveWithResponse request returning *ConnectionsRetrieveResponse
+func (c *ClientWithResponses) ConnectionsRetrieveWithResponse(ctx context.Context, id openapi_types.UUID, params *ConnectionsRetrieveParams, reqEditors ...RequestEditorFn) (*ConnectionsRetrieveResponse, error) {
+	rsp, err := c.ConnectionsRetrieve(ctx, id, params, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseConnectionsRetrieveResponse(rsp)
+}
+
+// ConnectionsPartialUpdateWithBodyWithResponse request with arbitrary body returning *ConnectionsPartialUpdateResponse
+func (c *ClientWithResponses) ConnectionsPartialUpdateWithBodyWithResponse(ctx context.Context, id openapi_types.UUID, params *ConnectionsPartialUpdateParams, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*ConnectionsPartialUpdateResponse, error) {
+	rsp, err := c.ConnectionsPartialUpdateWithBody(ctx, id, params, contentType, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseConnectionsPartialUpdateResponse(rsp)
+}
+
+func (c *ClientWithResponses) ConnectionsPartialUpdateWithResponse(ctx context.Context, id openapi_types.UUID, params *ConnectionsPartialUpdateParams, body ConnectionsPartialUpdateJSONRequestBody, reqEditors ...RequestEditorFn) (*ConnectionsPartialUpdateResponse, error) {
+	rsp, err := c.ConnectionsPartialUpdate(ctx, id, params, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseConnectionsPartialUpdateResponse(rsp)
+}
+
+// ConnectionsUpdateWithBodyWithResponse request with arbitrary body returning *ConnectionsUpdateResponse
+func (c *ClientWithResponses) ConnectionsUpdateWithBodyWithResponse(ctx context.Context, id openapi_types.UUID, params *ConnectionsUpdateParams, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*ConnectionsUpdateResponse, error) {
+	rsp, err := c.ConnectionsUpdateWithBody(ctx, id, params, contentType, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseConnectionsUpdateResponse(rsp)
+}
+
+func (c *ClientWithResponses) ConnectionsUpdateWithResponse(ctx context.Context, id openapi_types.UUID, params *ConnectionsUpdateParams, body ConnectionsUpdateJSONRequestBody, reqEditors ...RequestEditorFn) (*ConnectionsUpdateResponse, error) {
+	rsp, err := c.ConnectionsUpdate(ctx, id, params, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseConnectionsUpdateResponse(rsp)
+}
+
+// ConnectionsTestCreateWithResponse request returning *ConnectionsTestCreateResponse
+func (c *ClientWithResponses) ConnectionsTestCreateWithResponse(ctx context.Context, id openapi_types.UUID, params *ConnectionsTestCreateParams, reqEditors ...RequestEditorFn) (*ConnectionsTestCreateResponse, error) {
+	rsp, err := c.ConnectionsTestCreate(ctx, id, params, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseConnectionsTestCreateResponse(rsp)
+}
+
+// ConnectorsRetrieveWithResponse request returning *ConnectorsRetrieveResponse
+func (c *ClientWithResponses) ConnectorsRetrieveWithResponse(ctx context.Context, reqEditors ...RequestEditorFn) (*ConnectorsRetrieveResponse, error) {
+	rsp, err := c.ConnectorsRetrieve(ctx, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseConnectorsRetrieveResponse(rsp)
+}
+
+// ConnectorsRetrieve2WithResponse request returning *ConnectorsRetrieve2Response
+func (c *ClientWithResponses) ConnectorsRetrieve2WithResponse(ctx context.Context, connectorType string, reqEditors ...RequestEditorFn) (*ConnectorsRetrieve2Response, error) {
+	rsp, err := c.ConnectorsRetrieve2(ctx, connectorType, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseConnectorsRetrieve2Response(rsp)
+}
+
 // PoliciesListWithResponse request returning *PoliciesListResponse
 func (c *ClientWithResponses) PoliciesListWithResponse(ctx context.Context, params *PoliciesListParams, reqEditors ...RequestEditorFn) (*PoliciesListResponse, error) {
 	rsp, err := c.PoliciesList(ctx, params, reqEditors...)
@@ -6020,6 +8132,41 @@ func (c *ClientWithResponses) PoliciesVersionsRetrieveWithResponse(ctx context.C
 	return ParsePoliciesVersionsRetrieveResponse(rsp)
 }
 
+// TablesListWithResponse request returning *TablesListResponse
+func (c *ClientWithResponses) TablesListWithResponse(ctx context.Context, reqEditors ...RequestEditorFn) (*TablesListResponse, error) {
+	rsp, err := c.TablesList(ctx, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseTablesListResponse(rsp)
+}
+
+// TablesQueryCreateWithBodyWithResponse request with arbitrary body returning *TablesQueryCreateResponse
+func (c *ClientWithResponses) TablesQueryCreateWithBodyWithResponse(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*TablesQueryCreateResponse, error) {
+	rsp, err := c.TablesQueryCreateWithBody(ctx, contentType, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseTablesQueryCreateResponse(rsp)
+}
+
+func (c *ClientWithResponses) TablesQueryCreateWithResponse(ctx context.Context, body TablesQueryCreateJSONRequestBody, reqEditors ...RequestEditorFn) (*TablesQueryCreateResponse, error) {
+	rsp, err := c.TablesQueryCreate(ctx, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseTablesQueryCreateResponse(rsp)
+}
+
+// TablesQueryResultRetrieveWithResponse request returning *TablesQueryResultRetrieveResponse
+func (c *ClientWithResponses) TablesQueryResultRetrieveWithResponse(ctx context.Context, tableQueryId openapi_types.UUID, reqEditors ...RequestEditorFn) (*TablesQueryResultRetrieveResponse, error) {
+	rsp, err := c.TablesQueryResultRetrieve(ctx, tableQueryId, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseTablesQueryResultRetrieveResponse(rsp)
+}
+
 // UploadTableWithBodyWithResponse request with arbitrary body returning *UploadTableResponse
 func (c *ClientWithResponses) UploadTableWithBodyWithResponse(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*UploadTableResponse, error) {
 	rsp, err := c.UploadTableWithBody(ctx, contentType, body, reqEditors...)
@@ -6027,6 +8174,33 @@ func (c *ClientWithResponses) UploadTableWithBodyWithResponse(ctx context.Contex
 		return nil, err
 	}
 	return ParseUploadTableResponse(rsp)
+}
+
+// TablesDestroyWithResponse request returning *TablesDestroyResponse
+func (c *ClientWithResponses) TablesDestroyWithResponse(ctx context.Context, tableName string, reqEditors ...RequestEditorFn) (*TablesDestroyResponse, error) {
+	rsp, err := c.TablesDestroy(ctx, tableName, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseTablesDestroyResponse(rsp)
+}
+
+// TablesDescribeRetrieveWithResponse request returning *TablesDescribeRetrieveResponse
+func (c *ClientWithResponses) TablesDescribeRetrieveWithResponse(ctx context.Context, tableName string, reqEditors ...RequestEditorFn) (*TablesDescribeRetrieveResponse, error) {
+	rsp, err := c.TablesDescribeRetrieve(ctx, tableName, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseTablesDescribeRetrieveResponse(rsp)
+}
+
+// TablesPreviewRetrieveWithResponse request returning *TablesPreviewRetrieveResponse
+func (c *ClientWithResponses) TablesPreviewRetrieveWithResponse(ctx context.Context, tableName string, params *TablesPreviewRetrieveParams, reqEditors ...RequestEditorFn) (*TablesPreviewRetrieveResponse, error) {
+	rsp, err := c.TablesPreviewRetrieve(ctx, tableName, params, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseTablesPreviewRetrieveResponse(rsp)
 }
 
 // UsersCurrentUserRetrieveWithResponse request returning *UsersCurrentUserRetrieveResponse
@@ -7244,6 +9418,284 @@ func ParseAgentsVersionsUpdateResponse(rsp *http.Response) (*AgentsVersionsUpdat
 	return response, nil
 }
 
+// ParseConnectionsListResponse parses an HTTP response from a ConnectionsListWithResponse call
+func ParseConnectionsListResponse(rsp *http.Response) (*ConnectionsListResponse, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &ConnectionsListResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest PaginatedConnectionListList
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseConnectionsCreateResponse parses an HTTP response from a ConnectionsCreateWithResponse call
+func ParseConnectionsCreateResponse(rsp *http.Response) (*ConnectionsCreateResponse, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &ConnectionsCreateResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 201:
+		var dest Connection
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON201 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 400:
+		var dest ErrorResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON400 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 409:
+		var dest DuplicateConnectionResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON409 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseConnectionsTestCredentialsCreateResponse parses an HTTP response from a ConnectionsTestCredentialsCreateWithResponse call
+func ParseConnectionsTestCredentialsCreateResponse(rsp *http.Response) (*ConnectionsTestCredentialsCreateResponse, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &ConnectionsTestCredentialsCreateResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest TestConnection
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 400:
+		var dest TestConnection
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON400 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseConnectionsDestroyResponse parses an HTTP response from a ConnectionsDestroyWithResponse call
+func ParseConnectionsDestroyResponse(rsp *http.Response) (*ConnectionsDestroyResponse, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &ConnectionsDestroyResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	return response, nil
+}
+
+// ParseConnectionsRetrieveResponse parses an HTTP response from a ConnectionsRetrieveWithResponse call
+func ParseConnectionsRetrieveResponse(rsp *http.Response) (*ConnectionsRetrieveResponse, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &ConnectionsRetrieveResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest Connection
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseConnectionsPartialUpdateResponse parses an HTTP response from a ConnectionsPartialUpdateWithResponse call
+func ParseConnectionsPartialUpdateResponse(rsp *http.Response) (*ConnectionsPartialUpdateResponse, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &ConnectionsPartialUpdateResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest UpdateConnection
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseConnectionsUpdateResponse parses an HTTP response from a ConnectionsUpdateWithResponse call
+func ParseConnectionsUpdateResponse(rsp *http.Response) (*ConnectionsUpdateResponse, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &ConnectionsUpdateResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest Connection
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseConnectionsTestCreateResponse parses an HTTP response from a ConnectionsTestCreateWithResponse call
+func ParseConnectionsTestCreateResponse(rsp *http.Response) (*ConnectionsTestCreateResponse, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &ConnectionsTestCreateResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest TestConnection
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 400:
+		var dest TestConnection
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON400 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseConnectorsRetrieveResponse parses an HTTP response from a ConnectorsRetrieveWithResponse call
+func ParseConnectorsRetrieveResponse(rsp *http.Response) (*ConnectorsRetrieveResponse, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &ConnectorsRetrieveResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest ConnectorListResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseConnectorsRetrieve2Response parses an HTTP response from a ConnectorsRetrieve2WithResponse call
+func ParseConnectorsRetrieve2Response(rsp *http.Response) (*ConnectorsRetrieve2Response, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &ConnectorsRetrieve2Response{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest ConnectorMetadata
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	}
+
+	return response, nil
+}
+
 // ParsePoliciesListResponse parses an HTTP response from a PoliciesListWithResponse call
 func ParsePoliciesListResponse(rsp *http.Response) (*PoliciesListResponse, error) {
 	bodyBytes, err := io.ReadAll(rsp.Body)
@@ -7468,6 +9920,91 @@ func ParsePoliciesVersionsRetrieveResponse(rsp *http.Response) (*PoliciesVersion
 	return response, nil
 }
 
+// ParseTablesListResponse parses an HTTP response from a TablesListWithResponse call
+func ParseTablesListResponse(rsp *http.Response) (*TablesListResponse, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &TablesListResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest TableListResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 400:
+		var dest ErrorResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON400 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseTablesQueryCreateResponse parses an HTTP response from a TablesQueryCreateWithResponse call
+func ParseTablesQueryCreateResponse(rsp *http.Response) (*TablesQueryCreateResponse, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &TablesQueryCreateResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 202:
+		var dest TableQuerySubmitResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON202 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseTablesQueryResultRetrieveResponse parses an HTTP response from a TablesQueryResultRetrieveWithResponse call
+func ParseTablesQueryResultRetrieveResponse(rsp *http.Response) (*TablesQueryResultRetrieveResponse, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &TablesQueryResultRetrieveResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest TableQueryResultResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	}
+
+	return response, nil
+}
+
 // ParseUploadTableResponse parses an HTTP response from a UploadTableWithResponse call
 func ParseUploadTableResponse(rsp *http.Response) (*UploadTableResponse, error) {
 	bodyBytes, err := io.ReadAll(rsp.Body)
@@ -7488,6 +10025,98 @@ func ParseUploadTableResponse(rsp *http.Response) (*UploadTableResponse, error) 
 			return nil, err
 		}
 		response.JSON201 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 400:
+		var dest ErrorResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON400 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseTablesDestroyResponse parses an HTTP response from a TablesDestroyWithResponse call
+func ParseTablesDestroyResponse(rsp *http.Response) (*TablesDestroyResponse, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &TablesDestroyResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 400:
+		var dest ErrorResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON400 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseTablesDescribeRetrieveResponse parses an HTTP response from a TablesDescribeRetrieveWithResponse call
+func ParseTablesDescribeRetrieveResponse(rsp *http.Response) (*TablesDescribeRetrieveResponse, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &TablesDescribeRetrieveResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest TableDescribeResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 400:
+		var dest ErrorResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON400 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseTablesPreviewRetrieveResponse parses an HTTP response from a TablesPreviewRetrieveWithResponse call
+func ParseTablesPreviewRetrieveResponse(rsp *http.Response) (*TablesPreviewRetrieveResponse, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &TablesPreviewRetrieveResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest TablePreviewResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
 
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 400:
 		var dest ErrorResponse
