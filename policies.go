@@ -100,7 +100,7 @@ func (p *PoliciesAPI) UpdateWithContext(ctx context.Context, policyID string, na
 		payload["description"] = *description
 	}
 	var resp Policy
-	if err := p.httpClient.putJSONWithContext(ctx, fmt.Sprintf("/v1/policies/%s/", policyID), payload, nil, &resp); err != nil {
+	if err := p.httpClient.patchJSONWithContext(ctx, fmt.Sprintf("/v1/policies/%s/", policyID), payload, nil, &resp); err != nil {
 		return Policy{}, err
 	}
 	return resp, nil
