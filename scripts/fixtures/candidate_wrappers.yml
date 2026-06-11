@@ -1,0 +1,542 @@
+# MIGRATION PARITY FIXTURE — not consumed by scripts/generate-sdk in production.
+#
+# Candidate openapi/wrappers.yml for migrating the hand-written facades
+# (agents.go, policies.go) to contract-generated code. Every signature and
+# behavior below was derived from the hand-written facades as of this commit;
+# swapping this file into openapi/wrappers.yml and running the generator must
+# reproduce the existing public surface exactly.
+#
+# - APIs with at least one `manual` operation (agents, policies) emit METHODS
+#   ONLY to {api}_generated.go (same package); structs, constructors,
+#   namespace wiring, and manual methods stay in the hand-written file.
+# - discovery/tables are verbatim copies of the committed openapi/wrappers.yml.
+#
+# Go-specific conventions captured as flags (uniform across the hand-written
+# facades): validate_nonempty, error_wrap, set_api_hook (the setAgentsAPI
+# active-record hook), omit_when_empty (string != "" / int > 0), pointer
+# optionals (*bool/*string => nil-check + deref), refetch_with_retrieve.
+# Return types are the SDK's hand-written types (types.go), never generated.*.
+
+apis:
+  discovery:
+    struct_name: DiscoveryAPI
+    field_name: Discovery
+    docstring: API for discovering valid agent engine types and model IDs.
+    operations:
+    - kind: simple
+      method_name: ListAgentEngineTypes
+      docstring: Return production engine_class_id values accepted by agent creation.
+      path: /v1/agents/types/
+      return_type: generated.AgentEngineTypeList
+    - kind: simple
+      method_name: ListSupportedModels
+      docstring: Return non-deprecated model IDs accepted in engine_config.model.
+      path: /v1/agents/models/
+      return_type: generated.SupportedLLMModelList
+      parameters:
+      - name: capability
+        wire_name: capability
+        go_type: string
+        optional: true
+        omit_when_empty: true
+  tables:
+    struct_name: TablesAPI
+    field_name: Tables
+    docstring: API for uploading CSV files into Roe tables.
+    operations:
+    - kind: table_upload
+      method_name: Upload
+      docstring: Upload a CSV file and create a Roe table.
+      path: /v1/tables/upload/
+      return_type: generated.TableUploadResponse
+      body_type: generated.TableUploadRequest
+
+  agents:
+    struct_name: AgentsAPI
+    field_name: Agents
+    docstring: manages agent operations.
+    operations:
+    - kind: body
+      method_name: List
+      docstring: returns paginated agents.
+      method: GET
+      path: /v1/agents/
+      return_type: PaginatedResponse[BaseAgent]
+      inject_organization_id: true
+      set_api_hook: paginated
+      parameters:
+      - name: page
+        location: query
+        wire_name: page
+        go_type: int
+        optional: true
+        omit_when_empty: true
+      - name: pageSize
+        location: query
+        wire_name: page_size
+        go_type: int
+        optional: true
+        omit_when_empty: true
+    - kind: body
+      method_name: Retrieve
+      docstring: fetches an agent.
+      method: GET
+      path: /v1/agents/{agent_id}/
+      return_type: BaseAgent
+      error_wrap: retrieve agent %s
+      set_api_hook: scalar
+      parameters:
+      - name: agentID
+        location: path
+        go_type: string
+        validate_nonempty: true
+    - kind: body
+      method_name: Create
+      docstring: creates a new agent.
+      method: POST
+      path: /v1/agents/
+      return_type: BaseAgent
+      inject_organization_id: true
+      set_api_hook: scalar
+      parameters:
+      - name: name
+        location: body
+        wire_name: name
+        go_type: string
+      - name: engineClassID
+        location: body
+        wire_name: engine_class_id
+        go_type: string
+      - name: inputDefs
+        location: body
+        wire_name: input_definitions
+        go_type: '[]map[string]any'
+      - name: engineConfig
+        location: body
+        wire_name: engine_config
+        go_type: map[string]any
+      - name: versionName
+        location: body
+        wire_name: version_name
+        go_type: string
+        optional: true
+        omit_when_empty: true
+      - name: description
+        location: body
+        wire_name: description
+        go_type: string
+        optional: true
+        omit_when_empty: true
+    - kind: body
+      method_name: Update
+      docstring: updates an agent.
+      method: PUT
+      path: /v1/agents/{agent_id}/
+      return_type: BaseAgent
+      set_api_hook: scalar
+      parameters:
+      - name: agentID
+        location: path
+        go_type: string
+      - name: name
+        location: body
+        wire_name: name
+        go_type: string
+        optional: true
+        omit_when_empty: true
+      - name: disableCache
+        location: body
+        wire_name: disable_cache
+        go_type: '*bool'
+        optional: true
+      - name: cacheFailedJobs
+        location: body
+        wire_name: cache_failed_jobs
+        go_type: '*bool'
+        optional: true
+    - kind: body
+      method_name: Delete
+      docstring: removes an agent.
+      method: DELETE
+      path: /v1/agents/{agent_id}/
+      error_wrap: delete agent %s
+      parameters:
+      - name: agentID
+        location: path
+        go_type: string
+        validate_nonempty: true
+    # Bespoke: Duplicate unwraps {"base_agent": ...}; the run family uses
+    # dynamic multipart inputs, Job/JobBatch handles, and batch chunking.
+    - kind: manual
+      method_name: Duplicate
+      docstring: clones an agent.
+      method: POST
+      path: /v1/agents/{agent_id}/duplicate/
+    - kind: manual
+      method_name: Run
+      docstring: starts an async job for the given agent.
+      method: POST
+      path: /v1/agents/run/{agent_id}/async/
+    - kind: manual
+      method_name: RunMany
+      docstring: submits batch jobs.
+      method: POST
+      path: /v1/agents/run/{agent_id}/async/many/
+    - kind: manual
+      method_name: RunSync
+      docstring: runs synchronously and returns outputs.
+      method: POST
+      path: /v1/agents/run/{agent_id}/
+    - kind: manual
+      method_name: RunVersion
+      docstring: runs a specific version asynchronously.
+      method: POST
+      path: /v1/agents/run/{agent_id}/versions/{agent_version_id}/async/
+    - kind: manual
+      method_name: RunVersionSync
+      docstring: runs a specific version synchronously.
+      method: POST
+      path: /v1/agents/run/{agent_id}/versions/{agent_version_id}/
+    namespaces:
+      versions:
+        struct_name: AgentVersionsAPI
+        field_name: Versions
+        docstring: handles version operations.
+        operations:
+        - kind: body
+          method_name: List
+          docstring: ''
+          method: GET
+          path: /v1/agents/{agent_id}/versions/
+          return_type: '[]AgentVersion'
+          error_wrap: list agent versions
+          set_api_hook: list
+          parameters:
+          - name: agentID
+            location: path
+            go_type: string
+            validate_nonempty: true
+        - kind: body
+          method_name: Retrieve
+          docstring: ''
+          method: GET
+          path: /v1/agents/{agent_id}/versions/{agent_version_id}/
+          return_type: AgentVersion
+          set_api_hook: scalar
+          parameters:
+          - name: agentID
+            location: path
+            go_type: string
+          - name: versionID
+            location: path
+            go_type: string
+          - name: getSupportsEval
+            location: query
+            wire_name: get_supports_eval
+            go_type: '*bool'
+            optional: true
+        - kind: body
+          method_name: Create
+          docstring: ''
+          method: POST
+          path: /v1/agents/{agent_id}/versions/
+          return_type: AgentVersion
+          refetch_with_retrieve: true
+          refetch_extra_args: ['nil']
+          parameters:
+          - name: agentID
+            location: path
+            go_type: string
+          - name: inputDefs
+            location: body
+            wire_name: input_definitions
+            go_type: '[]map[string]any'
+          - name: engineConfig
+            location: body
+            wire_name: engine_config
+            go_type: map[string]any
+          - name: versionName
+            location: body
+            wire_name: version_name
+            go_type: string
+            optional: true
+            omit_when_empty: true
+          - name: description
+            location: body
+            wire_name: description
+            go_type: string
+            optional: true
+            omit_when_empty: true
+        - kind: body
+          method_name: Update
+          docstring: ''
+          method: PUT
+          path: /v1/agents/{agent_id}/versions/{agent_version_id}/
+          parameters:
+          - name: agentID
+            location: path
+            go_type: string
+          - name: versionID
+            location: path
+            go_type: string
+          - name: versionName
+            location: body
+            wire_name: version_name
+            go_type: string
+            optional: true
+            omit_when_empty: true
+          - name: description
+            location: body
+            wire_name: description
+            go_type: string
+            optional: true
+            omit_when_empty: true
+        - kind: body
+          method_name: Delete
+          docstring: ''
+          method: DELETE
+          path: /v1/agents/{agent_id}/versions/{agent_version_id}/
+          parameters:
+          - name: agentID
+            location: path
+            go_type: string
+          - name: versionID
+            location: path
+            go_type: string
+        # Bespoke: extra Go-only variants (params struct / eval delegation chain).
+        - kind: manual
+          method_name: ListPaginated
+          docstring: ''
+          method: GET
+          path: /v1/agents/{agent_id}/versions/
+        - kind: manual
+          method_name: RetrieveCurrent
+          docstring: ''
+          method: GET
+          path: /v1/agents/{agent_id}/versions/current/
+        - kind: manual
+          method_name: RetrieveCurrentWithEval
+          docstring: ''
+          method: GET
+          path: /v1/agents/{agent_id}/versions/current/
+      jobs:
+        struct_name: AgentJobsAPI
+        field_name: Jobs
+        docstring: handles job operations.
+        operations:
+        - kind: body
+          method_name: RetrieveStatus
+          docstring: ''
+          method: GET
+          path: /v1/agents/jobs/{job_id}/status/
+          return_type: AgentJobStatus
+          parameters:
+          - name: jobID
+            location: path
+            go_type: string
+        - kind: body
+          method_name: RetrieveResult
+          docstring: ''
+          method: GET
+          path: /v1/agents/jobs/{agent_job_id}/result/
+          return_type: AgentJobResult
+          parameters:
+          - name: jobID
+            location: path
+            go_type: string
+        - kind: body
+          method_name: DeleteData
+          docstring: ''
+          method: POST
+          path: /v1/agents/jobs/{job_id}/delete-data/
+          return_type: JobDataDeleteResponse
+          parameters:
+          - name: jobID
+            location: path
+            go_type: string
+        - kind: body
+          method_name: Cancel
+          docstring: cancels a running job.
+          method: POST
+          path: /v1/agents/jobs/{job_id}/cancel/
+          parameters:
+          - name: jobID
+            location: path
+            go_type: string
+            validate_nonempty: true
+        - kind: body
+          method_name: CancelAll
+          docstring: cancels all running jobs for an agent.
+          method: POST
+          path: /v1/agents/{agent_id}/jobs/cancel-all/
+          parameters:
+          - name: agentID
+            location: path
+            go_type: string
+            validate_nonempty: true
+        # Bespoke: order-preserving chunked batches; raw byte download.
+        - kind: manual
+          method_name: RetrieveStatusMany
+          docstring: ''
+          method: POST
+          path: /v1/agents/jobs/statuses/
+        - kind: manual
+          method_name: RetrieveResultMany
+          docstring: ''
+          method: POST
+          path: /v1/agents/jobs/results/
+        - kind: manual
+          method_name: DownloadReference
+          docstring: ''
+          method: GET
+          path: /v1/agents/jobs/{agent_job_id}/references/{resource_id}/
+
+  policies:
+    struct_name: PoliciesAPI
+    field_name: Policies
+    docstring: manages policy operations for agentic workflows.
+    operations:
+    - kind: body
+      method_name: List
+      docstring: returns paginated policies.
+      method: GET
+      path: /v1/policies/
+      return_type: PaginatedResponse[Policy]
+      inject_organization_id: true
+      parameters:
+      - name: page
+        location: query
+        wire_name: page
+        go_type: int
+        optional: true
+        omit_when_empty: true
+      - name: pageSize
+        location: query
+        wire_name: page_size
+        go_type: int
+        optional: true
+        omit_when_empty: true
+    - kind: body
+      method_name: Retrieve
+      docstring: fetches a policy by ID.
+      method: GET
+      path: /v1/policies/{id}/
+      return_type: Policy
+      parameters:
+      - name: policyID
+        location: path
+        go_type: string
+        validate_nonempty: true
+    - kind: body
+      method_name: Create
+      docstring: creates a new policy with an initial version.
+      method: POST
+      path: /v1/policies/
+      return_type: Policy
+      inject_organization_id: true
+      parameters:
+      - name: name
+        location: body
+        wire_name: name
+        go_type: string
+      - name: content
+        location: body
+        wire_name: content
+        go_type: map[string]any
+      - name: description
+        location: body
+        wire_name: description
+        go_type: string
+      - name: versionName
+        location: body
+        wire_name: version_name
+        go_type: string
+        optional: true
+        omit_when_empty: true
+    - kind: body
+      method_name: Update
+      docstring: updates a policy's metadata. Pass nil for fields you don't want to change.
+      method: PUT
+      path: /v1/policies/{id}/
+      return_type: Policy
+      parameters:
+      - name: policyID
+        location: path
+        go_type: string
+        validate_nonempty: true
+      - name: name
+        location: body
+        wire_name: name
+        go_type: '*string'
+        optional: true
+      - name: description
+        location: body
+        wire_name: description
+        go_type: '*string'
+        optional: true
+    - kind: body
+      method_name: Delete
+      docstring: removes a policy and all its versions.
+      method: DELETE
+      path: /v1/policies/{id}/
+      parameters:
+      - name: policyID
+        location: path
+        go_type: string
+        validate_nonempty: true
+    namespaces:
+      versions:
+        struct_name: PolicyVersionsAPI
+        field_name: Versions
+        docstring: handles policy version operations.
+        operations:
+        # Bespoke: tolerates both paginated and raw-array response shapes.
+        - kind: manual
+          method_name: List
+          docstring: returns all versions of a policy.
+          method: GET
+          path: /v1/policies/{policy_id}/versions/
+        - kind: body
+          method_name: Retrieve
+          docstring: fetches a specific policy version.
+          method: GET
+          path: /v1/policies/{policy_id}/versions/{version_id}/
+          return_type: PolicyVersion
+          parameters:
+          - name: policyID
+            location: path
+            go_type: string
+            validate_nonempty: true
+          - name: versionID
+            location: path
+            go_type: string
+            validate_nonempty: true
+        - kind: body
+          method_name: Create
+          docstring: creates a new policy version. The new version automatically becomes current.
+          method: POST
+          path: /v1/policies/{policy_id}/versions/
+          return_type: PolicyVersion
+          refetch_with_retrieve: true
+          refetch_check_empty: true
+          parameters:
+          - name: policyID
+            location: path
+            go_type: string
+            validate_nonempty: true
+          - name: content
+            location: body
+            wire_name: content
+            go_type: map[string]any
+          - name: versionName
+            location: body
+            wire_name: version_name
+            go_type: string
+            optional: true
+            omit_when_empty: true
+          - name: baseVersionID
+            location: body
+            wire_name: base_version_id
+            go_type: string
+            optional: true
+            omit_when_empty: true
