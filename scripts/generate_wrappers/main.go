@@ -13,8 +13,10 @@ import (
 )
 
 const (
-	readmeBlockStart = "<!-- ROE-SDK:GENERATED-FRIENDLY-APIS:START -->"
-	readmeBlockEnd   = "<!-- ROE-SDK:GENERATED-FRIENDLY-APIS:END -->"
+	readmeBannerStart = "<!-- ROE-SDK:RELEASE-BANNER:START -->"
+	readmeBannerEnd   = "<!-- ROE-SDK:RELEASE-BANNER:END -->"
+	readmeBlockStart  = "<!-- ROE-SDK:GENERATED-FRIENDLY-APIS:START -->"
+	readmeBlockEnd    = "<!-- ROE-SDK:GENERATED-FRIENDLY-APIS:END -->"
 )
 
 type contract struct {
@@ -65,6 +67,7 @@ func main() {
 	for apiName, api := range spec.APIs {
 		writeAPI(root, modulePath, apiName, api)
 	}
+	syncReadmeReleaseBanner(root)
 	syncReadmeBlock(root)
 	fmt.Printf("Generated %d friendly API wrapper modules from openapi/wrappers.yml\n", len(spec.APIs))
 }
@@ -296,14 +299,49 @@ func syncReadmeBlock(root string) {
 	readmeBytes, err := os.ReadFile(readmePath)
 	must(err)
 	readme := string(readmeBytes)
-	start := strings.Index(readme, readmeBlockStart)
-	end := strings.Index(readme, readmeBlockEnd)
-	if start < 0 || end < start {
-		must(fmt.Errorf("README.md must contain %s and %s", readmeBlockStart, readmeBlockEnd))
-	}
-	end += len(readmeBlockEnd)
-	updated := readme[:start] + readmeBlockStart + "\n" + block + "\n" + readmeBlockEnd + readme[end:]
+	updated := replaceMarkedBlock(readme, readmeBlockStart, readmeBlockEnd, block)
 	must(os.WriteFile(readmePath, []byte(updated), 0o644))
+}
+
+func syncReadmeReleaseBanner(root string) {
+	version := readTrimmed(filepath.Join(root, "VERSION"))
+	marker := readTrimmed(filepath.Join(root, ".roe-main-release-version"))
+	block := fmt.Sprintf(`> **v%s** - Schema synchronization across roe-python / roe-typescript /
+> roe-golang. This release is generated from SDK OpenAPI marker %s, and
+> all public package metadata is bumped to %s. No Go module import-path
+> migration; the SDK stays on %s.`,
+		version,
+		"`"+marker+"`",
+		version,
+		"`github.com/roe-ai/roe-golang`",
+	)
+
+	readmePath := filepath.Join(root, "README.md")
+	readmeBytes, err := os.ReadFile(readmePath)
+	must(err)
+	readme := string(readmeBytes)
+	updated := replaceMarkedBlock(readme, readmeBannerStart, readmeBannerEnd, block)
+	must(os.WriteFile(readmePath, []byte(updated), 0o644))
+}
+
+func replaceMarkedBlock(readme, startMarker, endMarker, block string) string {
+	start := strings.Index(readme, startMarker)
+	end := strings.Index(readme, endMarker)
+	if start < 0 || end < start {
+		must(fmt.Errorf("README.md must contain %s and %s", startMarker, endMarker))
+	}
+	end += len(endMarker)
+	return readme[:start] + startMarker + "\n" + strings.TrimSpace(block) + "\n" + endMarker + readme[end:]
+}
+
+func readTrimmed(path string) string {
+	data, err := os.ReadFile(path)
+	must(err)
+	value := strings.TrimSpace(string(data))
+	if value == "" {
+		must(fmt.Errorf("%s must not be empty", path))
+	}
+	return value
 }
 
 func writeHeader(buf *bytes.Buffer) {
