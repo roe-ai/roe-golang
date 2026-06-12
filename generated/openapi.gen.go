@@ -18,6 +18,154 @@ import (
 	openapi_types "github.com/oapi-codegen/runtime/types"
 )
 
+const (
+	ApiKeyAuthScopes = "apiKeyAuth.Scopes"
+)
+
+// Defines values for ColorEnum.
+const (
+	Blue   ColorEnum = "blue"
+	Gray   ColorEnum = "gray"
+	Green  ColorEnum = "green"
+	Orange ColorEnum = "orange"
+	Pink   ColorEnum = "pink"
+	Purple ColorEnum = "purple"
+	Red    ColorEnum = "red"
+	Yellow ColorEnum = "yellow"
+)
+
+// Valid indicates whether the value is a known member of the ColorEnum enum.
+func (e ColorEnum) Valid() bool {
+	switch e {
+	case Blue:
+		return true
+	case Gray:
+		return true
+	case Green:
+		return true
+	case Orange:
+		return true
+	case Pink:
+		return true
+	case Purple:
+		return true
+	case Red:
+		return true
+	case Yellow:
+		return true
+	default:
+		return false
+	}
+}
+
+// Defines values for ConnectorTypeEnum.
+const (
+	CheckoutCom    ConnectorTypeEnum = "checkout_com"
+	CustomApi      ConnectorTypeEnum = "custom_api"
+	CustomMcp      ConnectorTypeEnum = "custom_mcp"
+	GoogleDrive    ConnectorTypeEnum = "google_drive"
+	Intercom       ConnectorTypeEnum = "intercom"
+	LexisNexis     ConnectorTypeEnum = "lexis_nexis"
+	Plaid          ConnectorTypeEnum = "plaid"
+	S3             ConnectorTypeEnum = "s3"
+	Salesforce     ConnectorTypeEnum = "salesforce"
+	Sardine        ConnectorTypeEnum = "sardine"
+	Sharepoint     ConnectorTypeEnum = "sharepoint"
+	Snowflake      ConnectorTypeEnum = "snowflake"
+	Socure         ConnectorTypeEnum = "socure"
+	Stripe         ConnectorTypeEnum = "stripe"
+	WebApplication ConnectorTypeEnum = "web_application"
+	Zendesk        ConnectorTypeEnum = "zendesk"
+)
+
+// Valid indicates whether the value is a known member of the ConnectorTypeEnum enum.
+func (e ConnectorTypeEnum) Valid() bool {
+	switch e {
+	case CheckoutCom:
+		return true
+	case CustomApi:
+		return true
+	case CustomMcp:
+		return true
+	case GoogleDrive:
+		return true
+	case Intercom:
+		return true
+	case LexisNexis:
+		return true
+	case Plaid:
+		return true
+	case S3:
+		return true
+	case Salesforce:
+		return true
+	case Sardine:
+		return true
+	case Sharepoint:
+		return true
+	case Snowflake:
+		return true
+	case Socure:
+		return true
+	case Stripe:
+		return true
+	case WebApplication:
+		return true
+	case Zendesk:
+		return true
+	default:
+		return false
+	}
+}
+
+// Defines values for StatusEnum.
+const (
+	Active StatusEnum = "active"
+	Error  StatusEnum = "error"
+)
+
+// Valid indicates whether the value is a known member of the StatusEnum enum.
+func (e StatusEnum) Valid() bool {
+	switch e {
+	case Active:
+		return true
+	case Error:
+		return true
+	default:
+		return false
+	}
+}
+
+// Defines values for TableQueryStatusEnum.
+const (
+	FAILURE TableQueryStatusEnum = "FAILURE"
+	PENDING TableQueryStatusEnum = "PENDING"
+	RETRY   TableQueryStatusEnum = "RETRY"
+	REVOKED TableQueryStatusEnum = "REVOKED"
+	STARTED TableQueryStatusEnum = "STARTED"
+	SUCCESS TableQueryStatusEnum = "SUCCESS"
+)
+
+// Valid indicates whether the value is a known member of the TableQueryStatusEnum enum.
+func (e TableQueryStatusEnum) Valid() bool {
+	switch e {
+	case FAILURE:
+		return true
+	case PENDING:
+		return true
+	case RETRY:
+		return true
+	case REVOKED:
+		return true
+	case STARTED:
+		return true
+	case SUCCESS:
+		return true
+	default:
+		return false
+	}
+}
+
 // AgentDatum defines model for AgentDatum.
 type AgentDatum struct {
 	// Cost The cost of the agent job execution
@@ -48,13 +196,11 @@ type AgentEngineTypeList struct {
 	TotalCount int `json:"total_count"`
 }
 
-// AgentExecutionRequestRequest Serializer for agent execution requests with dynamic input fields.
-type AgentExecutionRequestRequest struct {
-	// AgentInputKeyExample Agent input keys are dynamic based on agent configuration. Can be text or file.
-	AgentInputKeyExample *string `json:"agent_input_key_example,omitempty"`
-
-	// Metadata Optional metadata as JSON object or JSON string
-	Metadata interface{} `json:"metadata,omitempty"`
+// AgentExecutionRequest Agent execution request. In addition to `metadata`, every key of the agent's input definitions is accepted as a property (text value or file upload).
+type AgentExecutionRequest struct {
+	// Metadata Optional metadata stored as-is on the created agent job. A JSON-encoded object string is also accepted; null is treated the same as omitting the field (empty metadata). Only honored by the single-run endpoints — when this object is an item of the run-async-many `inputs` list, `metadata` is ignored.
+	Metadata             *map[string]interface{} `json:"metadata,omitempty"`
+	AdditionalProperties map[string]interface{}  `json:"-"`
 }
 
 // AgentInputDefinition defines model for AgentInputDefinition.
@@ -75,7 +221,7 @@ type AgentInputDefinition struct {
 	Key string `json:"key"`
 }
 
-// AgentJobDeleteDataResponse defines model for AgentJobDeleteDataResponse.
+// AgentJobDeleteDataResponse Response payload of purge_agent_job_data (delete-data and :purgeData).
 type AgentJobDeleteDataResponse struct {
 	// ArtifactsDeletedCount Number of workflow artifacts successfully deleted
 	ArtifactsDeletedCount int `json:"artifacts_deleted_count"`
@@ -89,8 +235,8 @@ type AgentJobDeleteDataResponse struct {
 	// DeletedCount Number of input files successfully deleted
 	DeletedCount int `json:"deleted_count"`
 
-	// Errors List of errors encountered during deletion
-	Errors *[]interface{} `json:"errors,omitempty"`
+	// Errors List of errors encountered during deletion; null when none
+	Errors *[]string `json:"errors"`
 
 	// FailedCount Number of input files that failed to delete
 	FailedCount int `json:"failed_count"`
@@ -132,8 +278,8 @@ type AgentJobResultItem struct {
 	Status *int `json:"status"`
 }
 
-// AgentJobResultManyRequestRequest Serializer for bulk agent job results request.
-type AgentJobResultManyRequestRequest struct {
+// AgentJobResultManyRequest Serializer for bulk agent job results request.
+type AgentJobResultManyRequest struct {
 	// JobIds List of agent job IDs to retrieve results for
 	JobIds []openapi_types.UUID `json:"job_ids"`
 }
@@ -159,28 +305,69 @@ type AgentJobResultResponse struct {
 	Outputs []AgentDatum `json:"outputs"`
 }
 
-// AgentJobStatus defines model for AgentJobStatus.
-type AgentJobStatus struct {
+// AgentJobSingleStatus defines model for AgentJobSingleStatus.
+type AgentJobSingleStatus struct {
 	// ErrorMessage Error message if status is RETRY or FAILURE
 	ErrorMessage *string `json:"error_message,omitempty"`
 
 	// Status Status code. 0: PENDING, 1: STARTED, 2: RETRY, 3: SUCCESS, 4: FAILURE, 5: CANCELLED, 6: CACHED
 	Status int `json:"status"`
 
-	// Timestamp Unix timestamp in seconds
-	Timestamp int `json:"timestamp"`
+	// Timestamp Unix timestamp in seconds (fractional)
+	Timestamp float64 `json:"timestamp"`
 }
 
-// AgentJobStatusManyRequestRequest Serializer for bulk agent job status request.
-type AgentJobStatusManyRequestRequest struct {
+// AgentJobStatus Serializer for individual agent job status response.
+type AgentJobStatus struct {
+	// CreatedAt When the job was created
+	CreatedAt *time.Time `json:"created_at"`
+
+	// ErrorMessage Error message if status is FAILURE or RETRY
+	ErrorMessage *string `json:"error_message,omitempty"`
+
+	// Id Agent job ID
+	Id openapi_types.UUID `json:"id"`
+
+	// LastUpdatedAt When the job was last updated
+	LastUpdatedAt *time.Time `json:"last_updated_at"`
+
+	// Status Current status code (0=PENDING, 1=STARTED, 2=RETRY, 3=SUCCESS, 4=FAILURE, 5=CANCELLED, 6=CACHED)
+	Status *int `json:"status"`
+
+	// Timestamp Unix timestamp in seconds from the latest status event
+	Timestamp *float64 `json:"timestamp,omitempty"`
+}
+
+// AgentJobStatusManyRequest Serializer for bulk agent job status request.
+type AgentJobStatusManyRequest struct {
 	// JobIds List of agent job IDs to retrieve statuses for
 	JobIds []openapi_types.UUID `json:"job_ids"`
 }
 
-// AgentRunAsyncManyRequestRequest Serializer for agent async many execution requests.
-type AgentRunAsyncManyRequestRequest struct {
+// AgentRunAsyncManyRequest Serializer for agent async many execution requests.
+type AgentRunAsyncManyRequest struct {
 	// Inputs List of agent execution requests to process
-	Inputs []AgentExecutionRequestRequest `json:"inputs"`
+	Inputs []AgentExecutionRequest `json:"inputs"`
+}
+
+// AgentTag Serializer for AgentTag model
+type AgentTag struct {
+	// Color * `blue` - Blue
+	// * `green` - Green
+	// * `purple` - Purple
+	// * `orange` - Orange
+	// * `red` - Red
+	// * `yellow` - Yellow
+	// * `gray` - Gray
+	// * `pink` - Pink
+	Color     ColorEnum           `json:"color"`
+	CreatedAt *time.Time          `json:"created_at,omitempty"`
+	Creator   *int                `json:"creator,omitempty"`
+	Id        *openapi_types.UUID `json:"id,omitempty"`
+	Name      string              `json:"name"`
+
+	// UsageCount Count of agents using this tag
+	UsageCount *int `json:"usage_count,omitempty"`
 }
 
 // AgentVersion Serializer for Agent (version) model
@@ -220,22 +407,28 @@ type AgentVersionCreateRequest struct {
 	Description *string `json:"description,omitempty"`
 
 	// EngineConfig Engine configuration as a dictionary of string key-value pairs.
-	EngineConfig interface{} `json:"engine_config"`
+	EngineConfig interface{} `json:"engine_config,omitempty"`
 
 	// InputDefinitions List of input definitions for this agent version.
-	InputDefinitions interface{} `json:"input_definitions"`
+	InputDefinitions interface{} `json:"input_definitions,omitempty"`
 
 	// VersionName Version name for the agent version. Defaults to 'unnamed version' if not provided.
 	VersionName *string `json:"version_name,omitempty"`
 }
 
-// AgentVersionUpdateRequestRequest defines model for AgentVersionUpdateRequestRequest.
-type AgentVersionUpdateRequestRequest struct {
+// AgentVersionUpdateRequest defines model for AgentVersionUpdateRequest.
+type AgentVersionUpdateRequest struct {
 	// Description New description for the agent version.
 	Description *string `json:"description,omitempty"`
 
 	// VersionName New version name for the agent version.
 	VersionName *string `json:"version_name,omitempty"`
+}
+
+// ApiErrorResponse Hand-built application error body: `Response({"error": ...}, 4xx/5xx)`.
+type ApiErrorResponse struct {
+	// Error Application error message
+	Error string `json:"error"`
 }
 
 // BaseAgent Serializer for BaseAgent (agent config)
@@ -257,13 +450,13 @@ type BaseAgent struct {
 	Id         *openapi_types.UUID `json:"id,omitempty"`
 
 	// JobCount Job count from annotation, or None when not fetched (use /agents/job-stats/).
-	JobCount      *int    `json:"job_count,omitempty"`
-	MostRecentJob *string `json:"most_recent_job,omitempty"`
-	Name          string  `json:"name"`
+	JobCount      *int       `json:"job_count,omitempty"`
+	MostRecentJob *time.Time `json:"most_recent_job,omitempty"`
+	Name          string     `json:"name"`
 
 	// OrganizationId Organization ID that owns this agent.
 	OrganizationId openapi_types.UUID `json:"organization_id"`
-	Tags           *string            `json:"tags,omitempty"`
+	Tags           *[]AgentTag        `json:"tags,omitempty"`
 }
 
 // BaseAgentCreateRequest Serializer for creating base agents with proper JSON field handling
@@ -275,16 +468,16 @@ type BaseAgentCreateRequest struct {
 	EngineClassId string `json:"engine_class_id"`
 
 	// EngineConfig Engine configuration for the first version.
-	EngineConfig interface{} `json:"engine_config"`
+	EngineConfig interface{} `json:"engine_config,omitempty"`
 
 	// InputDefinitions Input definitions for the first version.
-	InputDefinitions interface{} `json:"input_definitions"`
+	InputDefinitions interface{} `json:"input_definitions,omitempty"`
 
 	// Name Name of the base agent.
 	Name string `json:"name"`
 
-	// OrganizationId Organization ID where the agent belongs.
-	OrganizationId openapi_types.UUID `json:"organization_id"`
+	// OrganizationId Optional. Ignored by the API — the organization is derived from the authenticated API key/token. Accepted for backwards compatibility.
+	OrganizationId *openapi_types.UUID `json:"organization_id,omitempty"`
 
 	// VersionName Name of the first version.
 	VersionName *string `json:"version_name,omitempty"`
@@ -300,6 +493,130 @@ type BaseAgentUpdateRequest struct {
 
 	// Name New name for the agent. Must not be empty if provided.
 	Name *string `json:"name,omitempty"`
+}
+
+// ColorEnum * `blue` - Blue
+// * `green` - Green
+// * `purple` - Purple
+// * `orange` - Orange
+// * `red` - Red
+// * `yellow` - Yellow
+// * `gray` - Gray
+// * `pink` - Pink
+type ColorEnum string
+
+// Connection Serializer for Connection model.
+// Returns:
+// - config: Non-sensitive config from DB
+// - auth_config: Actual auth credentials from Secrets Manager (not the internal reference)
+type Connection struct {
+	AuthConfig *map[string]interface{} `json:"auth_config,omitempty"`
+	Config     interface{}             `json:"config,omitempty"`
+
+	// ConnectorDisplayName Get the display name for the connector type.
+	ConnectorDisplayName *string             `json:"connector_display_name,omitempty"`
+	ConnectorType        string              `json:"connector_type"`
+	CreatedAt            *time.Time          `json:"created_at,omitempty"`
+	Description          *string             `json:"description,omitempty"`
+	Id                   *openapi_types.UUID `json:"id,omitempty"`
+	Name                 string              `json:"name"`
+	Organization         openapi_types.UUID  `json:"organization"`
+
+	// Status * `active` - Active
+	// * `error` - Error
+	Status    *StatusEnum `json:"status,omitempty"`
+	UpdatedAt *time.Time  `json:"updated_at,omitempty"`
+	User      *int        `json:"user,omitempty"`
+}
+
+// ConnectionDeleteErrorResponse defines model for ConnectionDeleteErrorResponse.
+type ConnectionDeleteErrorResponse struct {
+	Error string `json:"error"`
+}
+
+// ConnectionList Lightweight serializer for listing connections.
+// Only returns metadata, no auth_config (avoids Secrets Manager calls).
+type ConnectionList struct {
+	Config interface{} `json:"config,omitempty"`
+
+	// ConnectorDisplayName Get the display name for the connector type.
+	ConnectorDisplayName *string             `json:"connector_display_name,omitempty"`
+	ConnectorType        string              `json:"connector_type"`
+	CreatedAt            *time.Time          `json:"created_at,omitempty"`
+	Description          *string             `json:"description,omitempty"`
+	Id                   *openapi_types.UUID `json:"id,omitempty"`
+	Name                 string              `json:"name"`
+	Organization         openapi_types.UUID  `json:"organization"`
+
+	// Status * `active` - Active
+	// * `error` - Error
+	Status    *StatusEnum `json:"status,omitempty"`
+	UpdatedAt *time.Time  `json:"updated_at,omitempty"`
+	User      *int        `json:"user,omitempty"`
+}
+
+// ConnectorListResponse defines model for ConnectorListResponse.
+type ConnectorListResponse struct {
+	Connectors []ConnectorMetadata `json:"connectors"`
+}
+
+// ConnectorMetadata Serializer for connector metadata.
+type ConnectorMetadata struct {
+	AuthSchema           interface{} `json:"auth_schema"`
+	Category             string      `json:"category"`
+	ConfigSchema         interface{} `json:"config_schema"`
+	DeliveryConfigSchema interface{} `json:"delivery_config_schema"`
+	Description          string      `json:"description"`
+	DisplayName          string      `json:"display_name"`
+	Icon                 string      `json:"icon"`
+	Id                   string      `json:"id"`
+	SupportsDelivery     bool        `json:"supports_delivery"`
+}
+
+// ConnectorTypeEnum * `snowflake` - SNOWFLAKE
+// * `s3` - S3
+// * `sharepoint` - SHAREPOINT
+// * `zendesk` - ZENDESK
+// * `google_drive` - GOOGLE_DRIVE
+// * `salesforce` - SALESFORCE
+// * `web_application` - WEB_APPLICATION
+// * `custom_api` - CUSTOM_API
+// * `lexis_nexis` - LEXIS_NEXIS
+// * `sardine` - SARDINE
+// * `intercom` - INTERCOM
+// * `stripe` - STRIPE
+// * `plaid` - PLAID
+// * `checkout_com` - CHECKOUT_COM
+// * `socure` - SOCURE
+// * `custom_mcp` - CUSTOM_MCP
+type ConnectorTypeEnum string
+
+// CreateConnectionRequest Serializer for creating connections.
+// Accepts full config, splits into config (DB) and auth (Secrets Manager).
+type CreateConnectionRequest struct {
+	AuthConfig *map[string]interface{} `json:"auth_config,omitempty"`
+	Config     map[string]interface{}  `json:"config"`
+
+	// ConnectorType * `snowflake` - SNOWFLAKE
+	// * `s3` - S3
+	// * `sharepoint` - SHAREPOINT
+	// * `zendesk` - ZENDESK
+	// * `google_drive` - GOOGLE_DRIVE
+	// * `salesforce` - SALESFORCE
+	// * `web_application` - WEB_APPLICATION
+	// * `custom_api` - CUSTOM_API
+	// * `lexis_nexis` - LEXIS_NEXIS
+	// * `sardine` - SARDINE
+	// * `intercom` - INTERCOM
+	// * `stripe` - STRIPE
+	// * `plaid` - PLAID
+	// * `checkout_com` - CHECKOUT_COM
+	// * `socure` - SOCURE
+	// * `custom_mcp` - CUSTOM_MCP
+	ConnectorType  ConnectorTypeEnum   `json:"connector_type"`
+	Description    *string             `json:"description,omitempty"`
+	Name           string              `json:"name"`
+	OrganizationId *openapi_types.UUID `json:"organization_id,omitempty"`
 }
 
 // CreatePolicy Serializer for creating a new policy with initial version
@@ -343,18 +660,37 @@ type CreatePolicyVersionRequest struct {
 	VersionName *string `json:"version_name,omitempty"`
 }
 
-// ErrorResponse defines model for ErrorResponse.
-type ErrorResponse struct {
-	// Message Error message
-	Message string `json:"message"`
+// DependentAgentInfo An agent version that references a policy (see get_agents_using_policy).
+type DependentAgentInfo struct {
+	AgentName   string             `json:"agent_name"`
+	BaseAgentId openapi_types.UUID `json:"base_agent_id"`
+	VersionId   openapi_types.UUID `json:"version_id"`
+	VersionName string             `json:"version_name"`
 }
 
-// PaginatedAgentJobResultItemList defines model for PaginatedAgentJobResultItemList.
-type PaginatedAgentJobResultItemList struct {
-	Count    int                  `json:"count"`
-	Next     *string              `json:"next,omitempty"`
-	Previous *string              `json:"previous,omitempty"`
-	Results  []AgentJobResultItem `json:"results"`
+// DuplicateConnectionExisting Identifying summary of the existing connection that triggered a 409.
+type DuplicateConnectionExisting struct {
+	Id   openapi_types.UUID `json:"id"`
+	Name string             `json:"name"`
+}
+
+// DuplicateConnectionResponse Body of the 409 response when create/update hits a strict-identity duplicate.
+type DuplicateConnectionResponse struct {
+	Error string `json:"error"`
+
+	// ExistingConnection Identifying summary of the existing connection that triggered a 409.
+	ExistingConnection DuplicateConnectionExisting `json:"existing_connection"`
+}
+
+// ErrorDetailResponse DRF default error body: NotFound, PermissionDenied, Http404, etc.
+type ErrorDetailResponse struct {
+	// Detail Human-readable error detail
+	Detail string `json:"detail"`
+}
+
+// MessageResponse Simple success acknowledgement body: `{"message": ...}`.
+type MessageResponse struct {
+	Message string `json:"message"`
 }
 
 // PaginatedBaseAgentList defines model for PaginatedBaseAgentList.
@@ -363,6 +699,14 @@ type PaginatedBaseAgentList struct {
 	Next     *string     `json:"next,omitempty"`
 	Previous *string     `json:"previous,omitempty"`
 	Results  []BaseAgent `json:"results"`
+}
+
+// PaginatedConnectionListList defines model for PaginatedConnectionListList.
+type PaginatedConnectionListList struct {
+	Count    int              `json:"count"`
+	Next     *string          `json:"next,omitempty"`
+	Previous *string          `json:"previous,omitempty"`
+	Results  []ConnectionList `json:"results"`
 }
 
 // PaginatedPolicyList defines model for PaginatedPolicyList.
@@ -381,6 +725,15 @@ type PaginatedPolicyVersionList struct {
 	Results  []PolicyVersion `json:"results"`
 }
 
+// PatchedAgentVersionUpdateRequest defines model for PatchedAgentVersionUpdateRequest.
+type PatchedAgentVersionUpdateRequest struct {
+	// Description New description for the agent version.
+	Description *string `json:"description,omitempty"`
+
+	// VersionName New version name for the agent version.
+	VersionName *string `json:"version_name,omitempty"`
+}
+
 // PatchedBaseAgentUpdateRequest Serializer for updating BaseAgent
 type PatchedBaseAgentUpdateRequest struct {
 	// CacheFailedJobs Whether to cache failed jobs for this agent.
@@ -393,13 +746,24 @@ type PatchedBaseAgentUpdateRequest struct {
 	Name *string `json:"name,omitempty"`
 }
 
-// PatchedPatchedAgentVersionUpdateRequestRequest defines model for PatchedPatchedAgentVersionUpdateRequestRequest.
-type PatchedPatchedAgentVersionUpdateRequestRequest struct {
-	// Description New description for the agent version.
-	Description *string `json:"description,omitempty"`
-
-	// VersionName New version name for the agent version.
-	VersionName *string `json:"version_name,omitempty"`
+// PatchedUpdateConnectionRequest Serializer for updating connections.
+//
+// Cross-state Pydantic validation (config + auth) lives in the view's
+// “update()“ method now -- see “connections.views.
+// ConnectionRetrieveUpdateDestroyView.update“. That path is the single
+// source of truth for canonical validation + write, mirrors the create
+// path's “service.create_connection_with_secrets“, AND correctly
+// handles the SM-fetch-failure case for the unchanged-auth branch
+// (returns 502 / opportunistic backfill instead of silently corrupting
+// the fingerprint by hashing “{}“). Re-running the same validation
+// here would (a) double the work, (b) bypass the SM-failure semantics,
+// and (c) leak Pydantic field/value details through DRF's generic 400
+// handler. The serializer only does shape checks.
+type PatchedUpdateConnectionRequest struct {
+	AuthConfig  *map[string]interface{} `json:"auth_config,omitempty"`
+	Config      *map[string]interface{} `json:"config,omitempty"`
+	Description *string                 `json:"description,omitempty"`
+	Name        *string                 `json:"name,omitempty"`
 }
 
 // PatchedUpdatePolicyRequest Serializer for updating policy metadata (name, description)
@@ -417,6 +781,12 @@ type Policy struct {
 	Name             string              `json:"name"`
 	OrganizationId   *openapi_types.UUID `json:"organization_id,omitempty"`
 	UpdatedAt        *time.Time          `json:"updated_at,omitempty"`
+}
+
+// PolicyDeleteConflict 409 body when a policy cannot be deleted because agents reference it.
+type PolicyDeleteConflict struct {
+	DependentAgents []DependentAgentInfo `json:"dependent_agents"`
+	Error           string               `json:"error"`
 }
 
 // PolicyVersion Policy version serializer for public API.
@@ -443,6 +813,19 @@ type PolicyVersionCreatedBy struct {
 	Email       *openapi_types.Email `json:"email,omitempty"`
 	Id          *int                 `json:"id,omitempty"`
 }
+
+// QdrantCleanupErrorResponse 500 body when deleting an agent/version fails Qdrant collection cleanup.
+type QdrantCleanupErrorResponse struct {
+	// Detail Human-readable error detail
+	Detail string `json:"detail"`
+
+	// FailedCollections Qdrant collections that could not be deleted
+	FailedCollections []string `json:"failed_collections"`
+}
+
+// StatusEnum * `active` - Active
+// * `error` - Error
+type StatusEnum string
 
 // SupportedLLMModel Serializer for tenant-agnostic supported LLM metadata.
 type SupportedLLMModel struct {
@@ -476,6 +859,116 @@ type SupportedLLMModelList struct {
 	TotalCount  int    `json:"total_count"`
 }
 
+// Table Serializer for table information.
+type Table struct {
+	// Columns List of columns in the table
+	Columns []TableColumn `json:"columns"`
+
+	// Name Name of the table
+	Name string `json:"name"`
+}
+
+// TableColumn Serializer for table column information.
+type TableColumn struct {
+	// Name Name of the column
+	Name string `json:"name"`
+
+	// Type Type of the column (e.g., String, UInt64)
+	Type string `json:"type"`
+}
+
+// TableDescribeResponse Response payload for describing a public Roe table.
+type TableDescribeResponse struct {
+	// Columns List of columns in the table
+	Columns []TableColumn `json:"columns"`
+
+	// RowCount Total row count if ClickHouse can determine it from metadata without scanning the table
+	RowCount *int `json:"row_count"`
+
+	// TableName Name of the table
+	TableName string `json:"table_name"`
+
+	// UpdatedAt Latest ClickHouse table metadata modification timestamp if available
+	UpdatedAt *time.Time `json:"updated_at"`
+}
+
+// TableListResponse Response payload for listing public Roe tables.
+type TableListResponse struct {
+	Results []Table `json:"results"`
+
+	// Total Total number of tables returned
+	Total int `json:"total"`
+}
+
+// TablePreviewResponse Response payload for previewing a public Roe table.
+type TablePreviewResponse struct {
+	// Columns List of columns in the table
+	Columns []TableColumn `json:"columns"`
+
+	// RowCount Number of sample rows returned
+	RowCount int `json:"row_count"`
+
+	// Rows Sample rows keyed by column name
+	Rows []map[string]interface{} `json:"rows"`
+
+	// TableName Name of the table
+	TableName string `json:"table_name"`
+}
+
+// TableQueryRequest Request payload for running a public Roe table query.
+type TableQueryRequest struct {
+	// Limit Maximum rows returned. Defaults to 1000; maximum 1000.
+	Limit *int `json:"limit,omitempty"`
+
+	// Sql Single read-only ClickHouse SELECT or WITH ... SELECT query.
+	Sql string `json:"sql"`
+}
+
+// TableQueryResultResponse Response payload for polling or fetching a public Roe table query.
+type TableQueryResultResponse struct {
+	Columns         *[]map[string]interface{} `json:"columns,omitempty"`
+	Error           *string                   `json:"error,omitempty"`
+	ExecutionTimeMs *float64                  `json:"execution_time_ms,omitempty"`
+	RowCount        *int                      `json:"row_count,omitempty"`
+
+	// Rows Rows keyed by column name. When truncated is true, an oversized cell may be returned as a shortened string even if the original ClickHouse value was a nested object or array.
+	Rows *[]map[string]interface{} `json:"rows,omitempty"`
+
+	// Status * `PENDING` - PENDING
+	// * `STARTED` - STARTED
+	// * `RETRY` - RETRY
+	// * `SUCCESS` - SUCCESS
+	// * `FAILURE` - FAILURE
+	// * `REVOKED` - REVOKED
+	Status       TableQueryStatusEnum `json:"status"`
+	TableQueryId openapi_types.UUID   `json:"table_query_id"`
+
+	// Truncated True when the result hit the row limit, backend result byte cap, or an individual huge cell was shortened. In truncated responses, any oversized cell may be represented as a string regardless of its original ClickHouse type.
+	Truncated *bool `json:"truncated,omitempty"`
+}
+
+// TableQueryStatusEnum * `PENDING` - PENDING
+// * `STARTED` - STARTED
+// * `RETRY` - RETRY
+// * `SUCCESS` - SUCCESS
+// * `FAILURE` - FAILURE
+// * `REVOKED` - REVOKED
+type TableQueryStatusEnum string
+
+// TableQuerySubmitResponse Response payload for submitting a public Roe table query.
+type TableQuerySubmitResponse struct {
+	CreatedAt time.Time `json:"created_at"`
+
+	// Status * `PENDING` - PENDING
+	// * `STARTED` - STARTED
+	// * `RETRY` - RETRY
+	// * `SUCCESS` - SUCCESS
+	// * `FAILURE` - FAILURE
+	// * `REVOKED` - REVOKED
+	Status       TableQueryStatusEnum `json:"status"`
+	TableQueryId openapi_types.UUID   `json:"table_query_id"`
+}
+
 // TableUploadRequest Serializer for public CSV table uploads.
 type TableUploadRequest struct {
 	// File CSV file to upload
@@ -487,7 +980,7 @@ type TableUploadRequest struct {
 	// TableName Name of the Roe table to create from the uploaded CSV
 	TableName string `json:"table_name"`
 
-	// WithHeaders Whether the first row of the CSV contains column headers
+	// WithHeaders If true, the first CSV row contains column headers and is not inserted as data; if false, every row is inserted as data and columns are named column_1, column_2, etc.
 	WithHeaders *bool `json:"with_headers,omitempty"`
 }
 
@@ -501,6 +994,57 @@ type TableUploadResponse struct {
 
 	// TableName Created Roe table name
 	TableName string `json:"table_name"`
+}
+
+// TestConnection Serializer for connection test response.
+type TestConnection struct {
+	Message  string    `json:"message"`
+	Success  bool      `json:"success"`
+	TestedAt time.Time `json:"tested_at"`
+}
+
+// TestConnectionCredentialsRequest Serializer for testing connector credentials without saving a connection.
+type TestConnectionCredentialsRequest struct {
+	AuthConfig *map[string]interface{} `json:"auth_config,omitempty"`
+	Config     map[string]interface{}  `json:"config"`
+
+	// ConnectorType * `snowflake` - SNOWFLAKE
+	// * `s3` - S3
+	// * `sharepoint` - SHAREPOINT
+	// * `zendesk` - ZENDESK
+	// * `google_drive` - GOOGLE_DRIVE
+	// * `salesforce` - SALESFORCE
+	// * `web_application` - WEB_APPLICATION
+	// * `custom_api` - CUSTOM_API
+	// * `lexis_nexis` - LEXIS_NEXIS
+	// * `sardine` - SARDINE
+	// * `intercom` - INTERCOM
+	// * `stripe` - STRIPE
+	// * `plaid` - PLAID
+	// * `checkout_com` - CHECKOUT_COM
+	// * `socure` - SOCURE
+	// * `custom_mcp` - CUSTOM_MCP
+	ConnectorType ConnectorTypeEnum `json:"connector_type"`
+}
+
+// UpdateConnectionRequest Serializer for updating connections.
+//
+// Cross-state Pydantic validation (config + auth) lives in the view's
+// “update()“ method now -- see “connections.views.
+// ConnectionRetrieveUpdateDestroyView.update“. That path is the single
+// source of truth for canonical validation + write, mirrors the create
+// path's “service.create_connection_with_secrets“, AND correctly
+// handles the SM-fetch-failure case for the unchanged-auth branch
+// (returns 502 / opportunistic backfill instead of silently corrupting
+// the fingerprint by hashing “{}“). Re-running the same validation
+// here would (a) double the work, (b) bypass the SM-failure semantics,
+// and (c) leak Pydantic field/value details through DRF's generic 400
+// handler. The serializer only does shape checks.
+type UpdateConnectionRequest struct {
+	AuthConfig  *map[string]interface{} `json:"auth_config,omitempty"`
+	Config      *map[string]interface{} `json:"config,omitempty"`
+	Description *string                 `json:"description,omitempty"`
+	Name        *string                 `json:"name,omitempty"`
 }
 
 // UpdatePolicy Serializer for updating policy metadata (name, description)
@@ -518,6 +1062,22 @@ type UpdatePolicy struct {
 type UpdatePolicyRequest struct {
 	Description *string `json:"description,omitempty"`
 	Name        string  `json:"name"`
+}
+
+// User defines model for User.
+type User struct {
+	DateJoined      *time.Time          `json:"date_joined,omitempty"`
+	DisplayName     *string             `json:"display_name,omitempty"`
+	Email           openapi_types.Email `json:"email"`
+	FirstName       string              `json:"first_name"`
+	Id              *int                `json:"id,omitempty"`
+	IsActive        *bool               `json:"is_active,omitempty"`
+	IsEmailVerified *bool               `json:"is_email_verified,omitempty"`
+	IsFirstLogin    *bool               `json:"is_first_login,omitempty"`
+	IsMfaEnabled    *bool               `json:"is_mfa_enabled,omitempty"`
+	IsStaff         *bool               `json:"is_staff,omitempty"`
+	IsSuperuser     *bool               `json:"is_superuser,omitempty"`
+	LastName        string              `json:"last_name"`
 }
 
 // UserInfo defines model for UserInfo.
@@ -579,6 +1139,9 @@ type AgentsJobsStatusesCreateParams struct {
 
 // AgentsJobsReferencesRetrieveParams defines parameters for AgentsJobsReferencesRetrieve.
 type AgentsJobsReferencesRetrieveParams struct {
+	// Download Set true to receive a Content-Disposition attachment header.
+	Download *bool `form:"download,omitempty" json:"download,omitempty"`
+
 	// OrganizationId Organization ID. This is required for access control. It can be provided via query or request body depending on the endpoint.
 	OrganizationId *openapi_types.UUID `form:"organization_id,omitempty" json:"organization_id,omitempty"`
 }
@@ -727,6 +1290,60 @@ type AgentsVersionsUpdateParams struct {
 	OrganizationId *openapi_types.UUID `form:"organization_id,omitempty" json:"organization_id,omitempty"`
 }
 
+// ConnectionsListParams defines parameters for ConnectionsList.
+type ConnectionsListParams struct {
+	// ConnectorType Filter by connector type (e.g., 'snowflake', 'postgres')
+	ConnectorType *string `form:"connector_type,omitempty" json:"connector_type,omitempty"`
+
+	// OrganizationId Organization ID to list connections from. Required for JWT auth; inferred from API key when using an Organization API Key.
+	OrganizationId *openapi_types.UUID `form:"organization_id,omitempty" json:"organization_id,omitempty"`
+
+	// Page A page number within the paginated result set.
+	Page *int `form:"page,omitempty" json:"page,omitempty"`
+
+	// PageSize Number of results to return per page.
+	PageSize *int `form:"page_size,omitempty" json:"page_size,omitempty"`
+
+	// Search Search connections by name, description, or ID (case-insensitive)
+	Search *string `form:"search,omitempty" json:"search,omitempty"`
+}
+
+// ConnectionsCreateParams defines parameters for ConnectionsCreate.
+type ConnectionsCreateParams struct {
+	// OrganizationId Organization ID. This is required for access control. It can be provided via query or request body depending on the endpoint.
+	OrganizationId *openapi_types.UUID `form:"organization_id,omitempty" json:"organization_id,omitempty"`
+}
+
+// ConnectionsDestroyParams defines parameters for ConnectionsDestroy.
+type ConnectionsDestroyParams struct {
+	// OrganizationId Organization ID. This is required for access control. It can be provided via query or request body depending on the endpoint.
+	OrganizationId *openapi_types.UUID `form:"organization_id,omitempty" json:"organization_id,omitempty"`
+}
+
+// ConnectionsRetrieveParams defines parameters for ConnectionsRetrieve.
+type ConnectionsRetrieveParams struct {
+	// OrganizationId Organization ID. This is required for access control. It can be provided via query or request body depending on the endpoint.
+	OrganizationId *openapi_types.UUID `form:"organization_id,omitempty" json:"organization_id,omitempty"`
+}
+
+// ConnectionsPartialUpdateParams defines parameters for ConnectionsPartialUpdate.
+type ConnectionsPartialUpdateParams struct {
+	// OrganizationId Organization ID. This is required for access control. It can be provided via query or request body depending on the endpoint.
+	OrganizationId *openapi_types.UUID `form:"organization_id,omitempty" json:"organization_id,omitempty"`
+}
+
+// ConnectionsUpdateParams defines parameters for ConnectionsUpdate.
+type ConnectionsUpdateParams struct {
+	// OrganizationId Organization ID. This is required for access control. It can be provided via query or request body depending on the endpoint.
+	OrganizationId *openapi_types.UUID `form:"organization_id,omitempty" json:"organization_id,omitempty"`
+}
+
+// ConnectionsTestCreateParams defines parameters for ConnectionsTestCreate.
+type ConnectionsTestCreateParams struct {
+	// OrganizationId Organization ID. This is required for access control. It can be provided via query or request body depending on the endpoint.
+	OrganizationId *openapi_types.UUID `form:"organization_id,omitempty" json:"organization_id,omitempty"`
+}
+
 // PoliciesListParams defines parameters for PoliciesList.
 type PoliciesListParams struct {
 	// Ordering Which field to use when ordering the results.
@@ -799,29 +1416,35 @@ type PoliciesVersionsRetrieveParams struct {
 	OrganizationId *openapi_types.UUID `form:"organization_id,omitempty" json:"organization_id,omitempty"`
 }
 
+// TablesPreviewRetrieveParams defines parameters for TablesPreviewRetrieve.
+type TablesPreviewRetrieveParams struct {
+	// Limit Maximum number of sample rows to return. Use 0 to return only table and column metadata without reading sample rows.
+	Limit *int `form:"limit,omitempty" json:"limit,omitempty"`
+}
+
 // AgentsCreateJSONRequestBody defines body for AgentsCreate for application/json ContentType.
 type AgentsCreateJSONRequestBody = BaseAgentCreateRequest
 
 // AgentsJobsResultsCreateJSONRequestBody defines body for AgentsJobsResultsCreate for application/json ContentType.
-type AgentsJobsResultsCreateJSONRequestBody = AgentJobResultManyRequestRequest
+type AgentsJobsResultsCreateJSONRequestBody = AgentJobResultManyRequest
 
 // AgentsJobsStatusesCreateJSONRequestBody defines body for AgentsJobsStatusesCreate for application/json ContentType.
-type AgentsJobsStatusesCreateJSONRequestBody = AgentJobStatusManyRequestRequest
+type AgentsJobsStatusesCreateJSONRequestBody = AgentJobStatusManyRequest
 
 // AgentsRunJSONRequestBody defines body for AgentsRun for application/json ContentType.
-type AgentsRunJSONRequestBody = AgentExecutionRequestRequest
+type AgentsRunJSONRequestBody = AgentExecutionRequest
 
 // AgentsRunAsyncCreateJSONRequestBody defines body for AgentsRunAsyncCreate for application/json ContentType.
-type AgentsRunAsyncCreateJSONRequestBody = AgentExecutionRequestRequest
+type AgentsRunAsyncCreateJSONRequestBody = AgentExecutionRequest
 
 // AgentsRunAsyncManyJSONRequestBody defines body for AgentsRunAsyncMany for application/json ContentType.
-type AgentsRunAsyncManyJSONRequestBody = AgentRunAsyncManyRequestRequest
+type AgentsRunAsyncManyJSONRequestBody = AgentRunAsyncManyRequest
 
 // AgentsRunVersionJSONRequestBody defines body for AgentsRunVersion for application/json ContentType.
-type AgentsRunVersionJSONRequestBody = AgentExecutionRequestRequest
+type AgentsRunVersionJSONRequestBody = AgentExecutionRequest
 
 // AgentsRunVersionsAsyncCreateJSONRequestBody defines body for AgentsRunVersionsAsyncCreate for application/json ContentType.
-type AgentsRunVersionsAsyncCreateJSONRequestBody = AgentExecutionRequestRequest
+type AgentsRunVersionsAsyncCreateJSONRequestBody = AgentExecutionRequest
 
 // AgentsPartialUpdateJSONRequestBody defines body for AgentsPartialUpdate for application/json ContentType.
 type AgentsPartialUpdateJSONRequestBody = PatchedBaseAgentUpdateRequest
@@ -833,10 +1456,22 @@ type AgentsUpdateJSONRequestBody = BaseAgentUpdateRequest
 type AgentsVersionsCreateJSONRequestBody = AgentVersionCreateRequest
 
 // AgentsVersionsPartialUpdateJSONRequestBody defines body for AgentsVersionsPartialUpdate for application/json ContentType.
-type AgentsVersionsPartialUpdateJSONRequestBody = PatchedPatchedAgentVersionUpdateRequestRequest
+type AgentsVersionsPartialUpdateJSONRequestBody = PatchedAgentVersionUpdateRequest
 
 // AgentsVersionsUpdateJSONRequestBody defines body for AgentsVersionsUpdate for application/json ContentType.
-type AgentsVersionsUpdateJSONRequestBody = AgentVersionUpdateRequestRequest
+type AgentsVersionsUpdateJSONRequestBody = AgentVersionUpdateRequest
+
+// ConnectionsCreateJSONRequestBody defines body for ConnectionsCreate for application/json ContentType.
+type ConnectionsCreateJSONRequestBody = CreateConnectionRequest
+
+// ConnectionsTestCredentialsCreateJSONRequestBody defines body for ConnectionsTestCredentialsCreate for application/json ContentType.
+type ConnectionsTestCredentialsCreateJSONRequestBody = TestConnectionCredentialsRequest
+
+// ConnectionsPartialUpdateJSONRequestBody defines body for ConnectionsPartialUpdate for application/json ContentType.
+type ConnectionsPartialUpdateJSONRequestBody = PatchedUpdateConnectionRequest
+
+// ConnectionsUpdateJSONRequestBody defines body for ConnectionsUpdate for application/json ContentType.
+type ConnectionsUpdateJSONRequestBody = UpdateConnectionRequest
 
 // PoliciesCreateJSONRequestBody defines body for PoliciesCreate for application/json ContentType.
 type PoliciesCreateJSONRequestBody = CreatePolicyRequest
@@ -850,8 +1485,79 @@ type PoliciesUpdateJSONRequestBody = UpdatePolicyRequest
 // PoliciesVersionsCreateJSONRequestBody defines body for PoliciesVersionsCreate for application/json ContentType.
 type PoliciesVersionsCreateJSONRequestBody = CreatePolicyVersionRequest
 
+// TablesQueryCreateJSONRequestBody defines body for TablesQueryCreate for application/json ContentType.
+type TablesQueryCreateJSONRequestBody = TableQueryRequest
+
 // UploadTableMultipartRequestBody defines body for UploadTable for multipart/form-data ContentType.
 type UploadTableMultipartRequestBody = TableUploadRequest
+
+// Getter for additional properties for AgentExecutionRequest. Returns the specified
+// element and whether it was found
+func (a AgentExecutionRequest) Get(fieldName string) (value interface{}, found bool) {
+	if a.AdditionalProperties != nil {
+		value, found = a.AdditionalProperties[fieldName]
+	}
+	return
+}
+
+// Setter for additional properties for AgentExecutionRequest
+func (a *AgentExecutionRequest) Set(fieldName string, value interface{}) {
+	if a.AdditionalProperties == nil {
+		a.AdditionalProperties = make(map[string]interface{})
+	}
+	a.AdditionalProperties[fieldName] = value
+}
+
+// Override default JSON handling for AgentExecutionRequest to handle AdditionalProperties
+func (a *AgentExecutionRequest) UnmarshalJSON(b []byte) error {
+	object := make(map[string]json.RawMessage)
+	err := json.Unmarshal(b, &object)
+	if err != nil {
+		return err
+	}
+
+	if raw, found := object["metadata"]; found {
+		err = json.Unmarshal(raw, &a.Metadata)
+		if err != nil {
+			return fmt.Errorf("error reading 'metadata': %w", err)
+		}
+		delete(object, "metadata")
+	}
+
+	if len(object) != 0 {
+		a.AdditionalProperties = make(map[string]interface{})
+		for fieldName, fieldBuf := range object {
+			var fieldVal interface{}
+			err := json.Unmarshal(fieldBuf, &fieldVal)
+			if err != nil {
+				return fmt.Errorf("error unmarshaling field %s: %w", fieldName, err)
+			}
+			a.AdditionalProperties[fieldName] = fieldVal
+		}
+	}
+	return nil
+}
+
+// Override default JSON handling for AgentExecutionRequest to handle AdditionalProperties
+func (a AgentExecutionRequest) MarshalJSON() ([]byte, error) {
+	var err error
+	object := make(map[string]json.RawMessage)
+
+	if a.Metadata != nil {
+		object["metadata"], err = json.Marshal(a.Metadata)
+		if err != nil {
+			return nil, fmt.Errorf("error marshaling 'metadata': %w", err)
+		}
+	}
+
+	for fieldName, field := range a.AdditionalProperties {
+		object[fieldName], err = json.Marshal(field)
+		if err != nil {
+			return nil, fmt.Errorf("error marshaling '%s': %w", fieldName, err)
+		}
+	}
+	return json.Marshal(object)
+}
 
 // RequestEditorFn  is the function signature for the RequestEditor callback function
 type RequestEditorFn func(ctx context.Context, req *http.Request) error
@@ -1039,6 +1745,44 @@ type ClientInterface interface {
 
 	AgentsVersionsUpdate(ctx context.Context, agentId openapi_types.UUID, agentVersionId openapi_types.UUID, params *AgentsVersionsUpdateParams, body AgentsVersionsUpdateJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
 
+	// ConnectionsList request
+	ConnectionsList(ctx context.Context, params *ConnectionsListParams, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// ConnectionsCreateWithBody request with any body
+	ConnectionsCreateWithBody(ctx context.Context, params *ConnectionsCreateParams, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	ConnectionsCreate(ctx context.Context, params *ConnectionsCreateParams, body ConnectionsCreateJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// ConnectionsTestCredentialsCreateWithBody request with any body
+	ConnectionsTestCredentialsCreateWithBody(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	ConnectionsTestCredentialsCreate(ctx context.Context, body ConnectionsTestCredentialsCreateJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// ConnectionsDestroy request
+	ConnectionsDestroy(ctx context.Context, id openapi_types.UUID, params *ConnectionsDestroyParams, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// ConnectionsRetrieve request
+	ConnectionsRetrieve(ctx context.Context, id openapi_types.UUID, params *ConnectionsRetrieveParams, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// ConnectionsPartialUpdateWithBody request with any body
+	ConnectionsPartialUpdateWithBody(ctx context.Context, id openapi_types.UUID, params *ConnectionsPartialUpdateParams, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	ConnectionsPartialUpdate(ctx context.Context, id openapi_types.UUID, params *ConnectionsPartialUpdateParams, body ConnectionsPartialUpdateJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// ConnectionsUpdateWithBody request with any body
+	ConnectionsUpdateWithBody(ctx context.Context, id openapi_types.UUID, params *ConnectionsUpdateParams, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	ConnectionsUpdate(ctx context.Context, id openapi_types.UUID, params *ConnectionsUpdateParams, body ConnectionsUpdateJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// ConnectionsTestCreate request
+	ConnectionsTestCreate(ctx context.Context, id openapi_types.UUID, params *ConnectionsTestCreateParams, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// ConnectorsRetrieve request
+	ConnectorsRetrieve(ctx context.Context, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// ConnectorsRetrieveByType request
+	ConnectorsRetrieveByType(ctx context.Context, connectorType string, reqEditors ...RequestEditorFn) (*http.Response, error)
+
 	// PoliciesList request
 	PoliciesList(ctx context.Context, params *PoliciesListParams, reqEditors ...RequestEditorFn) (*http.Response, error)
 
@@ -1074,8 +1818,28 @@ type ClientInterface interface {
 	// PoliciesVersionsRetrieve request
 	PoliciesVersionsRetrieve(ctx context.Context, policyId openapi_types.UUID, versionId openapi_types.UUID, params *PoliciesVersionsRetrieveParams, reqEditors ...RequestEditorFn) (*http.Response, error)
 
+	// TablesList request
+	TablesList(ctx context.Context, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// TablesQueryCreateWithBody request with any body
+	TablesQueryCreateWithBody(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	TablesQueryCreate(ctx context.Context, body TablesQueryCreateJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// TablesQueryResultRetrieve request
+	TablesQueryResultRetrieve(ctx context.Context, tableQueryId openapi_types.UUID, reqEditors ...RequestEditorFn) (*http.Response, error)
+
 	// UploadTableWithBody request with any body
 	UploadTableWithBody(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// TablesDestroy request
+	TablesDestroy(ctx context.Context, tableName string, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// TablesDescribeRetrieve request
+	TablesDescribeRetrieve(ctx context.Context, tableName string, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// TablesPreviewRetrieve request
+	TablesPreviewRetrieve(ctx context.Context, tableName string, params *TablesPreviewRetrieveParams, reqEditors ...RequestEditorFn) (*http.Response, error)
 
 	// UsersCurrentUserRetrieve request
 	UsersCurrentUserRetrieve(ctx context.Context, reqEditors ...RequestEditorFn) (*http.Response, error)
@@ -1585,6 +2349,174 @@ func (c *Client) AgentsVersionsUpdate(ctx context.Context, agentId openapi_types
 	return c.Client.Do(req)
 }
 
+func (c *Client) ConnectionsList(ctx context.Context, params *ConnectionsListParams, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewConnectionsListRequest(c.Server, params)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) ConnectionsCreateWithBody(ctx context.Context, params *ConnectionsCreateParams, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewConnectionsCreateRequestWithBody(c.Server, params, contentType, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) ConnectionsCreate(ctx context.Context, params *ConnectionsCreateParams, body ConnectionsCreateJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewConnectionsCreateRequest(c.Server, params, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) ConnectionsTestCredentialsCreateWithBody(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewConnectionsTestCredentialsCreateRequestWithBody(c.Server, contentType, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) ConnectionsTestCredentialsCreate(ctx context.Context, body ConnectionsTestCredentialsCreateJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewConnectionsTestCredentialsCreateRequest(c.Server, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) ConnectionsDestroy(ctx context.Context, id openapi_types.UUID, params *ConnectionsDestroyParams, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewConnectionsDestroyRequest(c.Server, id, params)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) ConnectionsRetrieve(ctx context.Context, id openapi_types.UUID, params *ConnectionsRetrieveParams, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewConnectionsRetrieveRequest(c.Server, id, params)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) ConnectionsPartialUpdateWithBody(ctx context.Context, id openapi_types.UUID, params *ConnectionsPartialUpdateParams, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewConnectionsPartialUpdateRequestWithBody(c.Server, id, params, contentType, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) ConnectionsPartialUpdate(ctx context.Context, id openapi_types.UUID, params *ConnectionsPartialUpdateParams, body ConnectionsPartialUpdateJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewConnectionsPartialUpdateRequest(c.Server, id, params, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) ConnectionsUpdateWithBody(ctx context.Context, id openapi_types.UUID, params *ConnectionsUpdateParams, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewConnectionsUpdateRequestWithBody(c.Server, id, params, contentType, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) ConnectionsUpdate(ctx context.Context, id openapi_types.UUID, params *ConnectionsUpdateParams, body ConnectionsUpdateJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewConnectionsUpdateRequest(c.Server, id, params, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) ConnectionsTestCreate(ctx context.Context, id openapi_types.UUID, params *ConnectionsTestCreateParams, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewConnectionsTestCreateRequest(c.Server, id, params)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) ConnectorsRetrieve(ctx context.Context, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewConnectorsRetrieveRequest(c.Server)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) ConnectorsRetrieveByType(ctx context.Context, connectorType string, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewConnectorsRetrieveByTypeRequest(c.Server, connectorType)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
 func (c *Client) PoliciesList(ctx context.Context, params *PoliciesListParams, reqEditors ...RequestEditorFn) (*http.Response, error) {
 	req, err := NewPoliciesListRequest(c.Server, params)
 	if err != nil {
@@ -1741,8 +2673,92 @@ func (c *Client) PoliciesVersionsRetrieve(ctx context.Context, policyId openapi_
 	return c.Client.Do(req)
 }
 
+func (c *Client) TablesList(ctx context.Context, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewTablesListRequest(c.Server)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) TablesQueryCreateWithBody(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewTablesQueryCreateRequestWithBody(c.Server, contentType, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) TablesQueryCreate(ctx context.Context, body TablesQueryCreateJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewTablesQueryCreateRequest(c.Server, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) TablesQueryResultRetrieve(ctx context.Context, tableQueryId openapi_types.UUID, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewTablesQueryResultRetrieveRequest(c.Server, tableQueryId)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
 func (c *Client) UploadTableWithBody(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error) {
 	req, err := NewUploadTableRequestWithBody(c.Server, contentType, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) TablesDestroy(ctx context.Context, tableName string, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewTablesDestroyRequest(c.Server, tableName)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) TablesDescribeRetrieve(ctx context.Context, tableName string, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewTablesDescribeRetrieveRequest(c.Server, tableName)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) TablesPreviewRetrieve(ctx context.Context, tableName string, params *TablesPreviewRetrieveParams, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewTablesPreviewRetrieveRequest(c.Server, tableName, params)
 	if err != nil {
 		return nil, err
 	}
@@ -2159,6 +3175,22 @@ func NewAgentsJobsReferencesRetrieveRequest(server string, agentJobId openapi_ty
 
 	if params != nil {
 		queryValues := queryURL.Query()
+
+		if params.Download != nil {
+
+			if queryFrag, err := runtime.StyleParamWithOptions("form", true, "download", *params.Download, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationQuery, Type: "boolean", Format: ""}); err != nil {
+				return nil, err
+			} else if parsed, err := url.ParseQuery(queryFrag); err != nil {
+				return nil, err
+			} else {
+				for k, v := range parsed {
+					for _, v2 := range v {
+						queryValues.Add(k, v2)
+					}
+				}
+			}
+
+		}
 
 		if params.OrganizationId != nil {
 
@@ -3699,6 +4731,588 @@ func NewAgentsVersionsUpdateRequestWithBody(server string, agentId openapi_types
 	return req, nil
 }
 
+// NewConnectionsListRequest generates requests for ConnectionsList
+func NewConnectionsListRequest(server string, params *ConnectionsListParams) (*http.Request, error) {
+	var err error
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/v1/connections/")
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	if params != nil {
+		queryValues := queryURL.Query()
+
+		if params.ConnectorType != nil {
+
+			if queryFrag, err := runtime.StyleParamWithOptions("form", true, "connector_type", *params.ConnectorType, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationQuery, Type: "string", Format: ""}); err != nil {
+				return nil, err
+			} else if parsed, err := url.ParseQuery(queryFrag); err != nil {
+				return nil, err
+			} else {
+				for k, v := range parsed {
+					for _, v2 := range v {
+						queryValues.Add(k, v2)
+					}
+				}
+			}
+
+		}
+
+		if params.OrganizationId != nil {
+
+			if queryFrag, err := runtime.StyleParamWithOptions("form", true, "organization_id", *params.OrganizationId, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationQuery, Type: "string", Format: "uuid"}); err != nil {
+				return nil, err
+			} else if parsed, err := url.ParseQuery(queryFrag); err != nil {
+				return nil, err
+			} else {
+				for k, v := range parsed {
+					for _, v2 := range v {
+						queryValues.Add(k, v2)
+					}
+				}
+			}
+
+		}
+
+		if params.Page != nil {
+
+			if queryFrag, err := runtime.StyleParamWithOptions("form", true, "page", *params.Page, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationQuery, Type: "integer", Format: ""}); err != nil {
+				return nil, err
+			} else if parsed, err := url.ParseQuery(queryFrag); err != nil {
+				return nil, err
+			} else {
+				for k, v := range parsed {
+					for _, v2 := range v {
+						queryValues.Add(k, v2)
+					}
+				}
+			}
+
+		}
+
+		if params.PageSize != nil {
+
+			if queryFrag, err := runtime.StyleParamWithOptions("form", true, "page_size", *params.PageSize, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationQuery, Type: "integer", Format: ""}); err != nil {
+				return nil, err
+			} else if parsed, err := url.ParseQuery(queryFrag); err != nil {
+				return nil, err
+			} else {
+				for k, v := range parsed {
+					for _, v2 := range v {
+						queryValues.Add(k, v2)
+					}
+				}
+			}
+
+		}
+
+		if params.Search != nil {
+
+			if queryFrag, err := runtime.StyleParamWithOptions("form", true, "search", *params.Search, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationQuery, Type: "string", Format: ""}); err != nil {
+				return nil, err
+			} else if parsed, err := url.ParseQuery(queryFrag); err != nil {
+				return nil, err
+			} else {
+				for k, v := range parsed {
+					for _, v2 := range v {
+						queryValues.Add(k, v2)
+					}
+				}
+			}
+
+		}
+
+		queryURL.RawQuery = queryValues.Encode()
+	}
+
+	req, err := http.NewRequest("GET", queryURL.String(), nil)
+	if err != nil {
+		return nil, err
+	}
+
+	return req, nil
+}
+
+// NewConnectionsCreateRequest calls the generic ConnectionsCreate builder with application/json body
+func NewConnectionsCreateRequest(server string, params *ConnectionsCreateParams, body ConnectionsCreateJSONRequestBody) (*http.Request, error) {
+	var bodyReader io.Reader
+	buf, err := json.Marshal(body)
+	if err != nil {
+		return nil, err
+	}
+	bodyReader = bytes.NewReader(buf)
+	return NewConnectionsCreateRequestWithBody(server, params, "application/json", bodyReader)
+}
+
+// NewConnectionsCreateRequestWithBody generates requests for ConnectionsCreate with any type of body
+func NewConnectionsCreateRequestWithBody(server string, params *ConnectionsCreateParams, contentType string, body io.Reader) (*http.Request, error) {
+	var err error
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/v1/connections/")
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	if params != nil {
+		queryValues := queryURL.Query()
+
+		if params.OrganizationId != nil {
+
+			if queryFrag, err := runtime.StyleParamWithOptions("form", true, "organization_id", *params.OrganizationId, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationQuery, Type: "string", Format: "uuid"}); err != nil {
+				return nil, err
+			} else if parsed, err := url.ParseQuery(queryFrag); err != nil {
+				return nil, err
+			} else {
+				for k, v := range parsed {
+					for _, v2 := range v {
+						queryValues.Add(k, v2)
+					}
+				}
+			}
+
+		}
+
+		queryURL.RawQuery = queryValues.Encode()
+	}
+
+	req, err := http.NewRequest("POST", queryURL.String(), body)
+	if err != nil {
+		return nil, err
+	}
+
+	req.Header.Add("Content-Type", contentType)
+
+	return req, nil
+}
+
+// NewConnectionsTestCredentialsCreateRequest calls the generic ConnectionsTestCredentialsCreate builder with application/json body
+func NewConnectionsTestCredentialsCreateRequest(server string, body ConnectionsTestCredentialsCreateJSONRequestBody) (*http.Request, error) {
+	var bodyReader io.Reader
+	buf, err := json.Marshal(body)
+	if err != nil {
+		return nil, err
+	}
+	bodyReader = bytes.NewReader(buf)
+	return NewConnectionsTestCredentialsCreateRequestWithBody(server, "application/json", bodyReader)
+}
+
+// NewConnectionsTestCredentialsCreateRequestWithBody generates requests for ConnectionsTestCredentialsCreate with any type of body
+func NewConnectionsTestCredentialsCreateRequestWithBody(server string, contentType string, body io.Reader) (*http.Request, error) {
+	var err error
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/v1/connections/test-credentials/")
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest("POST", queryURL.String(), body)
+	if err != nil {
+		return nil, err
+	}
+
+	req.Header.Add("Content-Type", contentType)
+
+	return req, nil
+}
+
+// NewConnectionsDestroyRequest generates requests for ConnectionsDestroy
+func NewConnectionsDestroyRequest(server string, id openapi_types.UUID, params *ConnectionsDestroyParams) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithOptions("simple", false, "id", id, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationPath, Type: "string", Format: "uuid"})
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/v1/connections/%s/", pathParam0)
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	if params != nil {
+		queryValues := queryURL.Query()
+
+		if params.OrganizationId != nil {
+
+			if queryFrag, err := runtime.StyleParamWithOptions("form", true, "organization_id", *params.OrganizationId, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationQuery, Type: "string", Format: "uuid"}); err != nil {
+				return nil, err
+			} else if parsed, err := url.ParseQuery(queryFrag); err != nil {
+				return nil, err
+			} else {
+				for k, v := range parsed {
+					for _, v2 := range v {
+						queryValues.Add(k, v2)
+					}
+				}
+			}
+
+		}
+
+		queryURL.RawQuery = queryValues.Encode()
+	}
+
+	req, err := http.NewRequest("DELETE", queryURL.String(), nil)
+	if err != nil {
+		return nil, err
+	}
+
+	return req, nil
+}
+
+// NewConnectionsRetrieveRequest generates requests for ConnectionsRetrieve
+func NewConnectionsRetrieveRequest(server string, id openapi_types.UUID, params *ConnectionsRetrieveParams) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithOptions("simple", false, "id", id, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationPath, Type: "string", Format: "uuid"})
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/v1/connections/%s/", pathParam0)
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	if params != nil {
+		queryValues := queryURL.Query()
+
+		if params.OrganizationId != nil {
+
+			if queryFrag, err := runtime.StyleParamWithOptions("form", true, "organization_id", *params.OrganizationId, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationQuery, Type: "string", Format: "uuid"}); err != nil {
+				return nil, err
+			} else if parsed, err := url.ParseQuery(queryFrag); err != nil {
+				return nil, err
+			} else {
+				for k, v := range parsed {
+					for _, v2 := range v {
+						queryValues.Add(k, v2)
+					}
+				}
+			}
+
+		}
+
+		queryURL.RawQuery = queryValues.Encode()
+	}
+
+	req, err := http.NewRequest("GET", queryURL.String(), nil)
+	if err != nil {
+		return nil, err
+	}
+
+	return req, nil
+}
+
+// NewConnectionsPartialUpdateRequest calls the generic ConnectionsPartialUpdate builder with application/json body
+func NewConnectionsPartialUpdateRequest(server string, id openapi_types.UUID, params *ConnectionsPartialUpdateParams, body ConnectionsPartialUpdateJSONRequestBody) (*http.Request, error) {
+	var bodyReader io.Reader
+	buf, err := json.Marshal(body)
+	if err != nil {
+		return nil, err
+	}
+	bodyReader = bytes.NewReader(buf)
+	return NewConnectionsPartialUpdateRequestWithBody(server, id, params, "application/json", bodyReader)
+}
+
+// NewConnectionsPartialUpdateRequestWithBody generates requests for ConnectionsPartialUpdate with any type of body
+func NewConnectionsPartialUpdateRequestWithBody(server string, id openapi_types.UUID, params *ConnectionsPartialUpdateParams, contentType string, body io.Reader) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithOptions("simple", false, "id", id, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationPath, Type: "string", Format: "uuid"})
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/v1/connections/%s/", pathParam0)
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	if params != nil {
+		queryValues := queryURL.Query()
+
+		if params.OrganizationId != nil {
+
+			if queryFrag, err := runtime.StyleParamWithOptions("form", true, "organization_id", *params.OrganizationId, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationQuery, Type: "string", Format: "uuid"}); err != nil {
+				return nil, err
+			} else if parsed, err := url.ParseQuery(queryFrag); err != nil {
+				return nil, err
+			} else {
+				for k, v := range parsed {
+					for _, v2 := range v {
+						queryValues.Add(k, v2)
+					}
+				}
+			}
+
+		}
+
+		queryURL.RawQuery = queryValues.Encode()
+	}
+
+	req, err := http.NewRequest("PATCH", queryURL.String(), body)
+	if err != nil {
+		return nil, err
+	}
+
+	req.Header.Add("Content-Type", contentType)
+
+	return req, nil
+}
+
+// NewConnectionsUpdateRequest calls the generic ConnectionsUpdate builder with application/json body
+func NewConnectionsUpdateRequest(server string, id openapi_types.UUID, params *ConnectionsUpdateParams, body ConnectionsUpdateJSONRequestBody) (*http.Request, error) {
+	var bodyReader io.Reader
+	buf, err := json.Marshal(body)
+	if err != nil {
+		return nil, err
+	}
+	bodyReader = bytes.NewReader(buf)
+	return NewConnectionsUpdateRequestWithBody(server, id, params, "application/json", bodyReader)
+}
+
+// NewConnectionsUpdateRequestWithBody generates requests for ConnectionsUpdate with any type of body
+func NewConnectionsUpdateRequestWithBody(server string, id openapi_types.UUID, params *ConnectionsUpdateParams, contentType string, body io.Reader) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithOptions("simple", false, "id", id, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationPath, Type: "string", Format: "uuid"})
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/v1/connections/%s/", pathParam0)
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	if params != nil {
+		queryValues := queryURL.Query()
+
+		if params.OrganizationId != nil {
+
+			if queryFrag, err := runtime.StyleParamWithOptions("form", true, "organization_id", *params.OrganizationId, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationQuery, Type: "string", Format: "uuid"}); err != nil {
+				return nil, err
+			} else if parsed, err := url.ParseQuery(queryFrag); err != nil {
+				return nil, err
+			} else {
+				for k, v := range parsed {
+					for _, v2 := range v {
+						queryValues.Add(k, v2)
+					}
+				}
+			}
+
+		}
+
+		queryURL.RawQuery = queryValues.Encode()
+	}
+
+	req, err := http.NewRequest("PUT", queryURL.String(), body)
+	if err != nil {
+		return nil, err
+	}
+
+	req.Header.Add("Content-Type", contentType)
+
+	return req, nil
+}
+
+// NewConnectionsTestCreateRequest generates requests for ConnectionsTestCreate
+func NewConnectionsTestCreateRequest(server string, id openapi_types.UUID, params *ConnectionsTestCreateParams) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithOptions("simple", false, "id", id, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationPath, Type: "string", Format: "uuid"})
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/v1/connections/%s/test/", pathParam0)
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	if params != nil {
+		queryValues := queryURL.Query()
+
+		if params.OrganizationId != nil {
+
+			if queryFrag, err := runtime.StyleParamWithOptions("form", true, "organization_id", *params.OrganizationId, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationQuery, Type: "string", Format: "uuid"}); err != nil {
+				return nil, err
+			} else if parsed, err := url.ParseQuery(queryFrag); err != nil {
+				return nil, err
+			} else {
+				for k, v := range parsed {
+					for _, v2 := range v {
+						queryValues.Add(k, v2)
+					}
+				}
+			}
+
+		}
+
+		queryURL.RawQuery = queryValues.Encode()
+	}
+
+	req, err := http.NewRequest("POST", queryURL.String(), nil)
+	if err != nil {
+		return nil, err
+	}
+
+	return req, nil
+}
+
+// NewConnectorsRetrieveRequest generates requests for ConnectorsRetrieve
+func NewConnectorsRetrieveRequest(server string) (*http.Request, error) {
+	var err error
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/v1/connectors/")
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest("GET", queryURL.String(), nil)
+	if err != nil {
+		return nil, err
+	}
+
+	return req, nil
+}
+
+// NewConnectorsRetrieveByTypeRequest generates requests for ConnectorsRetrieveByType
+func NewConnectorsRetrieveByTypeRequest(server string, connectorType string) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithOptions("simple", false, "connector_type", connectorType, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationPath, Type: "string", Format: ""})
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/v1/connectors/%s/", pathParam0)
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest("GET", queryURL.String(), nil)
+	if err != nil {
+		return nil, err
+	}
+
+	return req, nil
+}
+
 // NewPoliciesListRequest generates requests for PoliciesList
 func NewPoliciesListRequest(server string, params *PoliciesListParams) (*http.Request, error) {
 	var err error
@@ -4344,6 +5958,107 @@ func NewPoliciesVersionsRetrieveRequest(server string, policyId openapi_types.UU
 	return req, nil
 }
 
+// NewTablesListRequest generates requests for TablesList
+func NewTablesListRequest(server string) (*http.Request, error) {
+	var err error
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/v1/tables/")
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest("GET", queryURL.String(), nil)
+	if err != nil {
+		return nil, err
+	}
+
+	return req, nil
+}
+
+// NewTablesQueryCreateRequest calls the generic TablesQueryCreate builder with application/json body
+func NewTablesQueryCreateRequest(server string, body TablesQueryCreateJSONRequestBody) (*http.Request, error) {
+	var bodyReader io.Reader
+	buf, err := json.Marshal(body)
+	if err != nil {
+		return nil, err
+	}
+	bodyReader = bytes.NewReader(buf)
+	return NewTablesQueryCreateRequestWithBody(server, "application/json", bodyReader)
+}
+
+// NewTablesQueryCreateRequestWithBody generates requests for TablesQueryCreate with any type of body
+func NewTablesQueryCreateRequestWithBody(server string, contentType string, body io.Reader) (*http.Request, error) {
+	var err error
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/v1/tables/query/")
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest("POST", queryURL.String(), body)
+	if err != nil {
+		return nil, err
+	}
+
+	req.Header.Add("Content-Type", contentType)
+
+	return req, nil
+}
+
+// NewTablesQueryResultRetrieveRequest generates requests for TablesQueryResultRetrieve
+func NewTablesQueryResultRetrieveRequest(server string, tableQueryId openapi_types.UUID) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithOptions("simple", false, "table_query_id", tableQueryId, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationPath, Type: "string", Format: "uuid"})
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/v1/tables/query/%s/result/", pathParam0)
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest("GET", queryURL.String(), nil)
+	if err != nil {
+		return nil, err
+	}
+
+	return req, nil
+}
+
 // NewUploadTableRequestWithBody generates requests for UploadTable with any type of body
 func NewUploadTableRequestWithBody(server string, contentType string, body io.Reader) (*http.Request, error) {
 	var err error
@@ -4369,6 +6084,130 @@ func NewUploadTableRequestWithBody(server string, contentType string, body io.Re
 	}
 
 	req.Header.Add("Content-Type", contentType)
+
+	return req, nil
+}
+
+// NewTablesDestroyRequest generates requests for TablesDestroy
+func NewTablesDestroyRequest(server string, tableName string) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithOptions("simple", false, "table_name", tableName, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationPath, Type: "string", Format: ""})
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/v1/tables/%s/", pathParam0)
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest("DELETE", queryURL.String(), nil)
+	if err != nil {
+		return nil, err
+	}
+
+	return req, nil
+}
+
+// NewTablesDescribeRetrieveRequest generates requests for TablesDescribeRetrieve
+func NewTablesDescribeRetrieveRequest(server string, tableName string) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithOptions("simple", false, "table_name", tableName, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationPath, Type: "string", Format: ""})
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/v1/tables/%s/describe/", pathParam0)
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest("GET", queryURL.String(), nil)
+	if err != nil {
+		return nil, err
+	}
+
+	return req, nil
+}
+
+// NewTablesPreviewRetrieveRequest generates requests for TablesPreviewRetrieve
+func NewTablesPreviewRetrieveRequest(server string, tableName string, params *TablesPreviewRetrieveParams) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithOptions("simple", false, "table_name", tableName, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationPath, Type: "string", Format: ""})
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/v1/tables/%s/preview/", pathParam0)
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	if params != nil {
+		queryValues := queryURL.Query()
+
+		if params.Limit != nil {
+
+			if queryFrag, err := runtime.StyleParamWithOptions("form", true, "limit", *params.Limit, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationQuery, Type: "integer", Format: ""}); err != nil {
+				return nil, err
+			} else if parsed, err := url.ParseQuery(queryFrag); err != nil {
+				return nil, err
+			} else {
+				for k, v := range parsed {
+					for _, v2 := range v {
+						queryValues.Add(k, v2)
+					}
+				}
+			}
+
+		}
+
+		queryURL.RawQuery = queryValues.Encode()
+	}
+
+	req, err := http.NewRequest("GET", queryURL.String(), nil)
+	if err != nil {
+		return nil, err
+	}
 
 	return req, nil
 }
@@ -4556,6 +6395,44 @@ type ClientWithResponsesInterface interface {
 
 	AgentsVersionsUpdateWithResponse(ctx context.Context, agentId openapi_types.UUID, agentVersionId openapi_types.UUID, params *AgentsVersionsUpdateParams, body AgentsVersionsUpdateJSONRequestBody, reqEditors ...RequestEditorFn) (*AgentsVersionsUpdateResponse, error)
 
+	// ConnectionsListWithResponse request
+	ConnectionsListWithResponse(ctx context.Context, params *ConnectionsListParams, reqEditors ...RequestEditorFn) (*ConnectionsListResponse, error)
+
+	// ConnectionsCreateWithBodyWithResponse request with any body
+	ConnectionsCreateWithBodyWithResponse(ctx context.Context, params *ConnectionsCreateParams, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*ConnectionsCreateResponse, error)
+
+	ConnectionsCreateWithResponse(ctx context.Context, params *ConnectionsCreateParams, body ConnectionsCreateJSONRequestBody, reqEditors ...RequestEditorFn) (*ConnectionsCreateResponse, error)
+
+	// ConnectionsTestCredentialsCreateWithBodyWithResponse request with any body
+	ConnectionsTestCredentialsCreateWithBodyWithResponse(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*ConnectionsTestCredentialsCreateResponse, error)
+
+	ConnectionsTestCredentialsCreateWithResponse(ctx context.Context, body ConnectionsTestCredentialsCreateJSONRequestBody, reqEditors ...RequestEditorFn) (*ConnectionsTestCredentialsCreateResponse, error)
+
+	// ConnectionsDestroyWithResponse request
+	ConnectionsDestroyWithResponse(ctx context.Context, id openapi_types.UUID, params *ConnectionsDestroyParams, reqEditors ...RequestEditorFn) (*ConnectionsDestroyResponse, error)
+
+	// ConnectionsRetrieveWithResponse request
+	ConnectionsRetrieveWithResponse(ctx context.Context, id openapi_types.UUID, params *ConnectionsRetrieveParams, reqEditors ...RequestEditorFn) (*ConnectionsRetrieveResponse, error)
+
+	// ConnectionsPartialUpdateWithBodyWithResponse request with any body
+	ConnectionsPartialUpdateWithBodyWithResponse(ctx context.Context, id openapi_types.UUID, params *ConnectionsPartialUpdateParams, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*ConnectionsPartialUpdateResponse, error)
+
+	ConnectionsPartialUpdateWithResponse(ctx context.Context, id openapi_types.UUID, params *ConnectionsPartialUpdateParams, body ConnectionsPartialUpdateJSONRequestBody, reqEditors ...RequestEditorFn) (*ConnectionsPartialUpdateResponse, error)
+
+	// ConnectionsUpdateWithBodyWithResponse request with any body
+	ConnectionsUpdateWithBodyWithResponse(ctx context.Context, id openapi_types.UUID, params *ConnectionsUpdateParams, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*ConnectionsUpdateResponse, error)
+
+	ConnectionsUpdateWithResponse(ctx context.Context, id openapi_types.UUID, params *ConnectionsUpdateParams, body ConnectionsUpdateJSONRequestBody, reqEditors ...RequestEditorFn) (*ConnectionsUpdateResponse, error)
+
+	// ConnectionsTestCreateWithResponse request
+	ConnectionsTestCreateWithResponse(ctx context.Context, id openapi_types.UUID, params *ConnectionsTestCreateParams, reqEditors ...RequestEditorFn) (*ConnectionsTestCreateResponse, error)
+
+	// ConnectorsRetrieveWithResponse request
+	ConnectorsRetrieveWithResponse(ctx context.Context, reqEditors ...RequestEditorFn) (*ConnectorsRetrieveResponse, error)
+
+	// ConnectorsRetrieveByTypeWithResponse request
+	ConnectorsRetrieveByTypeWithResponse(ctx context.Context, connectorType string, reqEditors ...RequestEditorFn) (*ConnectorsRetrieveByTypeResponse, error)
+
 	// PoliciesListWithResponse request
 	PoliciesListWithResponse(ctx context.Context, params *PoliciesListParams, reqEditors ...RequestEditorFn) (*PoliciesListResponse, error)
 
@@ -4591,8 +6468,28 @@ type ClientWithResponsesInterface interface {
 	// PoliciesVersionsRetrieveWithResponse request
 	PoliciesVersionsRetrieveWithResponse(ctx context.Context, policyId openapi_types.UUID, versionId openapi_types.UUID, params *PoliciesVersionsRetrieveParams, reqEditors ...RequestEditorFn) (*PoliciesVersionsRetrieveResponse, error)
 
+	// TablesListWithResponse request
+	TablesListWithResponse(ctx context.Context, reqEditors ...RequestEditorFn) (*TablesListResponse, error)
+
+	// TablesQueryCreateWithBodyWithResponse request with any body
+	TablesQueryCreateWithBodyWithResponse(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*TablesQueryCreateResponse, error)
+
+	TablesQueryCreateWithResponse(ctx context.Context, body TablesQueryCreateJSONRequestBody, reqEditors ...RequestEditorFn) (*TablesQueryCreateResponse, error)
+
+	// TablesQueryResultRetrieveWithResponse request
+	TablesQueryResultRetrieveWithResponse(ctx context.Context, tableQueryId openapi_types.UUID, reqEditors ...RequestEditorFn) (*TablesQueryResultRetrieveResponse, error)
+
 	// UploadTableWithBodyWithResponse request with any body
 	UploadTableWithBodyWithResponse(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*UploadTableResponse, error)
+
+	// TablesDestroyWithResponse request
+	TablesDestroyWithResponse(ctx context.Context, tableName string, reqEditors ...RequestEditorFn) (*TablesDestroyResponse, error)
+
+	// TablesDescribeRetrieveWithResponse request
+	TablesDescribeRetrieveWithResponse(ctx context.Context, tableName string, reqEditors ...RequestEditorFn) (*TablesDescribeRetrieveResponse, error)
+
+	// TablesPreviewRetrieveWithResponse request
+	TablesPreviewRetrieveWithResponse(ctx context.Context, tableName string, params *TablesPreviewRetrieveParams, reqEditors ...RequestEditorFn) (*TablesPreviewRetrieveResponse, error)
 
 	// UsersCurrentUserRetrieveWithResponse request
 	UsersCurrentUserRetrieveWithResponse(ctx context.Context, reqEditors ...RequestEditorFn) (*UsersCurrentUserRetrieveResponse, error)
@@ -4602,9 +6499,14 @@ type AgentsListResponse struct {
 	Body         []byte
 	HTTPResponse *http.Response
 	JSON200      *PaginatedBaseAgentList
-	JSON400      *ErrorResponse
-	JSON403      *ErrorResponse
-	JSON404      *ErrorResponse
+	JSON400      *map[string]AgentsList_400_AdditionalProperties
+	JSON403      *ErrorDetailResponse
+	JSON404      *ErrorDetailResponse
+}
+type AgentsList4000 = []string
+type AgentsList4001 = string
+type AgentsList_400_AdditionalProperties struct {
+	union json.RawMessage
 }
 
 // Status returns HTTPResponse.Status
@@ -4627,8 +6529,13 @@ type AgentsCreateResponse struct {
 	Body         []byte
 	HTTPResponse *http.Response
 	JSON201      *BaseAgent
-	JSON400      *ErrorResponse
-	JSON403      *ErrorResponse
+	JSON400      *map[string]AgentsCreate_400_AdditionalProperties
+	JSON403      *ErrorDetailResponse
+}
+type AgentsCreate4000 = []string
+type AgentsCreate4001 = string
+type AgentsCreate_400_AdditionalProperties struct {
+	union json.RawMessage
 }
 
 // Status returns HTTPResponse.Status
@@ -4650,9 +6557,14 @@ func (r AgentsCreateResponse) StatusCode() int {
 type AgentsJobsResultsCreateResponse struct {
 	Body         []byte
 	HTTPResponse *http.Response
-	JSON200      *PaginatedAgentJobResultItemList
-	JSON400      *ErrorResponse
-	JSON403      *ErrorResponse
+	JSON200      *[]AgentJobResultItem
+	JSON400      *map[string]AgentsJobsResultsCreate_400_AdditionalProperties
+	JSON403      *ErrorDetailResponse
+}
+type AgentsJobsResultsCreate4000 = []string
+type AgentsJobsResultsCreate4001 = string
+type AgentsJobsResultsCreate_400_AdditionalProperties struct {
+	union json.RawMessage
 }
 
 // Status returns HTTPResponse.Status
@@ -4675,8 +6587,13 @@ type AgentsJobsStatusesCreateResponse struct {
 	Body         []byte
 	HTTPResponse *http.Response
 	JSON200      *[]AgentJobStatus
-	JSON400      *ErrorResponse
-	JSON403      *ErrorResponse
+	JSON400      *map[string]AgentsJobsStatusesCreate_400_AdditionalProperties
+	JSON403      *ErrorDetailResponse
+}
+type AgentsJobsStatusesCreate4000 = []string
+type AgentsJobsStatusesCreate4001 = string
+type AgentsJobsStatusesCreate_400_AdditionalProperties struct {
+	union json.RawMessage
 }
 
 // Status returns HTTPResponse.Status
@@ -4698,6 +6615,23 @@ func (r AgentsJobsStatusesCreateResponse) StatusCode() int {
 type AgentsJobsReferencesRetrieveResponse struct {
 	Body         []byte
 	HTTPResponse *http.Response
+	JSON400      *struct {
+		union json.RawMessage
+	}
+	JSON403 *ErrorDetailResponse
+	JSON404 *ErrorDetailResponse
+	JSON416 *ApiErrorResponse
+	JSON500 *ApiErrorResponse
+}
+type AgentsJobsReferencesRetrieve4000 = []string
+type AgentsJobsReferencesRetrieve4001 map[string]AgentsJobsReferencesRetrieve_400_1_AdditionalProperties
+type AgentsJobsReferencesRetrieve40010 = []string
+type AgentsJobsReferencesRetrieve40011 = string
+type AgentsJobsReferencesRetrieve_400_1_AdditionalProperties struct {
+	union json.RawMessage
+}
+type AgentsJobsReferencesRetrieve4002 struct {
+	Error string `json:"error"`
 }
 
 // Status returns HTTPResponse.Status
@@ -4720,9 +6654,8 @@ type AgentsJobsResultRetrieveResponse struct {
 	Body         []byte
 	HTTPResponse *http.Response
 	JSON200      *AgentJobResultResponse
-	JSON403      *ErrorResponse
-	JSON404      *ErrorResponse
-	JSON500      *ErrorResponse
+	JSON403      *ErrorDetailResponse
+	JSON404      *ErrorDetailResponse
 }
 
 // Status returns HTTPResponse.Status
@@ -4744,8 +6677,8 @@ func (r AgentsJobsResultRetrieveResponse) StatusCode() int {
 type AgentsJobsCancelCreateResponse struct {
 	Body         []byte
 	HTTPResponse *http.Response
-	JSON403      *ErrorResponse
-	JSON404      *ErrorResponse
+	JSON403      *ErrorDetailResponse
+	JSON404      *ErrorDetailResponse
 }
 
 // Status returns HTTPResponse.Status
@@ -4768,10 +6701,9 @@ type AgentsJobsDeleteDataCreateResponse struct {
 	Body         []byte
 	HTTPResponse *http.Response
 	JSON200      *AgentJobDeleteDataResponse
-	JSON400      *ErrorResponse
-	JSON403      *ErrorResponse
-	JSON404      *ErrorResponse
-	JSON500      *ErrorResponse
+	JSON400      *ApiErrorResponse
+	JSON403      *ErrorDetailResponse
+	JSON404      *ErrorDetailResponse
 }
 
 // Status returns HTTPResponse.Status
@@ -4793,9 +6725,9 @@ func (r AgentsJobsDeleteDataCreateResponse) StatusCode() int {
 type AgentsJobsStatusRetrieveResponse struct {
 	Body         []byte
 	HTTPResponse *http.Response
-	JSON200      *AgentJobStatus
-	JSON403      *ErrorResponse
-	JSON404      *ErrorResponse
+	JSON200      *AgentJobSingleStatus
+	JSON403      *ErrorDetailResponse
+	JSON404      *ErrorDetailResponse
 }
 
 // Status returns HTTPResponse.Status
@@ -4818,6 +6750,12 @@ type DiscoverySupportedModelsListResponse struct {
 	Body         []byte
 	HTTPResponse *http.Response
 	JSON200      *SupportedLLMModelList
+	JSON400      *map[string]DiscoverySupportedModelsList_400_AdditionalProperties
+}
+type DiscoverySupportedModelsList4000 = []string
+type DiscoverySupportedModelsList4001 = string
+type DiscoverySupportedModelsList_400_AdditionalProperties struct {
+	union json.RawMessage
 }
 
 // Status returns HTTPResponse.Status
@@ -4840,10 +6778,22 @@ type AgentsRunResponse struct {
 	Body         []byte
 	HTTPResponse *http.Response
 	JSON200      *[]AgentDatum
-	JSON400      *ErrorResponse
-	JSON402      *ErrorResponse
-	JSON403      *ErrorResponse
-	JSON404      *ErrorResponse
+	JSON400      *struct {
+		union json.RawMessage
+	}
+	JSON403 *ErrorDetailResponse
+	JSON404 *ErrorDetailResponse
+	JSON500 *ErrorDetailResponse
+}
+type AgentsRun4000 = []string
+type AgentsRun4001 map[string]AgentsRun_400_1_AdditionalProperties
+type AgentsRun40010 = []string
+type AgentsRun40011 = string
+type AgentsRun_400_1_AdditionalProperties struct {
+	union json.RawMessage
+}
+type AgentsRun4002 struct {
+	Error string `json:"error"`
 }
 
 // Status returns HTTPResponse.Status
@@ -4866,11 +6816,22 @@ type AgentsRunAsyncCreateResponse struct {
 	Body         []byte
 	HTTPResponse *http.Response
 	JSON200      *string
-	JSON400      *ErrorResponse
-	JSON402      *ErrorResponse
-	JSON403      *ErrorResponse
-	JSON404      *ErrorResponse
-	JSON500      *ErrorResponse
+	JSON400      *struct {
+		union json.RawMessage
+	}
+	JSON403 *ErrorDetailResponse
+	JSON404 *ErrorDetailResponse
+	JSON500 *ErrorDetailResponse
+}
+type AgentsRunAsyncCreate4000 = []string
+type AgentsRunAsyncCreate4001 map[string]AgentsRunAsyncCreate_400_1_AdditionalProperties
+type AgentsRunAsyncCreate40010 = []string
+type AgentsRunAsyncCreate40011 = string
+type AgentsRunAsyncCreate_400_1_AdditionalProperties struct {
+	union json.RawMessage
+}
+type AgentsRunAsyncCreate4002 struct {
+	Error string `json:"error"`
 }
 
 // Status returns HTTPResponse.Status
@@ -4892,11 +6853,23 @@ func (r AgentsRunAsyncCreateResponse) StatusCode() int {
 type AgentsRunAsyncManyResponse struct {
 	Body         []byte
 	HTTPResponse *http.Response
-	JSON200      *map[string]interface{}
-	JSON400      *ErrorResponse
-	JSON402      *ErrorResponse
-	JSON403      *ErrorResponse
-	JSON404      *ErrorResponse
+	JSON200      *[]openapi_types.UUID
+	JSON400      *struct {
+		union json.RawMessage
+	}
+	JSON403 *ErrorDetailResponse
+	JSON404 *ErrorDetailResponse
+	JSON500 *ErrorDetailResponse
+}
+type AgentsRunAsyncMany4000 = []string
+type AgentsRunAsyncMany4001 map[string]AgentsRunAsyncMany_400_1_AdditionalProperties
+type AgentsRunAsyncMany40010 = []string
+type AgentsRunAsyncMany40011 = string
+type AgentsRunAsyncMany_400_1_AdditionalProperties struct {
+	union json.RawMessage
+}
+type AgentsRunAsyncMany4002 struct {
+	Error string `json:"error"`
 }
 
 // Status returns HTTPResponse.Status
@@ -4919,10 +6892,22 @@ type AgentsRunVersionResponse struct {
 	Body         []byte
 	HTTPResponse *http.Response
 	JSON200      *[]AgentDatum
-	JSON400      *ErrorResponse
-	JSON402      *ErrorResponse
-	JSON403      *ErrorResponse
-	JSON404      *ErrorResponse
+	JSON400      *struct {
+		union json.RawMessage
+	}
+	JSON403 *ErrorDetailResponse
+	JSON404 *ErrorDetailResponse
+	JSON500 *ErrorDetailResponse
+}
+type AgentsRunVersion4000 = []string
+type AgentsRunVersion4001 map[string]AgentsRunVersion_400_1_AdditionalProperties
+type AgentsRunVersion40010 = []string
+type AgentsRunVersion40011 = string
+type AgentsRunVersion_400_1_AdditionalProperties struct {
+	union json.RawMessage
+}
+type AgentsRunVersion4002 struct {
+	Error string `json:"error"`
 }
 
 // Status returns HTTPResponse.Status
@@ -4945,11 +6930,22 @@ type AgentsRunVersionsAsyncCreateResponse struct {
 	Body         []byte
 	HTTPResponse *http.Response
 	JSON200      *string
-	JSON400      *ErrorResponse
-	JSON402      *ErrorResponse
-	JSON403      *ErrorResponse
-	JSON404      *ErrorResponse
-	JSON500      *ErrorResponse
+	JSON400      *struct {
+		union json.RawMessage
+	}
+	JSON403 *ErrorDetailResponse
+	JSON404 *ErrorDetailResponse
+	JSON500 *ErrorDetailResponse
+}
+type AgentsRunVersionsAsyncCreate4000 = []string
+type AgentsRunVersionsAsyncCreate4001 map[string]AgentsRunVersionsAsyncCreate_400_1_AdditionalProperties
+type AgentsRunVersionsAsyncCreate40010 = []string
+type AgentsRunVersionsAsyncCreate40011 = string
+type AgentsRunVersionsAsyncCreate_400_1_AdditionalProperties struct {
+	union json.RawMessage
+}
+type AgentsRunVersionsAsyncCreate4002 struct {
+	Error string `json:"error"`
 }
 
 // Status returns HTTPResponse.Status
@@ -4993,9 +6989,9 @@ func (r DiscoveryAgentEngineTypesListResponse) StatusCode() int {
 type AgentsDestroyResponse struct {
 	Body         []byte
 	HTTPResponse *http.Response
-	JSON403      *ErrorResponse
-	JSON404      *ErrorResponse
-	JSON500      *ErrorResponse
+	JSON403      *ErrorDetailResponse
+	JSON404      *ErrorDetailResponse
+	JSON500      *QdrantCleanupErrorResponse
 }
 
 // Status returns HTTPResponse.Status
@@ -5018,8 +7014,8 @@ type AgentsRetrieveResponse struct {
 	Body         []byte
 	HTTPResponse *http.Response
 	JSON200      *BaseAgent
-	JSON403      *ErrorResponse
-	JSON404      *ErrorResponse
+	JSON403      *ErrorDetailResponse
+	JSON404      *ErrorDetailResponse
 }
 
 // Status returns HTTPResponse.Status
@@ -5042,9 +7038,14 @@ type AgentsPartialUpdateResponse struct {
 	Body         []byte
 	HTTPResponse *http.Response
 	JSON200      *BaseAgent
-	JSON400      *ErrorResponse
-	JSON403      *ErrorResponse
-	JSON404      *ErrorResponse
+	JSON400      *map[string]AgentsPartialUpdate_400_AdditionalProperties
+	JSON403      *ErrorDetailResponse
+	JSON404      *ErrorDetailResponse
+}
+type AgentsPartialUpdate4000 = []string
+type AgentsPartialUpdate4001 = string
+type AgentsPartialUpdate_400_AdditionalProperties struct {
+	union json.RawMessage
 }
 
 // Status returns HTTPResponse.Status
@@ -5067,9 +7068,14 @@ type AgentsUpdateResponse struct {
 	Body         []byte
 	HTTPResponse *http.Response
 	JSON200      *BaseAgent
-	JSON400      *ErrorResponse
-	JSON403      *ErrorResponse
-	JSON404      *ErrorResponse
+	JSON400      *map[string]AgentsUpdate_400_AdditionalProperties
+	JSON403      *ErrorDetailResponse
+	JSON404      *ErrorDetailResponse
+}
+type AgentsUpdate4000 = []string
+type AgentsUpdate4001 = string
+type AgentsUpdate_400_AdditionalProperties struct {
+	union json.RawMessage
 }
 
 // Status returns HTTPResponse.Status
@@ -5092,8 +7098,8 @@ type AgentsDuplicateCreateResponse struct {
 	Body         []byte
 	HTTPResponse *http.Response
 	JSON201      *AgentVersion
-	JSON403      *ErrorResponse
-	JSON404      *ErrorResponse
+	JSON403      *ErrorDetailResponse
+	JSON404      *ErrorDetailResponse
 }
 
 // Status returns HTTPResponse.Status
@@ -5115,8 +7121,8 @@ func (r AgentsDuplicateCreateResponse) StatusCode() int {
 type AgentsJobsCancelAllCreateResponse struct {
 	Body         []byte
 	HTTPResponse *http.Response
-	JSON403      *ErrorResponse
-	JSON404      *ErrorResponse
+	JSON403      *ErrorDetailResponse
+	JSON404      *ErrorDetailResponse
 }
 
 // Status returns HTTPResponse.Status
@@ -5139,8 +7145,8 @@ type AgentsVersionsListResponse struct {
 	Body         []byte
 	HTTPResponse *http.Response
 	JSON200      *[]AgentVersion
-	JSON403      *ErrorResponse
-	JSON404      *ErrorResponse
+	JSON403      *ErrorDetailResponse
+	JSON404      *ErrorDetailResponse
 }
 
 // Status returns HTTPResponse.Status
@@ -5163,9 +7169,14 @@ type AgentsVersionsCreateResponse struct {
 	Body         []byte
 	HTTPResponse *http.Response
 	JSON201      *AgentVersion
-	JSON400      *ErrorResponse
-	JSON403      *ErrorResponse
-	JSON404      *ErrorResponse
+	JSON400      *map[string]AgentsVersionsCreate_400_AdditionalProperties
+	JSON403      *ErrorDetailResponse
+	JSON404      *ErrorDetailResponse
+}
+type AgentsVersionsCreate4000 = []string
+type AgentsVersionsCreate4001 = string
+type AgentsVersionsCreate_400_AdditionalProperties struct {
+	union json.RawMessage
 }
 
 // Status returns HTTPResponse.Status
@@ -5188,8 +7199,8 @@ type AgentsVersionsCurrentRetrieveResponse struct {
 	Body         []byte
 	HTTPResponse *http.Response
 	JSON200      *AgentVersion
-	JSON403      *ErrorResponse
-	JSON404      *ErrorResponse
+	JSON403      *ErrorDetailResponse
+	JSON404      *ErrorDetailResponse
 }
 
 // Status returns HTTPResponse.Status
@@ -5211,8 +7222,9 @@ func (r AgentsVersionsCurrentRetrieveResponse) StatusCode() int {
 type AgentsVersionsDestroyResponse struct {
 	Body         []byte
 	HTTPResponse *http.Response
-	JSON403      *ErrorResponse
-	JSON404      *ErrorResponse
+	JSON403      *ErrorDetailResponse
+	JSON404      *ErrorDetailResponse
+	JSON500      *QdrantCleanupErrorResponse
 }
 
 // Status returns HTTPResponse.Status
@@ -5235,8 +7247,8 @@ type AgentsVersionsRetrieveResponse struct {
 	Body         []byte
 	HTTPResponse *http.Response
 	JSON200      *AgentVersion
-	JSON403      *ErrorResponse
-	JSON404      *ErrorResponse
+	JSON403      *ErrorDetailResponse
+	JSON404      *ErrorDetailResponse
 }
 
 // Status returns HTTPResponse.Status
@@ -5258,8 +7270,9 @@ func (r AgentsVersionsRetrieveResponse) StatusCode() int {
 type AgentsVersionsPartialUpdateResponse struct {
 	Body         []byte
 	HTTPResponse *http.Response
-	JSON403      *ErrorResponse
-	JSON404      *ErrorResponse
+	JSON200      *MessageResponse
+	JSON403      *ErrorDetailResponse
+	JSON404      *ErrorDetailResponse
 }
 
 // Status returns HTTPResponse.Status
@@ -5281,8 +7294,9 @@ func (r AgentsVersionsPartialUpdateResponse) StatusCode() int {
 type AgentsVersionsUpdateResponse struct {
 	Body         []byte
 	HTTPResponse *http.Response
-	JSON403      *ErrorResponse
-	JSON404      *ErrorResponse
+	JSON200      *MessageResponse
+	JSON403      *ErrorDetailResponse
+	JSON404      *ErrorDetailResponse
 }
 
 // Status returns HTTPResponse.Status
@@ -5295,6 +7309,295 @@ func (r AgentsVersionsUpdateResponse) Status() string {
 
 // StatusCode returns HTTPResponse.StatusCode
 func (r AgentsVersionsUpdateResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+type ConnectionsListResponse struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	JSON200      *PaginatedConnectionListList
+	JSON400      *map[string]ConnectionsList_400_AdditionalProperties
+	JSON403      *ErrorDetailResponse
+	JSON404      *ErrorDetailResponse
+}
+type ConnectionsList4000 = []string
+type ConnectionsList4001 = string
+type ConnectionsList_400_AdditionalProperties struct {
+	union json.RawMessage
+}
+
+// Status returns HTTPResponse.Status
+func (r ConnectionsListResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r ConnectionsListResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+type ConnectionsCreateResponse struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	JSON201      *Connection
+	JSON400      *struct {
+		union json.RawMessage
+	}
+	JSON409 *DuplicateConnectionResponse
+}
+type ConnectionsCreate4000 = []string
+type ConnectionsCreate4001 map[string]ConnectionsCreate_400_1_AdditionalProperties
+type ConnectionsCreate40010 = []string
+type ConnectionsCreate40011 = string
+type ConnectionsCreate_400_1_AdditionalProperties struct {
+	union json.RawMessage
+}
+type ConnectionsCreate4002 struct {
+	Error string `json:"error"`
+}
+
+// Status returns HTTPResponse.Status
+func (r ConnectionsCreateResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r ConnectionsCreateResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+type ConnectionsTestCredentialsCreateResponse struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	JSON200      *TestConnection
+	JSON400      *struct {
+		union json.RawMessage
+	}
+}
+type ConnectionsTestCredentialsCreate4000 struct {
+	Message  string    `json:"message"`
+	Success  bool      `json:"success"`
+	TestedAt time.Time `json:"tested_at"`
+}
+type ConnectionsTestCredentialsCreate4001 struct {
+	Error string `json:"error"`
+}
+
+// Status returns HTTPResponse.Status
+func (r ConnectionsTestCredentialsCreateResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r ConnectionsTestCredentialsCreateResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+type ConnectionsDestroyResponse struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	JSON400      *ConnectionDeleteErrorResponse
+	JSON404      *ErrorDetailResponse
+	JSON500      *ConnectionDeleteErrorResponse
+}
+
+// Status returns HTTPResponse.Status
+func (r ConnectionsDestroyResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r ConnectionsDestroyResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+type ConnectionsRetrieveResponse struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	JSON200      *Connection
+	JSON404      *ErrorDetailResponse
+}
+
+// Status returns HTTPResponse.Status
+func (r ConnectionsRetrieveResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r ConnectionsRetrieveResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+type ConnectionsPartialUpdateResponse struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	JSON200      *Connection
+	JSON400      *struct {
+		union json.RawMessage
+	}
+	JSON404 *ErrorDetailResponse
+	JSON409 *DuplicateConnectionResponse
+}
+type ConnectionsPartialUpdate4000 = []string
+type ConnectionsPartialUpdate4001 map[string]ConnectionsPartialUpdate_400_1_AdditionalProperties
+type ConnectionsPartialUpdate40010 = []string
+type ConnectionsPartialUpdate40011 = string
+type ConnectionsPartialUpdate_400_1_AdditionalProperties struct {
+	union json.RawMessage
+}
+type ConnectionsPartialUpdate4002 struct {
+	Error string `json:"error"`
+}
+
+// Status returns HTTPResponse.Status
+func (r ConnectionsPartialUpdateResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r ConnectionsPartialUpdateResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+type ConnectionsUpdateResponse struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	JSON200      *Connection
+	JSON400      *struct {
+		union json.RawMessage
+	}
+	JSON404 *ErrorDetailResponse
+	JSON409 *DuplicateConnectionResponse
+}
+type ConnectionsUpdate4000 = []string
+type ConnectionsUpdate4001 map[string]ConnectionsUpdate_400_1_AdditionalProperties
+type ConnectionsUpdate40010 = []string
+type ConnectionsUpdate40011 = string
+type ConnectionsUpdate_400_1_AdditionalProperties struct {
+	union json.RawMessage
+}
+type ConnectionsUpdate4002 struct {
+	Error string `json:"error"`
+}
+
+// Status returns HTTPResponse.Status
+func (r ConnectionsUpdateResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r ConnectionsUpdateResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+type ConnectionsTestCreateResponse struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	JSON200      *TestConnection
+	JSON400      *TestConnection
+	JSON404      *ErrorDetailResponse
+}
+
+// Status returns HTTPResponse.Status
+func (r ConnectionsTestCreateResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r ConnectionsTestCreateResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+type ConnectorsRetrieveResponse struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	JSON200      *ConnectorListResponse
+}
+
+// Status returns HTTPResponse.Status
+func (r ConnectorsRetrieveResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r ConnectorsRetrieveResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+type ConnectorsRetrieveByTypeResponse struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	JSON200      *ConnectorMetadata
+	JSON404      *ErrorDetailResponse
+}
+
+// Status returns HTTPResponse.Status
+func (r ConnectorsRetrieveByTypeResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r ConnectorsRetrieveByTypeResponse) StatusCode() int {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.StatusCode
 	}
@@ -5327,6 +7630,12 @@ type PoliciesCreateResponse struct {
 	Body         []byte
 	HTTPResponse *http.Response
 	JSON201      *CreatePolicy
+	JSON400      *map[string]PoliciesCreate_400_AdditionalProperties
+}
+type PoliciesCreate4000 = []string
+type PoliciesCreate4001 = string
+type PoliciesCreate_400_AdditionalProperties struct {
+	union json.RawMessage
 }
 
 // Status returns HTTPResponse.Status
@@ -5348,6 +7657,8 @@ func (r PoliciesCreateResponse) StatusCode() int {
 type PoliciesDestroyResponse struct {
 	Body         []byte
 	HTTPResponse *http.Response
+	JSON404      *ErrorDetailResponse
+	JSON409      *PolicyDeleteConflict
 }
 
 // Status returns HTTPResponse.Status
@@ -5370,6 +7681,7 @@ type PoliciesRetrieveResponse struct {
 	Body         []byte
 	HTTPResponse *http.Response
 	JSON200      *Policy
+	JSON404      *ErrorDetailResponse
 }
 
 // Status returns HTTPResponse.Status
@@ -5392,6 +7704,13 @@ type PoliciesPartialUpdateResponse struct {
 	Body         []byte
 	HTTPResponse *http.Response
 	JSON200      *UpdatePolicy
+	JSON400      *map[string]PoliciesPartialUpdate_400_AdditionalProperties
+	JSON404      *ErrorDetailResponse
+}
+type PoliciesPartialUpdate4000 = []string
+type PoliciesPartialUpdate4001 = string
+type PoliciesPartialUpdate_400_AdditionalProperties struct {
+	union json.RawMessage
 }
 
 // Status returns HTTPResponse.Status
@@ -5414,6 +7733,13 @@ type PoliciesUpdateResponse struct {
 	Body         []byte
 	HTTPResponse *http.Response
 	JSON200      *UpdatePolicy
+	JSON400      *map[string]PoliciesUpdate_400_AdditionalProperties
+	JSON404      *ErrorDetailResponse
+}
+type PoliciesUpdate4000 = []string
+type PoliciesUpdate4001 = string
+type PoliciesUpdate_400_AdditionalProperties struct {
+	union json.RawMessage
 }
 
 // Status returns HTTPResponse.Status
@@ -5436,6 +7762,7 @@ type PoliciesVersionsListResponse struct {
 	Body         []byte
 	HTTPResponse *http.Response
 	JSON200      *PaginatedPolicyVersionList
+	JSON404      *ErrorDetailResponse
 }
 
 // Status returns HTTPResponse.Status
@@ -5458,6 +7785,13 @@ type PoliciesVersionsCreateResponse struct {
 	Body         []byte
 	HTTPResponse *http.Response
 	JSON201      *CreatePolicyVersion
+	JSON400      *map[string]PoliciesVersionsCreate_400_AdditionalProperties
+	JSON404      *ErrorDetailResponse
+}
+type PoliciesVersionsCreate4000 = []string
+type PoliciesVersionsCreate4001 = string
+type PoliciesVersionsCreate_400_AdditionalProperties struct {
+	union json.RawMessage
 }
 
 // Status returns HTTPResponse.Status
@@ -5480,6 +7814,7 @@ type PoliciesVersionsRetrieveResponse struct {
 	Body         []byte
 	HTTPResponse *http.Response
 	JSON200      *PolicyVersion
+	JSON404      *ErrorDetailResponse
 }
 
 // Status returns HTTPResponse.Status
@@ -5498,11 +7833,97 @@ func (r PoliciesVersionsRetrieveResponse) StatusCode() int {
 	return 0
 }
 
+type TablesListResponse struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	JSON200      *TableListResponse
+}
+
+// Status returns HTTPResponse.Status
+func (r TablesListResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r TablesListResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+type TablesQueryCreateResponse struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	JSON202      *TableQuerySubmitResponse
+	JSON400      *map[string]TablesQueryCreate_400_AdditionalProperties
+}
+type TablesQueryCreate4000 = []string
+type TablesQueryCreate4001 = string
+type TablesQueryCreate_400_AdditionalProperties struct {
+	union json.RawMessage
+}
+
+// Status returns HTTPResponse.Status
+func (r TablesQueryCreateResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r TablesQueryCreateResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+type TablesQueryResultRetrieveResponse struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	JSON200      *TableQueryResultResponse
+	JSON403      *ErrorDetailResponse
+	JSON404      *ErrorDetailResponse
+}
+
+// Status returns HTTPResponse.Status
+func (r TablesQueryResultRetrieveResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r TablesQueryResultRetrieveResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
 type UploadTableResponse struct {
 	Body         []byte
 	HTTPResponse *http.Response
 	JSON201      *TableUploadResponse
-	JSON400      *ErrorResponse
+	JSON400      *struct {
+		union json.RawMessage
+	}
+}
+type UploadTable4000 = []string
+type UploadTable4001 map[string]UploadTable_400_1_AdditionalProperties
+type UploadTable40010 = []string
+type UploadTable40011 = string
+type UploadTable_400_1_AdditionalProperties struct {
+	union json.RawMessage
+}
+type UploadTable4002 struct {
+	Error string `json:"error"`
 }
 
 // Status returns HTTPResponse.Status
@@ -5521,9 +7942,93 @@ func (r UploadTableResponse) StatusCode() int {
 	return 0
 }
 
+type TablesDestroyResponse struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	JSON400      *[]string
+	JSON404      *ErrorDetailResponse
+}
+
+// Status returns HTTPResponse.Status
+func (r TablesDestroyResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r TablesDestroyResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+type TablesDescribeRetrieveResponse struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	JSON200      *TableDescribeResponse
+	JSON400      *[]string
+	JSON404      *ErrorDetailResponse
+}
+
+// Status returns HTTPResponse.Status
+func (r TablesDescribeRetrieveResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r TablesDescribeRetrieveResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+type TablesPreviewRetrieveResponse struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	JSON200      *TablePreviewResponse
+	JSON400      *struct {
+		union json.RawMessage
+	}
+	JSON404 *ErrorDetailResponse
+}
+type TablesPreviewRetrieve4000 = []string
+type TablesPreviewRetrieve4001 map[string]TablesPreviewRetrieve_400_1_AdditionalProperties
+type TablesPreviewRetrieve40010 = []string
+type TablesPreviewRetrieve40011 = string
+type TablesPreviewRetrieve_400_1_AdditionalProperties struct {
+	union json.RawMessage
+}
+type TablesPreviewRetrieve4002 struct {
+	Error string `json:"error"`
+}
+
+// Status returns HTTPResponse.Status
+func (r TablesPreviewRetrieveResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r TablesPreviewRetrieveResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
 type UsersCurrentUserRetrieveResponse struct {
 	Body         []byte
 	HTTPResponse *http.Response
+	JSON200      *User
 }
 
 // Status returns HTTPResponse.Status
@@ -5907,6 +8412,128 @@ func (c *ClientWithResponses) AgentsVersionsUpdateWithResponse(ctx context.Conte
 	return ParseAgentsVersionsUpdateResponse(rsp)
 }
 
+// ConnectionsListWithResponse request returning *ConnectionsListResponse
+func (c *ClientWithResponses) ConnectionsListWithResponse(ctx context.Context, params *ConnectionsListParams, reqEditors ...RequestEditorFn) (*ConnectionsListResponse, error) {
+	rsp, err := c.ConnectionsList(ctx, params, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseConnectionsListResponse(rsp)
+}
+
+// ConnectionsCreateWithBodyWithResponse request with arbitrary body returning *ConnectionsCreateResponse
+func (c *ClientWithResponses) ConnectionsCreateWithBodyWithResponse(ctx context.Context, params *ConnectionsCreateParams, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*ConnectionsCreateResponse, error) {
+	rsp, err := c.ConnectionsCreateWithBody(ctx, params, contentType, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseConnectionsCreateResponse(rsp)
+}
+
+func (c *ClientWithResponses) ConnectionsCreateWithResponse(ctx context.Context, params *ConnectionsCreateParams, body ConnectionsCreateJSONRequestBody, reqEditors ...RequestEditorFn) (*ConnectionsCreateResponse, error) {
+	rsp, err := c.ConnectionsCreate(ctx, params, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseConnectionsCreateResponse(rsp)
+}
+
+// ConnectionsTestCredentialsCreateWithBodyWithResponse request with arbitrary body returning *ConnectionsTestCredentialsCreateResponse
+func (c *ClientWithResponses) ConnectionsTestCredentialsCreateWithBodyWithResponse(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*ConnectionsTestCredentialsCreateResponse, error) {
+	rsp, err := c.ConnectionsTestCredentialsCreateWithBody(ctx, contentType, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseConnectionsTestCredentialsCreateResponse(rsp)
+}
+
+func (c *ClientWithResponses) ConnectionsTestCredentialsCreateWithResponse(ctx context.Context, body ConnectionsTestCredentialsCreateJSONRequestBody, reqEditors ...RequestEditorFn) (*ConnectionsTestCredentialsCreateResponse, error) {
+	rsp, err := c.ConnectionsTestCredentialsCreate(ctx, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseConnectionsTestCredentialsCreateResponse(rsp)
+}
+
+// ConnectionsDestroyWithResponse request returning *ConnectionsDestroyResponse
+func (c *ClientWithResponses) ConnectionsDestroyWithResponse(ctx context.Context, id openapi_types.UUID, params *ConnectionsDestroyParams, reqEditors ...RequestEditorFn) (*ConnectionsDestroyResponse, error) {
+	rsp, err := c.ConnectionsDestroy(ctx, id, params, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseConnectionsDestroyResponse(rsp)
+}
+
+// ConnectionsRetrieveWithResponse request returning *ConnectionsRetrieveResponse
+func (c *ClientWithResponses) ConnectionsRetrieveWithResponse(ctx context.Context, id openapi_types.UUID, params *ConnectionsRetrieveParams, reqEditors ...RequestEditorFn) (*ConnectionsRetrieveResponse, error) {
+	rsp, err := c.ConnectionsRetrieve(ctx, id, params, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseConnectionsRetrieveResponse(rsp)
+}
+
+// ConnectionsPartialUpdateWithBodyWithResponse request with arbitrary body returning *ConnectionsPartialUpdateResponse
+func (c *ClientWithResponses) ConnectionsPartialUpdateWithBodyWithResponse(ctx context.Context, id openapi_types.UUID, params *ConnectionsPartialUpdateParams, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*ConnectionsPartialUpdateResponse, error) {
+	rsp, err := c.ConnectionsPartialUpdateWithBody(ctx, id, params, contentType, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseConnectionsPartialUpdateResponse(rsp)
+}
+
+func (c *ClientWithResponses) ConnectionsPartialUpdateWithResponse(ctx context.Context, id openapi_types.UUID, params *ConnectionsPartialUpdateParams, body ConnectionsPartialUpdateJSONRequestBody, reqEditors ...RequestEditorFn) (*ConnectionsPartialUpdateResponse, error) {
+	rsp, err := c.ConnectionsPartialUpdate(ctx, id, params, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseConnectionsPartialUpdateResponse(rsp)
+}
+
+// ConnectionsUpdateWithBodyWithResponse request with arbitrary body returning *ConnectionsUpdateResponse
+func (c *ClientWithResponses) ConnectionsUpdateWithBodyWithResponse(ctx context.Context, id openapi_types.UUID, params *ConnectionsUpdateParams, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*ConnectionsUpdateResponse, error) {
+	rsp, err := c.ConnectionsUpdateWithBody(ctx, id, params, contentType, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseConnectionsUpdateResponse(rsp)
+}
+
+func (c *ClientWithResponses) ConnectionsUpdateWithResponse(ctx context.Context, id openapi_types.UUID, params *ConnectionsUpdateParams, body ConnectionsUpdateJSONRequestBody, reqEditors ...RequestEditorFn) (*ConnectionsUpdateResponse, error) {
+	rsp, err := c.ConnectionsUpdate(ctx, id, params, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseConnectionsUpdateResponse(rsp)
+}
+
+// ConnectionsTestCreateWithResponse request returning *ConnectionsTestCreateResponse
+func (c *ClientWithResponses) ConnectionsTestCreateWithResponse(ctx context.Context, id openapi_types.UUID, params *ConnectionsTestCreateParams, reqEditors ...RequestEditorFn) (*ConnectionsTestCreateResponse, error) {
+	rsp, err := c.ConnectionsTestCreate(ctx, id, params, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseConnectionsTestCreateResponse(rsp)
+}
+
+// ConnectorsRetrieveWithResponse request returning *ConnectorsRetrieveResponse
+func (c *ClientWithResponses) ConnectorsRetrieveWithResponse(ctx context.Context, reqEditors ...RequestEditorFn) (*ConnectorsRetrieveResponse, error) {
+	rsp, err := c.ConnectorsRetrieve(ctx, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseConnectorsRetrieveResponse(rsp)
+}
+
+// ConnectorsRetrieveByTypeWithResponse request returning *ConnectorsRetrieveByTypeResponse
+func (c *ClientWithResponses) ConnectorsRetrieveByTypeWithResponse(ctx context.Context, connectorType string, reqEditors ...RequestEditorFn) (*ConnectorsRetrieveByTypeResponse, error) {
+	rsp, err := c.ConnectorsRetrieveByType(ctx, connectorType, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseConnectorsRetrieveByTypeResponse(rsp)
+}
+
 // PoliciesListWithResponse request returning *PoliciesListResponse
 func (c *ClientWithResponses) PoliciesListWithResponse(ctx context.Context, params *PoliciesListParams, reqEditors ...RequestEditorFn) (*PoliciesListResponse, error) {
 	rsp, err := c.PoliciesList(ctx, params, reqEditors...)
@@ -6020,6 +8647,41 @@ func (c *ClientWithResponses) PoliciesVersionsRetrieveWithResponse(ctx context.C
 	return ParsePoliciesVersionsRetrieveResponse(rsp)
 }
 
+// TablesListWithResponse request returning *TablesListResponse
+func (c *ClientWithResponses) TablesListWithResponse(ctx context.Context, reqEditors ...RequestEditorFn) (*TablesListResponse, error) {
+	rsp, err := c.TablesList(ctx, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseTablesListResponse(rsp)
+}
+
+// TablesQueryCreateWithBodyWithResponse request with arbitrary body returning *TablesQueryCreateResponse
+func (c *ClientWithResponses) TablesQueryCreateWithBodyWithResponse(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*TablesQueryCreateResponse, error) {
+	rsp, err := c.TablesQueryCreateWithBody(ctx, contentType, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseTablesQueryCreateResponse(rsp)
+}
+
+func (c *ClientWithResponses) TablesQueryCreateWithResponse(ctx context.Context, body TablesQueryCreateJSONRequestBody, reqEditors ...RequestEditorFn) (*TablesQueryCreateResponse, error) {
+	rsp, err := c.TablesQueryCreate(ctx, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseTablesQueryCreateResponse(rsp)
+}
+
+// TablesQueryResultRetrieveWithResponse request returning *TablesQueryResultRetrieveResponse
+func (c *ClientWithResponses) TablesQueryResultRetrieveWithResponse(ctx context.Context, tableQueryId openapi_types.UUID, reqEditors ...RequestEditorFn) (*TablesQueryResultRetrieveResponse, error) {
+	rsp, err := c.TablesQueryResultRetrieve(ctx, tableQueryId, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseTablesQueryResultRetrieveResponse(rsp)
+}
+
 // UploadTableWithBodyWithResponse request with arbitrary body returning *UploadTableResponse
 func (c *ClientWithResponses) UploadTableWithBodyWithResponse(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*UploadTableResponse, error) {
 	rsp, err := c.UploadTableWithBody(ctx, contentType, body, reqEditors...)
@@ -6027,6 +8689,33 @@ func (c *ClientWithResponses) UploadTableWithBodyWithResponse(ctx context.Contex
 		return nil, err
 	}
 	return ParseUploadTableResponse(rsp)
+}
+
+// TablesDestroyWithResponse request returning *TablesDestroyResponse
+func (c *ClientWithResponses) TablesDestroyWithResponse(ctx context.Context, tableName string, reqEditors ...RequestEditorFn) (*TablesDestroyResponse, error) {
+	rsp, err := c.TablesDestroy(ctx, tableName, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseTablesDestroyResponse(rsp)
+}
+
+// TablesDescribeRetrieveWithResponse request returning *TablesDescribeRetrieveResponse
+func (c *ClientWithResponses) TablesDescribeRetrieveWithResponse(ctx context.Context, tableName string, reqEditors ...RequestEditorFn) (*TablesDescribeRetrieveResponse, error) {
+	rsp, err := c.TablesDescribeRetrieve(ctx, tableName, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseTablesDescribeRetrieveResponse(rsp)
+}
+
+// TablesPreviewRetrieveWithResponse request returning *TablesPreviewRetrieveResponse
+func (c *ClientWithResponses) TablesPreviewRetrieveWithResponse(ctx context.Context, tableName string, params *TablesPreviewRetrieveParams, reqEditors ...RequestEditorFn) (*TablesPreviewRetrieveResponse, error) {
+	rsp, err := c.TablesPreviewRetrieve(ctx, tableName, params, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseTablesPreviewRetrieveResponse(rsp)
 }
 
 // UsersCurrentUserRetrieveWithResponse request returning *UsersCurrentUserRetrieveResponse
@@ -6060,21 +8749,21 @@ func ParseAgentsListResponse(rsp *http.Response) (*AgentsListResponse, error) {
 		response.JSON200 = &dest
 
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 400:
-		var dest ErrorResponse
+		var dest map[string]AgentsList_400_AdditionalProperties
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
 			return nil, err
 		}
 		response.JSON400 = &dest
 
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 403:
-		var dest ErrorResponse
+		var dest ErrorDetailResponse
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
 			return nil, err
 		}
 		response.JSON403 = &dest
 
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 404:
-		var dest ErrorResponse
+		var dest ErrorDetailResponse
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
 			return nil, err
 		}
@@ -6107,14 +8796,14 @@ func ParseAgentsCreateResponse(rsp *http.Response) (*AgentsCreateResponse, error
 		response.JSON201 = &dest
 
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 400:
-		var dest ErrorResponse
+		var dest map[string]AgentsCreate_400_AdditionalProperties
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
 			return nil, err
 		}
 		response.JSON400 = &dest
 
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 403:
-		var dest ErrorResponse
+		var dest ErrorDetailResponse
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
 			return nil, err
 		}
@@ -6140,21 +8829,21 @@ func ParseAgentsJobsResultsCreateResponse(rsp *http.Response) (*AgentsJobsResult
 
 	switch {
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
-		var dest PaginatedAgentJobResultItemList
+		var dest []AgentJobResultItem
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
 			return nil, err
 		}
 		response.JSON200 = &dest
 
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 400:
-		var dest ErrorResponse
+		var dest map[string]AgentsJobsResultsCreate_400_AdditionalProperties
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
 			return nil, err
 		}
 		response.JSON400 = &dest
 
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 403:
-		var dest ErrorResponse
+		var dest ErrorDetailResponse
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
 			return nil, err
 		}
@@ -6187,14 +8876,14 @@ func ParseAgentsJobsStatusesCreateResponse(rsp *http.Response) (*AgentsJobsStatu
 		response.JSON200 = &dest
 
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 400:
-		var dest ErrorResponse
+		var dest map[string]AgentsJobsStatusesCreate_400_AdditionalProperties
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
 			return nil, err
 		}
 		response.JSON400 = &dest
 
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 403:
-		var dest ErrorResponse
+		var dest ErrorDetailResponse
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
 			return nil, err
 		}
@@ -6216,6 +8905,46 @@ func ParseAgentsJobsReferencesRetrieveResponse(rsp *http.Response) (*AgentsJobsR
 	response := &AgentsJobsReferencesRetrieveResponse{
 		Body:         bodyBytes,
 		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 400:
+		var dest struct {
+			union json.RawMessage
+		}
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON400 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 403:
+		var dest ErrorDetailResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON403 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 404:
+		var dest ErrorDetailResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON404 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 416:
+		var dest ApiErrorResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON416 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 500:
+		var dest ApiErrorResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON500 = &dest
+
 	}
 
 	return response, nil
@@ -6243,25 +8972,18 @@ func ParseAgentsJobsResultRetrieveResponse(rsp *http.Response) (*AgentsJobsResul
 		response.JSON200 = &dest
 
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 403:
-		var dest ErrorResponse
+		var dest ErrorDetailResponse
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
 			return nil, err
 		}
 		response.JSON403 = &dest
 
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 404:
-		var dest ErrorResponse
+		var dest ErrorDetailResponse
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
 			return nil, err
 		}
 		response.JSON404 = &dest
-
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 500:
-		var dest ErrorResponse
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSON500 = &dest
 
 	}
 
@@ -6283,14 +9005,14 @@ func ParseAgentsJobsCancelCreateResponse(rsp *http.Response) (*AgentsJobsCancelC
 
 	switch {
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 403:
-		var dest ErrorResponse
+		var dest ErrorDetailResponse
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
 			return nil, err
 		}
 		response.JSON403 = &dest
 
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 404:
-		var dest ErrorResponse
+		var dest ErrorDetailResponse
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
 			return nil, err
 		}
@@ -6323,32 +9045,25 @@ func ParseAgentsJobsDeleteDataCreateResponse(rsp *http.Response) (*AgentsJobsDel
 		response.JSON200 = &dest
 
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 400:
-		var dest ErrorResponse
+		var dest ApiErrorResponse
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
 			return nil, err
 		}
 		response.JSON400 = &dest
 
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 403:
-		var dest ErrorResponse
+		var dest ErrorDetailResponse
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
 			return nil, err
 		}
 		response.JSON403 = &dest
 
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 404:
-		var dest ErrorResponse
+		var dest ErrorDetailResponse
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
 			return nil, err
 		}
 		response.JSON404 = &dest
-
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 500:
-		var dest ErrorResponse
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSON500 = &dest
 
 	}
 
@@ -6370,21 +9085,21 @@ func ParseAgentsJobsStatusRetrieveResponse(rsp *http.Response) (*AgentsJobsStatu
 
 	switch {
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
-		var dest AgentJobStatus
+		var dest AgentJobSingleStatus
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
 			return nil, err
 		}
 		response.JSON200 = &dest
 
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 403:
-		var dest ErrorResponse
+		var dest ErrorDetailResponse
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
 			return nil, err
 		}
 		response.JSON403 = &dest
 
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 404:
-		var dest ErrorResponse
+		var dest ErrorDetailResponse
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
 			return nil, err
 		}
@@ -6416,6 +9131,13 @@ func ParseDiscoverySupportedModelsListResponse(rsp *http.Response) (*DiscoverySu
 		}
 		response.JSON200 = &dest
 
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 400:
+		var dest map[string]DiscoverySupportedModelsList_400_AdditionalProperties
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON400 = &dest
+
 	}
 
 	return response, nil
@@ -6443,32 +9165,34 @@ func ParseAgentsRunResponse(rsp *http.Response) (*AgentsRunResponse, error) {
 		response.JSON200 = &dest
 
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 400:
-		var dest ErrorResponse
+		var dest struct {
+			union json.RawMessage
+		}
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
 			return nil, err
 		}
 		response.JSON400 = &dest
 
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 402:
-		var dest ErrorResponse
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSON402 = &dest
-
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 403:
-		var dest ErrorResponse
+		var dest ErrorDetailResponse
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
 			return nil, err
 		}
 		response.JSON403 = &dest
 
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 404:
-		var dest ErrorResponse
+		var dest ErrorDetailResponse
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
 			return nil, err
 		}
 		response.JSON404 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 500:
+		var dest ErrorDetailResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON500 = &dest
 
 	}
 
@@ -6497,35 +9221,30 @@ func ParseAgentsRunAsyncCreateResponse(rsp *http.Response) (*AgentsRunAsyncCreat
 		response.JSON200 = &dest
 
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 400:
-		var dest ErrorResponse
+		var dest struct {
+			union json.RawMessage
+		}
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
 			return nil, err
 		}
 		response.JSON400 = &dest
 
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 402:
-		var dest ErrorResponse
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSON402 = &dest
-
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 403:
-		var dest ErrorResponse
+		var dest ErrorDetailResponse
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
 			return nil, err
 		}
 		response.JSON403 = &dest
 
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 404:
-		var dest ErrorResponse
+		var dest ErrorDetailResponse
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
 			return nil, err
 		}
 		response.JSON404 = &dest
 
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 500:
-		var dest ErrorResponse
+		var dest ErrorDetailResponse
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
 			return nil, err
 		}
@@ -6551,39 +9270,41 @@ func ParseAgentsRunAsyncManyResponse(rsp *http.Response) (*AgentsRunAsyncManyRes
 
 	switch {
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
-		var dest map[string]interface{}
+		var dest []openapi_types.UUID
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
 			return nil, err
 		}
 		response.JSON200 = &dest
 
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 400:
-		var dest ErrorResponse
+		var dest struct {
+			union json.RawMessage
+		}
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
 			return nil, err
 		}
 		response.JSON400 = &dest
 
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 402:
-		var dest ErrorResponse
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSON402 = &dest
-
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 403:
-		var dest ErrorResponse
+		var dest ErrorDetailResponse
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
 			return nil, err
 		}
 		response.JSON403 = &dest
 
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 404:
-		var dest ErrorResponse
+		var dest ErrorDetailResponse
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
 			return nil, err
 		}
 		response.JSON404 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 500:
+		var dest ErrorDetailResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON500 = &dest
 
 	}
 
@@ -6612,32 +9333,34 @@ func ParseAgentsRunVersionResponse(rsp *http.Response) (*AgentsRunVersionRespons
 		response.JSON200 = &dest
 
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 400:
-		var dest ErrorResponse
+		var dest struct {
+			union json.RawMessage
+		}
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
 			return nil, err
 		}
 		response.JSON400 = &dest
 
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 402:
-		var dest ErrorResponse
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSON402 = &dest
-
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 403:
-		var dest ErrorResponse
+		var dest ErrorDetailResponse
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
 			return nil, err
 		}
 		response.JSON403 = &dest
 
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 404:
-		var dest ErrorResponse
+		var dest ErrorDetailResponse
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
 			return nil, err
 		}
 		response.JSON404 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 500:
+		var dest ErrorDetailResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON500 = &dest
 
 	}
 
@@ -6666,35 +9389,30 @@ func ParseAgentsRunVersionsAsyncCreateResponse(rsp *http.Response) (*AgentsRunVe
 		response.JSON200 = &dest
 
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 400:
-		var dest ErrorResponse
+		var dest struct {
+			union json.RawMessage
+		}
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
 			return nil, err
 		}
 		response.JSON400 = &dest
 
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 402:
-		var dest ErrorResponse
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSON402 = &dest
-
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 403:
-		var dest ErrorResponse
+		var dest ErrorDetailResponse
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
 			return nil, err
 		}
 		response.JSON403 = &dest
 
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 404:
-		var dest ErrorResponse
+		var dest ErrorDetailResponse
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
 			return nil, err
 		}
 		response.JSON404 = &dest
 
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 500:
-		var dest ErrorResponse
+		var dest ErrorDetailResponse
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
 			return nil, err
 		}
@@ -6746,21 +9464,21 @@ func ParseAgentsDestroyResponse(rsp *http.Response) (*AgentsDestroyResponse, err
 
 	switch {
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 403:
-		var dest ErrorResponse
+		var dest ErrorDetailResponse
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
 			return nil, err
 		}
 		response.JSON403 = &dest
 
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 404:
-		var dest ErrorResponse
+		var dest ErrorDetailResponse
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
 			return nil, err
 		}
 		response.JSON404 = &dest
 
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 500:
-		var dest ErrorResponse
+		var dest QdrantCleanupErrorResponse
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
 			return nil, err
 		}
@@ -6793,14 +9511,14 @@ func ParseAgentsRetrieveResponse(rsp *http.Response) (*AgentsRetrieveResponse, e
 		response.JSON200 = &dest
 
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 403:
-		var dest ErrorResponse
+		var dest ErrorDetailResponse
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
 			return nil, err
 		}
 		response.JSON403 = &dest
 
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 404:
-		var dest ErrorResponse
+		var dest ErrorDetailResponse
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
 			return nil, err
 		}
@@ -6833,21 +9551,21 @@ func ParseAgentsPartialUpdateResponse(rsp *http.Response) (*AgentsPartialUpdateR
 		response.JSON200 = &dest
 
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 400:
-		var dest ErrorResponse
+		var dest map[string]AgentsPartialUpdate_400_AdditionalProperties
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
 			return nil, err
 		}
 		response.JSON400 = &dest
 
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 403:
-		var dest ErrorResponse
+		var dest ErrorDetailResponse
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
 			return nil, err
 		}
 		response.JSON403 = &dest
 
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 404:
-		var dest ErrorResponse
+		var dest ErrorDetailResponse
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
 			return nil, err
 		}
@@ -6880,21 +9598,21 @@ func ParseAgentsUpdateResponse(rsp *http.Response) (*AgentsUpdateResponse, error
 		response.JSON200 = &dest
 
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 400:
-		var dest ErrorResponse
+		var dest map[string]AgentsUpdate_400_AdditionalProperties
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
 			return nil, err
 		}
 		response.JSON400 = &dest
 
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 403:
-		var dest ErrorResponse
+		var dest ErrorDetailResponse
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
 			return nil, err
 		}
 		response.JSON403 = &dest
 
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 404:
-		var dest ErrorResponse
+		var dest ErrorDetailResponse
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
 			return nil, err
 		}
@@ -6927,14 +9645,14 @@ func ParseAgentsDuplicateCreateResponse(rsp *http.Response) (*AgentsDuplicateCre
 		response.JSON201 = &dest
 
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 403:
-		var dest ErrorResponse
+		var dest ErrorDetailResponse
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
 			return nil, err
 		}
 		response.JSON403 = &dest
 
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 404:
-		var dest ErrorResponse
+		var dest ErrorDetailResponse
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
 			return nil, err
 		}
@@ -6960,14 +9678,14 @@ func ParseAgentsJobsCancelAllCreateResponse(rsp *http.Response) (*AgentsJobsCanc
 
 	switch {
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 403:
-		var dest ErrorResponse
+		var dest ErrorDetailResponse
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
 			return nil, err
 		}
 		response.JSON403 = &dest
 
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 404:
-		var dest ErrorResponse
+		var dest ErrorDetailResponse
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
 			return nil, err
 		}
@@ -7000,14 +9718,14 @@ func ParseAgentsVersionsListResponse(rsp *http.Response) (*AgentsVersionsListRes
 		response.JSON200 = &dest
 
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 403:
-		var dest ErrorResponse
+		var dest ErrorDetailResponse
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
 			return nil, err
 		}
 		response.JSON403 = &dest
 
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 404:
-		var dest ErrorResponse
+		var dest ErrorDetailResponse
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
 			return nil, err
 		}
@@ -7040,21 +9758,21 @@ func ParseAgentsVersionsCreateResponse(rsp *http.Response) (*AgentsVersionsCreat
 		response.JSON201 = &dest
 
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 400:
-		var dest ErrorResponse
+		var dest map[string]AgentsVersionsCreate_400_AdditionalProperties
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
 			return nil, err
 		}
 		response.JSON400 = &dest
 
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 403:
-		var dest ErrorResponse
+		var dest ErrorDetailResponse
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
 			return nil, err
 		}
 		response.JSON403 = &dest
 
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 404:
-		var dest ErrorResponse
+		var dest ErrorDetailResponse
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
 			return nil, err
 		}
@@ -7087,14 +9805,14 @@ func ParseAgentsVersionsCurrentRetrieveResponse(rsp *http.Response) (*AgentsVers
 		response.JSON200 = &dest
 
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 403:
-		var dest ErrorResponse
+		var dest ErrorDetailResponse
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
 			return nil, err
 		}
 		response.JSON403 = &dest
 
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 404:
-		var dest ErrorResponse
+		var dest ErrorDetailResponse
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
 			return nil, err
 		}
@@ -7120,18 +9838,25 @@ func ParseAgentsVersionsDestroyResponse(rsp *http.Response) (*AgentsVersionsDest
 
 	switch {
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 403:
-		var dest ErrorResponse
+		var dest ErrorDetailResponse
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
 			return nil, err
 		}
 		response.JSON403 = &dest
 
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 404:
-		var dest ErrorResponse
+		var dest ErrorDetailResponse
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
 			return nil, err
 		}
 		response.JSON404 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 500:
+		var dest QdrantCleanupErrorResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON500 = &dest
 
 	}
 
@@ -7160,14 +9885,14 @@ func ParseAgentsVersionsRetrieveResponse(rsp *http.Response) (*AgentsVersionsRet
 		response.JSON200 = &dest
 
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 403:
-		var dest ErrorResponse
+		var dest ErrorDetailResponse
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
 			return nil, err
 		}
 		response.JSON403 = &dest
 
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 404:
-		var dest ErrorResponse
+		var dest ErrorDetailResponse
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
 			return nil, err
 		}
@@ -7192,15 +9917,22 @@ func ParseAgentsVersionsPartialUpdateResponse(rsp *http.Response) (*AgentsVersio
 	}
 
 	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest MessageResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 403:
-		var dest ErrorResponse
+		var dest ErrorDetailResponse
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
 			return nil, err
 		}
 		response.JSON403 = &dest
 
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 404:
-		var dest ErrorResponse
+		var dest ErrorDetailResponse
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
 			return nil, err
 		}
@@ -7225,15 +9957,416 @@ func ParseAgentsVersionsUpdateResponse(rsp *http.Response) (*AgentsVersionsUpdat
 	}
 
 	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest MessageResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 403:
-		var dest ErrorResponse
+		var dest ErrorDetailResponse
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
 			return nil, err
 		}
 		response.JSON403 = &dest
 
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 404:
-		var dest ErrorResponse
+		var dest ErrorDetailResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON404 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseConnectionsListResponse parses an HTTP response from a ConnectionsListWithResponse call
+func ParseConnectionsListResponse(rsp *http.Response) (*ConnectionsListResponse, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &ConnectionsListResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest PaginatedConnectionListList
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 400:
+		var dest map[string]ConnectionsList_400_AdditionalProperties
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON400 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 403:
+		var dest ErrorDetailResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON403 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 404:
+		var dest ErrorDetailResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON404 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseConnectionsCreateResponse parses an HTTP response from a ConnectionsCreateWithResponse call
+func ParseConnectionsCreateResponse(rsp *http.Response) (*ConnectionsCreateResponse, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &ConnectionsCreateResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 201:
+		var dest Connection
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON201 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 400:
+		var dest struct {
+			union json.RawMessage
+		}
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON400 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 409:
+		var dest DuplicateConnectionResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON409 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseConnectionsTestCredentialsCreateResponse parses an HTTP response from a ConnectionsTestCredentialsCreateWithResponse call
+func ParseConnectionsTestCredentialsCreateResponse(rsp *http.Response) (*ConnectionsTestCredentialsCreateResponse, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &ConnectionsTestCredentialsCreateResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest TestConnection
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 400:
+		var dest struct {
+			union json.RawMessage
+		}
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON400 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseConnectionsDestroyResponse parses an HTTP response from a ConnectionsDestroyWithResponse call
+func ParseConnectionsDestroyResponse(rsp *http.Response) (*ConnectionsDestroyResponse, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &ConnectionsDestroyResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 400:
+		var dest ConnectionDeleteErrorResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON400 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 404:
+		var dest ErrorDetailResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON404 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 500:
+		var dest ConnectionDeleteErrorResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON500 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseConnectionsRetrieveResponse parses an HTTP response from a ConnectionsRetrieveWithResponse call
+func ParseConnectionsRetrieveResponse(rsp *http.Response) (*ConnectionsRetrieveResponse, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &ConnectionsRetrieveResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest Connection
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 404:
+		var dest ErrorDetailResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON404 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseConnectionsPartialUpdateResponse parses an HTTP response from a ConnectionsPartialUpdateWithResponse call
+func ParseConnectionsPartialUpdateResponse(rsp *http.Response) (*ConnectionsPartialUpdateResponse, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &ConnectionsPartialUpdateResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest Connection
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 400:
+		var dest struct {
+			union json.RawMessage
+		}
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON400 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 404:
+		var dest ErrorDetailResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON404 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 409:
+		var dest DuplicateConnectionResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON409 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseConnectionsUpdateResponse parses an HTTP response from a ConnectionsUpdateWithResponse call
+func ParseConnectionsUpdateResponse(rsp *http.Response) (*ConnectionsUpdateResponse, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &ConnectionsUpdateResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest Connection
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 400:
+		var dest struct {
+			union json.RawMessage
+		}
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON400 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 404:
+		var dest ErrorDetailResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON404 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 409:
+		var dest DuplicateConnectionResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON409 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseConnectionsTestCreateResponse parses an HTTP response from a ConnectionsTestCreateWithResponse call
+func ParseConnectionsTestCreateResponse(rsp *http.Response) (*ConnectionsTestCreateResponse, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &ConnectionsTestCreateResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest TestConnection
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 400:
+		var dest TestConnection
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON400 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 404:
+		var dest ErrorDetailResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON404 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseConnectorsRetrieveResponse parses an HTTP response from a ConnectorsRetrieveWithResponse call
+func ParseConnectorsRetrieveResponse(rsp *http.Response) (*ConnectorsRetrieveResponse, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &ConnectorsRetrieveResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest ConnectorListResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseConnectorsRetrieveByTypeResponse parses an HTTP response from a ConnectorsRetrieveByTypeWithResponse call
+func ParseConnectorsRetrieveByTypeResponse(rsp *http.Response) (*ConnectorsRetrieveByTypeResponse, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &ConnectorsRetrieveByTypeResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest ConnectorMetadata
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 404:
+		var dest ErrorDetailResponse
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
 			return nil, err
 		}
@@ -7291,6 +10424,13 @@ func ParsePoliciesCreateResponse(rsp *http.Response) (*PoliciesCreateResponse, e
 		}
 		response.JSON201 = &dest
 
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 400:
+		var dest map[string]PoliciesCreate_400_AdditionalProperties
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON400 = &dest
+
 	}
 
 	return response, nil
@@ -7307,6 +10447,23 @@ func ParsePoliciesDestroyResponse(rsp *http.Response) (*PoliciesDestroyResponse,
 	response := &PoliciesDestroyResponse{
 		Body:         bodyBytes,
 		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 404:
+		var dest ErrorDetailResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON404 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 409:
+		var dest PolicyDeleteConflict
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON409 = &dest
+
 	}
 
 	return response, nil
@@ -7332,6 +10489,13 @@ func ParsePoliciesRetrieveResponse(rsp *http.Response) (*PoliciesRetrieveRespons
 			return nil, err
 		}
 		response.JSON200 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 404:
+		var dest ErrorDetailResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON404 = &dest
 
 	}
 
@@ -7359,6 +10523,20 @@ func ParsePoliciesPartialUpdateResponse(rsp *http.Response) (*PoliciesPartialUpd
 		}
 		response.JSON200 = &dest
 
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 400:
+		var dest map[string]PoliciesPartialUpdate_400_AdditionalProperties
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON400 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 404:
+		var dest ErrorDetailResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON404 = &dest
+
 	}
 
 	return response, nil
@@ -7384,6 +10562,20 @@ func ParsePoliciesUpdateResponse(rsp *http.Response) (*PoliciesUpdateResponse, e
 			return nil, err
 		}
 		response.JSON200 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 400:
+		var dest map[string]PoliciesUpdate_400_AdditionalProperties
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON400 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 404:
+		var dest ErrorDetailResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON404 = &dest
 
 	}
 
@@ -7411,6 +10603,13 @@ func ParsePoliciesVersionsListResponse(rsp *http.Response) (*PoliciesVersionsLis
 		}
 		response.JSON200 = &dest
 
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 404:
+		var dest ErrorDetailResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON404 = &dest
+
 	}
 
 	return response, nil
@@ -7437,6 +10636,20 @@ func ParsePoliciesVersionsCreateResponse(rsp *http.Response) (*PoliciesVersionsC
 		}
 		response.JSON201 = &dest
 
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 400:
+		var dest map[string]PoliciesVersionsCreate_400_AdditionalProperties
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON400 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 404:
+		var dest ErrorDetailResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON404 = &dest
+
 	}
 
 	return response, nil
@@ -7462,6 +10675,112 @@ func ParsePoliciesVersionsRetrieveResponse(rsp *http.Response) (*PoliciesVersion
 			return nil, err
 		}
 		response.JSON200 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 404:
+		var dest ErrorDetailResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON404 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseTablesListResponse parses an HTTP response from a TablesListWithResponse call
+func ParseTablesListResponse(rsp *http.Response) (*TablesListResponse, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &TablesListResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest TableListResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseTablesQueryCreateResponse parses an HTTP response from a TablesQueryCreateWithResponse call
+func ParseTablesQueryCreateResponse(rsp *http.Response) (*TablesQueryCreateResponse, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &TablesQueryCreateResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 202:
+		var dest TableQuerySubmitResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON202 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 400:
+		var dest map[string]TablesQueryCreate_400_AdditionalProperties
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON400 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseTablesQueryResultRetrieveResponse parses an HTTP response from a TablesQueryResultRetrieveWithResponse call
+func ParseTablesQueryResultRetrieveResponse(rsp *http.Response) (*TablesQueryResultRetrieveResponse, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &TablesQueryResultRetrieveResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest TableQueryResultResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 403:
+		var dest ErrorDetailResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON403 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 404:
+		var dest ErrorDetailResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON404 = &dest
 
 	}
 
@@ -7490,11 +10809,128 @@ func ParseUploadTableResponse(rsp *http.Response) (*UploadTableResponse, error) 
 		response.JSON201 = &dest
 
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 400:
-		var dest ErrorResponse
+		var dest struct {
+			union json.RawMessage
+		}
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
 			return nil, err
 		}
 		response.JSON400 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseTablesDestroyResponse parses an HTTP response from a TablesDestroyWithResponse call
+func ParseTablesDestroyResponse(rsp *http.Response) (*TablesDestroyResponse, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &TablesDestroyResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 400:
+		var dest []string
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON400 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 404:
+		var dest ErrorDetailResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON404 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseTablesDescribeRetrieveResponse parses an HTTP response from a TablesDescribeRetrieveWithResponse call
+func ParseTablesDescribeRetrieveResponse(rsp *http.Response) (*TablesDescribeRetrieveResponse, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &TablesDescribeRetrieveResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest TableDescribeResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 400:
+		var dest []string
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON400 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 404:
+		var dest ErrorDetailResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON404 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseTablesPreviewRetrieveResponse parses an HTTP response from a TablesPreviewRetrieveWithResponse call
+func ParseTablesPreviewRetrieveResponse(rsp *http.Response) (*TablesPreviewRetrieveResponse, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &TablesPreviewRetrieveResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest TablePreviewResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 400:
+		var dest struct {
+			union json.RawMessage
+		}
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON400 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 404:
+		var dest ErrorDetailResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON404 = &dest
 
 	}
 
@@ -7512,6 +10948,16 @@ func ParseUsersCurrentUserRetrieveResponse(rsp *http.Response) (*UsersCurrentUse
 	response := &UsersCurrentUserRetrieveResponse{
 		Body:         bodyBytes,
 		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest User
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
 	}
 
 	return response, nil

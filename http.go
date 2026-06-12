@@ -458,6 +458,26 @@ func (c *httpClient) putJSONWithContext(ctx context.Context, path string, payloa
 	return json.Unmarshal(data, out)
 }
 
+func (c *httpClient) patchJSONWithContext(ctx context.Context, path string, payload any, query map[string]string, out any) error {
+	buf := &bytes.Buffer{}
+	if payload != nil {
+		if err := json.NewEncoder(buf).Encode(payload); err != nil {
+			return fmt.Errorf("encode json: %w", err)
+		}
+	}
+	headers := http.Header{}
+	headers.Set("Content-Type", "application/json")
+
+	data, err := c.doRequest(ctx, http.MethodPatch, path, headers, buf, query)
+	if err != nil {
+		return err
+	}
+	if out == nil {
+		return nil
+	}
+	return json.Unmarshal(data, out)
+}
+
 type preparedFile struct {
 	FieldName string
 	File      FileUpload

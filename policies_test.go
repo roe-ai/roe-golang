@@ -135,8 +135,8 @@ func TestPoliciesAPICreate(t *testing.T) {
 
 func TestPoliciesAPIUpdate(t *testing.T) {
 	server := newTestServer(t, http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		if r.Method != http.MethodPut {
-			t.Fatalf("expected PUT, got %s", r.Method)
+		if r.Method != http.MethodPatch {
+			t.Fatalf("expected PATCH, got %s", r.Method)
 		}
 		var body map[string]any
 		if err := json.NewDecoder(r.Body).Decode(&body); err != nil {
@@ -172,6 +172,48 @@ func TestPoliciesAPIUpdate(t *testing.T) {
 	}
 	if policy.Name != "Updated" {
 		t.Fatalf("expected name=Updated, got %s", policy.Name)
+	}
+}
+
+func TestPoliciesAPIUpdateDescriptionOnly(t *testing.T) {
+	server := newTestServer(t, http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		if r.Method != http.MethodPatch {
+			t.Fatalf("expected PATCH, got %s", r.Method)
+		}
+		var body map[string]any
+		if err := json.NewDecoder(r.Body).Decode(&body); err != nil {
+			t.Fatalf("decode body: %v", err)
+		}
+		if _, ok := body["name"]; ok {
+			t.Fatalf("did not expect name in body")
+		}
+		if body["description"] != "Updated description" {
+			t.Fatalf("expected updated description, got %v", body["description"])
+		}
+		w.Header().Set("Content-Type", "application/json")
+		_, _ = w.Write([]byte(`{"id":"p1","name":"Existing","description":"Updated description","organization_id":"org","current_version_id":"v1","created_at":"2026-01-01","updated_at":"2026-01-01"}`))
+	}))
+	defer server.Close()
+
+	client, err := NewClientWithConfig(Config{
+		APIKey:         "k",
+		OrganizationID: "org",
+		BaseURL:        server.URL,
+		Timeout:        time.Second,
+		MaxRetries:     0,
+	})
+	if err != nil {
+		t.Fatalf("new client: %v", err)
+	}
+	defer client.Close()
+
+	description := "Updated description"
+	policy, err := client.Policies.Update("p1", nil, &description)
+	if err != nil {
+		t.Fatalf("update: %v", err)
+	}
+	if policy.Description != "Updated description" {
+		t.Fatalf("expected updated description, got %s", policy.Description)
 	}
 }
 
