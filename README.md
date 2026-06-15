@@ -535,7 +535,7 @@ Before opening a PR, format and lint the codebase by running:
 ./roe-cli format
 ```
 
-CI runs the same checks (`gofmt`, `go vet`, and `golangci-lint`) on every pull request and on merges to `main`, and they must pass before a PR can be merged.
+CI runs formatting and lint checks (`gofmt` and `golangci-lint`) on every pull request and on merges to `main`, and they must pass before a PR can be merged. Local `./roe-cli format` also runs `go vet`.
 
 ## Links
 

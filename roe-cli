@@ -14,7 +14,7 @@ roe-cli - Development CLI for the Roe Go SDK
 Usage: ./roe-cli <command>
 
 Commands:
-    format              Run code formatter and linters (gofmt, go vet)
+    format              Run code formatter and linters (gofmt, go vet, golangci-lint)
     help                Show this help message
 
 Examples:
