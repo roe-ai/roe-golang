@@ -13,22 +13,13 @@ Copy-ready calls for every SDK operation. Required and optional inputs are shown
 List agents or create a new agent.
 
 ```go
-params := &generated.AgentsListParams{
-    EngineClassId: &[]string{"engine_class_id"}[0], // optional query engine_class_id
-    ExcludeEngineClassId: &[]string{"exclude_engine_class_id"}[0], // optional query exclude_engine_class_id
-    IncludeJobStats: &[]bool{true}[0], // optional query include_job_stats
-    Ordering: &[]string{"ordering"}[0], // optional query ordering
-    OrganizationId: openapi_types.UUID("00000000-0000-0000-0000-000000000000"), // required query organization_id
-    Page: &[]int{1}[0], // optional query page
-    PageSize: &[]int{1}[0], // optional query page_size
-    Search: &[]string{"search"}[0], // optional query search
-    Tags: &[]string{"value"}, // optional query tags
-}
-
-resp, err := raw.AgentsListWithResponse(
-    ctx,
-    params,
+result, err := client.Agents.List(
+    1,
+    1,
 )
+if err != nil {
+    log.Fatal(err)
+}
 ```
 
 #### `agents_create`
@@ -36,28 +27,17 @@ resp, err := raw.AgentsListWithResponse(
 Create a new base agent.
 
 ```go
-params := &generated.AgentsCreateParams{
-    OrganizationId: &[]openapi_types.UUID{openapi_types.UUID("00000000-0000-0000-0000-000000000000")}[0], // optional query organization_id
-}
-// Required body fields: name, engine_class_id
-// Optional body fields: organization_id, version_name, description, input_definitions, engine_config
-body := strings.NewReader(`{
-  "name": "name",
-  "engine_class_id": "engine_class_id",
-  "organization_id": "00000000-0000-0000-0000-000000000000",
-  "version_name": "version_name",
-  "description": "description",
-  "input_definitions": "input_definitions",
-  "engine_config": "engine_config"
-}`)
-contentType := "application/json"
-
-resp, err := raw.AgentsCreateWithBodyWithResponse(
-    ctx,
-    params,
-    contentType,
-    body,
+result, err := client.Agents.Create(
+    "name",
+    "engineClassID",
+    []map[string]any{{"key": "text", "data_type": "text/plain"}},
+    map[string]any{"model": "gpt-4.1"},
+    "versionName",
+    "description",
 )
+if err != nil {
+    log.Fatal(err)
+}
 ```
 
 #### `agents_jobs_results_create`
@@ -65,21 +45,10 @@ resp, err := raw.AgentsCreateWithBodyWithResponse(
 Get results for multiple agent jobs
 
 ```go
-params := &generated.AgentsJobsResultsCreateParams{
-    OrganizationId: &[]openapi_types.UUID{openapi_types.UUID("00000000-0000-0000-0000-000000000000")}[0], // optional query organization_id
+result, err := client.Agents.Jobs.RetrieveResultMany([]string{"job_id"})
+if err != nil {
+    log.Fatal(err)
 }
-// Required body fields: job_ids
-body := strings.NewReader(`{
-  "job_ids": ["value"]
-}`)
-contentType := "application/json"
-
-resp, err := raw.AgentsJobsResultsCreateWithBodyWithResponse(
-    ctx,
-    params,
-    contentType,
-    body,
-)
 ```
 
 #### `agents_jobs_statuses_create`
@@ -87,21 +56,10 @@ resp, err := raw.AgentsJobsResultsCreateWithBodyWithResponse(
 Get status for multiple agent jobs
 
 ```go
-params := &generated.AgentsJobsStatusesCreateParams{
-    OrganizationId: &[]openapi_types.UUID{openapi_types.UUID("00000000-0000-0000-0000-000000000000")}[0], // optional query organization_id
+result, err := client.Agents.Jobs.RetrieveStatusMany([]string{"job_id"})
+if err != nil {
+    log.Fatal(err)
 }
-// Required body fields: job_ids
-body := strings.NewReader(`{
-  "job_ids": ["value"]
-}`)
-contentType := "application/json"
-
-resp, err := raw.AgentsJobsStatusesCreateWithBodyWithResponse(
-    ctx,
-    params,
-    contentType,
-    body,
-)
 ```
 
 #### `agents_jobs_references_retrieve`
@@ -109,20 +67,14 @@ resp, err := raw.AgentsJobsStatusesCreateWithBodyWithResponse(
 Serve a reference file associated with an agent job.
 
 ```go
-agentJobId := openapi_types.UUID("00000000-0000-0000-0000-000000000000") // required path agent_job_id
-resourceId := "resource_id" // required path resource_id
-
-params := &generated.AgentsJobsReferencesRetrieveParams{
-    Download: &[]bool{true}[0], // optional query download
-    OrganizationId: &[]openapi_types.UUID{openapi_types.UUID("00000000-0000-0000-0000-000000000000")}[0], // optional query organization_id
-}
-
-resp, err := raw.AgentsJobsReferencesRetrieveWithResponse(
-    ctx,
-    agentJobId,
-    resourceId,
-    params,
+content, err := client.Agents.Jobs.DownloadReference(
+    "job_id",
+    "resource_id",
+    false,
 )
+if err != nil {
+    log.Fatal(err)
+}
 ```
 
 #### `agents_jobs_result_retrieve`
@@ -130,17 +82,12 @@ resp, err := raw.AgentsJobsReferencesRetrieveWithResponse(
 Get agent job result data.
 
 ```go
-agentJobId := openapi_types.UUID("00000000-0000-0000-0000-000000000000") // required path agent_job_id
-
-params := &generated.AgentsJobsResultRetrieveParams{
-    OrganizationId: &[]openapi_types.UUID{openapi_types.UUID("00000000-0000-0000-0000-000000000000")}[0], // optional query organization_id
-}
-
-resp, err := raw.AgentsJobsResultRetrieveWithResponse(
-    ctx,
-    agentJobId,
-    params,
+result, err := client.Agents.Jobs.RetrieveResult(
+    "jobID",
 )
+if err != nil {
+    log.Fatal(err)
+}
 ```
 
 #### `agents_jobs_cancel_create`
@@ -148,17 +95,12 @@ resp, err := raw.AgentsJobsResultRetrieveWithResponse(
 Cancel an agent job
 
 ```go
-jobId := openapi_types.UUID("00000000-0000-0000-0000-000000000000") // required path job_id
-
-params := &generated.AgentsJobsCancelCreateParams{
-    OrganizationId: &[]openapi_types.UUID{openapi_types.UUID("00000000-0000-0000-0000-000000000000")}[0], // optional query organization_id
-}
-
-resp, err := raw.AgentsJobsCancelCreateWithResponse(
-    ctx,
-    jobId,
-    params,
+err := client.Agents.Jobs.Cancel(
+    "jobID",
 )
+if err != nil {
+    log.Fatal(err)
+}
 ```
 
 #### `agents_jobs_delete_data_create`
@@ -166,17 +108,12 @@ resp, err := raw.AgentsJobsCancelCreateWithResponse(
 Delete agent job data
 
 ```go
-jobId := openapi_types.UUID("00000000-0000-0000-0000-000000000000") // required path job_id
-
-params := &generated.AgentsJobsDeleteDataCreateParams{
-    OrganizationId: &[]openapi_types.UUID{openapi_types.UUID("00000000-0000-0000-0000-000000000000")}[0], // optional query organization_id
-}
-
-resp, err := raw.AgentsJobsDeleteDataCreateWithResponse(
-    ctx,
-    jobId,
-    params,
+result, err := client.Agents.Jobs.DeleteData(
+    "jobID",
 )
+if err != nil {
+    log.Fatal(err)
+}
 ```
 
 #### `agents_jobs_status_retrieve`
@@ -184,17 +121,12 @@ resp, err := raw.AgentsJobsDeleteDataCreateWithResponse(
 Get agent job status.
 
 ```go
-jobId := openapi_types.UUID("00000000-0000-0000-0000-000000000000") // required path job_id
-
-params := &generated.AgentsJobsStatusRetrieveParams{
-    OrganizationId: &[]openapi_types.UUID{openapi_types.UUID("00000000-0000-0000-0000-000000000000")}[0], // optional query organization_id
-}
-
-resp, err := raw.AgentsJobsStatusRetrieveWithResponse(
-    ctx,
-    jobId,
-    params,
+result, err := client.Agents.Jobs.RetrieveStatus(
+    "jobID",
 )
+if err != nil {
+    log.Fatal(err)
+}
 ```
 
 #### `agents_run`
@@ -202,24 +134,14 @@ resp, err := raw.AgentsJobsStatusRetrieveWithResponse(
 Run agent synchronously
 
 ```go
-agentId := openapi_types.UUID("00000000-0000-0000-0000-000000000000") // required path agent_id
-
-params := &generated.AgentsRunParams{
-    OrganizationId: &[]openapi_types.UUID{openapi_types.UUID("00000000-0000-0000-0000-000000000000")}[0], // optional query organization_id
-}
-// Optional body fields: metadata
-body := strings.NewReader(`{
-  "metadata": {}
-}`)
-contentType := "application/json"
-
-resp, err := raw.AgentsRunWithBodyWithResponse(
-    ctx,
-    agentId,
-    params,
-    contentType,
-    body,
+result, err := client.Agents.RunSync(
+    "agent_id",
+    map[string]any{"text": "text"},
+    map[string]any{},
 )
+if err != nil {
+    log.Fatal(err)
+}
 ```
 
 #### `agents_run_async_create`
@@ -227,24 +149,15 @@ resp, err := raw.AgentsRunWithBodyWithResponse(
 Run agent asynchronously.
 
 ```go
-agentId := openapi_types.UUID("00000000-0000-0000-0000-000000000000") // required path agent_id
-
-params := &generated.AgentsRunAsyncCreateParams{
-    OrganizationId: &[]openapi_types.UUID{openapi_types.UUID("00000000-0000-0000-0000-000000000000")}[0], // optional query organization_id
-}
-// Optional body fields: metadata
-body := strings.NewReader(`{
-  "metadata": {}
-}`)
-contentType := "application/json"
-
-resp, err := raw.AgentsRunAsyncCreateWithBodyWithResponse(
-    ctx,
-    agentId,
-    params,
-    contentType,
-    body,
+job, err := client.Agents.Run(
+    "agent_id",
+    300,
+    map[string]any{"text": "text"},
+    map[string]any{},
 )
+if err != nil {
+    log.Fatal(err)
+}
 ```
 
 #### `agents_run_async_many`
@@ -252,24 +165,15 @@ resp, err := raw.AgentsRunAsyncCreateWithBodyWithResponse(
 Run agent asynchronously with multiple inputs
 
 ```go
-agentId := openapi_types.UUID("00000000-0000-0000-0000-000000000000") // required path agent_id
-
-params := &generated.AgentsRunAsyncManyParams{
-    OrganizationId: &[]openapi_types.UUID{openapi_types.UUID("00000000-0000-0000-0000-000000000000")}[0], // optional query organization_id
-}
-// Required body fields: inputs
-body := strings.NewReader(`{
-  "inputs": ["value"]
-}`)
-contentType := "application/json"
-
-resp, err := raw.AgentsRunAsyncManyWithBodyWithResponse(
-    ctx,
-    agentId,
-    params,
-    contentType,
-    body,
+batch, err := client.Agents.RunMany(
+    "agent_id",
+    []map[string]any{{"text": "text"}},
+    300,
+    map[string]any{},
 )
+if err != nil {
+    log.Fatal(err)
+}
 ```
 
 #### `agents_run_version`
@@ -277,26 +181,15 @@ resp, err := raw.AgentsRunAsyncManyWithBodyWithResponse(
 Run agent version synchronously
 
 ```go
-agentId := openapi_types.UUID("00000000-0000-0000-0000-000000000000") // required path agent_id
-agentVersionId := openapi_types.UUID("00000000-0000-0000-0000-000000000000") // required path agent_version_id
-
-params := &generated.AgentsRunVersionParams{
-    OrganizationId: &[]openapi_types.UUID{openapi_types.UUID("00000000-0000-0000-0000-000000000000")}[0], // optional query organization_id
-}
-// Optional body fields: metadata
-body := strings.NewReader(`{
-  "metadata": {}
-}`)
-contentType := "application/json"
-
-resp, err := raw.AgentsRunVersionWithBodyWithResponse(
-    ctx,
-    agentId,
-    agentVersionId,
-    params,
-    contentType,
-    body,
+result, err := client.Agents.RunVersionSync(
+    "agent_id",
+    "version_id",
+    map[string]any{"text": "text"},
+    map[string]any{},
 )
+if err != nil {
+    log.Fatal(err)
+}
 ```
 
 #### `agents_run_versions_async_create`
@@ -304,26 +197,16 @@ resp, err := raw.AgentsRunVersionWithBodyWithResponse(
 Run agent version asynchronously.
 
 ```go
-agentId := openapi_types.UUID("00000000-0000-0000-0000-000000000000") // required path agent_id
-agentVersionId := openapi_types.UUID("00000000-0000-0000-0000-000000000000") // required path agent_version_id
-
-params := &generated.AgentsRunVersionsAsyncCreateParams{
-    OrganizationId: &[]openapi_types.UUID{openapi_types.UUID("00000000-0000-0000-0000-000000000000")}[0], // optional query organization_id
-}
-// Optional body fields: metadata
-body := strings.NewReader(`{
-  "metadata": {}
-}`)
-contentType := "application/json"
-
-resp, err := raw.AgentsRunVersionsAsyncCreateWithBodyWithResponse(
-    ctx,
-    agentId,
-    agentVersionId,
-    params,
-    contentType,
-    body,
+job, err := client.Agents.RunVersion(
+    "agent_id",
+    "version_id",
+    300,
+    map[string]any{"text": "text"},
+    map[string]any{},
 )
+if err != nil {
+    log.Fatal(err)
+}
 ```
 
 #### `agents_destroy`
@@ -331,17 +214,12 @@ resp, err := raw.AgentsRunVersionsAsyncCreateWithBodyWithResponse(
 Delete a base agent.
 
 ```go
-agentId := openapi_types.UUID("00000000-0000-0000-0000-000000000000") // required path agent_id
-
-params := &generated.AgentsDestroyParams{
-    OrganizationId: &[]openapi_types.UUID{openapi_types.UUID("00000000-0000-0000-0000-000000000000")}[0], // optional query organization_id
-}
-
-resp, err := raw.AgentsDestroyWithResponse(
-    ctx,
-    agentId,
-    params,
+err := client.Agents.Delete(
+    "agentID",
 )
+if err != nil {
+    log.Fatal(err)
+}
 ```
 
 #### `agents_retrieve`
@@ -349,17 +227,12 @@ resp, err := raw.AgentsDestroyWithResponse(
 Retrieve an agent.
 
 ```go
-agentId := openapi_types.UUID("00000000-0000-0000-0000-000000000000") // required path agent_id
-
-params := &generated.AgentsRetrieveParams{
-    OrganizationId: &[]openapi_types.UUID{openapi_types.UUID("00000000-0000-0000-0000-000000000000")}[0], // optional query organization_id
-}
-
-resp, err := raw.AgentsRetrieveWithResponse(
-    ctx,
-    agentId,
-    params,
+result, err := client.Agents.Retrieve(
+    "agentID",
 )
+if err != nil {
+    log.Fatal(err)
+}
 ```
 
 #### `agents_partial_update`
@@ -394,26 +267,15 @@ resp, err := raw.AgentsPartialUpdateWithBodyWithResponse(
 Update a base agent.
 
 ```go
-agentId := openapi_types.UUID("00000000-0000-0000-0000-000000000000") // required path agent_id
-
-params := &generated.AgentsUpdateParams{
-    OrganizationId: &[]openapi_types.UUID{openapi_types.UUID("00000000-0000-0000-0000-000000000000")}[0], // optional query organization_id
-}
-// Optional body fields: name, disable_cache, cache_failed_jobs
-body := strings.NewReader(`{
-  "name": "name",
-  "disable_cache": true,
-  "cache_failed_jobs": true
-}`)
-contentType := "application/json"
-
-resp, err := raw.AgentsUpdateWithBodyWithResponse(
-    ctx,
-    agentId,
-    params,
-    contentType,
-    body,
+result, err := client.Agents.Update(
+    "agentID",
+    "name",
+    &[]bool{true}[0],
+    &[]bool{true}[0],
 )
+if err != nil {
+    log.Fatal(err)
+}
 ```
 
 #### `agents_duplicate_create`
@@ -421,17 +283,10 @@ resp, err := raw.AgentsUpdateWithBodyWithResponse(
 Duplicate an agent.
 
 ```go
-agentId := openapi_types.UUID("00000000-0000-0000-0000-000000000000") // required path agent_id
-
-params := &generated.AgentsDuplicateCreateParams{
-    OrganizationId: &[]openapi_types.UUID{openapi_types.UUID("00000000-0000-0000-0000-000000000000")}[0], // optional query organization_id
+result, err := client.Agents.Duplicate("agent_id")
+if err != nil {
+    log.Fatal(err)
 }
-
-resp, err := raw.AgentsDuplicateCreateWithResponse(
-    ctx,
-    agentId,
-    params,
-)
 ```
 
 #### `agents_jobs_cancel_all_create`
@@ -439,17 +294,12 @@ resp, err := raw.AgentsDuplicateCreateWithResponse(
 Cancel all agent jobs
 
 ```go
-agentId := openapi_types.UUID("00000000-0000-0000-0000-000000000000") // required path agent_id
-
-params := &generated.AgentsJobsCancelAllCreateParams{
-    OrganizationId: &[]openapi_types.UUID{openapi_types.UUID("00000000-0000-0000-0000-000000000000")}[0], // optional query organization_id
-}
-
-resp, err := raw.AgentsJobsCancelAllCreateWithResponse(
-    ctx,
-    agentId,
-    params,
+err := client.Agents.Jobs.CancelAll(
+    "agentID",
 )
+if err != nil {
+    log.Fatal(err)
+}
 ```
 
 #### `agents_versions_list`
@@ -457,17 +307,15 @@ resp, err := raw.AgentsJobsCancelAllCreateWithResponse(
 List agent versions.
 
 ```go
-agentId := openapi_types.UUID("00000000-0000-0000-0000-000000000000") // required path agent_id
+params := &roe.ListVersionsParams{Page: 1, PageSize: 10}
 
-params := &generated.AgentsVersionsListParams{
-    OrganizationId: &[]openapi_types.UUID{openapi_types.UUID("00000000-0000-0000-0000-000000000000")}[0], // optional query organization_id
-}
-
-resp, err := raw.AgentsVersionsListWithResponse(
-    ctx,
-    agentId,
+result, err := client.Agents.Versions.ListPaginated(
+    "agent_id",
     params,
 )
+if err != nil {
+    log.Fatal(err)
+}
 ```
 
 #### `agents_versions_create`
@@ -475,27 +323,16 @@ resp, err := raw.AgentsVersionsListWithResponse(
 Create a new agent version.
 
 ```go
-agentId := openapi_types.UUID("00000000-0000-0000-0000-000000000000") // required path agent_id
-
-params := &generated.AgentsVersionsCreateParams{
-    OrganizationId: &[]openapi_types.UUID{openapi_types.UUID("00000000-0000-0000-0000-000000000000")}[0], // optional query organization_id
-}
-// Optional body fields: version_name, description, input_definitions, engine_config
-body := strings.NewReader(`{
-  "version_name": "version_name",
-  "description": "description",
-  "input_definitions": "input_definitions",
-  "engine_config": "engine_config"
-}`)
-contentType := "application/json"
-
-resp, err := raw.AgentsVersionsCreateWithBodyWithResponse(
-    ctx,
-    agentId,
-    params,
-    contentType,
-    body,
+result, err := client.Agents.Versions.Create(
+    "agentID",
+    []map[string]any{{"key": "text", "data_type": "text/plain"}},
+    map[string]any{"model": "gpt-4.1"},
+    "versionName",
+    "description",
 )
+if err != nil {
+    log.Fatal(err)
+}
 ```
 
 #### `agents_versions_current_retrieve`
@@ -503,18 +340,15 @@ resp, err := raw.AgentsVersionsCreateWithBodyWithResponse(
 Retrieve the current version of an agent.
 
 ```go
-agentId := openapi_types.UUID("00000000-0000-0000-0000-000000000000") // required path agent_id
+getSupportsEval := true
 
-params := &generated.AgentsVersionsCurrentRetrieveParams{
-    GetSupportsEval: &[]bool{true}[0], // optional query get_supports_eval
-    OrganizationId: &[]openapi_types.UUID{openapi_types.UUID("00000000-0000-0000-0000-000000000000")}[0], // optional query organization_id
-}
-
-resp, err := raw.AgentsVersionsCurrentRetrieveWithResponse(
-    ctx,
-    agentId,
-    params,
+result, err := client.Agents.Versions.RetrieveCurrentWithEval(
+    "agent_id",
+    &getSupportsEval,
 )
+if err != nil {
+    log.Fatal(err)
+}
 ```
 
 #### `agents_versions_destroy`
@@ -522,19 +356,13 @@ resp, err := raw.AgentsVersionsCurrentRetrieveWithResponse(
 Delete an agent version.
 
 ```go
-agentId := openapi_types.UUID("00000000-0000-0000-0000-000000000000") // required path agent_id
-agentVersionId := openapi_types.UUID("00000000-0000-0000-0000-000000000000") // required path agent_version_id
-
-params := &generated.AgentsVersionsDestroyParams{
-    OrganizationId: &[]openapi_types.UUID{openapi_types.UUID("00000000-0000-0000-0000-000000000000")}[0], // optional query organization_id
-}
-
-resp, err := raw.AgentsVersionsDestroyWithResponse(
-    ctx,
-    agentId,
-    agentVersionId,
-    params,
+err := client.Agents.Versions.Delete(
+    "agentID",
+    "versionID",
 )
+if err != nil {
+    log.Fatal(err)
+}
 ```
 
 #### `agents_versions_retrieve`
@@ -542,20 +370,14 @@ resp, err := raw.AgentsVersionsDestroyWithResponse(
 Retrieve an agent version.
 
 ```go
-agentId := openapi_types.UUID("00000000-0000-0000-0000-000000000000") // required path agent_id
-agentVersionId := openapi_types.UUID("00000000-0000-0000-0000-000000000000") // required path agent_version_id
-
-params := &generated.AgentsVersionsRetrieveParams{
-    GetSupportsEval: &[]bool{true}[0], // optional query get_supports_eval
-    OrganizationId: &[]openapi_types.UUID{openapi_types.UUID("00000000-0000-0000-0000-000000000000")}[0], // optional query organization_id
-}
-
-resp, err := raw.AgentsVersionsRetrieveWithResponse(
-    ctx,
-    agentId,
-    agentVersionId,
-    params,
+result, err := client.Agents.Versions.Retrieve(
+    "agentID",
+    "versionID",
+    &[]bool{true}[0],
 )
+if err != nil {
+    log.Fatal(err)
+}
 ```
 
 #### `agents_versions_partial_update`
@@ -591,27 +413,15 @@ resp, err := raw.AgentsVersionsPartialUpdateWithBodyWithResponse(
 Update an agent version.
 
 ```go
-agentId := openapi_types.UUID("00000000-0000-0000-0000-000000000000") // required path agent_id
-agentVersionId := openapi_types.UUID("00000000-0000-0000-0000-000000000000") // required path agent_version_id
-
-params := &generated.AgentsVersionsUpdateParams{
-    OrganizationId: &[]openapi_types.UUID{openapi_types.UUID("00000000-0000-0000-0000-000000000000")}[0], // optional query organization_id
-}
-// Optional body fields: version_name, description
-body := strings.NewReader(`{
-  "version_name": "version_name",
-  "description": "description"
-}`)
-contentType := "application/json"
-
-resp, err := raw.AgentsVersionsUpdateWithBodyWithResponse(
-    ctx,
-    agentId,
-    agentVersionId,
-    params,
-    contentType,
-    body,
+err := client.Agents.Versions.Update(
+    "agentID",
+    "versionID",
+    "versionName",
+    "description",
 )
+if err != nil {
+    log.Fatal(err)
+}
 ```
 
 ### Connections
@@ -826,14 +636,12 @@ resp, err := raw.ConnectorsRetrieveByTypeWithResponse(
 List supported model IDs
 
 ```go
-params := &generated.DiscoverySupportedModelsListParams{
-    Capability: &[]string{"capability"}[0], // optional query capability
-}
-
-resp, err := raw.DiscoverySupportedModelsListWithResponse(
-    ctx,
-    params,
+result, err := client.Discovery.ListSupportedModels(
+    "capability",
 )
+if err != nil {
+    log.Fatal(err)
+}
 ```
 
 #### `discovery_agent_engine_types_list`
@@ -841,9 +649,11 @@ resp, err := raw.DiscoverySupportedModelsListWithResponse(
 List supported agent engine types
 
 ```go
-resp, err := raw.DiscoveryAgentEngineTypesListWithResponse(
-    ctx,
+result, err := client.Discovery.ListAgentEngineTypes(
 )
+if err != nil {
+    log.Fatal(err)
+}
 ```
 
 ### Policies
@@ -853,18 +663,13 @@ resp, err := raw.DiscoveryAgentEngineTypesListWithResponse(
 List all policies and create a new policy.
 
 ```go
-params := &generated.PoliciesListParams{
-    Ordering: &[]string{"ordering"}[0], // optional query ordering
-    Page: &[]int{1}[0], // optional query page
-    PageSize: &[]int{1}[0], // optional query page_size
-    Search: &[]string{"search"}[0], // optional query search
-    OrganizationId: &[]openapi_types.UUID{openapi_types.UUID("00000000-0000-0000-0000-000000000000")}[0], // optional query organization_id
-}
-
-resp, err := raw.PoliciesListWithResponse(
-    ctx,
-    params,
+result, err := client.Policies.List(
+    1,
+    1,
 )
+if err != nil {
+    log.Fatal(err)
+}
 ```
 
 #### `policies_create`
@@ -872,25 +677,15 @@ resp, err := raw.PoliciesListWithResponse(
 List all policies and create a new policy.
 
 ```go
-params := &generated.PoliciesCreateParams{
-    OrganizationId: &[]openapi_types.UUID{openapi_types.UUID("00000000-0000-0000-0000-000000000000")}[0], // optional query organization_id
-}
-// Required body fields: name, content
-// Optional body fields: description, version_name
-body := strings.NewReader(`{
-  "name": "name",
-  "description": "description",
-  "content": "content",
-  "version_name": "version_name"
-}`)
-contentType := "application/json"
-
-resp, err := raw.PoliciesCreateWithBodyWithResponse(
-    ctx,
-    params,
-    contentType,
-    body,
+result, err := client.Policies.Create(
+    "name",
+    map[string]any{},
+    "description",
+    "versionName",
 )
+if err != nil {
+    log.Fatal(err)
+}
 ```
 
 #### `policies_destroy`
@@ -898,17 +693,12 @@ resp, err := raw.PoliciesCreateWithBodyWithResponse(
 Retrieve, update, or delete a single policy by ID.
 
 ```go
-id := openapi_types.UUID("00000000-0000-0000-0000-000000000000") // required path id
-
-params := &generated.PoliciesDestroyParams{
-    OrganizationId: &[]openapi_types.UUID{openapi_types.UUID("00000000-0000-0000-0000-000000000000")}[0], // optional query organization_id
-}
-
-resp, err := raw.PoliciesDestroyWithResponse(
-    ctx,
-    id,
-    params,
+err := client.Policies.Delete(
+    "policyID",
 )
+if err != nil {
+    log.Fatal(err)
+}
 ```
 
 #### `policies_retrieve`
@@ -916,17 +706,12 @@ resp, err := raw.PoliciesDestroyWithResponse(
 Retrieve, update, or delete a single policy by ID.
 
 ```go
-id := openapi_types.UUID("00000000-0000-0000-0000-000000000000") // required path id
-
-params := &generated.PoliciesRetrieveParams{
-    OrganizationId: &[]openapi_types.UUID{openapi_types.UUID("00000000-0000-0000-0000-000000000000")}[0], // optional query organization_id
-}
-
-resp, err := raw.PoliciesRetrieveWithResponse(
-    ctx,
-    id,
-    params,
+result, err := client.Policies.Retrieve(
+    "policyID",
 )
+if err != nil {
+    log.Fatal(err)
+}
 ```
 
 #### `policies_partial_update`
@@ -934,25 +719,14 @@ resp, err := raw.PoliciesRetrieveWithResponse(
 Retrieve, update, or delete a single policy by ID.
 
 ```go
-id := openapi_types.UUID("00000000-0000-0000-0000-000000000000") // required path id
-
-params := &generated.PoliciesPartialUpdateParams{
-    OrganizationId: &[]openapi_types.UUID{openapi_types.UUID("00000000-0000-0000-0000-000000000000")}[0], // optional query organization_id
-}
-// Optional body fields: name, description
-body := strings.NewReader(`{
-  "name": "name",
-  "description": "description"
-}`)
-contentType := "application/json"
-
-resp, err := raw.PoliciesPartialUpdateWithBodyWithResponse(
-    ctx,
-    id,
-    params,
-    contentType,
-    body,
+result, err := client.Policies.Update(
+    "policyID",
+    &[]string{"value"}[0],
+    &[]string{"value"}[0],
 )
+if err != nil {
+    log.Fatal(err)
+}
 ```
 
 #### `policies_update`
@@ -987,19 +761,10 @@ resp, err := raw.PoliciesUpdateWithBodyWithResponse(
 Create a new policy version or list all versions of a specific policy.
 
 ```go
-policyId := openapi_types.UUID("00000000-0000-0000-0000-000000000000") // required path policy_id
-
-params := &generated.PoliciesVersionsListParams{
-    Page: &[]int{1}[0], // optional query page
-    PageSize: &[]int{1}[0], // optional query page_size
-    OrganizationId: &[]openapi_types.UUID{openapi_types.UUID("00000000-0000-0000-0000-000000000000")}[0], // optional query organization_id
+result, err := client.Policies.Versions.List("policy_id")
+if err != nil {
+    log.Fatal(err)
 }
-
-resp, err := raw.PoliciesVersionsListWithResponse(
-    ctx,
-    policyId,
-    params,
-)
 ```
 
 #### `policies_versions_create`
@@ -1007,27 +772,15 @@ resp, err := raw.PoliciesVersionsListWithResponse(
 Create a new policy version or list all versions of a specific policy.
 
 ```go
-policyId := openapi_types.UUID("00000000-0000-0000-0000-000000000000") // required path policy_id
-
-params := &generated.PoliciesVersionsCreateParams{
-    OrganizationId: &[]openapi_types.UUID{openapi_types.UUID("00000000-0000-0000-0000-000000000000")}[0], // optional query organization_id
-}
-// Required body fields: content
-// Optional body fields: version_name, base_version_id
-body := strings.NewReader(`{
-  "version_name": "version_name",
-  "content": "content",
-  "base_version_id": "00000000-0000-0000-0000-000000000000"
-}`)
-contentType := "application/json"
-
-resp, err := raw.PoliciesVersionsCreateWithBodyWithResponse(
-    ctx,
-    policyId,
-    params,
-    contentType,
-    body,
+result, err := client.Policies.Versions.Create(
+    "policy_id",
+    map[string]any{},
+    "version_name",
+    "base_version_id",
 )
+if err != nil {
+    log.Fatal(err)
+}
 ```
 
 #### `policies_versions_retrieve`
@@ -1035,19 +788,13 @@ resp, err := raw.PoliciesVersionsCreateWithBodyWithResponse(
 Get a specific policy version by policy_id and version_id.
 
 ```go
-policyId := openapi_types.UUID("00000000-0000-0000-0000-000000000000") // required path policy_id
-versionId := openapi_types.UUID("00000000-0000-0000-0000-000000000000") // required path version_id
-
-params := &generated.PoliciesVersionsRetrieveParams{
-    OrganizationId: &[]openapi_types.UUID{openapi_types.UUID("00000000-0000-0000-0000-000000000000")}[0], // optional query organization_id
-}
-
-resp, err := raw.PoliciesVersionsRetrieveWithResponse(
-    ctx,
-    policyId,
-    versionId,
-    params,
+result, err := client.Policies.Versions.Retrieve(
+    "policy_id",
+    "version_id",
 )
+if err != nil {
+    log.Fatal(err)
+}
 ```
 
 ### Tables
@@ -1144,43 +891,16 @@ resp, err := raw.TablesPreviewRetrieveWithResponse(
 Upload a CSV as a Roe table
 
 ```go
-var body bytes.Buffer
-writer := multipart.NewWriter(&body)
-// required body field table_name
-if err := writer.WriteField("table_name", "table_name"); err != nil {
-    panic(err)
-}
-// required body field file
-fileReader, err := os.Open("file.csv")
-if err != nil {
-    panic(err)
-}
-defer fileReader.Close()
-fileWriter, err := writer.CreateFormFile("file", "file.csv")
-if err != nil {
-    panic(err)
-}
-if _, err = io.Copy(fileWriter, fileReader); err != nil {
-    panic(err)
-}
-// optional body field with_headers
-if err := writer.WriteField("with_headers", "true"); err != nil {
-    panic(err)
-}
-// optional body field organization_id
-if err := writer.WriteField("organization_id", "00000000-0000-0000-0000-000000000000"); err != nil {
-    panic(err)
-}
-if err := writer.Close(); err != nil {
-    panic(err)
-}
-contentType := writer.FormDataContentType()
+file := roe.FileUpload{Path: "file.csv"}
 
-resp, err := raw.UploadTableWithBodyWithResponse(
-    ctx,
-    contentType,
-    &body,
+result, err := client.Tables.Upload(
+    "table_name",
+    file,
+    true,
 )
+if err != nil {
+    log.Fatal(err)
+}
 ```
 
 ### Users
