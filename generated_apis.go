@@ -3,12 +3,12 @@ package roe
 
 type generatedAPIs struct {
 	Discovery *DiscoveryAPI
-	Tables *TablesAPI
+	Tables    *TablesAPI
 }
 
 func newGeneratedAPIs(cfg Config, httpClient *httpClient) *generatedAPIs {
 	return &generatedAPIs{
 		Discovery: newDiscoveryAPI(cfg, httpClient),
-		Tables: newTablesAPI(cfg, httpClient),
+		Tables:    newTablesAPI(cfg, httpClient),
 	}
 }
