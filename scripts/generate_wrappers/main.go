@@ -37,17 +37,20 @@ type apiSpec struct {
 }
 
 type operation struct {
-	Kind       string      `yaml:"kind"`
-	MethodName string      `yaml:"method_name"`
-	Docstring  string      `yaml:"docstring"`
-	Path       string      `yaml:"path"`
-	ReturnType string      `yaml:"return_type"`
-	BodyType   string      `yaml:"body_type"`
-	Parameters []parameter `yaml:"parameters"`
+	Kind                 string      `yaml:"kind"`
+	Method               string      `yaml:"method"`
+	MethodName           string      `yaml:"method_name"`
+	Docstring            string      `yaml:"docstring"`
+	Path                 string      `yaml:"path"`
+	ReturnType           string      `yaml:"return_type"`
+	BodyType             string      `yaml:"body_type"`
+	InjectOrganizationID bool        `yaml:"inject_organization_id"`
+	Parameters           []parameter `yaml:"parameters"`
 }
 
 type parameter struct {
 	Name          string `yaml:"name"`
+	Location      string `yaml:"location"`
 	WireName      string `yaml:"wire_name"`
 	GoType        string `yaml:"go_type"`
 	Optional      bool   `yaml:"optional"`
@@ -178,7 +181,7 @@ func isGeneratedAPI(apiName string, api apiSpec) bool {
 
 func isGeneratedOperation(op operation) bool {
 	switch kind(op.Kind) {
-	case "simple", "table_upload":
+	case "body", "simple", "table_upload":
 		return true
 	default:
 		return false
@@ -216,6 +219,8 @@ func writeAPI(root, modulePath, apiName string, api apiSpec) {
 			renderSimpleOperation(&buf, api.StructName, operation)
 		case "table_upload":
 			renderTableUploadOperation(&buf, api.StructName, operation)
+		case "body":
+			renderBodyOperation(&buf, api.StructName, operation)
 		default:
 			must(fmt.Errorf("%s.%s has unsupported kind %q", apiName, operation.MethodName, operation.Kind))
 		}
@@ -242,7 +247,7 @@ func renderSimpleOperation(buf *bytes.Buffer, receiver string, op operation) {
 		fmt.Fprintf(buf, ", %s %s", param.Name, param.GoType)
 	}
 	fmt.Fprintf(buf, ") (%s, error) {\n", op.ReturnType)
-	writeQueryMap(buf, op.Parameters)
+	writeQueryMap(buf, op.Parameters, false)
 	fmt.Fprintf(buf, "\tvar resp %s\n", op.ReturnType)
 	fmt.Fprintf(buf, "\tif err := a.httpClient.getWithContext(ctx, %q, query, &resp); err != nil {\n", op.Path)
 	fmt.Fprintf(buf, "\t\treturn %s{}, err\n", op.ReturnType)
@@ -273,8 +278,58 @@ func renderTableUploadOperation(buf *bytes.Buffer, receiver string, op operation
 	buf.WriteString("}\n")
 }
 
-func writeQueryMap(buf *bytes.Buffer, params []parameter) {
+func renderBodyOperation(buf *bytes.Buffer, receiver string, op operation) {
+	params := goParams(op.Parameters)
+	callArgs := goParamNames(op.Parameters)
+	if callArgs != "" {
+		callArgs = ", " + callArgs
+	}
+	returns := "error"
+	if op.ReturnType != "" {
+		returns = fmt.Sprintf("(%s, error)", op.ReturnType)
+	}
+
+	fmt.Fprintf(buf, "// %s %s\n", op.MethodName, sentence(op.Docstring))
+	fmt.Fprintf(buf, "func (a *%s) %s(%s) %s {\n", receiver, op.MethodName, params, returns)
+	fmt.Fprintf(buf, "\treturn a.%sWithContext(context.Background()%s)\n", op.MethodName, callArgs)
+	buf.WriteString("}\n\n")
+
+	fmt.Fprintf(buf, "// %sWithContext %s\n", op.MethodName, sentence(op.Docstring))
+	fmt.Fprintf(buf, "func (a *%s) %sWithContext(ctx context.Context", receiver, op.MethodName)
+	for _, param := range op.Parameters {
+		fmt.Fprintf(buf, ", %s %s", param.Name, param.GoType)
+	}
+	fmt.Fprintf(buf, ") %s {\n", returns)
+
+	pathExpr := operationPathExpression(op)
+	queryParams := paramsByLocation(op.Parameters, "query")
+	writeQueryMap(buf, queryParams, op.InjectOrganizationID)
+	bodyParams := paramsByLocation(op.Parameters, "body")
+	hasBody := len(bodyParams) > 0
+	if hasBody {
+		writeBodyMap(buf, bodyParams)
+	}
+
+	if op.ReturnType != "" {
+		fmt.Fprintf(buf, "\tvar resp %s\n", op.ReturnType)
+	}
+	call := httpCall(op, pathExpr, hasBody)
+	if op.ReturnType != "" {
+		fmt.Fprintf(buf, "\tif err := %s; err != nil {\n", call)
+		fmt.Fprintf(buf, "\t\treturn %s, err\n", zeroValue(op.ReturnType))
+		buf.WriteString("\t}\n")
+		buf.WriteString("\treturn resp, nil\n")
+	} else {
+		fmt.Fprintf(buf, "\treturn %s\n", call)
+	}
+	buf.WriteString("}\n")
+}
+
+func writeQueryMap(buf *bytes.Buffer, params []parameter, injectOrganizationID bool) {
 	buf.WriteString("\tquery := map[string]string{}\n")
+	if injectOrganizationID {
+		buf.WriteString("\tquery[\"organization_id\"] = a.cfg.OrganizationID\n")
+	}
 	for _, param := range params {
 		wireName := param.WireName
 		if wireName == "" {
@@ -292,12 +347,106 @@ func writeQueryMap(buf *bytes.Buffer, params []parameter) {
 	}
 }
 
+func writeBodyMap(buf *bytes.Buffer, params []parameter) {
+	buf.WriteString("\tpayload := map[string]any{}\n")
+	for _, param := range params {
+		wireName := param.WireName
+		if wireName == "" {
+			wireName = param.Name
+		}
+		if param.OmitWhenEmpty {
+			condition, err := omitWhenEmptyCondition(param)
+			must(err)
+			fmt.Fprintf(buf, "\tif %s {\n", condition)
+			fmt.Fprintf(buf, "\t\tpayload[%q] = %s\n", wireName, param.Name)
+			buf.WriteString("\t}\n")
+		} else {
+			fmt.Fprintf(buf, "\tpayload[%q] = %s\n", wireName, param.Name)
+		}
+	}
+}
+
+func httpCall(op operation, pathExpr string, hasBody bool) string {
+	outArg := "nil"
+	if op.ReturnType != "" {
+		outArg = "&resp"
+	}
+	switch strings.ToUpper(op.Method) {
+	case "GET":
+		return fmt.Sprintf("a.httpClient.getWithContext(ctx, %s, query, %s)", pathExpr, outArg)
+	case "POST":
+		bodyArg := "nil"
+		if hasBody {
+			bodyArg = "payload"
+		}
+		return fmt.Sprintf("a.httpClient.postJSONWithContext(ctx, %s, %s, query, %s)", pathExpr, bodyArg, outArg)
+	case "PATCH":
+		bodyArg := "nil"
+		if hasBody {
+			bodyArg = "payload"
+		}
+		return fmt.Sprintf("a.httpClient.patchJSONWithContext(ctx, %s, %s, query, %s)", pathExpr, bodyArg, outArg)
+	case "PUT":
+		bodyArg := "nil"
+		if hasBody {
+			bodyArg = "payload"
+		}
+		return fmt.Sprintf("a.httpClient.putJSONWithContext(ctx, %s, %s, query, %s)", pathExpr, bodyArg, outArg)
+	case "DELETE":
+		return fmt.Sprintf("a.httpClient.deleteWithContext(ctx, %s, query)", pathExpr)
+	default:
+		must(fmt.Errorf("%s has unsupported HTTP method %q", op.MethodName, op.Method))
+		return ""
+	}
+}
+
+func operationPathExpression(op operation) string {
+	pathParams := paramsByLocation(op.Parameters, "path")
+	if len(pathParams) == 0 {
+		return fmt.Sprintf("%q", op.Path)
+	}
+	path := op.Path
+	args := make([]string, 0, len(pathParams))
+	for _, param := range pathParams {
+		wireName := param.WireName
+		if wireName == "" {
+			wireName = param.Name
+		}
+		path = strings.ReplaceAll(path, "{"+wireName+"}", "%s")
+		args = append(args, param.Name)
+	}
+	return fmt.Sprintf("fmt.Sprintf(%q, %s)", path, strings.Join(args, ", "))
+}
+
+func paramsByLocation(params []parameter, location string) []parameter {
+	out := make([]parameter, 0, len(params))
+	for _, param := range params {
+		paramLocation := param.Location
+		if paramLocation == "" {
+			paramLocation = "query"
+		}
+		if paramLocation == location {
+			out = append(out, param)
+		}
+	}
+	return out
+}
+
+func zeroValue(returnType string) string {
+	if strings.HasPrefix(returnType, "[]") {
+		return "nil"
+	}
+	return returnType + "{}"
+}
+
 func omitWhenEmptyCondition(param parameter) (string, error) {
 	switch param.GoType {
 	case "string":
 		return fmt.Sprintf("%s != \"\"", param.Name), nil
 	case "bool":
 		return param.Name, nil
+	case "map[string]any":
+		return fmt.Sprintf("len(%s) > 0", param.Name), nil
 	case "int", "int8", "int16", "int32", "int64",
 		"uint", "uint8", "uint16", "uint32", "uint64", "uintptr",
 		"float32", "float64":
@@ -309,8 +458,10 @@ func omitWhenEmptyCondition(param parameter) (string, error) {
 
 func apiNeedsFmt(api apiSpec) bool {
 	for _, op := range api.Operations {
-		if len(op.Parameters) > 0 {
-			return true
+		for _, param := range op.Parameters {
+			if param.Location == "path" || param.Location == "query" || param.Location == "" {
+				return true
+			}
 		}
 	}
 	return false

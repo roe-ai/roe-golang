@@ -27,14 +27,97 @@ apis:
   tables:
     struct_name: TablesAPI
     field_name: Tables
-    docstring: API for uploading CSV files into Roe tables.
+    docstring: API for managing Roe tables.
     operations:
+    - kind: body
+      method_name: List
+      docstring: List Roe tables.
+      method: GET
+      path: /v1/tables/
+      return_type: generated.TableListResponse
     - kind: table_upload
       method_name: Upload
       docstring: Upload a CSV file and create a Roe table.
       path: /v1/tables/upload/
       return_type: generated.TableUploadResponse
       body_type: generated.TableUploadRequest
+    - kind: body
+      method_name: Query
+      docstring: Run a read-only query against Roe tables.
+      method: POST
+      path: /v1/tables/query/
+      return_type: generated.TableQuerySubmitResponse
+      body_type: generated.TableQueryRequest
+      parameters:
+      - name: sql
+        location: body
+        wire_name: sql
+        go_type: string
+        optional: false
+        omit_when_empty: false
+      - name: limit
+        location: body
+        wire_name: limit
+        go_type: int
+        optional: true
+        omit_when_empty: true
+    - kind: body
+      method_name: QueryResult
+      docstring: Get the result for a submitted table query.
+      method: GET
+      path: /v1/tables/query/{table_query_id}/result/
+      return_type: generated.TableQueryResultResponse
+      parameters:
+      - name: tableQueryID
+        location: path
+        wire_name: table_query_id
+        go_type: string
+        optional: false
+        omit_when_empty: false
+    - kind: body
+      method_name: Describe
+      docstring: Describe a Roe table.
+      method: GET
+      path: /v1/tables/{table_name}/describe/
+      return_type: generated.TableDescribeResponse
+      parameters:
+      - name: tableName
+        location: path
+        wire_name: table_name
+        go_type: string
+        optional: false
+        omit_when_empty: false
+    - kind: body
+      method_name: Preview
+      docstring: Preview rows from a Roe table.
+      method: GET
+      path: /v1/tables/{table_name}/preview/
+      return_type: generated.TablePreviewResponse
+      parameters:
+      - name: tableName
+        location: path
+        wire_name: table_name
+        go_type: string
+        optional: false
+        omit_when_empty: false
+      - name: limit
+        location: query
+        wire_name: limit
+        go_type: int
+        optional: true
+        omit_when_empty: true
+    - kind: body
+      method_name: Delete
+      docstring: Delete a Roe table.
+      method: DELETE
+      path: /v1/tables/{table_name}/
+      parameters:
+      - name: tableName
+        location: path
+        wire_name: table_name
+        go_type: string
+        optional: false
+        omit_when_empty: false
   agents:
     struct_name: AgentsAPI
     field_name: Agents
@@ -113,7 +196,34 @@ apis:
         omit_when_empty: true
     - kind: body
       method_name: Update
-      docstring: updates an agent.
+      docstring: updates mutable fields of an agent.
+      method: PATCH
+      path: /v1/agents/{agent_id}/
+      return_type: BaseAgent
+      set_api_hook: scalar
+      parameters:
+      - name: agentID
+        location: path
+        go_type: string
+      - name: name
+        location: body
+        wire_name: name
+        go_type: string
+        optional: true
+        omit_when_empty: true
+      - name: disableCache
+        location: body
+        wire_name: disable_cache
+        go_type: '*bool'
+        optional: true
+      - name: cacheFailedJobs
+        location: body
+        wire_name: cache_failed_jobs
+        go_type: '*bool'
+        optional: true
+    - kind: body
+      method_name: Replace
+      docstring: replaces an agent.
       method: PUT
       path: /v1/agents/{agent_id}/
       return_type: BaseAgent
@@ -258,6 +368,30 @@ apis:
         - kind: body
           method_name: Update
           docstring: ''
+          method: PATCH
+          path: /v1/agents/{agent_id}/versions/{agent_version_id}/
+          parameters:
+          - name: agentID
+            location: path
+            go_type: string
+          - name: versionID
+            location: path
+            go_type: string
+          - name: versionName
+            location: body
+            wire_name: version_name
+            go_type: string
+            optional: true
+            omit_when_empty: true
+          - name: description
+            location: body
+            wire_name: description
+            go_type: string
+            optional: true
+            omit_when_empty: true
+        - kind: body
+          method_name: Replace
+          docstring: replaces an agent version.
           method: PUT
           path: /v1/agents/{agent_id}/versions/{agent_version_id}/
           parameters:
@@ -371,6 +505,251 @@ apis:
           docstring: ''
           method: GET
           path: /v1/agents/jobs/{agent_job_id}/references/{resource_id}/
+  connections:
+    struct_name: ConnectionsAPI
+    field_name: Connections
+    docstring: API for managing external data connections.
+    operations:
+    - kind: body
+      method_name: List
+      docstring: List connections.
+      method: GET
+      path: /v1/connections/
+      return_type: generated.PaginatedConnectionListList
+      inject_organization_id: true
+      parameters:
+      - name: connectorType
+        location: query
+        wire_name: connector_type
+        go_type: string
+        optional: true
+        omit_when_empty: true
+      - name: search
+        location: query
+        wire_name: search
+        go_type: string
+        optional: true
+        omit_when_empty: true
+      - name: page
+        location: query
+        wire_name: page
+        go_type: int
+        optional: true
+        omit_when_empty: true
+      - name: pageSize
+        location: query
+        wire_name: page_size
+        go_type: int
+        optional: true
+        omit_when_empty: true
+    - kind: body
+      method_name: Create
+      docstring: Create a connection.
+      method: POST
+      path: /v1/connections/
+      return_type: generated.Connection
+      body_type: generated.CreateConnectionRequest
+      inject_organization_id: true
+      parameters:
+      - name: connectorType
+        location: body
+        wire_name: connector_type
+        go_type: string
+        optional: false
+        omit_when_empty: false
+      - name: name
+        location: body
+        wire_name: name
+        go_type: string
+        optional: false
+        omit_when_empty: false
+      - name: config
+        location: body
+        wire_name: config
+        go_type: map[string]any
+        optional: false
+        omit_when_empty: false
+      - name: description
+        location: body
+        wire_name: description
+        go_type: string
+        optional: true
+        omit_when_empty: true
+      - name: authConfig
+        location: body
+        wire_name: auth_config
+        go_type: map[string]any
+        optional: true
+        omit_when_empty: true
+    - kind: body
+      method_name: TestCredentials
+      docstring: Test connection credentials without saving a connection.
+      method: POST
+      path: /v1/connections/test-credentials/
+      return_type: generated.TestConnection
+      body_type: generated.TestConnectionCredentialsRequest
+      parameters:
+      - name: connectorType
+        location: body
+        wire_name: connector_type
+        go_type: string
+        optional: false
+        omit_when_empty: false
+      - name: config
+        location: body
+        wire_name: config
+        go_type: map[string]any
+        optional: false
+        omit_when_empty: false
+      - name: authConfig
+        location: body
+        wire_name: auth_config
+        go_type: map[string]any
+        optional: true
+        omit_when_empty: true
+    - kind: body
+      method_name: Retrieve
+      docstring: Retrieve a connection.
+      method: GET
+      path: /v1/connections/{id}/
+      return_type: generated.Connection
+      inject_organization_id: true
+      parameters:
+      - name: connectionID
+        location: path
+        wire_name: id
+        go_type: string
+        optional: false
+        omit_when_empty: false
+    - kind: body
+      method_name: Update
+      docstring: Update mutable connection fields.
+      method: PATCH
+      path: /v1/connections/{id}/
+      return_type: generated.Connection
+      body_type: generated.PatchedUpdateConnectionRequest
+      inject_organization_id: true
+      parameters:
+      - name: connectionID
+        location: path
+        wire_name: id
+        go_type: string
+        optional: false
+        omit_when_empty: false
+      - name: name
+        location: body
+        wire_name: name
+        go_type: string
+        optional: true
+        omit_when_empty: true
+      - name: description
+        location: body
+        wire_name: description
+        go_type: string
+        optional: true
+        omit_when_empty: true
+      - name: config
+        location: body
+        wire_name: config
+        go_type: map[string]any
+        optional: true
+        omit_when_empty: true
+      - name: authConfig
+        location: body
+        wire_name: auth_config
+        go_type: map[string]any
+        optional: true
+        omit_when_empty: true
+    - kind: body
+      method_name: Replace
+      docstring: Replace a connection.
+      method: PUT
+      path: /v1/connections/{id}/
+      return_type: generated.Connection
+      body_type: generated.UpdateConnectionRequest
+      inject_organization_id: true
+      parameters:
+      - name: connectionID
+        location: path
+        wire_name: id
+        go_type: string
+        optional: false
+        omit_when_empty: false
+      - name: name
+        location: body
+        wire_name: name
+        go_type: string
+        optional: true
+        omit_when_empty: true
+      - name: description
+        location: body
+        wire_name: description
+        go_type: string
+        optional: true
+        omit_when_empty: true
+      - name: config
+        location: body
+        wire_name: config
+        go_type: map[string]any
+        optional: true
+        omit_when_empty: true
+      - name: authConfig
+        location: body
+        wire_name: auth_config
+        go_type: map[string]any
+        optional: true
+        omit_when_empty: true
+    - kind: body
+      method_name: Delete
+      docstring: Delete a connection.
+      method: DELETE
+      path: /v1/connections/{id}/
+      inject_organization_id: true
+      parameters:
+      - name: connectionID
+        location: path
+        wire_name: id
+        go_type: string
+        optional: false
+        omit_when_empty: false
+    - kind: body
+      method_name: Test
+      docstring: Test a saved connection.
+      method: POST
+      path: /v1/connections/{id}/test/
+      return_type: generated.TestConnection
+      inject_organization_id: true
+      parameters:
+      - name: connectionID
+        location: path
+        wire_name: id
+        go_type: string
+        optional: false
+        omit_when_empty: false
+  connectors:
+    struct_name: ConnectorsAPI
+    field_name: Connectors
+    docstring: API for discovering available connector types.
+    operations:
+    - kind: body
+      method_name: List
+      docstring: List available connector types.
+      method: GET
+      path: /v1/connectors/
+      return_type: generated.ConnectorListResponse
+    - kind: body
+      method_name: Retrieve
+      docstring: Retrieve metadata for a connector type.
+      method: GET
+      path: /v1/connectors/{connector_type}/
+      return_type: generated.ConnectorMetadata
+      parameters:
+      - name: connectorType
+        location: path
+        wire_name: connector_type
+        go_type: string
+        optional: false
+        omit_when_empty: false
   policies:
     struct_name: PoliciesAPI
     field_name: Policies
@@ -455,6 +834,27 @@ apis:
         go_type: '*string'
         optional: true
     - kind: body
+      method_name: Replace
+      docstring: replaces a policy.
+      method: PUT
+      path: /v1/policies/{id}/
+      return_type: Policy
+      parameters:
+      - name: policyID
+        location: path
+        go_type: string
+        validate_nonempty: true
+      - name: name
+        location: body
+        wire_name: name
+        go_type: string
+      - name: description
+        location: body
+        wire_name: description
+        go_type: string
+        optional: true
+        omit_when_empty: true
+    - kind: body
       method_name: Delete
       docstring: removes a policy and all its versions.
       method: DELETE
@@ -519,3 +919,13 @@ apis:
             go_type: string
             optional: true
             omit_when_empty: true
+  users:
+    struct_name: UsersAPI
+    field_name: Users
+    docstring: API for user account information.
+    operations:
+    - kind: manual
+      method_name: Me
+      docstring: retrieves the currently authenticated user.
+      method: GET
+      path: /v1/users/current_user/

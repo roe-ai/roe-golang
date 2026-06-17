@@ -94,13 +94,27 @@ func (a *AgentsAPI) CreateWithContext(ctx context.Context, name, engineClassID s
 	return resp, nil
 }
 
-// Update updates an agent.
+// Update updates mutable fields on an agent.
 func (a *AgentsAPI) Update(agentID string, name string, disableCache, cacheFailedJobs *bool) (BaseAgent, error) {
 	return a.UpdateWithContext(context.Background(), agentID, name, disableCache, cacheFailedJobs)
 }
 
-// UpdateWithContext updates an agent with a caller-supplied context.
+// UpdateWithContext updates mutable fields on an agent with a caller-supplied context.
 func (a *AgentsAPI) UpdateWithContext(ctx context.Context, agentID string, name string, disableCache, cacheFailedJobs *bool) (BaseAgent, error) {
+	return a.updateWithContext(ctx, "PATCH", agentID, name, disableCache, cacheFailedJobs)
+}
+
+// Replace replaces an agent.
+func (a *AgentsAPI) Replace(agentID string, name string, disableCache, cacheFailedJobs *bool) (BaseAgent, error) {
+	return a.ReplaceWithContext(context.Background(), agentID, name, disableCache, cacheFailedJobs)
+}
+
+// ReplaceWithContext replaces an agent with a caller-supplied context.
+func (a *AgentsAPI) ReplaceWithContext(ctx context.Context, agentID string, name string, disableCache, cacheFailedJobs *bool) (BaseAgent, error) {
+	return a.updateWithContext(ctx, "PUT", agentID, name, disableCache, cacheFailedJobs)
+}
+
+func (a *AgentsAPI) updateWithContext(ctx context.Context, method string, agentID string, name string, disableCache, cacheFailedJobs *bool) (BaseAgent, error) {
 	payload := map[string]any{}
 	if name != "" {
 		payload["name"] = name
@@ -112,7 +126,16 @@ func (a *AgentsAPI) UpdateWithContext(ctx context.Context, agentID string, name 
 		payload["cache_failed_jobs"] = *cacheFailedJobs
 	}
 	var resp BaseAgent
-	if err := a.httpClient.putJSONWithContext(ctx, fmt.Sprintf("/v1/agents/%s/", agentID), payload, nil, &resp); err != nil {
+	var err error
+	switch method {
+	case "PATCH":
+		err = a.httpClient.patchJSONWithContext(ctx, fmt.Sprintf("/v1/agents/%s/", agentID), payload, nil, &resp)
+	case "PUT":
+		err = a.httpClient.putJSONWithContext(ctx, fmt.Sprintf("/v1/agents/%s/", agentID), payload, nil, &resp)
+	default:
+		err = fmt.Errorf("unsupported agent update method %s", method)
+	}
+	if err != nil {
 		return BaseAgent{}, err
 	}
 	resp.setAgentsAPI(a)
@@ -387,6 +410,18 @@ func (v *AgentVersionsAPI) Update(agentID, versionID, versionName, description s
 }
 
 func (v *AgentVersionsAPI) UpdateWithContext(ctx context.Context, agentID, versionID, versionName, description string) error {
+	return v.updateWithContext(ctx, "PATCH", agentID, versionID, versionName, description)
+}
+
+func (v *AgentVersionsAPI) Replace(agentID, versionID, versionName, description string) error {
+	return v.ReplaceWithContext(context.Background(), agentID, versionID, versionName, description)
+}
+
+func (v *AgentVersionsAPI) ReplaceWithContext(ctx context.Context, agentID, versionID, versionName, description string) error {
+	return v.updateWithContext(ctx, "PUT", agentID, versionID, versionName, description)
+}
+
+func (v *AgentVersionsAPI) updateWithContext(ctx context.Context, method string, agentID, versionID, versionName, description string) error {
 	payload := map[string]any{}
 	if versionName != "" {
 		payload["version_name"] = versionName
@@ -394,7 +429,14 @@ func (v *AgentVersionsAPI) UpdateWithContext(ctx context.Context, agentID, versi
 	if description != "" {
 		payload["description"] = description
 	}
-	return v.agentsAPI.httpClient.putJSONWithContext(ctx, fmt.Sprintf("/v1/agents/%s/versions/%s/", agentID, versionID), payload, nil, nil)
+	switch method {
+	case "PATCH":
+		return v.agentsAPI.httpClient.patchJSONWithContext(ctx, fmt.Sprintf("/v1/agents/%s/versions/%s/", agentID, versionID), payload, nil, nil)
+	case "PUT":
+		return v.agentsAPI.httpClient.putJSONWithContext(ctx, fmt.Sprintf("/v1/agents/%s/versions/%s/", agentID, versionID), payload, nil, nil)
+	default:
+		return fmt.Errorf("unsupported agent version update method %s", method)
+	}
 }
 
 func (v *AgentVersionsAPI) Delete(agentID, versionID string) error {

@@ -106,6 +106,29 @@ func (p *PoliciesAPI) UpdateWithContext(ctx context.Context, policyID string, na
 	return resp, nil
 }
 
+// Replace replaces a policy's metadata.
+func (p *PoliciesAPI) Replace(policyID string, name string, description string) (Policy, error) {
+	return p.ReplaceWithContext(context.Background(), policyID, name, description)
+}
+
+// ReplaceWithContext replaces a policy's metadata with a caller-supplied context.
+func (p *PoliciesAPI) ReplaceWithContext(ctx context.Context, policyID string, name string, description string) (Policy, error) {
+	if policyID == "" {
+		return Policy{}, fmt.Errorf("policyID cannot be empty")
+	}
+	payload := map[string]any{
+		"name": name,
+	}
+	if description != "" {
+		payload["description"] = description
+	}
+	var resp Policy
+	if err := p.httpClient.putJSONWithContext(ctx, fmt.Sprintf("/v1/policies/%s/", policyID), payload, nil, &resp); err != nil {
+		return Policy{}, err
+	}
+	return resp, nil
+}
+
 // Delete removes a policy and all its versions.
 func (p *PoliciesAPI) Delete(policyID string) error {
 	return p.DeleteWithContext(context.Background(), policyID)

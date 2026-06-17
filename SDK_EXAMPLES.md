@@ -240,26 +240,15 @@ if err != nil {
 Partially update an agent.
 
 ```go
-agentId := openapi_types.UUID("00000000-0000-0000-0000-000000000000") // required path agent_id
-
-params := &generated.AgentsPartialUpdateParams{
-    OrganizationId: &[]openapi_types.UUID{openapi_types.UUID("00000000-0000-0000-0000-000000000000")}[0], // optional query organization_id
-}
-// Optional body fields: name, disable_cache, cache_failed_jobs
-body := strings.NewReader(`{
-  "name": "name",
-  "disable_cache": true,
-  "cache_failed_jobs": true
-}`)
-contentType := "application/json"
-
-resp, err := raw.AgentsPartialUpdateWithBodyWithResponse(
-    ctx,
-    agentId,
-    params,
-    contentType,
-    body,
+result, err := client.Agents.Update(
+    "agentID",
+    "name",
+    &[]bool{true}[0],
+    &[]bool{true}[0],
 )
+if err != nil {
+    log.Fatal(err)
+}
 ```
 
 #### `agents_update`
@@ -267,7 +256,7 @@ resp, err := raw.AgentsPartialUpdateWithBodyWithResponse(
 Update a base agent.
 
 ```go
-result, err := client.Agents.Update(
+result, err := client.Agents.Replace(
     "agentID",
     "name",
     &[]bool{true}[0],
@@ -385,27 +374,15 @@ if err != nil {
 Partially update an agent version.
 
 ```go
-agentId := openapi_types.UUID("00000000-0000-0000-0000-000000000000") // required path agent_id
-agentVersionId := openapi_types.UUID("00000000-0000-0000-0000-000000000000") // required path agent_version_id
-
-params := &generated.AgentsVersionsPartialUpdateParams{
-    OrganizationId: &[]openapi_types.UUID{openapi_types.UUID("00000000-0000-0000-0000-000000000000")}[0], // optional query organization_id
-}
-// Optional body fields: version_name, description
-body := strings.NewReader(`{
-  "version_name": "version_name",
-  "description": "description"
-}`)
-contentType := "application/json"
-
-resp, err := raw.AgentsVersionsPartialUpdateWithBodyWithResponse(
-    ctx,
-    agentId,
-    agentVersionId,
-    params,
-    contentType,
-    body,
+err := client.Agents.Versions.Update(
+    "agentID",
+    "versionID",
+    "versionName",
+    "description",
 )
+if err != nil {
+    log.Fatal(err)
+}
 ```
 
 #### `agents_versions_update`
@@ -413,7 +390,7 @@ resp, err := raw.AgentsVersionsPartialUpdateWithBodyWithResponse(
 Update an agent version.
 
 ```go
-err := client.Agents.Versions.Update(
+result, err := client.Agents.Versions.Replace(
     "agentID",
     "versionID",
     "versionName",
@@ -431,18 +408,15 @@ if err != nil {
 List/create connections.
 
 ```go
-params := &generated.ConnectionsListParams{
-    ConnectorType: &[]string{"connector_type"}[0], // optional query connector_type
-    OrganizationId: &[]openapi_types.UUID{openapi_types.UUID("00000000-0000-0000-0000-000000000000")}[0], // optional query organization_id
-    Page: &[]int{1}[0], // optional query page
-    PageSize: &[]int{1}[0], // optional query page_size
-    Search: &[]string{"search"}[0], // optional query search
-}
-
-resp, err := raw.ConnectionsListWithResponse(
-    ctx,
-    params,
+result, err := client.Connections.List(
+    "connectorType",
+    "search",
+    1,
+    1,
 )
+if err != nil {
+    log.Fatal(err)
+}
 ```
 
 #### `connections_create`
@@ -450,27 +424,16 @@ resp, err := raw.ConnectionsListWithResponse(
 List/create connections.
 
 ```go
-params := &generated.ConnectionsCreateParams{
-    OrganizationId: &[]openapi_types.UUID{openapi_types.UUID("00000000-0000-0000-0000-000000000000")}[0], // optional query organization_id
-}
-// Required body fields: connector_type, name, config
-// Optional body fields: description, auth_config, organization_id
-body := strings.NewReader(`{
-  "connector_type": "connector_type",
-  "name": "name",
-  "description": "description",
-  "config": {},
-  "auth_config": {},
-  "organization_id": "00000000-0000-0000-0000-000000000000"
-}`)
-contentType := "application/json"
-
-resp, err := raw.ConnectionsCreateWithBodyWithResponse(
-    ctx,
-    params,
-    contentType,
-    body,
+result, err := client.Connections.Create(
+    "connectorType",
+    "name",
+    map[string]any{},
+    "description",
+    map[string]any{},
 )
+if err != nil {
+    log.Fatal(err)
+}
 ```
 
 #### `connections_test_credentials_create`
@@ -478,20 +441,14 @@ resp, err := raw.ConnectionsCreateWithBodyWithResponse(
 Test credentials without storing them.
 
 ```go
-// Required body fields: connector_type, config
-// Optional body fields: auth_config
-body := strings.NewReader(`{
-  "connector_type": "connector_type",
-  "config": {},
-  "auth_config": {}
-}`)
-contentType := "application/json"
-
-resp, err := raw.ConnectionsTestCredentialsCreateWithBodyWithResponse(
-    ctx,
-    contentType,
-    body,
+result, err := client.Connections.TestCredentials(
+    "connectorType",
+    map[string]any{},
+    map[string]any{},
 )
+if err != nil {
+    log.Fatal(err)
+}
 ```
 
 #### `connections_destroy`
@@ -499,17 +456,12 @@ resp, err := raw.ConnectionsTestCredentialsCreateWithBodyWithResponse(
 Manage connection.
 
 ```go
-id := openapi_types.UUID("00000000-0000-0000-0000-000000000000") // required path id
-
-params := &generated.ConnectionsDestroyParams{
-    OrganizationId: &[]openapi_types.UUID{openapi_types.UUID("00000000-0000-0000-0000-000000000000")}[0], // optional query organization_id
-}
-
-resp, err := raw.ConnectionsDestroyWithResponse(
-    ctx,
-    id,
-    params,
+result, err := client.Connections.Delete(
+    "connectionID",
 )
+if err != nil {
+    log.Fatal(err)
+}
 ```
 
 #### `connections_retrieve`
@@ -517,17 +469,12 @@ resp, err := raw.ConnectionsDestroyWithResponse(
 Manage connection.
 
 ```go
-id := openapi_types.UUID("00000000-0000-0000-0000-000000000000") // required path id
-
-params := &generated.ConnectionsRetrieveParams{
-    OrganizationId: &[]openapi_types.UUID{openapi_types.UUID("00000000-0000-0000-0000-000000000000")}[0], // optional query organization_id
-}
-
-resp, err := raw.ConnectionsRetrieveWithResponse(
-    ctx,
-    id,
-    params,
+result, err := client.Connections.Retrieve(
+    "connectionID",
 )
+if err != nil {
+    log.Fatal(err)
+}
 ```
 
 #### `connections_partial_update`
@@ -535,27 +482,16 @@ resp, err := raw.ConnectionsRetrieveWithResponse(
 Manage connection.
 
 ```go
-id := openapi_types.UUID("00000000-0000-0000-0000-000000000000") // required path id
-
-params := &generated.ConnectionsPartialUpdateParams{
-    OrganizationId: &[]openapi_types.UUID{openapi_types.UUID("00000000-0000-0000-0000-000000000000")}[0], // optional query organization_id
-}
-// Optional body fields: name, description, config, auth_config
-body := strings.NewReader(`{
-  "name": "name",
-  "description": "description",
-  "config": {},
-  "auth_config": {}
-}`)
-contentType := "application/json"
-
-resp, err := raw.ConnectionsPartialUpdateWithBodyWithResponse(
-    ctx,
-    id,
-    params,
-    contentType,
-    body,
+result, err := client.Connections.Update(
+    "connectionID",
+    "name",
+    "description",
+    map[string]any{},
+    map[string]any{},
 )
+if err != nil {
+    log.Fatal(err)
+}
 ```
 
 #### `connections_update`
@@ -563,27 +499,16 @@ resp, err := raw.ConnectionsPartialUpdateWithBodyWithResponse(
 Manage connection.
 
 ```go
-id := openapi_types.UUID("00000000-0000-0000-0000-000000000000") // required path id
-
-params := &generated.ConnectionsUpdateParams{
-    OrganizationId: &[]openapi_types.UUID{openapi_types.UUID("00000000-0000-0000-0000-000000000000")}[0], // optional query organization_id
-}
-// Optional body fields: name, description, config, auth_config
-body := strings.NewReader(`{
-  "name": "name",
-  "description": "description",
-  "config": {},
-  "auth_config": {}
-}`)
-contentType := "application/json"
-
-resp, err := raw.ConnectionsUpdateWithBodyWithResponse(
-    ctx,
-    id,
-    params,
-    contentType,
-    body,
+result, err := client.Connections.Replace(
+    "connectionID",
+    "name",
+    "description",
+    map[string]any{},
+    map[string]any{},
 )
+if err != nil {
+    log.Fatal(err)
+}
 ```
 
 #### `connections_test_create`
@@ -591,17 +516,12 @@ resp, err := raw.ConnectionsUpdateWithBodyWithResponse(
 Test connection.
 
 ```go
-id := openapi_types.UUID("00000000-0000-0000-0000-000000000000") // required path id
-
-params := &generated.ConnectionsTestCreateParams{
-    OrganizationId: &[]openapi_types.UUID{openapi_types.UUID("00000000-0000-0000-0000-000000000000")}[0], // optional query organization_id
-}
-
-resp, err := raw.ConnectionsTestCreateWithResponse(
-    ctx,
-    id,
-    params,
+result, err := client.Connections.Test(
+    "connectionID",
 )
+if err != nil {
+    log.Fatal(err)
+}
 ```
 
 ### Connectors
@@ -611,9 +531,11 @@ resp, err := raw.ConnectionsTestCreateWithResponse(
 List all connector types.
 
 ```go
-resp, err := raw.ConnectorsRetrieveWithResponse(
-    ctx,
+result, err := client.Connectors.List(
 )
+if err != nil {
+    log.Fatal(err)
+}
 ```
 
 #### `connectors_retrieve_by_type`
@@ -621,12 +543,12 @@ resp, err := raw.ConnectorsRetrieveWithResponse(
 Get connector details.
 
 ```go
-connectorType := "connector_type" // required path connector_type
-
-resp, err := raw.ConnectorsRetrieveByTypeWithResponse(
-    ctx,
-    connectorType,
+result, err := client.Connectors.Retrieve(
+    "connectorType",
 )
+if err != nil {
+    log.Fatal(err)
+}
 ```
 
 ### Discovery
@@ -734,26 +656,14 @@ if err != nil {
 Retrieve, update, or delete a single policy by ID.
 
 ```go
-id := openapi_types.UUID("00000000-0000-0000-0000-000000000000") // required path id
-
-params := &generated.PoliciesUpdateParams{
-    OrganizationId: &[]openapi_types.UUID{openapi_types.UUID("00000000-0000-0000-0000-000000000000")}[0], // optional query organization_id
-}
-// Required body fields: name
-// Optional body fields: description
-body := strings.NewReader(`{
-  "name": "name",
-  "description": "description"
-}`)
-contentType := "application/json"
-
-resp, err := raw.PoliciesUpdateWithBodyWithResponse(
-    ctx,
-    id,
-    params,
-    contentType,
-    body,
+result, err := client.Policies.Replace(
+    "policyID",
+    "name",
+    "description",
 )
+if err != nil {
+    log.Fatal(err)
+}
 ```
 
 #### `policies_versions_list`
@@ -804,9 +714,11 @@ if err != nil {
 List Roe tables
 
 ```go
-resp, err := raw.TablesListWithResponse(
-    ctx,
+result, err := client.Tables.List(
 )
+if err != nil {
+    log.Fatal(err)
+}
 ```
 
 #### `tables_query_create`
@@ -814,19 +726,13 @@ resp, err := raw.TablesListWithResponse(
 Run a read-only Roe table query
 
 ```go
-// Required body fields: sql
-// Optional body fields: limit
-body := strings.NewReader(`{
-  "sql": "sql",
-  "limit": 1
-}`)
-contentType := "application/json"
-
-resp, err := raw.TablesQueryCreateWithBodyWithResponse(
-    ctx,
-    contentType,
-    body,
+result, err := client.Tables.Query(
+    "sql",
+    1,
 )
+if err != nil {
+    log.Fatal(err)
+}
 ```
 
 #### `tables_query_result_retrieve`
@@ -834,12 +740,12 @@ resp, err := raw.TablesQueryCreateWithBodyWithResponse(
 Get a Roe table query result
 
 ```go
-tableQueryId := openapi_types.UUID("00000000-0000-0000-0000-000000000000") // required path table_query_id
-
-resp, err := raw.TablesQueryResultRetrieveWithResponse(
-    ctx,
-    tableQueryId,
+result, err := client.Tables.QueryResult(
+    "tableQueryID",
 )
+if err != nil {
+    log.Fatal(err)
+}
 ```
 
 #### `tables_destroy`
@@ -847,12 +753,12 @@ resp, err := raw.TablesQueryResultRetrieveWithResponse(
 Delete a Roe table
 
 ```go
-tableName := "table_name" // required path table_name
-
-resp, err := raw.TablesDestroyWithResponse(
-    ctx,
-    tableName,
+result, err := client.Tables.Delete(
+    "tableName",
 )
+if err != nil {
+    log.Fatal(err)
+}
 ```
 
 #### `tables_describe_retrieve`
@@ -860,12 +766,12 @@ resp, err := raw.TablesDestroyWithResponse(
 Describe a Roe table
 
 ```go
-tableName := "table_name" // required path table_name
-
-resp, err := raw.TablesDescribeRetrieveWithResponse(
-    ctx,
-    tableName,
+result, err := client.Tables.Describe(
+    "tableName",
 )
+if err != nil {
+    log.Fatal(err)
+}
 ```
 
 #### `tables_preview_retrieve`
@@ -873,17 +779,13 @@ resp, err := raw.TablesDescribeRetrieveWithResponse(
 Preview a Roe table
 
 ```go
-tableName := "table_name" // required path table_name
-
-params := &generated.TablesPreviewRetrieveParams{
-    Limit: &[]int{1}[0], // optional query limit
-}
-
-resp, err := raw.TablesPreviewRetrieveWithResponse(
-    ctx,
-    tableName,
-    params,
+result, err := client.Tables.Preview(
+    "tableName",
+    1,
 )
+if err != nil {
+    log.Fatal(err)
+}
 ```
 
 #### `upload_table`
@@ -910,9 +812,10 @@ if err != nil {
 Get the current user
 
 ```go
-resp, err := raw.UsersCurrentUserRetrieveWithResponse(
-    ctx,
-)
+result, err := client.Users.Me()
+if err != nil {
+    log.Fatal(err)
+}
 ```
 
 ## Use Cases
