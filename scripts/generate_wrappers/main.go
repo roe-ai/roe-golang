@@ -401,15 +401,6 @@ func writeFile(root, relpath string, data []byte) {
 	must(os.WriteFile(filepath.Join(root, relpath), data, 0o644))
 }
 
-func sortedAPINames(apis map[string]apiSpec) []string {
-	names := make([]string, 0, len(apis))
-	for name := range apis {
-		names = append(names, name)
-	}
-	sort.Strings(names)
-	return names
-}
-
 func kind(value string) string {
 	if value == "" {
 		return "simple"
