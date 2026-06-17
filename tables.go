@@ -25,9 +25,9 @@ func (a *TablesAPI) Upload(tableName string, file FileUpload, withHeaders bool) 
 // UploadWithContext Upload a CSV file and create a Roe table.
 func (a *TablesAPI) UploadWithContext(ctx context.Context, tableName string, file FileUpload, withHeaders bool) (generated.TableUploadResponse, error) {
 	inputs := map[string]any{
-		"table_name":      tableName,
-		"file":            file,
-		"with_headers":    withHeaders,
+		"table_name": tableName,
+		"file": file,
+		"with_headers": withHeaders,
 		"organization_id": a.cfg.OrganizationID,
 	}
 	var resp generated.TableUploadResponse

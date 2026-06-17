@@ -86,10 +86,12 @@ func assertWrapperTransports(t *testing.T, label string, operations []wrapperOpe
 	if !ok {
 		t.Fatalf("no transport contract registered for hand-maintained wrapper %s", label)
 	}
+	seen := map[string]bool{}
 	for _, operation := range operations {
 		if operation.Method == "" && operation.Path == "" {
 			continue
 		}
+		seen[operation.MethodName] = true
 		expected, ok := expectedByMethod[operation.MethodName]
 		if !ok {
 			t.Fatalf("%s contract method %s has no expected transport", label, operation.MethodName)
@@ -104,6 +106,11 @@ func assertWrapperTransports(t *testing.T, label string, operations []wrapperOpe
 				expected.Method,
 				expected.Path,
 			)
+		}
+	}
+	for methodName := range expectedByMethod {
+		if !seen[methodName] {
+			t.Fatalf("%s expected transport %s is not declared in wrapper contract", label, methodName)
 		}
 	}
 }

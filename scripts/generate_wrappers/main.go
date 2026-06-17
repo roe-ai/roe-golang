@@ -353,14 +353,11 @@ func syncReadmeBlock(root string) {
 
 func syncReadmeReleaseBanner(root string) {
 	version := readTrimmed(filepath.Join(root, "VERSION"))
-	marker := readTrimmed(filepath.Join(root, ".roe-main-release-version"))
-	block := fmt.Sprintf(`> **v%s** - Schema synchronization across roe-python / roe-typescript /
-> roe-golang. This release is generated from SDK OpenAPI marker %s, and
-> all public package metadata is bumped to %s. No Go module import-path
-> migration; the SDK stays on %s.`,
+	block := fmt.Sprintf(`> **v%s** - SDK operation coverage is synchronized across Python,
+> TypeScript, and Go. See %s for copy-ready examples and use cases.
+> The module path remains %s.`,
 		version,
-		"`"+marker+"`",
-		version,
+		"`SDK_EXAMPLES.md`",
 		"`github.com/roe-ai/roe-golang`",
 	)
 
