@@ -9,4 +9,4 @@ cd "$ROOT_DIR"
 
 go generate ./generated/...
 go run ./scripts/generate_wrappers
-gofmt -s -w generated/openapi.gen.go generated_apis.go discovery.go tables.go
+gofmt -s -w generated/openapi.gen.go generated_apis.go connections.go connectors.go discovery.go tables.go

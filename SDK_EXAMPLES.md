@@ -456,7 +456,7 @@ if err != nil {
 Manage connection.
 
 ```go
-result, err := client.Connections.Delete(
+err := client.Connections.Delete(
     "connectionID",
 )
 if err != nil {
@@ -753,7 +753,7 @@ if err != nil {
 Delete a Roe table
 
 ```go
-result, err := client.Tables.Delete(
+err := client.Tables.Delete(
     "tableName",
 )
 if err != nil {
