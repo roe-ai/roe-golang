@@ -3,9 +3,9 @@
 Go SDK for the [Roe](https://www.roe-ai.com/) API.
 
 <!-- ROE-SDK:RELEASE-BANNER:START -->
-> **v1.1.0** - Schema synchronization across roe-python / roe-typescript /
-> roe-golang. This release is generated from SDK OpenAPI marker `1-0-83`, and
-> all public package metadata is bumped to 1.1.0. No Go module import-path
+> **v1.1.1** - Schema synchronization across roe-python / roe-typescript /
+> roe-golang. This release is generated from SDK OpenAPI marker `pr3456-fanout-sim-3`, and
+> all public package metadata is bumped to 1.1.1. No Go module import-path
 > migration; the SDK stays on `github.com/roe-ai/roe-golang`.
 <!-- ROE-SDK:RELEASE-BANNER:END -->
 

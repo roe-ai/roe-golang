@@ -19,15 +19,22 @@ const (
 	readmeBlockEnd    = "<!-- ROE-SDK:GENERATED-FRIENDLY-APIS:END -->"
 )
 
+var handMaintainedAPIs = map[string]bool{
+	"agents":   true,
+	"policies": true,
+	"users":    true,
+}
+
 type contract struct {
 	APIs map[string]apiSpec `yaml:"apis"`
 }
 
 type apiSpec struct {
-	StructName string      `yaml:"struct_name"`
-	FieldName  string      `yaml:"field_name"`
-	Docstring  string      `yaml:"docstring"`
-	Operations []operation `yaml:"operations"`
+	StructName string             `yaml:"struct_name"`
+	FieldName  string             `yaml:"field_name"`
+	Docstring  string             `yaml:"docstring"`
+	Operations []operation        `yaml:"operations"`
+	Namespaces map[string]apiSpec `yaml:"namespaces"`
 }
 
 type operation struct {
@@ -65,11 +72,14 @@ func main() {
 	spec := readContract(filepath.Join(root, "openapi", "wrappers.yml"))
 	writeGeneratedAPIs(root, spec)
 	for apiName, api := range spec.APIs {
+		if !isGeneratedAPI(apiName, api) {
+			continue
+		}
 		writeAPI(root, modulePath, apiName, api)
 	}
 	syncReadmeReleaseBanner(root)
 	syncReadmeBlock(root)
-	fmt.Printf("Generated %d friendly API wrapper modules from openapi/wrappers.yml\n", len(spec.APIs))
+	fmt.Printf("Generated %d friendly API wrapper modules from openapi/wrappers.yml\n", len(generatedAPINames(spec.APIs)))
 }
 
 func repoRoot() (string, error) {
@@ -117,7 +127,7 @@ func readContract(path string) contract {
 func writeGeneratedAPIs(root string, spec contract) {
 	var buf bytes.Buffer
 	writeHeader(&buf)
-	apiNames := sortedAPINames(spec.APIs)
+	apiNames := generatedAPINames(spec.APIs)
 
 	buf.WriteString("type generatedAPIs struct {\n")
 	for _, apiName := range apiNames {
@@ -136,6 +146,44 @@ func writeGeneratedAPIs(root string, spec contract) {
 	buf.WriteString("}\n")
 
 	writeFile(root, "generated_apis.go", buf.Bytes())
+}
+
+func generatedAPINames(apis map[string]apiSpec) []string {
+	names := make([]string, 0, len(apis))
+	for apiName, api := range apis {
+		if isGeneratedAPI(apiName, api) {
+			names = append(names, apiName)
+		}
+	}
+	sort.Strings(names)
+	return names
+}
+
+func isGeneratedAPI(apiName string, api apiSpec) bool {
+	if len(api.Namespaces) > 0 {
+		if handMaintainedAPIs[apiName] {
+			return false
+		}
+		must(fmt.Errorf("%s has namespaces; Go wrapper generator only supports top-level generated APIs", apiName))
+	}
+	for _, op := range api.Operations {
+		if !isGeneratedOperation(op) {
+			if handMaintainedAPIs[apiName] {
+				return false
+			}
+			must(fmt.Errorf("%s.%s has unsupported kind %q", apiName, op.MethodName, op.Kind))
+		}
+	}
+	return true
+}
+
+func isGeneratedOperation(op operation) bool {
+	switch kind(op.Kind) {
+	case "simple", "table_upload":
+		return true
+	default:
+		return false
+	}
 }
 
 func writeAPI(root, modulePath, apiName string, api apiSpec) {
