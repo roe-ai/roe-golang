@@ -3,10 +3,9 @@
 Go SDK for the [Roe](https://www.roe-ai.com/) API.
 
 <!-- ROE-SDK:RELEASE-BANNER:START -->
-> **v1.1.0** - Schema synchronization across roe-python / roe-typescript /
-> roe-golang. This release is generated from SDK OpenAPI marker `1-0-83`, and
-> all public package metadata is bumped to 1.1.0. No Go module import-path
-> migration; the SDK stays on `github.com/roe-ai/roe-golang`.
+> **v1.1.1** - SDK operation coverage is synchronized across Python,
+> TypeScript, and Go. See `SDK_EXAMPLES.md` for copy-ready examples and use cases.
+> The module path remains `github.com/roe-ai/roe-golang`.
 <!-- ROE-SDK:RELEASE-BANNER:END -->
 
 > **v1.0.0** — The Go SDK uses an `oapi-codegen`-generated client; ergonomic
@@ -124,9 +123,9 @@ releases, so check the `generated` package godoc for the current surface
 rather than aliasing symbol names in your own code.
 
 <!-- ROE-SDK:GENERATED-FRIENDLY-APIS:START -->
-## Generated Friendly APIs
+## SDK Operation Groups
 
-This block is synced from `roe-main/roe-sdk/sdk_contract.yml` during SDK fan-out.
+Common operations are available directly on the SDK client.
 
 ```go
 engines, err := client.Discovery.ListAgentEngineTypes()
