@@ -197,10 +197,10 @@ func TestAgentVersionsAPIUpdateAndReplaceUseExpectedTransport(t *testing.T) {
 			method: http.MethodPut,
 			body: map[string]any{
 				"version_name": "",
-				"description":  "replacement version",
+				"description":  "",
 			},
 			callClient: func(client *RoeClient) error {
-				return client.Agents.Versions.Replace("agent-id", "version-id", "", "replacement version")
+				return client.Agents.Versions.Replace("agent-id", "version-id", "", "")
 			},
 		},
 	}

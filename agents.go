@@ -448,9 +448,7 @@ func agentVersionUpdatePayload(versionName, description string) map[string]any {
 func agentVersionReplacePayload(versionName, description string) map[string]any {
 	payload := map[string]any{
 		"version_name": versionName,
-	}
-	if description != "" {
-		payload["description"] = description
+		"description":  description,
 	}
 	return payload
 }

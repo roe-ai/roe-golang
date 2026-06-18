@@ -117,10 +117,8 @@ func (p *PoliciesAPI) ReplaceWithContext(ctx context.Context, policyID string, n
 		return Policy{}, fmt.Errorf("policyID cannot be empty")
 	}
 	payload := map[string]any{
-		"name": name,
-	}
-	if description != "" {
-		payload["description"] = description
+		"name":        name,
+		"description": description,
 	}
 	var resp Policy
 	if err := p.httpClient.putJSONWithContext(ctx, fmt.Sprintf("/v1/policies/%s/", policyID), payload, nil, &resp); err != nil {

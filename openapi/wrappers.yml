@@ -416,7 +416,6 @@ apis:
             wire_name: description
             go_type: string
             optional: true
-            omit_when_empty: true
         - kind: body
           method_name: Delete
           docstring: ''
@@ -857,7 +856,6 @@ apis:
         wire_name: description
         go_type: string
         optional: true
-        omit_when_empty: true
     - kind: body
       method_name: Delete
       docstring: removes a policy and all its versions.
