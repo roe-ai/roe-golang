@@ -2,8 +2,10 @@ package roe
 
 import (
 	"context"
+	"encoding/json"
 	"errors"
 	"net/http"
+	"reflect"
 	"strings"
 	"sync/atomic"
 	"testing"
@@ -111,6 +113,121 @@ func TestAgentsAPIListWithContextCancelledDoesNotSendRequest(t *testing.T) {
 	}
 }
 
+func TestAgentsAPIUpdateAndReplaceUseExpectedTransport(t *testing.T) {
+	tests := []struct {
+		name       string
+		method     string
+		body       map[string]any
+		callClient func(*RoeClient) (BaseAgent, error)
+	}{
+		{
+			name:   "update",
+			method: http.MethodPatch,
+			body: map[string]any{
+				"name":          "Updated agent",
+				"disable_cache": true,
+			},
+			callClient: func(client *RoeClient) (BaseAgent, error) {
+				disableCache := true
+				return client.Agents.Update("agent-id", "Updated agent", &disableCache, nil)
+			},
+		},
+		{
+			name:   "replace",
+			method: http.MethodPut,
+			body: map[string]any{
+				"name":              "Replaced agent",
+				"cache_failed_jobs": true,
+			},
+			callClient: func(client *RoeClient) (BaseAgent, error) {
+				cacheFailedJobs := true
+				return client.Agents.Replace("agent-id", "Replaced agent", nil, &cacheFailedJobs)
+			},
+		},
+	}
+
+	for _, test := range tests {
+		t.Run(test.name, func(t *testing.T) {
+			server := newTestServer(t, http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+				if r.Method != test.method {
+					t.Fatalf("expected %s, got %s", test.method, r.Method)
+				}
+				if r.URL.Path != "/v1/agents/agent-id/" {
+					t.Fatalf("unexpected path %s", r.URL.Path)
+				}
+				assertJSONBody(t, r, test.body)
+				w.Header().Set("Content-Type", "application/json")
+				_, _ = w.Write([]byte(`{"id":"agent-id","name":"Agent","disable_cache":false,"cache_failed_jobs":false,"organization_id":"org","engine_class_id":"engine","job_count":0,"engine_name":"Engine"}`))
+			}))
+			defer server.Close()
+
+			client := newAgentsTestClient(t, server.URL)
+			defer client.Close()
+
+			agent, err := test.callClient(client)
+			if err != nil {
+				t.Fatalf("%s agent: %v", test.name, err)
+			}
+			if agent.agentsAPI != client.Agents {
+				t.Fatalf("expected agentsAPI to be set on returned agent")
+			}
+		})
+	}
+}
+
+func TestAgentVersionsAPIUpdateAndReplaceUseExpectedTransport(t *testing.T) {
+	tests := []struct {
+		name       string
+		method     string
+		body       map[string]any
+		callClient func(*RoeClient) error
+	}{
+		{
+			name:   "update",
+			method: http.MethodPatch,
+			body: map[string]any{
+				"version_name": "v2",
+			},
+			callClient: func(client *RoeClient) error {
+				return client.Agents.Versions.Update("agent-id", "version-id", "v2", "")
+			},
+		},
+		{
+			name:   "replace",
+			method: http.MethodPut,
+			body: map[string]any{
+				"description": "replacement version",
+			},
+			callClient: func(client *RoeClient) error {
+				return client.Agents.Versions.Replace("agent-id", "version-id", "", "replacement version")
+			},
+		},
+	}
+
+	for _, test := range tests {
+		t.Run(test.name, func(t *testing.T) {
+			server := newTestServer(t, http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+				if r.Method != test.method {
+					t.Fatalf("expected %s, got %s", test.method, r.Method)
+				}
+				if r.URL.Path != "/v1/agents/agent-id/versions/version-id/" {
+					t.Fatalf("unexpected path %s", r.URL.Path)
+				}
+				assertJSONBody(t, r, test.body)
+				w.WriteHeader(http.StatusNoContent)
+			}))
+			defer server.Close()
+
+			client := newAgentsTestClient(t, server.URL)
+			defer client.Close()
+
+			if err := test.callClient(client); err != nil {
+				t.Fatalf("%s agent version: %v", test.name, err)
+			}
+		})
+	}
+}
+
 func TestAgentsAPIRunManyWithContextStopsAfterCancel(t *testing.T) {
 	var calls int32
 	server := newTestServer(t, http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
@@ -166,5 +283,31 @@ func TestAgentsAPIRunManyWithContextStopsAfterCancel(t *testing.T) {
 	}
 	if atomic.LoadInt32(&calls) != 1 {
 		t.Fatalf("expected exactly 1 call, got %d", atomic.LoadInt32(&calls))
+	}
+}
+
+func newAgentsTestClient(t *testing.T, baseURL string) *RoeClient {
+	t.Helper()
+	client, err := NewClientWithConfig(Config{
+		APIKey:         "k",
+		OrganizationID: "org",
+		BaseURL:        baseURL,
+		Timeout:        time.Second,
+		MaxRetries:     0,
+	})
+	if err != nil {
+		t.Fatalf("new client: %v", err)
+	}
+	return client
+}
+
+func assertJSONBody(t *testing.T, r *http.Request, want map[string]any) {
+	t.Helper()
+	var got map[string]any
+	if err := json.NewDecoder(r.Body).Decode(&got); err != nil {
+		t.Fatalf("decode body: %v", err)
+	}
+	if !reflect.DeepEqual(got, want) {
+		t.Fatalf("unexpected body: got %#v, want %#v", got, want)
 	}
 }

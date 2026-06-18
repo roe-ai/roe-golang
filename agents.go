@@ -101,7 +101,13 @@ func (a *AgentsAPI) Update(agentID string, name string, disableCache, cacheFaile
 
 // UpdateWithContext updates mutable fields on an agent with a caller-supplied context.
 func (a *AgentsAPI) UpdateWithContext(ctx context.Context, agentID string, name string, disableCache, cacheFailedJobs *bool) (BaseAgent, error) {
-	return a.updateWithContext(ctx, "PATCH", agentID, name, disableCache, cacheFailedJobs)
+	payload := agentUpdatePayload(name, disableCache, cacheFailedJobs)
+	var resp BaseAgent
+	if err := a.httpClient.patchJSONWithContext(ctx, fmt.Sprintf("/v1/agents/%s/", agentID), payload, nil, &resp); err != nil {
+		return BaseAgent{}, err
+	}
+	resp.setAgentsAPI(a)
+	return resp, nil
 }
 
 // Replace replaces an agent.
@@ -111,10 +117,16 @@ func (a *AgentsAPI) Replace(agentID string, name string, disableCache, cacheFail
 
 // ReplaceWithContext replaces an agent with a caller-supplied context.
 func (a *AgentsAPI) ReplaceWithContext(ctx context.Context, agentID string, name string, disableCache, cacheFailedJobs *bool) (BaseAgent, error) {
-	return a.updateWithContext(ctx, "PUT", agentID, name, disableCache, cacheFailedJobs)
+	payload := agentUpdatePayload(name, disableCache, cacheFailedJobs)
+	var resp BaseAgent
+	if err := a.httpClient.putJSONWithContext(ctx, fmt.Sprintf("/v1/agents/%s/", agentID), payload, nil, &resp); err != nil {
+		return BaseAgent{}, err
+	}
+	resp.setAgentsAPI(a)
+	return resp, nil
 }
 
-func (a *AgentsAPI) updateWithContext(ctx context.Context, method string, agentID string, name string, disableCache, cacheFailedJobs *bool) (BaseAgent, error) {
+func agentUpdatePayload(name string, disableCache, cacheFailedJobs *bool) map[string]any {
 	payload := map[string]any{}
 	if name != "" {
 		payload["name"] = name
@@ -125,21 +137,7 @@ func (a *AgentsAPI) updateWithContext(ctx context.Context, method string, agentI
 	if cacheFailedJobs != nil {
 		payload["cache_failed_jobs"] = *cacheFailedJobs
 	}
-	var resp BaseAgent
-	var err error
-	switch method {
-	case "PATCH":
-		err = a.httpClient.patchJSONWithContext(ctx, fmt.Sprintf("/v1/agents/%s/", agentID), payload, nil, &resp)
-	case "PUT":
-		err = a.httpClient.putJSONWithContext(ctx, fmt.Sprintf("/v1/agents/%s/", agentID), payload, nil, &resp)
-	default:
-		err = fmt.Errorf("unsupported agent update method %s", method)
-	}
-	if err != nil {
-		return BaseAgent{}, err
-	}
-	resp.setAgentsAPI(a)
-	return resp, nil
+	return payload
 }
 
 // Delete removes an agent.
@@ -410,7 +408,8 @@ func (v *AgentVersionsAPI) Update(agentID, versionID, versionName, description s
 }
 
 func (v *AgentVersionsAPI) UpdateWithContext(ctx context.Context, agentID, versionID, versionName, description string) error {
-	return v.updateWithContext(ctx, "PATCH", agentID, versionID, versionName, description)
+	payload := agentVersionUpdatePayload(versionName, description)
+	return v.agentsAPI.httpClient.patchJSONWithContext(ctx, fmt.Sprintf("/v1/agents/%s/versions/%s/", agentID, versionID), payload, nil, nil)
 }
 
 func (v *AgentVersionsAPI) Replace(agentID, versionID, versionName, description string) error {
@@ -418,10 +417,11 @@ func (v *AgentVersionsAPI) Replace(agentID, versionID, versionName, description 
 }
 
 func (v *AgentVersionsAPI) ReplaceWithContext(ctx context.Context, agentID, versionID, versionName, description string) error {
-	return v.updateWithContext(ctx, "PUT", agentID, versionID, versionName, description)
+	payload := agentVersionUpdatePayload(versionName, description)
+	return v.agentsAPI.httpClient.putJSONWithContext(ctx, fmt.Sprintf("/v1/agents/%s/versions/%s/", agentID, versionID), payload, nil, nil)
 }
 
-func (v *AgentVersionsAPI) updateWithContext(ctx context.Context, method string, agentID, versionID, versionName, description string) error {
+func agentVersionUpdatePayload(versionName, description string) map[string]any {
 	payload := map[string]any{}
 	if versionName != "" {
 		payload["version_name"] = versionName
@@ -429,14 +429,7 @@ func (v *AgentVersionsAPI) updateWithContext(ctx context.Context, method string,
 	if description != "" {
 		payload["description"] = description
 	}
-	switch method {
-	case "PATCH":
-		return v.agentsAPI.httpClient.patchJSONWithContext(ctx, fmt.Sprintf("/v1/agents/%s/versions/%s/", agentID, versionID), payload, nil, nil)
-	case "PUT":
-		return v.agentsAPI.httpClient.putJSONWithContext(ctx, fmt.Sprintf("/v1/agents/%s/versions/%s/", agentID, versionID), payload, nil, nil)
-	default:
-		return fmt.Errorf("unsupported agent version update method %s", method)
-	}
+	return payload
 }
 
 func (v *AgentVersionsAPI) Delete(agentID, versionID string) error {
