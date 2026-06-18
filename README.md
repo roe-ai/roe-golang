@@ -272,7 +272,9 @@ Iterate on policies by creating new versions:
 // Create a new version (automatically becomes the current version)
 newVersion, _ := client.Policies.Versions.Create(
     policy.ID,
-    map[string]any{...}, // Updated policy content
+    map[string]any{
+        "instructions": "Investigate the alert and include layering rules.",
+    },
     "v2 - added layering rules",
     "",
 )
