@@ -22,6 +22,7 @@ const (
 var handMaintainedAPIs = map[string]bool{
 	"agents":   true,
 	"policies": true,
+	"users":    true,
 }
 
 type contract struct {
