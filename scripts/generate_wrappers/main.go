@@ -406,17 +406,52 @@ func operationPathExpression(op operation) string {
 	if len(pathParams) == 0 {
 		return fmt.Sprintf("%q", op.Path)
 	}
-	path := op.Path
-	args := make([]string, 0, len(pathParams))
+	placeholderNames := pathParamNames(op.Path)
+	paramsByWireName := map[string]parameter{}
 	for _, param := range pathParams {
 		wireName := param.WireName
 		if wireName == "" {
 			wireName = param.Name
 		}
-		path = strings.ReplaceAll(path, "{"+wireName+"}", "%s")
+		paramsByWireName[wireName] = param
+	}
+
+	path := op.Path
+	args := make([]string, 0, len(placeholderNames))
+	used := map[string]bool{}
+	for _, wireName := range placeholderNames {
+		param, ok := paramsByWireName[wireName]
+		if !ok {
+			must(fmt.Errorf("%s path uses {%s} without a matching path parameter", op.MethodName, wireName))
+		}
+		path = strings.Replace(path, "{"+wireName+"}", "%s", 1)
 		args = append(args, param.Name)
+		used[wireName] = true
+	}
+	for wireName := range paramsByWireName {
+		if !used[wireName] {
+			must(fmt.Errorf("%s declares unused path parameter %s", op.MethodName, wireName))
+		}
 	}
 	return fmt.Sprintf("fmt.Sprintf(%q, %s)", path, strings.Join(args, ", "))
+}
+
+func pathParamNames(path string) []string {
+	var out []string
+	rest := path
+	for {
+		start := strings.Index(rest, "{")
+		if start < 0 {
+			return out
+		}
+		rest = rest[start+1:]
+		end := strings.Index(rest, "}")
+		if end < 0 {
+			return out
+		}
+		out = append(out, rest[:end])
+		rest = rest[end+1:]
+	}
 }
 
 func paramsByLocation(params []parameter, location string) []parameter {
@@ -434,7 +469,7 @@ func paramsByLocation(params []parameter, location string) []parameter {
 }
 
 func zeroValue(returnType string) string {
-	if strings.HasPrefix(returnType, "[]") {
+	if strings.HasPrefix(returnType, "[]") || strings.HasPrefix(returnType, "*") {
 		return "nil"
 	}
 	return returnType + "{}"
