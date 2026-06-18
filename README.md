@@ -8,9 +8,9 @@ Go SDK for the [Roe](https://www.roe-ai.com/) API.
 > The module path remains `github.com/roe-ai/roe-golang`.
 <!-- ROE-SDK:RELEASE-BANNER:END -->
 
-> **v1.0.0** — The Go SDK uses an `oapi-codegen`-generated client; ergonomic
-> wrappers on `Agents` (with `Agents.Jobs` and `Agents.Versions`) and `Policies`
-> (with `Policies.Versions`) remain.
+> **v1.0.0** - The Go SDK uses an OpenAPI-backed transport behind stable public
+> client groups such as `Agents`, `Policies`, `Tables`, `Connections`, and
+> `Connectors`.
 
 ## Installation
 
@@ -73,55 +73,6 @@ export ROE_API_KEY="your-api-key"
 export ROE_ORGANIZATION_ID="your-org-uuid"
 ```
 
-## Raw API Access
-
-When the ergonomic wrappers don't expose an endpoint you need, the generated
-client is available off `client.Raw()`. Each OpenAPI operation maps to a
-generated method on `*generated.ClientWithResponses`; godoc on the
-`generated` package lists the full surface. The example below uses the
-underlying generic client so it stays portable across `operationId` renames:
-
-```go
-import (
-    "context"
-    "log"
-    "net/http"
-
-    "github.com/roe-ai/roe-golang/generated"
-)
-
-raw, err := client.Raw()
-if err != nil {
-    log.Fatal(err)
-}
-
-gen, ok := raw.ClientInterface.(*generated.Client)
-if !ok {
-    log.Fatalf("unexpected raw client type: %T", raw.ClientInterface)
-}
-
-ctx := context.Background()
-req, err := http.NewRequestWithContext(ctx, http.MethodGet, gen.Server+"v1/users/current_user/", nil)
-if err != nil {
-    log.Fatal(err)
-}
-for _, edit := range gen.RequestEditors {
-    if err := edit(ctx, req); err != nil {
-        log.Fatal(err)
-    }
-}
-resp, err := gen.Client.Do(req)
-if err != nil {
-    log.Fatal(err)
-}
-defer resp.Body.Close()
-```
-
-For typed responses, call the named generated method off `raw` directly —
-those symbols track the upstream OpenAPI `operationId` and may change across
-releases, so check the `generated` package godoc for the current surface
-rather than aliasing symbol names in your own code.
-
 <!-- ROE-SDK:GENERATED-FRIENDLY-APIS:START -->
 ## SDK Operation Groups
 
@@ -170,18 +121,33 @@ Non-2xx responses return typed errors that embed `*APIError` and expose
 without parsing error strings:
 
 ```go
+package main
+
 import (
     "errors"
     "log"
+    "os"
 
     roe "github.com/roe-ai/roe-golang"
 )
 
-_, err := client.Agents.Retrieve("00000000-0000-0000-0000-000000000000")
+func main() {
+    client, err := roe.NewClient(
+        os.Getenv("ROE_API_KEY"),
+        os.Getenv("ROE_ORGANIZATION_ID"),
+        "", 0, 0,
+    )
+    if err != nil {
+        log.Fatal(err)
+    }
+    defer client.Close()
 
-var notFound *roe.NotFoundError
-if errors.As(err, &notFound) {
-    log.Printf("not found: %d %s", notFound.StatusCode, notFound.Message)
+    _, err = client.Agents.Retrieve("00000000-0000-0000-0000-000000000000")
+
+    var notFound *roe.NotFoundError
+    if errors.As(err, &notFound) {
+        log.Printf("not found: %d %s", notFound.StatusCode, notFound.Message)
+    }
 }
 ```
 
@@ -321,7 +287,9 @@ Iterate on policies by creating new versions:
 // Create a new version (automatically becomes the current version)
 newVersion, _ := client.Policies.Versions.Create(
     policy.ID,
-    map[string]any{...}, // Updated policy content
+    map[string]any{
+        "instructions": "Investigate the alert and include layering rules.",
+    },
     "v2 - added layering rules",
     "",
 )
@@ -426,12 +394,17 @@ client.Agents.List(page, pageSize)
 client.Agents.Retrieve(agentID)
 client.Agents.Create(name, engineClassID, inputDefs, engineConfig, versionName, desc)
 client.Agents.Update(agentID, name, disableCache, cacheFailedJobs)
+client.Agents.Replace(agentID, name, disableCache, cacheFailedJobs)
 client.Agents.Delete(agentID)
 client.Agents.Duplicate(agentID)
 ```
 
 > `Agents.Duplicate(...)` returns the new `BaseAgent` directly — the new
 > agent's id is on the returned value as `.ID`.
+>
+> Compatibility: `Agents.Update(...)` and `Agents.Versions.Update(...)` use
+> PATCH for partial updates. Use `Replace(...)` when you need the PUT
+> replacement endpoints.
 
 ### Running Agents
 
@@ -451,6 +424,7 @@ client.Agents.Versions.Retrieve(agentID, versionID, getSupportsEval)
 client.Agents.Versions.RetrieveCurrent(agentID)
 client.Agents.Versions.Create(agentID, inputDefs, engineConfig, versionName, desc)
 client.Agents.Versions.Update(agentID, versionID, versionName, desc)
+client.Agents.Versions.Replace(agentID, versionID, versionName, desc)
 client.Agents.Versions.Delete(agentID, versionID)
 ```
 

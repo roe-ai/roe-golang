@@ -35,7 +35,7 @@
 //		// Run an agent
 //		job, err := client.Agents.Run("agent-uuid", 0, map[string]any{
 //			"text": "Analyze this text",
-//		})
+//		}, nil)
 //		if err != nil {
 //			log.Fatal(err)
 //		}

@@ -94,13 +94,39 @@ func (a *AgentsAPI) CreateWithContext(ctx context.Context, name, engineClassID s
 	return resp, nil
 }
 
-// Update updates an agent.
+// Update updates mutable fields on an agent.
 func (a *AgentsAPI) Update(agentID string, name string, disableCache, cacheFailedJobs *bool) (BaseAgent, error) {
 	return a.UpdateWithContext(context.Background(), agentID, name, disableCache, cacheFailedJobs)
 }
 
-// UpdateWithContext updates an agent with a caller-supplied context.
+// UpdateWithContext updates mutable fields on an agent with a caller-supplied context.
 func (a *AgentsAPI) UpdateWithContext(ctx context.Context, agentID string, name string, disableCache, cacheFailedJobs *bool) (BaseAgent, error) {
+	payload := agentUpdatePayload(name, disableCache, cacheFailedJobs)
+	var resp BaseAgent
+	if err := a.httpClient.patchJSONWithContext(ctx, fmt.Sprintf("/v1/agents/%s/", agentID), payload, nil, &resp); err != nil {
+		return BaseAgent{}, err
+	}
+	resp.setAgentsAPI(a)
+	return resp, nil
+}
+
+// Replace replaces an agent.
+func (a *AgentsAPI) Replace(agentID string, name string, disableCache, cacheFailedJobs *bool) (BaseAgent, error) {
+	return a.ReplaceWithContext(context.Background(), agentID, name, disableCache, cacheFailedJobs)
+}
+
+// ReplaceWithContext replaces an agent with a caller-supplied context.
+func (a *AgentsAPI) ReplaceWithContext(ctx context.Context, agentID string, name string, disableCache, cacheFailedJobs *bool) (BaseAgent, error) {
+	payload := agentReplacePayload(name, disableCache, cacheFailedJobs)
+	var resp BaseAgent
+	if err := a.httpClient.putJSONWithContext(ctx, fmt.Sprintf("/v1/agents/%s/", agentID), payload, nil, &resp); err != nil {
+		return BaseAgent{}, err
+	}
+	resp.setAgentsAPI(a)
+	return resp, nil
+}
+
+func agentUpdatePayload(name string, disableCache, cacheFailedJobs *bool) map[string]any {
 	payload := map[string]any{}
 	if name != "" {
 		payload["name"] = name
@@ -111,12 +137,20 @@ func (a *AgentsAPI) UpdateWithContext(ctx context.Context, agentID string, name 
 	if cacheFailedJobs != nil {
 		payload["cache_failed_jobs"] = *cacheFailedJobs
 	}
-	var resp BaseAgent
-	if err := a.httpClient.putJSONWithContext(ctx, fmt.Sprintf("/v1/agents/%s/", agentID), payload, nil, &resp); err != nil {
-		return BaseAgent{}, err
+	return payload
+}
+
+func agentReplacePayload(name string, disableCache, cacheFailedJobs *bool) map[string]any {
+	payload := map[string]any{
+		"name": name,
 	}
-	resp.setAgentsAPI(a)
-	return resp, nil
+	if disableCache != nil {
+		payload["disable_cache"] = *disableCache
+	}
+	if cacheFailedJobs != nil {
+		payload["cache_failed_jobs"] = *cacheFailedJobs
+	}
+	return payload
 }
 
 // Delete removes an agent.
@@ -387,6 +421,20 @@ func (v *AgentVersionsAPI) Update(agentID, versionID, versionName, description s
 }
 
 func (v *AgentVersionsAPI) UpdateWithContext(ctx context.Context, agentID, versionID, versionName, description string) error {
+	payload := agentVersionUpdatePayload(versionName, description)
+	return v.agentsAPI.httpClient.patchJSONWithContext(ctx, fmt.Sprintf("/v1/agents/%s/versions/%s/", agentID, versionID), payload, nil, nil)
+}
+
+func (v *AgentVersionsAPI) Replace(agentID, versionID, versionName, description string) error {
+	return v.ReplaceWithContext(context.Background(), agentID, versionID, versionName, description)
+}
+
+func (v *AgentVersionsAPI) ReplaceWithContext(ctx context.Context, agentID, versionID, versionName, description string) error {
+	payload := agentVersionReplacePayload(versionName, description)
+	return v.agentsAPI.httpClient.putJSONWithContext(ctx, fmt.Sprintf("/v1/agents/%s/versions/%s/", agentID, versionID), payload, nil, nil)
+}
+
+func agentVersionUpdatePayload(versionName, description string) map[string]any {
 	payload := map[string]any{}
 	if versionName != "" {
 		payload["version_name"] = versionName
@@ -394,7 +442,15 @@ func (v *AgentVersionsAPI) UpdateWithContext(ctx context.Context, agentID, versi
 	if description != "" {
 		payload["description"] = description
 	}
-	return v.agentsAPI.httpClient.putJSONWithContext(ctx, fmt.Sprintf("/v1/agents/%s/versions/%s/", agentID, versionID), payload, nil, nil)
+	return payload
+}
+
+func agentVersionReplacePayload(versionName, description string) map[string]any {
+	payload := map[string]any{
+		"version_name": versionName,
+		"description":  description,
+	}
+	return payload
 }
 
 func (v *AgentVersionsAPI) Delete(agentID, versionID string) error {

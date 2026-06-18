@@ -80,13 +80,8 @@ jobs:
 
       - name: Check for codegen drift
         run: |
-          git diff --exit-code -- \
-            README.md \
-            client.go \
-            discovery.go \
-            generated/openapi.gen.go \
-            generated_apis.go \
-            openapi/openapi.yml \
-            openapi/wrappers.yml \
-            openapi/readme_blocks.yml \
-            tables.go
+          if [ -n "$(git status --porcelain)" ]; then
+            git status --porcelain
+            git diff --exit-code
+            exit 1
+          fi

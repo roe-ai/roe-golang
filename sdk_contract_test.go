@@ -42,6 +42,7 @@ func TestHandMaintainedWrapperContractsExposeMethods(t *testing.T) {
 	handMaintained := map[string]reflect.Type{
 		"agents":   reflect.TypeOf(&AgentsAPI{}),
 		"policies": reflect.TypeOf(&PoliciesAPI{}),
+		"users":    reflect.TypeOf(&UsersAPI{}),
 	}
 	namespaces := map[string]reflect.Type{
 		"agents.jobs":       reflect.TypeOf(&AgentJobsAPI{}),
@@ -120,7 +121,8 @@ var handMaintainedTransports = map[string]map[string]operationTransport{
 		"List":           {Method: "GET", Path: "/v1/agents/"},
 		"Retrieve":       {Method: "GET", Path: "/v1/agents/{agent_id}/"},
 		"Create":         {Method: "POST", Path: "/v1/agents/"},
-		"Update":         {Method: "PUT", Path: "/v1/agents/{agent_id}/"},
+		"Update":         {Method: "PATCH", Path: "/v1/agents/{agent_id}/"},
+		"Replace":        {Method: "PUT", Path: "/v1/agents/{agent_id}/"},
 		"Delete":         {Method: "DELETE", Path: "/v1/agents/{agent_id}/"},
 		"Duplicate":      {Method: "POST", Path: "/v1/agents/{agent_id}/duplicate/"},
 		"Run":            {Method: "POST", Path: "/v1/agents/run/{agent_id}/async/"},
@@ -134,7 +136,8 @@ var handMaintainedTransports = map[string]map[string]operationTransport{
 		"Retrieve":                {Method: "GET", Path: "/v1/agents/{agent_id}/versions/{agent_version_id}/"},
 		"RetrieveCurrent":         {Method: "GET", Path: "/v1/agents/{agent_id}/versions/current/"},
 		"Create":                  {Method: "POST", Path: "/v1/agents/{agent_id}/versions/"},
-		"Update":                  {Method: "PUT", Path: "/v1/agents/{agent_id}/versions/{agent_version_id}/"},
+		"Update":                  {Method: "PATCH", Path: "/v1/agents/{agent_id}/versions/{agent_version_id}/"},
+		"Replace":                 {Method: "PUT", Path: "/v1/agents/{agent_id}/versions/{agent_version_id}/"},
 		"Delete":                  {Method: "DELETE", Path: "/v1/agents/{agent_id}/versions/{agent_version_id}/"},
 		"ListPaginated":           {Method: "GET", Path: "/v1/agents/{agent_id}/versions/"},
 		"RetrieveCurrentWithEval": {Method: "GET", Path: "/v1/agents/{agent_id}/versions/current/"},
@@ -154,11 +157,15 @@ var handMaintainedTransports = map[string]map[string]operationTransport{
 		"Retrieve": {Method: "GET", Path: "/v1/policies/{id}/"},
 		"Create":   {Method: "POST", Path: "/v1/policies/"},
 		"Update":   {Method: "PATCH", Path: "/v1/policies/{id}/"},
+		"Replace":  {Method: "PUT", Path: "/v1/policies/{id}/"},
 		"Delete":   {Method: "DELETE", Path: "/v1/policies/{id}/"},
 	},
 	"policies.versions": {
 		"List":     {Method: "GET", Path: "/v1/policies/{policy_id}/versions/"},
 		"Retrieve": {Method: "GET", Path: "/v1/policies/{policy_id}/versions/{version_id}/"},
 		"Create":   {Method: "POST", Path: "/v1/policies/{policy_id}/versions/"},
+	},
+	"users": {
+		"Me": {Method: "GET", Path: "/v1/users/current_user/"},
 	},
 }

@@ -217,6 +217,50 @@ func TestPoliciesAPIUpdateDescriptionOnly(t *testing.T) {
 	}
 }
 
+func TestPoliciesAPIReplaceSendsExplicitDescription(t *testing.T) {
+	server := newTestServer(t, http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		if r.Method != http.MethodPut {
+			t.Fatalf("expected PUT, got %s", r.Method)
+		}
+		if r.URL.Path != "/v1/policies/p1/" {
+			t.Fatalf("unexpected path %s", r.URL.Path)
+		}
+		var body map[string]any
+		if err := json.NewDecoder(r.Body).Decode(&body); err != nil {
+			t.Fatalf("decode body: %v", err)
+		}
+		if body["name"] != "Existing" {
+			t.Fatalf("expected name, got %v", body["name"])
+		}
+		if body["description"] != "" {
+			t.Fatalf("expected empty description, got %v", body["description"])
+		}
+		w.Header().Set("Content-Type", "application/json")
+		_, _ = w.Write([]byte(`{"id":"p1","name":"Existing","description":"","organization_id":"org","current_version_id":"v1","created_at":"2026-01-01","updated_at":"2026-01-01"}`))
+	}))
+	defer server.Close()
+
+	client, err := NewClientWithConfig(Config{
+		APIKey:         "k",
+		OrganizationID: "org",
+		BaseURL:        server.URL,
+		Timeout:        time.Second,
+		MaxRetries:     0,
+	})
+	if err != nil {
+		t.Fatalf("new client: %v", err)
+	}
+	defer client.Close()
+
+	policy, err := client.Policies.Replace("p1", "Existing", "")
+	if err != nil {
+		t.Fatalf("replace: %v", err)
+	}
+	if policy.Description != "" {
+		t.Fatalf("expected empty description, got %s", policy.Description)
+	}
+}
+
 func TestPoliciesAPIDelete(t *testing.T) {
 	server := newTestServer(t, http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		if r.Method != http.MethodDelete {
