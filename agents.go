@@ -117,7 +117,7 @@ func (a *AgentsAPI) Replace(agentID string, name string, disableCache, cacheFail
 
 // ReplaceWithContext replaces an agent with a caller-supplied context.
 func (a *AgentsAPI) ReplaceWithContext(ctx context.Context, agentID string, name string, disableCache, cacheFailedJobs *bool) (BaseAgent, error) {
-	payload := agentUpdatePayload(name, disableCache, cacheFailedJobs)
+	payload := agentReplacePayload(name, disableCache, cacheFailedJobs)
 	var resp BaseAgent
 	if err := a.httpClient.putJSONWithContext(ctx, fmt.Sprintf("/v1/agents/%s/", agentID), payload, nil, &resp); err != nil {
 		return BaseAgent{}, err
@@ -130,6 +130,19 @@ func agentUpdatePayload(name string, disableCache, cacheFailedJobs *bool) map[st
 	payload := map[string]any{}
 	if name != "" {
 		payload["name"] = name
+	}
+	if disableCache != nil {
+		payload["disable_cache"] = *disableCache
+	}
+	if cacheFailedJobs != nil {
+		payload["cache_failed_jobs"] = *cacheFailedJobs
+	}
+	return payload
+}
+
+func agentReplacePayload(name string, disableCache, cacheFailedJobs *bool) map[string]any {
+	payload := map[string]any{
+		"name": name,
 	}
 	if disableCache != nil {
 		payload["disable_cache"] = *disableCache

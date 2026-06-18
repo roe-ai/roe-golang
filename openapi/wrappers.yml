@@ -239,7 +239,6 @@ apis:
         wire_name: name
         go_type: string
         optional: true
-        omit_when_empty: true
       - name: disableCache
         location: body
         wire_name: disable_cache

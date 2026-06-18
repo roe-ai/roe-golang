@@ -136,12 +136,12 @@ func TestAgentsAPIUpdateAndReplaceUseExpectedTransport(t *testing.T) {
 			name:   "replace",
 			method: http.MethodPut,
 			body: map[string]any{
-				"name":              "Replaced agent",
+				"name":              "",
 				"cache_failed_jobs": true,
 			},
 			callClient: func(client *RoeClient) (BaseAgent, error) {
 				cacheFailedJobs := true
-				return client.Agents.Replace("agent-id", "Replaced agent", nil, &cacheFailedJobs)
+				return client.Agents.Replace("agent-id", "", nil, &cacheFailedJobs)
 			},
 		},
 	}
