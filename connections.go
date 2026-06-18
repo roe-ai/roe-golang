@@ -62,7 +62,7 @@ func (a *ConnectionsAPI) CreateWithContext(ctx context.Context, connectorType st
 	if description != "" {
 		payload["description"] = description
 	}
-	if len(authConfig) > 0 {
+	if authConfig != nil {
 		payload["auth_config"] = authConfig
 	}
 	var resp generated.Connection
@@ -83,7 +83,7 @@ func (a *ConnectionsAPI) TestCredentialsWithContext(ctx context.Context, connect
 	payload := map[string]any{}
 	payload["connector_type"] = connectorType
 	payload["config"] = config
-	if len(authConfig) > 0 {
+	if authConfig != nil {
 		payload["auth_config"] = authConfig
 	}
 	var resp generated.TestConnection
@@ -125,10 +125,10 @@ func (a *ConnectionsAPI) UpdateWithContext(ctx context.Context, connectionID str
 	if description != "" {
 		payload["description"] = description
 	}
-	if len(config) > 0 {
+	if config != nil {
 		payload["config"] = config
 	}
-	if len(authConfig) > 0 {
+	if authConfig != nil {
 		payload["auth_config"] = authConfig
 	}
 	var resp generated.Connection
@@ -148,16 +148,12 @@ func (a *ConnectionsAPI) ReplaceWithContext(ctx context.Context, connectionID st
 	query := map[string]string{}
 	query["organization_id"] = a.cfg.OrganizationID
 	payload := map[string]any{}
-	if name != "" {
-		payload["name"] = name
-	}
-	if description != "" {
-		payload["description"] = description
-	}
-	if len(config) > 0 {
+	payload["name"] = name
+	payload["description"] = description
+	if config != nil {
 		payload["config"] = config
 	}
-	if len(authConfig) > 0 {
+	if authConfig != nil {
 		payload["auth_config"] = authConfig
 	}
 	var resp generated.Connection

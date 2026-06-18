@@ -3,6 +3,7 @@ package roe
 import (
 	"encoding/json"
 	"net/http"
+	"reflect"
 	"testing"
 	"time"
 )
@@ -12,6 +13,8 @@ func TestConnectionsAPIUpdateAndReplaceUseDistinctHTTPMethods(t *testing.T) {
 		name       string
 		wantMethod string
 		call       func(*RoeClient) error
+		wantBody   map[string]any
+		wantAbsent []string
 	}{
 		{
 			name:       "update",
@@ -20,13 +23,25 @@ func TestConnectionsAPIUpdateAndReplaceUseDistinctHTTPMethods(t *testing.T) {
 				_, err := client.Connections.Update("conn_1", "Updated", "desc", map[string]any{"database": "analytics"}, nil)
 				return err
 			},
+			wantBody: map[string]any{
+				"name":        "Updated",
+				"description": "desc",
+				"config":      map[string]any{"database": "analytics"},
+			},
+			wantAbsent: []string{"auth_config"},
 		},
 		{
 			name:       "replace",
 			wantMethod: http.MethodPut,
 			call: func(client *RoeClient) error {
-				_, err := client.Connections.Replace("conn_1", "Updated", "desc", map[string]any{"database": "analytics"}, nil)
+				_, err := client.Connections.Replace("conn_1", "Updated", "", map[string]any{}, map[string]any{})
 				return err
+			},
+			wantBody: map[string]any{
+				"name":        "Updated",
+				"description": "",
+				"config":      map[string]any{},
+				"auth_config": map[string]any{},
 			},
 		},
 	}
@@ -47,18 +62,19 @@ func TestConnectionsAPIUpdateAndReplaceUseDistinctHTTPMethods(t *testing.T) {
 				if err := json.NewDecoder(r.Body).Decode(&body); err != nil {
 					t.Fatalf("decode body: %v", err)
 				}
-				if body["name"] != "Updated" {
-					t.Fatalf("expected name=Updated, got %v", body["name"])
+				for key, want := range tt.wantBody {
+					got, ok := body[key]
+					if !ok {
+						t.Fatalf("expected body field %q in %#v", key, body)
+					}
+					if !reflect.DeepEqual(got, want) {
+						t.Fatalf("expected body field %q=%#v, got %#v", key, want, got)
+					}
 				}
-				if body["description"] != "desc" {
-					t.Fatalf("expected description=desc, got %v", body["description"])
-				}
-				config, ok := body["config"].(map[string]any)
-				if !ok {
-					t.Fatalf("expected config object, got %T", body["config"])
-				}
-				if config["database"] != "analytics" {
-					t.Fatalf("expected config database=analytics, got %v", config["database"])
+				for _, key := range tt.wantAbsent {
+					if _, ok := body[key]; ok {
+						t.Fatalf("expected body field %q to be omitted, got %#v", key, body[key])
+					}
 				}
 
 				w.Header().Set("Content-Type", "application/json")

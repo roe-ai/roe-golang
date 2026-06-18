@@ -205,6 +205,7 @@ apis:
       - name: agentID
         location: path
         go_type: string
+        validate_nonempty: true
       - name: name
         location: body
         wire_name: name
@@ -232,6 +233,7 @@ apis:
       - name: agentID
         location: path
         go_type: string
+        validate_nonempty: true
       - name: name
         location: body
         wire_name: name
@@ -374,9 +376,11 @@ apis:
           - name: agentID
             location: path
             go_type: string
+            validate_nonempty: true
           - name: versionID
             location: path
             go_type: string
+            validate_nonempty: true
           - name: versionName
             location: body
             wire_name: version_name
@@ -398,9 +402,11 @@ apis:
           - name: agentID
             location: path
             go_type: string
+            validate_nonempty: true
           - name: versionID
             location: path
             go_type: string
+            validate_nonempty: true
           - name: versionName
             location: body
             wire_name: version_name
@@ -680,13 +686,13 @@ apis:
         wire_name: name
         go_type: string
         optional: true
-        omit_when_empty: true
+        omit_when_empty: false
       - name: description
         location: body
         wire_name: description
         go_type: string
         optional: true
-        omit_when_empty: true
+        omit_when_empty: false
       - name: config
         location: body
         wire_name: config
