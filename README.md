@@ -121,18 +121,33 @@ Non-2xx responses return typed errors that embed `*APIError` and expose
 without parsing error strings:
 
 ```go
+package main
+
 import (
     "errors"
     "log"
+    "os"
 
     roe "github.com/roe-ai/roe-golang"
 )
 
-_, err := client.Agents.Retrieve("00000000-0000-0000-0000-000000000000")
+func main() {
+    client, err := roe.NewClient(
+        os.Getenv("ROE_API_KEY"),
+        os.Getenv("ROE_ORGANIZATION_ID"),
+        "", 0, 0,
+    )
+    if err != nil {
+        log.Fatal(err)
+    }
+    defer client.Close()
 
-var notFound *roe.NotFoundError
-if errors.As(err, &notFound) {
-    log.Printf("not found: %d %s", notFound.StatusCode, notFound.Message)
+    _, err = client.Agents.Retrieve("00000000-0000-0000-0000-000000000000")
+
+    var notFound *roe.NotFoundError
+    if errors.As(err, &notFound) {
+        log.Printf("not found: %d %s", notFound.StatusCode, notFound.Message)
+    }
 }
 ```
 
