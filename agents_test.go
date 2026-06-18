@@ -196,7 +196,8 @@ func TestAgentVersionsAPIUpdateAndReplaceUseExpectedTransport(t *testing.T) {
 			name:   "replace",
 			method: http.MethodPut,
 			body: map[string]any{
-				"description": "replacement version",
+				"version_name": "",
+				"description":  "replacement version",
 			},
 			callClient: func(client *RoeClient) error {
 				return client.Agents.Versions.Replace("agent-id", "version-id", "", "replacement version")

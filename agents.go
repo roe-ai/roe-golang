@@ -430,7 +430,7 @@ func (v *AgentVersionsAPI) Replace(agentID, versionID, versionName, description 
 }
 
 func (v *AgentVersionsAPI) ReplaceWithContext(ctx context.Context, agentID, versionID, versionName, description string) error {
-	payload := agentVersionUpdatePayload(versionName, description)
+	payload := agentVersionReplacePayload(versionName, description)
 	return v.agentsAPI.httpClient.putJSONWithContext(ctx, fmt.Sprintf("/v1/agents/%s/versions/%s/", agentID, versionID), payload, nil, nil)
 }
 
@@ -438,6 +438,16 @@ func agentVersionUpdatePayload(versionName, description string) map[string]any {
 	payload := map[string]any{}
 	if versionName != "" {
 		payload["version_name"] = versionName
+	}
+	if description != "" {
+		payload["description"] = description
+	}
+	return payload
+}
+
+func agentVersionReplacePayload(versionName, description string) map[string]any {
+	payload := map[string]any{
+		"version_name": versionName,
 	}
 	if description != "" {
 		payload["description"] = description

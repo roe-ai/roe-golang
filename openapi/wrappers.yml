@@ -411,7 +411,6 @@ apis:
             wire_name: version_name
             go_type: string
             optional: true
-            omit_when_empty: true
           - name: description
             location: body
             wire_name: description
