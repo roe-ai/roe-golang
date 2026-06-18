@@ -377,12 +377,17 @@ client.Agents.List(page, pageSize)
 client.Agents.Retrieve(agentID)
 client.Agents.Create(name, engineClassID, inputDefs, engineConfig, versionName, desc)
 client.Agents.Update(agentID, name, disableCache, cacheFailedJobs)
+client.Agents.Replace(agentID, name, disableCache, cacheFailedJobs)
 client.Agents.Delete(agentID)
 client.Agents.Duplicate(agentID)
 ```
 
 > `Agents.Duplicate(...)` returns the new `BaseAgent` directly — the new
 > agent's id is on the returned value as `.ID`.
+>
+> Compatibility: `Agents.Update(...)` and `Agents.Versions.Update(...)` use
+> PATCH for partial updates. Use `Replace(...)` when you need the PUT
+> replacement endpoints.
 
 ### Running Agents
 
@@ -402,6 +407,7 @@ client.Agents.Versions.Retrieve(agentID, versionID, getSupportsEval)
 client.Agents.Versions.RetrieveCurrent(agentID)
 client.Agents.Versions.Create(agentID, inputDefs, engineConfig, versionName, desc)
 client.Agents.Versions.Update(agentID, versionID, versionName, desc)
+client.Agents.Versions.Replace(agentID, versionID, versionName, desc)
 client.Agents.Versions.Delete(agentID, versionID)
 ```
 
