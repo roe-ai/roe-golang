@@ -390,7 +390,7 @@ if err != nil {
 Update an agent version.
 
 ```go
-result, err := client.Agents.Versions.Replace(
+err := client.Agents.Versions.Replace(
     "agentID",
     "versionID",
     "versionName",
