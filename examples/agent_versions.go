@@ -32,7 +32,7 @@ func main() {
 			{"key": "text", "data_type": "text/plain", "description": "Text input"},
 		},
 		map[string]any{
-			"model": "gpt-4.1-2025-04-14",
+			"model": "gpt-5.5-2026-04-23",
 			"text":  "${text}",
 			"output_schema": map[string]any{
 				"type": "object",
