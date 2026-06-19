@@ -2,17 +2,13 @@
 package roe
 
 type generatedAPIs struct {
-	Connections *ConnectionsAPI
-	Connectors  *ConnectorsAPI
-	Discovery   *DiscoveryAPI
-	Tables      *TablesAPI
+	Discovery *DiscoveryAPI
+	Tables    *TablesAPI
 }
 
 func newGeneratedAPIs(cfg Config, httpClient *httpClient) *generatedAPIs {
 	return &generatedAPIs{
-		Connections: newConnectionsAPI(cfg, httpClient),
-		Connectors:  newConnectorsAPI(cfg, httpClient),
-		Discovery:   newDiscoveryAPI(cfg, httpClient),
-		Tables:      newTablesAPI(cfg, httpClient),
+		Discovery: newDiscoveryAPI(cfg, httpClient),
+		Tables:    newTablesAPI(cfg, httpClient),
 	}
 }
