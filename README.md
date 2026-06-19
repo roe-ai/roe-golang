@@ -195,7 +195,7 @@ func main() {
         },
         map[string]any{
             "url":         "${url}",
-            "model":       "gpt-4.1-2025-04-14",
+            "model":       "gpt-5.5-2026-04-23",
             "instruction": "Extract company information from this website.",
             "vision_mode": false,
             "crawl_config": map[string]any{

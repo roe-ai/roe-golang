@@ -31,7 +31,7 @@ result, err := client.Agents.Create(
     "name",
     "engineClassID",
     []map[string]any{{"key": "text", "data_type": "text/plain"}},
-    map[string]any{"model": "gpt-4.1"},
+    map[string]any{"model": "gpt-5.5-2026-04-23"},
     "versionName",
     "description",
 )
@@ -315,7 +315,7 @@ Create a new agent version.
 result, err := client.Agents.Versions.Create(
     "agentID",
     []map[string]any{{"key": "text", "data_type": "text/plain"}},
-    map[string]any{"model": "gpt-4.1"},
+    map[string]any{"model": "gpt-5.5-2026-04-23"},
     "versionName",
     "description",
 )
