@@ -19,10 +19,15 @@ const (
 	readmeBlockEnd    = "<!-- ROE-SDK:GENERATED-FRIENDLY-APIS:END -->"
 )
 
+// handMaintainedAPIs lists namespaces whose wrappers are hand-written (their
+// operations use kind "manual"). The generator skips these instead of emitting
+// a generated wrapper. Every manual namespace in the SDK contract must be listed
+// here, otherwise isGeneratedAPI panics on its unsupported "manual" kind.
 var handMaintainedAPIs = map[string]bool{
-	"agents":   true,
-	"policies": true,
-	"users":    true,
+	"agents":         true,
+	"knowledge_base": true,
+	"policies":       true,
+	"users":          true,
 }
 
 type contract struct {
