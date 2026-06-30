@@ -19,12 +19,6 @@ const (
 	readmeBlockEnd    = "<!-- ROE-SDK:GENERATED-FRIENDLY-APIS:END -->"
 )
 
-var handMaintainedAPIs = map[string]bool{
-	"agents":   true,
-	"policies": true,
-	"users":    true,
-}
-
 type contract struct {
 	APIs map[string]apiSpec `yaml:"apis"`
 }
@@ -75,7 +69,7 @@ func main() {
 	spec := readContract(filepath.Join(root, "openapi", "wrappers.yml"))
 	writeGeneratedAPIs(root, spec)
 	for apiName, api := range spec.APIs {
-		if !isGeneratedAPI(apiName, api) {
+		if !isGeneratedAPI(api) {
 			continue
 		}
 		writeAPI(root, modulePath, apiName, api)
@@ -154,7 +148,7 @@ func writeGeneratedAPIs(root string, spec contract) {
 func generatedAPINames(apis map[string]apiSpec) []string {
 	names := make([]string, 0, len(apis))
 	for apiName, api := range apis {
-		if isGeneratedAPI(apiName, api) {
+		if isGeneratedAPI(api) {
 			names = append(names, apiName)
 		}
 	}
@@ -162,19 +156,19 @@ func generatedAPINames(apis map[string]apiSpec) []string {
 	return names
 }
 
-func isGeneratedAPI(apiName string, api apiSpec) bool {
+// isGeneratedAPI reports whether the generator should emit a wrapper for this
+// API. Hand-maintained namespaces are detected from the contract (mirroring the
+// Python and TypeScript generators) rather than from a static allowlist, so new
+// manual namespaces never need to be registered here. An API is hand-maintained
+// when it has nested namespaces (the generator only emits flat top-level
+// wrappers) or any operation whose kind is not generated (e.g. "manual").
+func isGeneratedAPI(api apiSpec) bool {
 	if len(api.Namespaces) > 0 {
-		if handMaintainedAPIs[apiName] {
-			return false
-		}
-		must(fmt.Errorf("%s has namespaces; Go wrapper generator only supports top-level generated APIs", apiName))
+		return false
 	}
 	for _, op := range api.Operations {
 		if !isGeneratedOperation(op) {
-			if handMaintainedAPIs[apiName] {
-				return false
-			}
-			must(fmt.Errorf("%s.%s has unsupported kind %q", apiName, op.MethodName, op.Kind))
+			return false
 		}
 	}
 	return true
