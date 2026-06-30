@@ -74,9 +74,9 @@ export ROE_ORGANIZATION_ID="your-org-uuid"
 ```
 
 <!-- ROE-SDK:GENERATED-FRIENDLY-APIS:START -->
-## SDK Operation Groups
+## Generated Friendly APIs
 
-Common operations are available directly on the SDK client.
+This block is synced from `roe-main/roe-sdk/sdk_contract.yml` during SDK fan-out.
 
 ```go
 engines, err := client.Discovery.ListAgentEngineTypes()

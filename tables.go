@@ -3,12 +3,11 @@ package roe
 
 import (
 	"context"
-	"fmt"
 
 	"github.com/roe-ai/roe-golang/generated"
 )
 
-// TablesAPI API for managing Roe tables.
+// TablesAPI API for uploading CSV files into Roe tables.
 type TablesAPI struct {
 	cfg        Config
 	httpClient *httpClient
@@ -16,21 +15,6 @@ type TablesAPI struct {
 
 func newTablesAPI(cfg Config, httpClient *httpClient) *TablesAPI {
 	return &TablesAPI{cfg: cfg, httpClient: httpClient}
-}
-
-// List List Roe tables.
-func (a *TablesAPI) List() (generated.TableListResponse, error) {
-	return a.ListWithContext(context.Background())
-}
-
-// ListWithContext List Roe tables.
-func (a *TablesAPI) ListWithContext(ctx context.Context) (generated.TableListResponse, error) {
-	query := map[string]string{}
-	var resp generated.TableListResponse
-	if err := a.httpClient.getWithContext(ctx, "/v1/tables/", query, &resp); err != nil {
-		return generated.TableListResponse{}, err
-	}
-	return resp, nil
 }
 
 // Upload Upload a CSV file and create a Roe table.
@@ -51,83 +35,4 @@ func (a *TablesAPI) UploadWithContext(ctx context.Context, tableName string, fil
 		return generated.TableUploadResponse{}, err
 	}
 	return resp, nil
-}
-
-// Query Run a read-only query against Roe tables.
-func (a *TablesAPI) Query(sql string, limit int) (generated.TableQuerySubmitResponse, error) {
-	return a.QueryWithContext(context.Background(), sql, limit)
-}
-
-// QueryWithContext Run a read-only query against Roe tables.
-func (a *TablesAPI) QueryWithContext(ctx context.Context, sql string, limit int) (generated.TableQuerySubmitResponse, error) {
-	query := map[string]string{}
-	payload := map[string]any{}
-	payload["sql"] = sql
-	if limit != 0 {
-		payload["limit"] = limit
-	}
-	var resp generated.TableQuerySubmitResponse
-	if err := a.httpClient.postJSONWithContext(ctx, "/v1/tables/query/", payload, query, &resp); err != nil {
-		return generated.TableQuerySubmitResponse{}, err
-	}
-	return resp, nil
-}
-
-// QueryResult Get the result for a submitted table query.
-func (a *TablesAPI) QueryResult(tableQueryID string) (generated.TableQueryResultResponse, error) {
-	return a.QueryResultWithContext(context.Background(), tableQueryID)
-}
-
-// QueryResultWithContext Get the result for a submitted table query.
-func (a *TablesAPI) QueryResultWithContext(ctx context.Context, tableQueryID string) (generated.TableQueryResultResponse, error) {
-	query := map[string]string{}
-	var resp generated.TableQueryResultResponse
-	if err := a.httpClient.getWithContext(ctx, fmt.Sprintf("/v1/tables/query/%s/result/", tableQueryID), query, &resp); err != nil {
-		return generated.TableQueryResultResponse{}, err
-	}
-	return resp, nil
-}
-
-// Describe Describe a Roe table.
-func (a *TablesAPI) Describe(tableName string) (generated.TableDescribeResponse, error) {
-	return a.DescribeWithContext(context.Background(), tableName)
-}
-
-// DescribeWithContext Describe a Roe table.
-func (a *TablesAPI) DescribeWithContext(ctx context.Context, tableName string) (generated.TableDescribeResponse, error) {
-	query := map[string]string{}
-	var resp generated.TableDescribeResponse
-	if err := a.httpClient.getWithContext(ctx, fmt.Sprintf("/v1/tables/%s/describe/", tableName), query, &resp); err != nil {
-		return generated.TableDescribeResponse{}, err
-	}
-	return resp, nil
-}
-
-// Preview Preview rows from a Roe table.
-func (a *TablesAPI) Preview(tableName string, limit int) (generated.TablePreviewResponse, error) {
-	return a.PreviewWithContext(context.Background(), tableName, limit)
-}
-
-// PreviewWithContext Preview rows from a Roe table.
-func (a *TablesAPI) PreviewWithContext(ctx context.Context, tableName string, limit int) (generated.TablePreviewResponse, error) {
-	query := map[string]string{}
-	if limit != 0 {
-		query["limit"] = fmt.Sprint(limit)
-	}
-	var resp generated.TablePreviewResponse
-	if err := a.httpClient.getWithContext(ctx, fmt.Sprintf("/v1/tables/%s/preview/", tableName), query, &resp); err != nil {
-		return generated.TablePreviewResponse{}, err
-	}
-	return resp, nil
-}
-
-// Delete Delete a Roe table.
-func (a *TablesAPI) Delete(tableName string) error {
-	return a.DeleteWithContext(context.Background(), tableName)
-}
-
-// DeleteWithContext Delete a Roe table.
-func (a *TablesAPI) DeleteWithContext(ctx context.Context, tableName string) error {
-	query := map[string]string{}
-	return a.httpClient.deleteWithContext(ctx, fmt.Sprintf("/v1/tables/%s/", tableName), query)
 }

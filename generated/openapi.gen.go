@@ -221,6 +221,13 @@ type AgentInputDefinition struct {
 	Key string `json:"key"`
 }
 
+// AgentJobCancelAllResponse defines model for AgentJobCancelAllResponse.
+type AgentJobCancelAllResponse struct {
+	Note          string  `json:"note"`
+	TargetedCount int     `json:"targeted_count"`
+	TaskId        *string `json:"task_id"`
+}
+
 // AgentJobDeleteDataResponse Response payload of purge_agent_job_data (delete-data and :purgeData).
 type AgentJobDeleteDataResponse struct {
 	// ArtifactsDeletedCount Number of workflow artifacts successfully deleted
@@ -7121,8 +7128,7 @@ func (r AgentsDuplicateCreateResponse) StatusCode() int {
 type AgentsJobsCancelAllCreateResponse struct {
 	Body         []byte
 	HTTPResponse *http.Response
-	JSON403      *ErrorDetailResponse
-	JSON404      *ErrorDetailResponse
+	JSON200      *AgentJobCancelAllResponse
 }
 
 // Status returns HTTPResponse.Status
@@ -9677,19 +9683,12 @@ func ParseAgentsJobsCancelAllCreateResponse(rsp *http.Response) (*AgentsJobsCanc
 	}
 
 	switch {
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 403:
-		var dest ErrorDetailResponse
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest AgentJobCancelAllResponse
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
 			return nil, err
 		}
-		response.JSON403 = &dest
-
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 404:
-		var dest ErrorDetailResponse
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSON404 = &dest
+		response.JSON200 = &dest
 
 	}
 
