@@ -312,6 +312,19 @@ type JobDataDeleteResponse struct {
 	Errors           []string `json:"errors"`
 }
 
+// AgentJobCancelAllResponse for the cancel-all endpoint.
+type AgentJobCancelAllResponse struct {
+	TaskID        *string `json:"task_id"`
+	TargetedCount int     `json:"targeted_count"`
+	Note          string  `json:"note"`
+}
+
+// AgentJobArtifactResult is the artifact result payload returned by
+// GET /v1/agents/jobs/{agent_job_id}/artifacts/result/.
+type AgentJobArtifactResult struct {
+	Result any `json:"result"`
+}
+
 // Policy represents a policy resource for agentic workflows.
 type Policy struct {
 	ID               string  `json:"id"`
