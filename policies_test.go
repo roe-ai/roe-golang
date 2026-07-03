@@ -449,7 +449,7 @@ func TestCancelAllVerifiesPath(t *testing.T) {
 	}
 	defer client.Close()
 
-	if err := client.Agents.Jobs.CancelAll("agent-123"); err != nil {
+	if _, err := client.Agents.Jobs.CancelAll("agent-123"); err != nil {
 		t.Fatalf("cancel all: %v", err)
 	}
 }

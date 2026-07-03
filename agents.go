@@ -594,6 +594,27 @@ func (j *AgentJobsAPI) DownloadReferenceWithContext(ctx context.Context, jobID, 
 	return j.agentsAPI.httpClient.getBytesWithContext(ctx, fmt.Sprintf("/v1/agents/jobs/%s/references/%s/", jobID, resourceID), params)
 }
 
+// RetrieveArtifact fetches a tool result artifact's result field by key.
+func (j *AgentJobsAPI) RetrieveArtifact(jobID, artifactKey string) (AgentJobArtifactResult, error) {
+	return j.RetrieveArtifactWithContext(context.Background(), jobID, artifactKey)
+}
+
+// RetrieveArtifactWithContext fetches an artifact result with a caller-supplied context.
+func (j *AgentJobsAPI) RetrieveArtifactWithContext(ctx context.Context, jobID, artifactKey string) (AgentJobArtifactResult, error) {
+	if jobID == "" {
+		return AgentJobArtifactResult{}, fmt.Errorf("jobID cannot be empty")
+	}
+	if artifactKey == "" {
+		return AgentJobArtifactResult{}, fmt.Errorf("artifactKey cannot be empty")
+	}
+	params := map[string]string{"artifact_key": artifactKey}
+	var resp AgentJobArtifactResult
+	if err := j.agentsAPI.httpClient.getWithContext(ctx, fmt.Sprintf("/v1/agents/jobs/%s/artifacts/result/", jobID), params, &resp); err != nil {
+		return AgentJobArtifactResult{}, err
+	}
+	return resp, nil
+}
+
 func (j *AgentJobsAPI) DeleteData(jobID string) (JobDataDeleteResponse, error) {
 	return j.DeleteDataWithContext(context.Background(), jobID)
 }
@@ -619,17 +640,22 @@ func (j *AgentJobsAPI) CancelWithContext(ctx context.Context, jobID string) erro
 	return j.agentsAPI.httpClient.postJSONWithContext(ctx, fmt.Sprintf("/v1/agents/jobs/%s/cancel/", jobID), nil, nil, nil)
 }
 
-// CancelAll cancels all running jobs for an agent.
-func (j *AgentJobsAPI) CancelAll(agentID string) error {
+// CancelAll cancels all running jobs for an agent and returns the structured
+// cancellation summary.
+func (j *AgentJobsAPI) CancelAll(agentID string) (AgentJobCancelAllResponse, error) {
 	return j.CancelAllWithContext(context.Background(), agentID)
 }
 
 // CancelAllWithContext cancels all running jobs for an agent with a caller-supplied context.
-func (j *AgentJobsAPI) CancelAllWithContext(ctx context.Context, agentID string) error {
+func (j *AgentJobsAPI) CancelAllWithContext(ctx context.Context, agentID string) (AgentJobCancelAllResponse, error) {
 	if agentID == "" {
-		return fmt.Errorf("agentID cannot be empty")
+		return AgentJobCancelAllResponse{}, fmt.Errorf("agentID cannot be empty")
 	}
-	return j.agentsAPI.httpClient.postJSONWithContext(ctx, fmt.Sprintf("/v1/agents/%s/jobs/cancel-all/", agentID), nil, nil, nil)
+	var resp AgentJobCancelAllResponse
+	if err := j.agentsAPI.httpClient.postJSONWithContext(ctx, fmt.Sprintf("/v1/agents/%s/jobs/cancel-all/", agentID), nil, nil, &resp); err != nil {
+		return AgentJobCancelAllResponse{}, err
+	}
+	return resp, nil
 }
 
 // helpers

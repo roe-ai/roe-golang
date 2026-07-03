@@ -62,6 +62,20 @@ if err != nil {
 }
 ```
 
+#### `agents_jobs_artifacts_result_retrieve`
+
+Get tool result artifact (result only)
+
+```go
+result, err := client.Agents.Jobs.RetrieveArtifact(
+    "jobID",
+    "artifactKey",
+)
+if err != nil {
+    log.Fatal(err)
+}
+```
+
 #### `agents_jobs_references_retrieve`
 
 Serve a reference file associated with an agent job.
@@ -280,7 +294,7 @@ if err != nil {
 
 #### `agents_jobs_cancel_all_create`
 
-Cancel all agent jobs
+Cancel all running agent jobs (:cancelAll)
 
 ```go
 err := client.Agents.Jobs.CancelAll(
@@ -573,6 +587,185 @@ List supported agent engine types
 ```go
 result, err := client.Discovery.ListAgentEngineTypes(
 )
+if err != nil {
+    log.Fatal(err)
+}
+```
+
+### Knowledge Base
+
+#### `knowledge_base_list`
+
+List all KBs for the org, or start a new draft.
+
+```go
+result, err := client.KnowledgeBase.List(1, 10)
+if err != nil {
+    log.Fatal(err)
+}
+```
+
+#### `knowledge_base_create`
+
+List all KBs for the org, or start a new draft.
+
+```go
+result, err := client.KnowledgeBase.Create(
+    "company",
+    "brief",
+    "", // name (optional)
+    "", // product name (optional)
+    "", // website URL (optional)
+)
+if err != nil {
+    log.Fatal(err)
+}
+```
+
+#### `knowledge_base_catalog_retrieve`
+
+Names-only typology+tactic catalog.
+
+```go
+result, err := client.KnowledgeBase.Catalog()
+if err != nil {
+    log.Fatal(err)
+}
+```
+
+#### `knowledge_base_import_lens_create`
+
+Import a finalized Atlas lens into roe-main by its atlas_lens_id.
+
+```go
+result, err := client.KnowledgeBase.ImportLens("atlas_lens_id")
+if err != nil {
+    log.Fatal(err)
+}
+```
+
+#### `knowledge_base_lens_retrieve`
+
+Fetch a lens directly from Atlas by its atlas_lens_id and return the
+names-only projection.
+
+```go
+result, err := client.KnowledgeBase.LensByAtlasId("atlas_lens_id")
+if err != nil {
+    log.Fatal(err)
+}
+```
+
+#### `knowledge_base_destroy`
+
+Get or delete a single KB.
+
+```go
+err := client.KnowledgeBase.Delete("knowledge_base_id")
+if err != nil {
+    log.Fatal(err)
+}
+```
+
+#### `knowledge_base_retrieve`
+
+Get or delete a single KB.
+
+```go
+result, err := client.KnowledgeBase.Retrieve("knowledge_base_id")
+if err != nil {
+    log.Fatal(err)
+}
+```
+
+#### `knowledge_base_draft_retrieve`
+
+Poll the atlas draft.
+
+```go
+result, err := client.KnowledgeBase.PollDraft("knowledge_base_id")
+if err != nil {
+    log.Fatal(err)
+}
+```
+
+#### `knowledge_base_finalize_create`
+
+Commit the agreed selection into a lens and mark the KB active.
+
+```go
+result, err := client.KnowledgeBase.Finalize(
+    "knowledge_base_id",
+    "",   // name (optional)
+    true, // MCP enabled
+    true, // public
+)
+if err != nil {
+    log.Fatal(err)
+}
+```
+
+#### `knowledge_base_regenerate_create`
+
+Kick off another async generation round with feedback.
+
+```go
+result, err := client.KnowledgeBase.Regenerate("knowledge_base_id", "")
+if err != nil {
+    log.Fatal(err)
+}
+```
+
+#### `knowledge_base_resolve_create`
+
+Approve or decline a pending regeneration proposal.
+
+```go
+result, err := client.KnowledgeBase.Resolve(
+    "knowledge_base_id",
+    nil,   // refs (optional)
+    "",    // suggested name (optional)
+    false, // accept summary
+    false, // discard
+)
+if err != nil {
+    log.Fatal(err)
+}
+```
+
+#### `knowledge_base_selection_partial_update`
+
+Persist hand-edits to the working selection (typology + tactic opt-in/out).
+
+```go
+result, err := client.KnowledgeBase.PatchSelection(
+    "knowledge_base_id",
+    []map[string]any{},
+    "", // suggested name (optional)
+)
+if err != nil {
+    log.Fatal(err)
+}
+```
+
+#### `knowledge_base_sync_create`
+
+Standalone best-effort lens sync (display mode).
+
+```go
+result, err := client.KnowledgeBase.Sync("knowledge_base_id")
+if err != nil {
+    log.Fatal(err)
+}
+```
+
+#### `knowledge_base_unlink_destroy`
+
+Unlink a knowledge base: remove the local KnowledgeBase row only, leaving
+the Atlas lens (and any in-progress draft) untouched.
+
+```go
+err := client.KnowledgeBase.Unlink("knowledge_base_id")
 if err != nil {
     log.Fatal(err)
 }
