@@ -599,8 +599,7 @@ if err != nil {
 List all KBs for the org, or start a new draft.
 
 ```go
-result, err := client.KnowledgeBase.List(
-)
+result, err := client.KnowledgeBase.List(1, 10)
 if err != nil {
     log.Fatal(err)
 }
@@ -612,6 +611,11 @@ List all KBs for the org, or start a new draft.
 
 ```go
 result, err := client.KnowledgeBase.Create(
+    "company",
+    "brief",
+    "", // name (optional)
+    "", // product name (optional)
+    "", // website URL (optional)
 )
 if err != nil {
     log.Fatal(err)
@@ -623,8 +627,7 @@ if err != nil {
 Names-only typology+tactic catalog.
 
 ```go
-result, err := client.KnowledgeBase.Catalog(
-)
+result, err := client.KnowledgeBase.Catalog()
 if err != nil {
     log.Fatal(err)
 }
@@ -635,8 +638,7 @@ if err != nil {
 Import a finalized Atlas lens into roe-main by its atlas_lens_id.
 
 ```go
-result, err := client.KnowledgeBase.ImportLens(
-)
+result, err := client.KnowledgeBase.ImportLens("atlas_lens_id")
 if err != nil {
     log.Fatal(err)
 }
@@ -648,8 +650,7 @@ Fetch a lens directly from Atlas by its atlas_lens_id and return the
 names-only projection.
 
 ```go
-result, err := client.KnowledgeBase.LensByAtlasId(
-)
+result, err := client.KnowledgeBase.LensByAtlasId("atlas_lens_id")
 if err != nil {
     log.Fatal(err)
 }
@@ -660,8 +661,7 @@ if err != nil {
 Get or delete a single KB.
 
 ```go
-result, err := client.KnowledgeBase.Delete(
-)
+err := client.KnowledgeBase.Delete("knowledge_base_id")
 if err != nil {
     log.Fatal(err)
 }
@@ -672,8 +672,7 @@ if err != nil {
 Get or delete a single KB.
 
 ```go
-result, err := client.KnowledgeBase.Retrieve(
-)
+result, err := client.KnowledgeBase.Retrieve("knowledge_base_id")
 if err != nil {
     log.Fatal(err)
 }
@@ -684,8 +683,7 @@ if err != nil {
 Poll the atlas draft.
 
 ```go
-result, err := client.KnowledgeBase.PollDraft(
-)
+result, err := client.KnowledgeBase.PollDraft("knowledge_base_id")
 if err != nil {
     log.Fatal(err)
 }
@@ -697,6 +695,10 @@ Commit the agreed selection into a lens and mark the KB active.
 
 ```go
 result, err := client.KnowledgeBase.Finalize(
+    "knowledge_base_id",
+    "",   // name (optional)
+    true, // MCP enabled
+    true, // public
 )
 if err != nil {
     log.Fatal(err)
@@ -708,8 +710,7 @@ if err != nil {
 Kick off another async generation round with feedback.
 
 ```go
-result, err := client.KnowledgeBase.Regenerate(
-)
+result, err := client.KnowledgeBase.Regenerate("knowledge_base_id", "")
 if err != nil {
     log.Fatal(err)
 }
@@ -721,6 +722,11 @@ Approve or decline a pending regeneration proposal.
 
 ```go
 result, err := client.KnowledgeBase.Resolve(
+    "knowledge_base_id",
+    nil,   // refs (optional)
+    "",    // suggested name (optional)
+    false, // accept summary
+    false, // discard
 )
 if err != nil {
     log.Fatal(err)
@@ -733,6 +739,9 @@ Persist hand-edits to the working selection (typology + tactic opt-in/out).
 
 ```go
 result, err := client.KnowledgeBase.PatchSelection(
+    "knowledge_base_id",
+    []map[string]any{},
+    "", // suggested name (optional)
 )
 if err != nil {
     log.Fatal(err)
@@ -744,8 +753,7 @@ if err != nil {
 Standalone best-effort lens sync (display mode).
 
 ```go
-result, err := client.KnowledgeBase.Sync(
-)
+result, err := client.KnowledgeBase.Sync("knowledge_base_id")
 if err != nil {
     log.Fatal(err)
 }
@@ -757,8 +765,7 @@ Unlink a knowledge base: remove the local KnowledgeBase row only, leaving
 the Atlas lens (and any in-progress draft) untouched.
 
 ```go
-result, err := client.KnowledgeBase.Unlink(
-)
+err := client.KnowledgeBase.Unlink("knowledge_base_id")
 if err != nil {
     log.Fatal(err)
 }
