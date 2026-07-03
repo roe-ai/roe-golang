@@ -62,6 +62,20 @@ if err != nil {
 }
 ```
 
+#### `agents_jobs_artifacts_result_retrieve`
+
+Get tool result artifact (result only)
+
+```go
+result, err := client.Agents.Jobs.RetrieveArtifact(
+    "jobID",
+    "artifactKey",
+)
+if err != nil {
+    log.Fatal(err)
+}
+```
+
 #### `agents_jobs_references_retrieve`
 
 Serve a reference file associated with an agent job.
@@ -280,7 +294,7 @@ if err != nil {
 
 #### `agents_jobs_cancel_all_create`
 
-Cancel all agent jobs
+Cancel all running agent jobs (:cancelAll)
 
 ```go
 err := client.Agents.Jobs.CancelAll(
@@ -572,6 +586,178 @@ List supported agent engine types
 
 ```go
 result, err := client.Discovery.ListAgentEngineTypes(
+)
+if err != nil {
+    log.Fatal(err)
+}
+```
+
+### Knowledge Base
+
+#### `knowledge_base_list`
+
+List all KBs for the org, or start a new draft.
+
+```go
+result, err := client.KnowledgeBase.List(
+)
+if err != nil {
+    log.Fatal(err)
+}
+```
+
+#### `knowledge_base_create`
+
+List all KBs for the org, or start a new draft.
+
+```go
+result, err := client.KnowledgeBase.Create(
+)
+if err != nil {
+    log.Fatal(err)
+}
+```
+
+#### `knowledge_base_catalog_retrieve`
+
+Names-only typology+tactic catalog.
+
+```go
+result, err := client.KnowledgeBase.Catalog(
+)
+if err != nil {
+    log.Fatal(err)
+}
+```
+
+#### `knowledge_base_import_lens_create`
+
+Import a finalized Atlas lens into roe-main by its atlas_lens_id.
+
+```go
+result, err := client.KnowledgeBase.ImportLens(
+)
+if err != nil {
+    log.Fatal(err)
+}
+```
+
+#### `knowledge_base_lens_retrieve`
+
+Fetch a lens directly from Atlas by its atlas_lens_id and return the
+names-only projection.
+
+```go
+result, err := client.KnowledgeBase.LensByAtlasId(
+)
+if err != nil {
+    log.Fatal(err)
+}
+```
+
+#### `knowledge_base_destroy`
+
+Get or delete a single KB.
+
+```go
+result, err := client.KnowledgeBase.Delete(
+)
+if err != nil {
+    log.Fatal(err)
+}
+```
+
+#### `knowledge_base_retrieve`
+
+Get or delete a single KB.
+
+```go
+result, err := client.KnowledgeBase.Retrieve(
+)
+if err != nil {
+    log.Fatal(err)
+}
+```
+
+#### `knowledge_base_draft_retrieve`
+
+Poll the atlas draft.
+
+```go
+result, err := client.KnowledgeBase.PollDraft(
+)
+if err != nil {
+    log.Fatal(err)
+}
+```
+
+#### `knowledge_base_finalize_create`
+
+Commit the agreed selection into a lens and mark the KB active.
+
+```go
+result, err := client.KnowledgeBase.Finalize(
+)
+if err != nil {
+    log.Fatal(err)
+}
+```
+
+#### `knowledge_base_regenerate_create`
+
+Kick off another async generation round with feedback.
+
+```go
+result, err := client.KnowledgeBase.Regenerate(
+)
+if err != nil {
+    log.Fatal(err)
+}
+```
+
+#### `knowledge_base_resolve_create`
+
+Approve or decline a pending regeneration proposal.
+
+```go
+result, err := client.KnowledgeBase.Resolve(
+)
+if err != nil {
+    log.Fatal(err)
+}
+```
+
+#### `knowledge_base_selection_partial_update`
+
+Persist hand-edits to the working selection (typology + tactic opt-in/out).
+
+```go
+result, err := client.KnowledgeBase.PatchSelection(
+)
+if err != nil {
+    log.Fatal(err)
+}
+```
+
+#### `knowledge_base_sync_create`
+
+Standalone best-effort lens sync (display mode).
+
+```go
+result, err := client.KnowledgeBase.Sync(
+)
+if err != nil {
+    log.Fatal(err)
+}
+```
+
+#### `knowledge_base_unlink_destroy`
+
+Unlink a knowledge base: remove the local KnowledgeBase row only, leaving
+the Atlas lens (and any in-progress draft) untouched.
+
+```go
+result, err := client.KnowledgeBase.Unlink(
 )
 if err != nil {
     log.Fatal(err)

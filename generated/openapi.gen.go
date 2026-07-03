@@ -63,7 +63,9 @@ const (
 	CheckoutCom    ConnectorTypeEnum = "checkout_com"
 	CustomApi      ConnectorTypeEnum = "custom_api"
 	CustomMcp      ConnectorTypeEnum = "custom_mcp"
+	GoogleDocs     ConnectorTypeEnum = "google_docs"
 	GoogleDrive    ConnectorTypeEnum = "google_drive"
+	GoogleSheets   ConnectorTypeEnum = "google_sheets"
 	Intercom       ConnectorTypeEnum = "intercom"
 	LexisNexis     ConnectorTypeEnum = "lexis_nexis"
 	Plaid          ConnectorTypeEnum = "plaid"
@@ -87,7 +89,11 @@ func (e ConnectorTypeEnum) Valid() bool {
 		return true
 	case CustomMcp:
 		return true
+	case GoogleDocs:
+		return true
 	case GoogleDrive:
+		return true
+	case GoogleSheets:
 		return true
 	case Intercom:
 		return true
@@ -118,18 +124,81 @@ func (e ConnectorTypeEnum) Valid() bool {
 	}
 }
 
+// Defines values for DraftStatusEnum.
+const (
+	DraftStatusEnumError      DraftStatusEnum = "error"
+	DraftStatusEnumGenerating DraftStatusEnum = "generating"
+	DraftStatusEnumReady      DraftStatusEnum = "ready"
+)
+
+// Valid indicates whether the value is a known member of the DraftStatusEnum enum.
+func (e DraftStatusEnum) Valid() bool {
+	switch e {
+	case DraftStatusEnumError:
+		return true
+	case DraftStatusEnumGenerating:
+		return true
+	case DraftStatusEnumReady:
+		return true
+	default:
+		return false
+	}
+}
+
+// Defines values for KnowledgeBaseStatusEnum.
+const (
+	Active   KnowledgeBaseStatusEnum = "active"
+	Drafting KnowledgeBaseStatusEnum = "drafting"
+	Orphaned KnowledgeBaseStatusEnum = "orphaned"
+)
+
+// Valid indicates whether the value is a known member of the KnowledgeBaseStatusEnum enum.
+func (e KnowledgeBaseStatusEnum) Valid() bool {
+	switch e {
+	case Active:
+		return true
+	case Drafting:
+		return true
+	case Orphaned:
+		return true
+	default:
+		return false
+	}
+}
+
+// Defines values for RelevanceEnum.
+const (
+	Core  RelevanceEnum = "core"
+	Edge  RelevanceEnum = "edge"
+	Watch RelevanceEnum = "watch"
+)
+
+// Valid indicates whether the value is a known member of the RelevanceEnum enum.
+func (e RelevanceEnum) Valid() bool {
+	switch e {
+	case Core:
+		return true
+	case Edge:
+		return true
+	case Watch:
+		return true
+	default:
+		return false
+	}
+}
+
 // Defines values for StatusEnum.
 const (
-	Active StatusEnum = "active"
-	Error  StatusEnum = "error"
+	StatusEnumActive StatusEnum = "active"
+	StatusEnumError  StatusEnum = "error"
 )
 
 // Valid indicates whether the value is a known member of the StatusEnum enum.
 func (e StatusEnum) Valid() bool {
 	switch e {
-	case Active:
+	case StatusEnumActive:
 		return true
-	case Error:
+	case StatusEnumError:
 		return true
 	default:
 		return false
@@ -219,6 +288,19 @@ type AgentInputDefinition struct {
 
 	// Key The unique identifier for this input definition
 	Key string `json:"key"`
+}
+
+// AgentJobArtifactResult defines model for AgentJobArtifactResult.
+type AgentJobArtifactResult struct {
+	// Result The artifact's result content (any JSON value).
+	Result interface{} `json:"result"`
+}
+
+// AgentJobCancelAllResponse defines model for AgentJobCancelAllResponse.
+type AgentJobCancelAllResponse struct {
+	Note          string  `json:"note"`
+	TargetedCount int     `json:"targeted_count"`
+	TaskId        *string `json:"task_id"`
 }
 
 // AgentJobDeleteDataResponse Response payload of purge_agent_job_data (delete-data and :purgeData).
@@ -449,7 +531,9 @@ type BaseAgent struct {
 	EngineName *string             `json:"engine_name,omitempty"`
 	Id         *openapi_types.UUID `json:"id,omitempty"`
 
-	// JobCount Job count from annotation, or None when not fetched (use /agents/job-stats/).
+	// JobCount Served job count: cached baseline + live delta, annotated by the views
+	// as ``job_count``. ``None`` when stats weren't fetched (the list can be
+	// requested with ``include_job_stats=false``; use /agents/job-stats/).
 	JobCount      *int       `json:"job_count,omitempty"`
 	MostRecentJob *time.Time `json:"most_recent_job,omitempty"`
 	Name          string     `json:"name"`
@@ -578,6 +662,8 @@ type ConnectorMetadata struct {
 // * `sharepoint` - SHAREPOINT
 // * `zendesk` - ZENDESK
 // * `google_drive` - GOOGLE_DRIVE
+// * `google_docs` - GOOGLE_DOCS
+// * `google_sheets` - GOOGLE_SHEETS
 // * `salesforce` - SALESFORCE
 // * `web_application` - WEB_APPLICATION
 // * `custom_api` - CUSTOM_API
@@ -602,6 +688,8 @@ type CreateConnectionRequest struct {
 	// * `sharepoint` - SHAREPOINT
 	// * `zendesk` - ZENDESK
 	// * `google_drive` - GOOGLE_DRIVE
+	// * `google_docs` - GOOGLE_DOCS
+	// * `google_sheets` - GOOGLE_SHEETS
 	// * `salesforce` - SALESFORCE
 	// * `web_application` - WEB_APPLICATION
 	// * `custom_api` - CUSTOM_API
@@ -617,6 +705,24 @@ type CreateConnectionRequest struct {
 	Description    *string             `json:"description,omitempty"`
 	Name           string              `json:"name"`
 	OrganizationId *openapi_types.UUID `json:"organization_id,omitempty"`
+}
+
+// CreateKnowledgeBase Body for POST /knowledge-base/ — starts a new draft.
+type CreateKnowledgeBase struct {
+	Brief       string  `json:"brief"`
+	Company     string  `json:"company"`
+	Name        *string `json:"name,omitempty"`
+	ProductName *string `json:"product_name,omitempty"`
+	WebsiteUrl  *string `json:"website_url,omitempty"`
+}
+
+// CreateKnowledgeBaseRequest Body for POST /knowledge-base/ — starts a new draft.
+type CreateKnowledgeBaseRequest struct {
+	Brief       string  `json:"brief"`
+	Company     string  `json:"company"`
+	Name        *string `json:"name,omitempty"`
+	ProductName *string `json:"product_name,omitempty"`
+	WebsiteUrl  *string `json:"website_url,omitempty"`
 }
 
 // CreatePolicy Serializer for creating a new policy with initial version
@@ -668,6 +774,43 @@ type DependentAgentInfo struct {
 	VersionName string             `json:"version_name"`
 }
 
+// Draft Projected atlas draft returned from poll/regenerate/resolve endpoints.
+type Draft struct {
+	Company        string  `json:"company"`
+	CreatedAt      *string `json:"createdAt,omitempty"`
+	Error          *string `json:"error,omitempty"`
+	Id             string  `json:"id"`
+	IterationCount int     `json:"iterationCount"`
+
+	// PendingProposal A staged regeneration awaiting reviewer approval (names-only).
+	PendingProposal *PendingProposal `json:"pendingProposal,omitempty"`
+	ProductName     *string          `json:"productName,omitempty"`
+	ProductSummary  string           `json:"productSummary"`
+	Refs            []DraftRef       `json:"refs"`
+
+	// Status * `generating` - generating
+	// * `ready` - ready
+	// * `error` - error
+	Status        DraftStatusEnum `json:"status"`
+	SuggestedName string          `json:"suggestedName"`
+	UpdatedAt     *string         `json:"updatedAt,omitempty"`
+}
+
+// DraftRef A single ref in a selection (names-only projection from atlas).
+type DraftRef struct {
+	Rationale    *string        `json:"rationale,omitempty"`
+	Relevance    *RelevanceEnum `json:"relevance,omitempty"`
+	TacticIds    *[]string      `json:"tacticIds,omitempty"`
+	TacticNames  *[]string      `json:"tacticNames,omitempty"`
+	TypologyId   string         `json:"typologyId"`
+	TypologyName *string        `json:"typologyName,omitempty"`
+}
+
+// DraftStatusEnum * `generating` - generating
+// * `ready` - ready
+// * `error` - error
+type DraftStatusEnum string
+
 // DuplicateConnectionExisting Identifying summary of the existing connection that triggered a 409.
 type DuplicateConnectionExisting struct {
 	Id   openapi_types.UUID `json:"id"`
@@ -688,6 +831,35 @@ type ErrorDetailResponse struct {
 	Detail string `json:"detail"`
 }
 
+// FinalizeRequest Body for POST /knowledge-base/<id>/finalize/.
+type FinalizeRequest struct {
+	McpEnabled *bool   `json:"mcp_enabled,omitempty"`
+	Name       *string `json:"name,omitempty"`
+	Public     *bool   `json:"public,omitempty"`
+}
+
+// KnowledgeBase defines model for KnowledgeBase.
+type KnowledgeBase struct {
+	AtlasDraftId   *string                  `json:"atlas_draft_id,omitempty"`
+	AtlasLensId    *string                  `json:"atlas_lens_id,omitempty"`
+	Company        string                   `json:"company"`
+	CreatedAt      *time.Time               `json:"created_at,omitempty"`
+	Id             *openapi_types.UUID      `json:"id,omitempty"`
+	LastSyncedAt   *time.Time               `json:"last_synced_at,omitempty"`
+	LensSnapshot   interface{}              `json:"lens_snapshot,omitempty"`
+	McpUrl         *string                  `json:"mcp_url,omitempty"`
+	Name           string                   `json:"name"`
+	OrganizationId *openapi_types.UUID      `json:"organization_id,omitempty"`
+	Status         *KnowledgeBaseStatusEnum `json:"status,omitempty"`
+	SyncError      *string                  `json:"sync_error,omitempty"`
+	UpdatedAt      *time.Time               `json:"updated_at,omitempty"`
+}
+
+// KnowledgeBaseStatusEnum * `drafting` - Drafting
+// * `active` - Active
+// * `orphaned` - Orphaned
+type KnowledgeBaseStatusEnum string
+
 // MessageResponse Simple success acknowledgement body: `{"message": ...}`.
 type MessageResponse struct {
 	Message string `json:"message"`
@@ -707,6 +879,14 @@ type PaginatedConnectionListList struct {
 	Next     *string          `json:"next,omitempty"`
 	Previous *string          `json:"previous,omitempty"`
 	Results  []ConnectionList `json:"results"`
+}
+
+// PaginatedKnowledgeBaseList defines model for PaginatedKnowledgeBaseList.
+type PaginatedKnowledgeBaseList struct {
+	Count    int             `json:"count"`
+	Next     *string         `json:"next,omitempty"`
+	Previous *string         `json:"previous,omitempty"`
+	Results  []KnowledgeBase `json:"results"`
 }
 
 // PaginatedPolicyList defines model for PaginatedPolicyList.
@@ -746,6 +926,12 @@ type PatchedBaseAgentUpdateRequest struct {
 	Name *string `json:"name,omitempty"`
 }
 
+// PatchedPatchSelectionRequest Body for PATCH /knowledge-base/<id>/selection/.
+type PatchedPatchSelectionRequest struct {
+	Refs          *[]map[string]interface{} `json:"refs,omitempty"`
+	SuggestedName *string                   `json:"suggested_name,omitempty"`
+}
+
 // PatchedUpdateConnectionRequest Serializer for updating connections.
 //
 // Cross-state Pydantic validation (config + auth) lives in the view's
@@ -770,6 +956,16 @@ type PatchedUpdateConnectionRequest struct {
 type PatchedUpdatePolicyRequest struct {
 	Description *string `json:"description,omitempty"`
 	Name        *string `json:"name,omitempty"`
+}
+
+// PendingProposal A staged regeneration awaiting reviewer approval (names-only).
+type PendingProposal struct {
+	BaseSelection  []DraftRef `json:"baseSelection"`
+	CreatedAt      *string    `json:"createdAt,omitempty"`
+	Feedback       *string    `json:"feedback,omitempty"`
+	ProductSummary *string    `json:"productSummary,omitempty"`
+	Refs           []DraftRef `json:"refs"`
+	SuggestedName  *string    `json:"suggestedName,omitempty"`
 }
 
 // Policy Policy serializer
@@ -821,6 +1017,28 @@ type QdrantCleanupErrorResponse struct {
 
 	// FailedCollections Qdrant collections that could not be deleted
 	FailedCollections []string `json:"failed_collections"`
+}
+
+// RegenerateRequest Body for POST /knowledge-base/<id>/regenerate/.
+type RegenerateRequest struct {
+	Feedback *string `json:"feedback,omitempty"`
+}
+
+// RelevanceEnum * `core` - core
+// * `watch` - watch
+// * `edge` - edge
+type RelevanceEnum string
+
+// ResolveRequest Body for POST /knowledge-base/<id>/resolve/.
+//
+// discard=True declines the pending proposal. Otherwise refs is the reviewer's
+// resolved selection (opaque-handle dicts) and suggested_name / accept_summary
+// optionally adopt the proposal's name / summary.
+type ResolveRequest struct {
+	AcceptSummary *bool                     `json:"accept_summary,omitempty"`
+	Discard       *bool                     `json:"discard,omitempty"`
+	Refs          *[]map[string]interface{} `json:"refs,omitempty"`
+	SuggestedName *string                   `json:"suggested_name,omitempty"`
 }
 
 // StatusEnum * `active` - Active
@@ -1013,6 +1231,8 @@ type TestConnectionCredentialsRequest struct {
 	// * `sharepoint` - SHAREPOINT
 	// * `zendesk` - ZENDESK
 	// * `google_drive` - GOOGLE_DRIVE
+	// * `google_docs` - GOOGLE_DOCS
+	// * `google_sheets` - GOOGLE_SHEETS
 	// * `salesforce` - SALESFORCE
 	// * `web_application` - WEB_APPLICATION
 	// * `custom_api` - CUSTOM_API
@@ -1137,13 +1357,19 @@ type AgentsJobsStatusesCreateParams struct {
 	OrganizationId *openapi_types.UUID `form:"organization_id,omitempty" json:"organization_id,omitempty"`
 }
 
+// AgentsJobsArtifactsResultRetrieveParams defines parameters for AgentsJobsArtifactsResultRetrieve.
+type AgentsJobsArtifactsResultRetrieveParams struct {
+	// ArtifactKey The artifact key (e.g., 'agent-job-xxx/extraction_123.json')
+	ArtifactKey string `form:"artifact_key" json:"artifact_key"`
+
+	// OrganizationId Organization ID. This is required for access control. It can be provided via query or request body depending on the endpoint.
+	OrganizationId *openapi_types.UUID `form:"organization_id,omitempty" json:"organization_id,omitempty"`
+}
+
 // AgentsJobsReferencesRetrieveParams defines parameters for AgentsJobsReferencesRetrieve.
 type AgentsJobsReferencesRetrieveParams struct {
 	// Download Set true to receive a Content-Disposition attachment header.
 	Download *bool `form:"download,omitempty" json:"download,omitempty"`
-
-	// OrganizationId Organization ID. This is required for access control. It can be provided via query or request body depending on the endpoint.
-	OrganizationId *openapi_types.UUID `form:"organization_id,omitempty" json:"organization_id,omitempty"`
 }
 
 // AgentsJobsResultRetrieveParams defines parameters for AgentsJobsResultRetrieve.
@@ -1344,6 +1570,99 @@ type ConnectionsTestCreateParams struct {
 	OrganizationId *openapi_types.UUID `form:"organization_id,omitempty" json:"organization_id,omitempty"`
 }
 
+// KnowledgeBaseListParams defines parameters for KnowledgeBaseList.
+type KnowledgeBaseListParams struct {
+	// Page A page number within the paginated result set.
+	Page *int `form:"page,omitempty" json:"page,omitempty"`
+
+	// PageSize Number of results to return per page.
+	PageSize *int `form:"page_size,omitempty" json:"page_size,omitempty"`
+
+	// OrganizationId Organization ID. This is required for access control. It can be provided via query or request body depending on the endpoint.
+	OrganizationId *openapi_types.UUID `form:"organization_id,omitempty" json:"organization_id,omitempty"`
+}
+
+// KnowledgeBaseCreateParams defines parameters for KnowledgeBaseCreate.
+type KnowledgeBaseCreateParams struct {
+	// OrganizationId Organization ID. This is required for access control. It can be provided via query or request body depending on the endpoint.
+	OrganizationId *openapi_types.UUID `form:"organization_id,omitempty" json:"organization_id,omitempty"`
+}
+
+// KnowledgeBaseCatalogRetrieveParams defines parameters for KnowledgeBaseCatalogRetrieve.
+type KnowledgeBaseCatalogRetrieveParams struct {
+	// OrganizationId Organization ID. This is required for access control. It can be provided via query or request body depending on the endpoint.
+	OrganizationId *openapi_types.UUID `form:"organization_id,omitempty" json:"organization_id,omitempty"`
+}
+
+// KnowledgeBaseImportLensCreateJSONBody defines parameters for KnowledgeBaseImportLensCreate.
+type KnowledgeBaseImportLensCreateJSONBody map[string]interface{}
+
+// KnowledgeBaseImportLensCreateParams defines parameters for KnowledgeBaseImportLensCreate.
+type KnowledgeBaseImportLensCreateParams struct {
+	// OrganizationId Organization ID. This is required for access control. It can be provided via query or request body depending on the endpoint.
+	OrganizationId *openapi_types.UUID `form:"organization_id,omitempty" json:"organization_id,omitempty"`
+}
+
+// KnowledgeBaseLensRetrieveParams defines parameters for KnowledgeBaseLensRetrieve.
+type KnowledgeBaseLensRetrieveParams struct {
+	// OrganizationId Organization ID. This is required for access control. It can be provided via query or request body depending on the endpoint.
+	OrganizationId *openapi_types.UUID `form:"organization_id,omitempty" json:"organization_id,omitempty"`
+}
+
+// KnowledgeBaseDestroyParams defines parameters for KnowledgeBaseDestroy.
+type KnowledgeBaseDestroyParams struct {
+	// OrganizationId Organization ID. This is required for access control. It can be provided via query or request body depending on the endpoint.
+	OrganizationId *openapi_types.UUID `form:"organization_id,omitempty" json:"organization_id,omitempty"`
+}
+
+// KnowledgeBaseRetrieveParams defines parameters for KnowledgeBaseRetrieve.
+type KnowledgeBaseRetrieveParams struct {
+	// OrganizationId Organization ID. This is required for access control. It can be provided via query or request body depending on the endpoint.
+	OrganizationId *openapi_types.UUID `form:"organization_id,omitempty" json:"organization_id,omitempty"`
+}
+
+// KnowledgeBaseDraftRetrieveParams defines parameters for KnowledgeBaseDraftRetrieve.
+type KnowledgeBaseDraftRetrieveParams struct {
+	// OrganizationId Organization ID. This is required for access control. It can be provided via query or request body depending on the endpoint.
+	OrganizationId *openapi_types.UUID `form:"organization_id,omitempty" json:"organization_id,omitempty"`
+}
+
+// KnowledgeBaseFinalizeCreateParams defines parameters for KnowledgeBaseFinalizeCreate.
+type KnowledgeBaseFinalizeCreateParams struct {
+	// OrganizationId Organization ID. This is required for access control. It can be provided via query or request body depending on the endpoint.
+	OrganizationId *openapi_types.UUID `form:"organization_id,omitempty" json:"organization_id,omitempty"`
+}
+
+// KnowledgeBaseRegenerateCreateParams defines parameters for KnowledgeBaseRegenerateCreate.
+type KnowledgeBaseRegenerateCreateParams struct {
+	// OrganizationId Organization ID. This is required for access control. It can be provided via query or request body depending on the endpoint.
+	OrganizationId *openapi_types.UUID `form:"organization_id,omitempty" json:"organization_id,omitempty"`
+}
+
+// KnowledgeBaseResolveCreateParams defines parameters for KnowledgeBaseResolveCreate.
+type KnowledgeBaseResolveCreateParams struct {
+	// OrganizationId Organization ID. This is required for access control. It can be provided via query or request body depending on the endpoint.
+	OrganizationId *openapi_types.UUID `form:"organization_id,omitempty" json:"organization_id,omitempty"`
+}
+
+// KnowledgeBaseSelectionPartialUpdateParams defines parameters for KnowledgeBaseSelectionPartialUpdate.
+type KnowledgeBaseSelectionPartialUpdateParams struct {
+	// OrganizationId Organization ID. This is required for access control. It can be provided via query or request body depending on the endpoint.
+	OrganizationId *openapi_types.UUID `form:"organization_id,omitempty" json:"organization_id,omitempty"`
+}
+
+// KnowledgeBaseSyncCreateParams defines parameters for KnowledgeBaseSyncCreate.
+type KnowledgeBaseSyncCreateParams struct {
+	// OrganizationId Organization ID. This is required for access control. It can be provided via query or request body depending on the endpoint.
+	OrganizationId *openapi_types.UUID `form:"organization_id,omitempty" json:"organization_id,omitempty"`
+}
+
+// KnowledgeBaseUnlinkDestroyParams defines parameters for KnowledgeBaseUnlinkDestroy.
+type KnowledgeBaseUnlinkDestroyParams struct {
+	// OrganizationId Organization ID. This is required for access control. It can be provided via query or request body depending on the endpoint.
+	OrganizationId *openapi_types.UUID `form:"organization_id,omitempty" json:"organization_id,omitempty"`
+}
+
 // PoliciesListParams defines parameters for PoliciesList.
 type PoliciesListParams struct {
 	// Ordering Which field to use when ordering the results.
@@ -1472,6 +1791,24 @@ type ConnectionsPartialUpdateJSONRequestBody = PatchedUpdateConnectionRequest
 
 // ConnectionsUpdateJSONRequestBody defines body for ConnectionsUpdate for application/json ContentType.
 type ConnectionsUpdateJSONRequestBody = UpdateConnectionRequest
+
+// KnowledgeBaseCreateJSONRequestBody defines body for KnowledgeBaseCreate for application/json ContentType.
+type KnowledgeBaseCreateJSONRequestBody = CreateKnowledgeBaseRequest
+
+// KnowledgeBaseImportLensCreateJSONRequestBody defines body for KnowledgeBaseImportLensCreate for application/json ContentType.
+type KnowledgeBaseImportLensCreateJSONRequestBody KnowledgeBaseImportLensCreateJSONBody
+
+// KnowledgeBaseFinalizeCreateJSONRequestBody defines body for KnowledgeBaseFinalizeCreate for application/json ContentType.
+type KnowledgeBaseFinalizeCreateJSONRequestBody = FinalizeRequest
+
+// KnowledgeBaseRegenerateCreateJSONRequestBody defines body for KnowledgeBaseRegenerateCreate for application/json ContentType.
+type KnowledgeBaseRegenerateCreateJSONRequestBody = RegenerateRequest
+
+// KnowledgeBaseResolveCreateJSONRequestBody defines body for KnowledgeBaseResolveCreate for application/json ContentType.
+type KnowledgeBaseResolveCreateJSONRequestBody = ResolveRequest
+
+// KnowledgeBaseSelectionPartialUpdateJSONRequestBody defines body for KnowledgeBaseSelectionPartialUpdate for application/json ContentType.
+type KnowledgeBaseSelectionPartialUpdateJSONRequestBody = PatchedPatchSelectionRequest
 
 // PoliciesCreateJSONRequestBody defines body for PoliciesCreate for application/json ContentType.
 type PoliciesCreateJSONRequestBody = CreatePolicyRequest
@@ -1650,6 +1987,9 @@ type ClientInterface interface {
 
 	AgentsJobsStatusesCreate(ctx context.Context, params *AgentsJobsStatusesCreateParams, body AgentsJobsStatusesCreateJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
 
+	// AgentsJobsArtifactsResultRetrieve request
+	AgentsJobsArtifactsResultRetrieve(ctx context.Context, agentJobId string, params *AgentsJobsArtifactsResultRetrieveParams, reqEditors ...RequestEditorFn) (*http.Response, error)
+
 	// AgentsJobsReferencesRetrieve request
 	AgentsJobsReferencesRetrieve(ctx context.Context, agentJobId openapi_types.UUID, resourceId string, params *AgentsJobsReferencesRetrieveParams, reqEditors ...RequestEditorFn) (*http.Response, error)
 
@@ -1782,6 +2122,60 @@ type ClientInterface interface {
 
 	// ConnectorsRetrieveByType request
 	ConnectorsRetrieveByType(ctx context.Context, connectorType string, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// KnowledgeBaseList request
+	KnowledgeBaseList(ctx context.Context, params *KnowledgeBaseListParams, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// KnowledgeBaseCreateWithBody request with any body
+	KnowledgeBaseCreateWithBody(ctx context.Context, params *KnowledgeBaseCreateParams, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	KnowledgeBaseCreate(ctx context.Context, params *KnowledgeBaseCreateParams, body KnowledgeBaseCreateJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// KnowledgeBaseCatalogRetrieve request
+	KnowledgeBaseCatalogRetrieve(ctx context.Context, params *KnowledgeBaseCatalogRetrieveParams, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// KnowledgeBaseImportLensCreateWithBody request with any body
+	KnowledgeBaseImportLensCreateWithBody(ctx context.Context, params *KnowledgeBaseImportLensCreateParams, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	KnowledgeBaseImportLensCreate(ctx context.Context, params *KnowledgeBaseImportLensCreateParams, body KnowledgeBaseImportLensCreateJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// KnowledgeBaseLensRetrieve request
+	KnowledgeBaseLensRetrieve(ctx context.Context, atlasLensId string, params *KnowledgeBaseLensRetrieveParams, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// KnowledgeBaseDestroy request
+	KnowledgeBaseDestroy(ctx context.Context, id openapi_types.UUID, params *KnowledgeBaseDestroyParams, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// KnowledgeBaseRetrieve request
+	KnowledgeBaseRetrieve(ctx context.Context, id openapi_types.UUID, params *KnowledgeBaseRetrieveParams, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// KnowledgeBaseDraftRetrieve request
+	KnowledgeBaseDraftRetrieve(ctx context.Context, id openapi_types.UUID, params *KnowledgeBaseDraftRetrieveParams, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// KnowledgeBaseFinalizeCreateWithBody request with any body
+	KnowledgeBaseFinalizeCreateWithBody(ctx context.Context, id openapi_types.UUID, params *KnowledgeBaseFinalizeCreateParams, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	KnowledgeBaseFinalizeCreate(ctx context.Context, id openapi_types.UUID, params *KnowledgeBaseFinalizeCreateParams, body KnowledgeBaseFinalizeCreateJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// KnowledgeBaseRegenerateCreateWithBody request with any body
+	KnowledgeBaseRegenerateCreateWithBody(ctx context.Context, id openapi_types.UUID, params *KnowledgeBaseRegenerateCreateParams, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	KnowledgeBaseRegenerateCreate(ctx context.Context, id openapi_types.UUID, params *KnowledgeBaseRegenerateCreateParams, body KnowledgeBaseRegenerateCreateJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// KnowledgeBaseResolveCreateWithBody request with any body
+	KnowledgeBaseResolveCreateWithBody(ctx context.Context, id openapi_types.UUID, params *KnowledgeBaseResolveCreateParams, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	KnowledgeBaseResolveCreate(ctx context.Context, id openapi_types.UUID, params *KnowledgeBaseResolveCreateParams, body KnowledgeBaseResolveCreateJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// KnowledgeBaseSelectionPartialUpdateWithBody request with any body
+	KnowledgeBaseSelectionPartialUpdateWithBody(ctx context.Context, id openapi_types.UUID, params *KnowledgeBaseSelectionPartialUpdateParams, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	KnowledgeBaseSelectionPartialUpdate(ctx context.Context, id openapi_types.UUID, params *KnowledgeBaseSelectionPartialUpdateParams, body KnowledgeBaseSelectionPartialUpdateJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// KnowledgeBaseSyncCreate request
+	KnowledgeBaseSyncCreate(ctx context.Context, id openapi_types.UUID, params *KnowledgeBaseSyncCreateParams, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// KnowledgeBaseUnlinkDestroy request
+	KnowledgeBaseUnlinkDestroy(ctx context.Context, id openapi_types.UUID, params *KnowledgeBaseUnlinkDestroyParams, reqEditors ...RequestEditorFn) (*http.Response, error)
 
 	// PoliciesList request
 	PoliciesList(ctx context.Context, params *PoliciesListParams, reqEditors ...RequestEditorFn) (*http.Response, error)
@@ -1919,6 +2313,18 @@ func (c *Client) AgentsJobsStatusesCreateWithBody(ctx context.Context, params *A
 
 func (c *Client) AgentsJobsStatusesCreate(ctx context.Context, params *AgentsJobsStatusesCreateParams, body AgentsJobsStatusesCreateJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
 	req, err := NewAgentsJobsStatusesCreateRequest(c.Server, params, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) AgentsJobsArtifactsResultRetrieve(ctx context.Context, agentJobId string, params *AgentsJobsArtifactsResultRetrieveParams, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewAgentsJobsArtifactsResultRetrieveRequest(c.Server, agentJobId, params)
 	if err != nil {
 		return nil, err
 	}
@@ -2507,6 +2913,246 @@ func (c *Client) ConnectorsRetrieve(ctx context.Context, reqEditors ...RequestEd
 
 func (c *Client) ConnectorsRetrieveByType(ctx context.Context, connectorType string, reqEditors ...RequestEditorFn) (*http.Response, error) {
 	req, err := NewConnectorsRetrieveByTypeRequest(c.Server, connectorType)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) KnowledgeBaseList(ctx context.Context, params *KnowledgeBaseListParams, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewKnowledgeBaseListRequest(c.Server, params)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) KnowledgeBaseCreateWithBody(ctx context.Context, params *KnowledgeBaseCreateParams, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewKnowledgeBaseCreateRequestWithBody(c.Server, params, contentType, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) KnowledgeBaseCreate(ctx context.Context, params *KnowledgeBaseCreateParams, body KnowledgeBaseCreateJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewKnowledgeBaseCreateRequest(c.Server, params, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) KnowledgeBaseCatalogRetrieve(ctx context.Context, params *KnowledgeBaseCatalogRetrieveParams, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewKnowledgeBaseCatalogRetrieveRequest(c.Server, params)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) KnowledgeBaseImportLensCreateWithBody(ctx context.Context, params *KnowledgeBaseImportLensCreateParams, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewKnowledgeBaseImportLensCreateRequestWithBody(c.Server, params, contentType, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) KnowledgeBaseImportLensCreate(ctx context.Context, params *KnowledgeBaseImportLensCreateParams, body KnowledgeBaseImportLensCreateJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewKnowledgeBaseImportLensCreateRequest(c.Server, params, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) KnowledgeBaseLensRetrieve(ctx context.Context, atlasLensId string, params *KnowledgeBaseLensRetrieveParams, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewKnowledgeBaseLensRetrieveRequest(c.Server, atlasLensId, params)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) KnowledgeBaseDestroy(ctx context.Context, id openapi_types.UUID, params *KnowledgeBaseDestroyParams, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewKnowledgeBaseDestroyRequest(c.Server, id, params)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) KnowledgeBaseRetrieve(ctx context.Context, id openapi_types.UUID, params *KnowledgeBaseRetrieveParams, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewKnowledgeBaseRetrieveRequest(c.Server, id, params)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) KnowledgeBaseDraftRetrieve(ctx context.Context, id openapi_types.UUID, params *KnowledgeBaseDraftRetrieveParams, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewKnowledgeBaseDraftRetrieveRequest(c.Server, id, params)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) KnowledgeBaseFinalizeCreateWithBody(ctx context.Context, id openapi_types.UUID, params *KnowledgeBaseFinalizeCreateParams, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewKnowledgeBaseFinalizeCreateRequestWithBody(c.Server, id, params, contentType, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) KnowledgeBaseFinalizeCreate(ctx context.Context, id openapi_types.UUID, params *KnowledgeBaseFinalizeCreateParams, body KnowledgeBaseFinalizeCreateJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewKnowledgeBaseFinalizeCreateRequest(c.Server, id, params, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) KnowledgeBaseRegenerateCreateWithBody(ctx context.Context, id openapi_types.UUID, params *KnowledgeBaseRegenerateCreateParams, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewKnowledgeBaseRegenerateCreateRequestWithBody(c.Server, id, params, contentType, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) KnowledgeBaseRegenerateCreate(ctx context.Context, id openapi_types.UUID, params *KnowledgeBaseRegenerateCreateParams, body KnowledgeBaseRegenerateCreateJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewKnowledgeBaseRegenerateCreateRequest(c.Server, id, params, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) KnowledgeBaseResolveCreateWithBody(ctx context.Context, id openapi_types.UUID, params *KnowledgeBaseResolveCreateParams, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewKnowledgeBaseResolveCreateRequestWithBody(c.Server, id, params, contentType, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) KnowledgeBaseResolveCreate(ctx context.Context, id openapi_types.UUID, params *KnowledgeBaseResolveCreateParams, body KnowledgeBaseResolveCreateJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewKnowledgeBaseResolveCreateRequest(c.Server, id, params, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) KnowledgeBaseSelectionPartialUpdateWithBody(ctx context.Context, id openapi_types.UUID, params *KnowledgeBaseSelectionPartialUpdateParams, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewKnowledgeBaseSelectionPartialUpdateRequestWithBody(c.Server, id, params, contentType, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) KnowledgeBaseSelectionPartialUpdate(ctx context.Context, id openapi_types.UUID, params *KnowledgeBaseSelectionPartialUpdateParams, body KnowledgeBaseSelectionPartialUpdateJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewKnowledgeBaseSelectionPartialUpdateRequest(c.Server, id, params, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) KnowledgeBaseSyncCreate(ctx context.Context, id openapi_types.UUID, params *KnowledgeBaseSyncCreateParams, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewKnowledgeBaseSyncCreateRequest(c.Server, id, params)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) KnowledgeBaseUnlinkDestroy(ctx context.Context, id openapi_types.UUID, params *KnowledgeBaseUnlinkDestroyParams, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewKnowledgeBaseUnlinkDestroyRequest(c.Server, id, params)
 	if err != nil {
 		return nil, err
 	}
@@ -3140,6 +3786,74 @@ func NewAgentsJobsStatusesCreateRequestWithBody(server string, params *AgentsJob
 	return req, nil
 }
 
+// NewAgentsJobsArtifactsResultRetrieveRequest generates requests for AgentsJobsArtifactsResultRetrieve
+func NewAgentsJobsArtifactsResultRetrieveRequest(server string, agentJobId string, params *AgentsJobsArtifactsResultRetrieveParams) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithOptions("simple", false, "agent_job_id", agentJobId, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationPath, Type: "string", Format: ""})
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/v1/agents/jobs/%s/artifacts/result/", pathParam0)
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	if params != nil {
+		queryValues := queryURL.Query()
+
+		if queryFrag, err := runtime.StyleParamWithOptions("form", true, "artifact_key", params.ArtifactKey, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationQuery, Type: "string", Format: ""}); err != nil {
+			return nil, err
+		} else if parsed, err := url.ParseQuery(queryFrag); err != nil {
+			return nil, err
+		} else {
+			for k, v := range parsed {
+				for _, v2 := range v {
+					queryValues.Add(k, v2)
+				}
+			}
+		}
+
+		if params.OrganizationId != nil {
+
+			if queryFrag, err := runtime.StyleParamWithOptions("form", true, "organization_id", *params.OrganizationId, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationQuery, Type: "string", Format: "uuid"}); err != nil {
+				return nil, err
+			} else if parsed, err := url.ParseQuery(queryFrag); err != nil {
+				return nil, err
+			} else {
+				for k, v := range parsed {
+					for _, v2 := range v {
+						queryValues.Add(k, v2)
+					}
+				}
+			}
+
+		}
+
+		queryURL.RawQuery = queryValues.Encode()
+	}
+
+	req, err := http.NewRequest("GET", queryURL.String(), nil)
+	if err != nil {
+		return nil, err
+	}
+
+	return req, nil
+}
+
 // NewAgentsJobsReferencesRetrieveRequest generates requests for AgentsJobsReferencesRetrieve
 func NewAgentsJobsReferencesRetrieveRequest(server string, agentJobId openapi_types.UUID, resourceId string, params *AgentsJobsReferencesRetrieveParams) (*http.Request, error) {
 	var err error
@@ -3179,22 +3893,6 @@ func NewAgentsJobsReferencesRetrieveRequest(server string, agentJobId openapi_ty
 		if params.Download != nil {
 
 			if queryFrag, err := runtime.StyleParamWithOptions("form", true, "download", *params.Download, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationQuery, Type: "boolean", Format: ""}); err != nil {
-				return nil, err
-			} else if parsed, err := url.ParseQuery(queryFrag); err != nil {
-				return nil, err
-			} else {
-				for k, v := range parsed {
-					for _, v2 := range v {
-						queryValues.Add(k, v2)
-					}
-				}
-			}
-
-		}
-
-		if params.OrganizationId != nil {
-
-			if queryFrag, err := runtime.StyleParamWithOptions("form", true, "organization_id", *params.OrganizationId, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationQuery, Type: "string", Format: "uuid"}); err != nil {
 				return nil, err
 			} else if parsed, err := url.ParseQuery(queryFrag); err != nil {
 				return nil, err
@@ -5313,6 +6011,872 @@ func NewConnectorsRetrieveByTypeRequest(server string, connectorType string) (*h
 	return req, nil
 }
 
+// NewKnowledgeBaseListRequest generates requests for KnowledgeBaseList
+func NewKnowledgeBaseListRequest(server string, params *KnowledgeBaseListParams) (*http.Request, error) {
+	var err error
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/v1/knowledge-base/")
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	if params != nil {
+		queryValues := queryURL.Query()
+
+		if params.Page != nil {
+
+			if queryFrag, err := runtime.StyleParamWithOptions("form", true, "page", *params.Page, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationQuery, Type: "integer", Format: ""}); err != nil {
+				return nil, err
+			} else if parsed, err := url.ParseQuery(queryFrag); err != nil {
+				return nil, err
+			} else {
+				for k, v := range parsed {
+					for _, v2 := range v {
+						queryValues.Add(k, v2)
+					}
+				}
+			}
+
+		}
+
+		if params.PageSize != nil {
+
+			if queryFrag, err := runtime.StyleParamWithOptions("form", true, "page_size", *params.PageSize, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationQuery, Type: "integer", Format: ""}); err != nil {
+				return nil, err
+			} else if parsed, err := url.ParseQuery(queryFrag); err != nil {
+				return nil, err
+			} else {
+				for k, v := range parsed {
+					for _, v2 := range v {
+						queryValues.Add(k, v2)
+					}
+				}
+			}
+
+		}
+
+		if params.OrganizationId != nil {
+
+			if queryFrag, err := runtime.StyleParamWithOptions("form", true, "organization_id", *params.OrganizationId, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationQuery, Type: "string", Format: "uuid"}); err != nil {
+				return nil, err
+			} else if parsed, err := url.ParseQuery(queryFrag); err != nil {
+				return nil, err
+			} else {
+				for k, v := range parsed {
+					for _, v2 := range v {
+						queryValues.Add(k, v2)
+					}
+				}
+			}
+
+		}
+
+		queryURL.RawQuery = queryValues.Encode()
+	}
+
+	req, err := http.NewRequest("GET", queryURL.String(), nil)
+	if err != nil {
+		return nil, err
+	}
+
+	return req, nil
+}
+
+// NewKnowledgeBaseCreateRequest calls the generic KnowledgeBaseCreate builder with application/json body
+func NewKnowledgeBaseCreateRequest(server string, params *KnowledgeBaseCreateParams, body KnowledgeBaseCreateJSONRequestBody) (*http.Request, error) {
+	var bodyReader io.Reader
+	buf, err := json.Marshal(body)
+	if err != nil {
+		return nil, err
+	}
+	bodyReader = bytes.NewReader(buf)
+	return NewKnowledgeBaseCreateRequestWithBody(server, params, "application/json", bodyReader)
+}
+
+// NewKnowledgeBaseCreateRequestWithBody generates requests for KnowledgeBaseCreate with any type of body
+func NewKnowledgeBaseCreateRequestWithBody(server string, params *KnowledgeBaseCreateParams, contentType string, body io.Reader) (*http.Request, error) {
+	var err error
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/v1/knowledge-base/")
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	if params != nil {
+		queryValues := queryURL.Query()
+
+		if params.OrganizationId != nil {
+
+			if queryFrag, err := runtime.StyleParamWithOptions("form", true, "organization_id", *params.OrganizationId, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationQuery, Type: "string", Format: "uuid"}); err != nil {
+				return nil, err
+			} else if parsed, err := url.ParseQuery(queryFrag); err != nil {
+				return nil, err
+			} else {
+				for k, v := range parsed {
+					for _, v2 := range v {
+						queryValues.Add(k, v2)
+					}
+				}
+			}
+
+		}
+
+		queryURL.RawQuery = queryValues.Encode()
+	}
+
+	req, err := http.NewRequest("POST", queryURL.String(), body)
+	if err != nil {
+		return nil, err
+	}
+
+	req.Header.Add("Content-Type", contentType)
+
+	return req, nil
+}
+
+// NewKnowledgeBaseCatalogRetrieveRequest generates requests for KnowledgeBaseCatalogRetrieve
+func NewKnowledgeBaseCatalogRetrieveRequest(server string, params *KnowledgeBaseCatalogRetrieveParams) (*http.Request, error) {
+	var err error
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/v1/knowledge-base/catalog/")
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	if params != nil {
+		queryValues := queryURL.Query()
+
+		if params.OrganizationId != nil {
+
+			if queryFrag, err := runtime.StyleParamWithOptions("form", true, "organization_id", *params.OrganizationId, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationQuery, Type: "string", Format: "uuid"}); err != nil {
+				return nil, err
+			} else if parsed, err := url.ParseQuery(queryFrag); err != nil {
+				return nil, err
+			} else {
+				for k, v := range parsed {
+					for _, v2 := range v {
+						queryValues.Add(k, v2)
+					}
+				}
+			}
+
+		}
+
+		queryURL.RawQuery = queryValues.Encode()
+	}
+
+	req, err := http.NewRequest("GET", queryURL.String(), nil)
+	if err != nil {
+		return nil, err
+	}
+
+	return req, nil
+}
+
+// NewKnowledgeBaseImportLensCreateRequest calls the generic KnowledgeBaseImportLensCreate builder with application/json body
+func NewKnowledgeBaseImportLensCreateRequest(server string, params *KnowledgeBaseImportLensCreateParams, body KnowledgeBaseImportLensCreateJSONRequestBody) (*http.Request, error) {
+	var bodyReader io.Reader
+	buf, err := json.Marshal(body)
+	if err != nil {
+		return nil, err
+	}
+	bodyReader = bytes.NewReader(buf)
+	return NewKnowledgeBaseImportLensCreateRequestWithBody(server, params, "application/json", bodyReader)
+}
+
+// NewKnowledgeBaseImportLensCreateRequestWithBody generates requests for KnowledgeBaseImportLensCreate with any type of body
+func NewKnowledgeBaseImportLensCreateRequestWithBody(server string, params *KnowledgeBaseImportLensCreateParams, contentType string, body io.Reader) (*http.Request, error) {
+	var err error
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/v1/knowledge-base/import-lens/")
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	if params != nil {
+		queryValues := queryURL.Query()
+
+		if params.OrganizationId != nil {
+
+			if queryFrag, err := runtime.StyleParamWithOptions("form", true, "organization_id", *params.OrganizationId, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationQuery, Type: "string", Format: "uuid"}); err != nil {
+				return nil, err
+			} else if parsed, err := url.ParseQuery(queryFrag); err != nil {
+				return nil, err
+			} else {
+				for k, v := range parsed {
+					for _, v2 := range v {
+						queryValues.Add(k, v2)
+					}
+				}
+			}
+
+		}
+
+		queryURL.RawQuery = queryValues.Encode()
+	}
+
+	req, err := http.NewRequest("POST", queryURL.String(), body)
+	if err != nil {
+		return nil, err
+	}
+
+	req.Header.Add("Content-Type", contentType)
+
+	return req, nil
+}
+
+// NewKnowledgeBaseLensRetrieveRequest generates requests for KnowledgeBaseLensRetrieve
+func NewKnowledgeBaseLensRetrieveRequest(server string, atlasLensId string, params *KnowledgeBaseLensRetrieveParams) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithOptions("simple", false, "atlas_lens_id", atlasLensId, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationPath, Type: "string", Format: ""})
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/v1/knowledge-base/lens/%s/", pathParam0)
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	if params != nil {
+		queryValues := queryURL.Query()
+
+		if params.OrganizationId != nil {
+
+			if queryFrag, err := runtime.StyleParamWithOptions("form", true, "organization_id", *params.OrganizationId, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationQuery, Type: "string", Format: "uuid"}); err != nil {
+				return nil, err
+			} else if parsed, err := url.ParseQuery(queryFrag); err != nil {
+				return nil, err
+			} else {
+				for k, v := range parsed {
+					for _, v2 := range v {
+						queryValues.Add(k, v2)
+					}
+				}
+			}
+
+		}
+
+		queryURL.RawQuery = queryValues.Encode()
+	}
+
+	req, err := http.NewRequest("GET", queryURL.String(), nil)
+	if err != nil {
+		return nil, err
+	}
+
+	return req, nil
+}
+
+// NewKnowledgeBaseDestroyRequest generates requests for KnowledgeBaseDestroy
+func NewKnowledgeBaseDestroyRequest(server string, id openapi_types.UUID, params *KnowledgeBaseDestroyParams) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithOptions("simple", false, "id", id, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationPath, Type: "string", Format: "uuid"})
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/v1/knowledge-base/%s/", pathParam0)
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	if params != nil {
+		queryValues := queryURL.Query()
+
+		if params.OrganizationId != nil {
+
+			if queryFrag, err := runtime.StyleParamWithOptions("form", true, "organization_id", *params.OrganizationId, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationQuery, Type: "string", Format: "uuid"}); err != nil {
+				return nil, err
+			} else if parsed, err := url.ParseQuery(queryFrag); err != nil {
+				return nil, err
+			} else {
+				for k, v := range parsed {
+					for _, v2 := range v {
+						queryValues.Add(k, v2)
+					}
+				}
+			}
+
+		}
+
+		queryURL.RawQuery = queryValues.Encode()
+	}
+
+	req, err := http.NewRequest("DELETE", queryURL.String(), nil)
+	if err != nil {
+		return nil, err
+	}
+
+	return req, nil
+}
+
+// NewKnowledgeBaseRetrieveRequest generates requests for KnowledgeBaseRetrieve
+func NewKnowledgeBaseRetrieveRequest(server string, id openapi_types.UUID, params *KnowledgeBaseRetrieveParams) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithOptions("simple", false, "id", id, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationPath, Type: "string", Format: "uuid"})
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/v1/knowledge-base/%s/", pathParam0)
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	if params != nil {
+		queryValues := queryURL.Query()
+
+		if params.OrganizationId != nil {
+
+			if queryFrag, err := runtime.StyleParamWithOptions("form", true, "organization_id", *params.OrganizationId, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationQuery, Type: "string", Format: "uuid"}); err != nil {
+				return nil, err
+			} else if parsed, err := url.ParseQuery(queryFrag); err != nil {
+				return nil, err
+			} else {
+				for k, v := range parsed {
+					for _, v2 := range v {
+						queryValues.Add(k, v2)
+					}
+				}
+			}
+
+		}
+
+		queryURL.RawQuery = queryValues.Encode()
+	}
+
+	req, err := http.NewRequest("GET", queryURL.String(), nil)
+	if err != nil {
+		return nil, err
+	}
+
+	return req, nil
+}
+
+// NewKnowledgeBaseDraftRetrieveRequest generates requests for KnowledgeBaseDraftRetrieve
+func NewKnowledgeBaseDraftRetrieveRequest(server string, id openapi_types.UUID, params *KnowledgeBaseDraftRetrieveParams) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithOptions("simple", false, "id", id, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationPath, Type: "string", Format: "uuid"})
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/v1/knowledge-base/%s/draft/", pathParam0)
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	if params != nil {
+		queryValues := queryURL.Query()
+
+		if params.OrganizationId != nil {
+
+			if queryFrag, err := runtime.StyleParamWithOptions("form", true, "organization_id", *params.OrganizationId, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationQuery, Type: "string", Format: "uuid"}); err != nil {
+				return nil, err
+			} else if parsed, err := url.ParseQuery(queryFrag); err != nil {
+				return nil, err
+			} else {
+				for k, v := range parsed {
+					for _, v2 := range v {
+						queryValues.Add(k, v2)
+					}
+				}
+			}
+
+		}
+
+		queryURL.RawQuery = queryValues.Encode()
+	}
+
+	req, err := http.NewRequest("GET", queryURL.String(), nil)
+	if err != nil {
+		return nil, err
+	}
+
+	return req, nil
+}
+
+// NewKnowledgeBaseFinalizeCreateRequest calls the generic KnowledgeBaseFinalizeCreate builder with application/json body
+func NewKnowledgeBaseFinalizeCreateRequest(server string, id openapi_types.UUID, params *KnowledgeBaseFinalizeCreateParams, body KnowledgeBaseFinalizeCreateJSONRequestBody) (*http.Request, error) {
+	var bodyReader io.Reader
+	buf, err := json.Marshal(body)
+	if err != nil {
+		return nil, err
+	}
+	bodyReader = bytes.NewReader(buf)
+	return NewKnowledgeBaseFinalizeCreateRequestWithBody(server, id, params, "application/json", bodyReader)
+}
+
+// NewKnowledgeBaseFinalizeCreateRequestWithBody generates requests for KnowledgeBaseFinalizeCreate with any type of body
+func NewKnowledgeBaseFinalizeCreateRequestWithBody(server string, id openapi_types.UUID, params *KnowledgeBaseFinalizeCreateParams, contentType string, body io.Reader) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithOptions("simple", false, "id", id, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationPath, Type: "string", Format: "uuid"})
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/v1/knowledge-base/%s/finalize/", pathParam0)
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	if params != nil {
+		queryValues := queryURL.Query()
+
+		if params.OrganizationId != nil {
+
+			if queryFrag, err := runtime.StyleParamWithOptions("form", true, "organization_id", *params.OrganizationId, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationQuery, Type: "string", Format: "uuid"}); err != nil {
+				return nil, err
+			} else if parsed, err := url.ParseQuery(queryFrag); err != nil {
+				return nil, err
+			} else {
+				for k, v := range parsed {
+					for _, v2 := range v {
+						queryValues.Add(k, v2)
+					}
+				}
+			}
+
+		}
+
+		queryURL.RawQuery = queryValues.Encode()
+	}
+
+	req, err := http.NewRequest("POST", queryURL.String(), body)
+	if err != nil {
+		return nil, err
+	}
+
+	req.Header.Add("Content-Type", contentType)
+
+	return req, nil
+}
+
+// NewKnowledgeBaseRegenerateCreateRequest calls the generic KnowledgeBaseRegenerateCreate builder with application/json body
+func NewKnowledgeBaseRegenerateCreateRequest(server string, id openapi_types.UUID, params *KnowledgeBaseRegenerateCreateParams, body KnowledgeBaseRegenerateCreateJSONRequestBody) (*http.Request, error) {
+	var bodyReader io.Reader
+	buf, err := json.Marshal(body)
+	if err != nil {
+		return nil, err
+	}
+	bodyReader = bytes.NewReader(buf)
+	return NewKnowledgeBaseRegenerateCreateRequestWithBody(server, id, params, "application/json", bodyReader)
+}
+
+// NewKnowledgeBaseRegenerateCreateRequestWithBody generates requests for KnowledgeBaseRegenerateCreate with any type of body
+func NewKnowledgeBaseRegenerateCreateRequestWithBody(server string, id openapi_types.UUID, params *KnowledgeBaseRegenerateCreateParams, contentType string, body io.Reader) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithOptions("simple", false, "id", id, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationPath, Type: "string", Format: "uuid"})
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/v1/knowledge-base/%s/regenerate/", pathParam0)
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	if params != nil {
+		queryValues := queryURL.Query()
+
+		if params.OrganizationId != nil {
+
+			if queryFrag, err := runtime.StyleParamWithOptions("form", true, "organization_id", *params.OrganizationId, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationQuery, Type: "string", Format: "uuid"}); err != nil {
+				return nil, err
+			} else if parsed, err := url.ParseQuery(queryFrag); err != nil {
+				return nil, err
+			} else {
+				for k, v := range parsed {
+					for _, v2 := range v {
+						queryValues.Add(k, v2)
+					}
+				}
+			}
+
+		}
+
+		queryURL.RawQuery = queryValues.Encode()
+	}
+
+	req, err := http.NewRequest("POST", queryURL.String(), body)
+	if err != nil {
+		return nil, err
+	}
+
+	req.Header.Add("Content-Type", contentType)
+
+	return req, nil
+}
+
+// NewKnowledgeBaseResolveCreateRequest calls the generic KnowledgeBaseResolveCreate builder with application/json body
+func NewKnowledgeBaseResolveCreateRequest(server string, id openapi_types.UUID, params *KnowledgeBaseResolveCreateParams, body KnowledgeBaseResolveCreateJSONRequestBody) (*http.Request, error) {
+	var bodyReader io.Reader
+	buf, err := json.Marshal(body)
+	if err != nil {
+		return nil, err
+	}
+	bodyReader = bytes.NewReader(buf)
+	return NewKnowledgeBaseResolveCreateRequestWithBody(server, id, params, "application/json", bodyReader)
+}
+
+// NewKnowledgeBaseResolveCreateRequestWithBody generates requests for KnowledgeBaseResolveCreate with any type of body
+func NewKnowledgeBaseResolveCreateRequestWithBody(server string, id openapi_types.UUID, params *KnowledgeBaseResolveCreateParams, contentType string, body io.Reader) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithOptions("simple", false, "id", id, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationPath, Type: "string", Format: "uuid"})
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/v1/knowledge-base/%s/resolve/", pathParam0)
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	if params != nil {
+		queryValues := queryURL.Query()
+
+		if params.OrganizationId != nil {
+
+			if queryFrag, err := runtime.StyleParamWithOptions("form", true, "organization_id", *params.OrganizationId, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationQuery, Type: "string", Format: "uuid"}); err != nil {
+				return nil, err
+			} else if parsed, err := url.ParseQuery(queryFrag); err != nil {
+				return nil, err
+			} else {
+				for k, v := range parsed {
+					for _, v2 := range v {
+						queryValues.Add(k, v2)
+					}
+				}
+			}
+
+		}
+
+		queryURL.RawQuery = queryValues.Encode()
+	}
+
+	req, err := http.NewRequest("POST", queryURL.String(), body)
+	if err != nil {
+		return nil, err
+	}
+
+	req.Header.Add("Content-Type", contentType)
+
+	return req, nil
+}
+
+// NewKnowledgeBaseSelectionPartialUpdateRequest calls the generic KnowledgeBaseSelectionPartialUpdate builder with application/json body
+func NewKnowledgeBaseSelectionPartialUpdateRequest(server string, id openapi_types.UUID, params *KnowledgeBaseSelectionPartialUpdateParams, body KnowledgeBaseSelectionPartialUpdateJSONRequestBody) (*http.Request, error) {
+	var bodyReader io.Reader
+	buf, err := json.Marshal(body)
+	if err != nil {
+		return nil, err
+	}
+	bodyReader = bytes.NewReader(buf)
+	return NewKnowledgeBaseSelectionPartialUpdateRequestWithBody(server, id, params, "application/json", bodyReader)
+}
+
+// NewKnowledgeBaseSelectionPartialUpdateRequestWithBody generates requests for KnowledgeBaseSelectionPartialUpdate with any type of body
+func NewKnowledgeBaseSelectionPartialUpdateRequestWithBody(server string, id openapi_types.UUID, params *KnowledgeBaseSelectionPartialUpdateParams, contentType string, body io.Reader) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithOptions("simple", false, "id", id, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationPath, Type: "string", Format: "uuid"})
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/v1/knowledge-base/%s/selection/", pathParam0)
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	if params != nil {
+		queryValues := queryURL.Query()
+
+		if params.OrganizationId != nil {
+
+			if queryFrag, err := runtime.StyleParamWithOptions("form", true, "organization_id", *params.OrganizationId, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationQuery, Type: "string", Format: "uuid"}); err != nil {
+				return nil, err
+			} else if parsed, err := url.ParseQuery(queryFrag); err != nil {
+				return nil, err
+			} else {
+				for k, v := range parsed {
+					for _, v2 := range v {
+						queryValues.Add(k, v2)
+					}
+				}
+			}
+
+		}
+
+		queryURL.RawQuery = queryValues.Encode()
+	}
+
+	req, err := http.NewRequest("PATCH", queryURL.String(), body)
+	if err != nil {
+		return nil, err
+	}
+
+	req.Header.Add("Content-Type", contentType)
+
+	return req, nil
+}
+
+// NewKnowledgeBaseSyncCreateRequest generates requests for KnowledgeBaseSyncCreate
+func NewKnowledgeBaseSyncCreateRequest(server string, id openapi_types.UUID, params *KnowledgeBaseSyncCreateParams) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithOptions("simple", false, "id", id, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationPath, Type: "string", Format: "uuid"})
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/v1/knowledge-base/%s/sync/", pathParam0)
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	if params != nil {
+		queryValues := queryURL.Query()
+
+		if params.OrganizationId != nil {
+
+			if queryFrag, err := runtime.StyleParamWithOptions("form", true, "organization_id", *params.OrganizationId, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationQuery, Type: "string", Format: "uuid"}); err != nil {
+				return nil, err
+			} else if parsed, err := url.ParseQuery(queryFrag); err != nil {
+				return nil, err
+			} else {
+				for k, v := range parsed {
+					for _, v2 := range v {
+						queryValues.Add(k, v2)
+					}
+				}
+			}
+
+		}
+
+		queryURL.RawQuery = queryValues.Encode()
+	}
+
+	req, err := http.NewRequest("POST", queryURL.String(), nil)
+	if err != nil {
+		return nil, err
+	}
+
+	return req, nil
+}
+
+// NewKnowledgeBaseUnlinkDestroyRequest generates requests for KnowledgeBaseUnlinkDestroy
+func NewKnowledgeBaseUnlinkDestroyRequest(server string, id openapi_types.UUID, params *KnowledgeBaseUnlinkDestroyParams) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithOptions("simple", false, "id", id, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationPath, Type: "string", Format: "uuid"})
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/v1/knowledge-base/%s/unlink/", pathParam0)
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	if params != nil {
+		queryValues := queryURL.Query()
+
+		if params.OrganizationId != nil {
+
+			if queryFrag, err := runtime.StyleParamWithOptions("form", true, "organization_id", *params.OrganizationId, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationQuery, Type: "string", Format: "uuid"}); err != nil {
+				return nil, err
+			} else if parsed, err := url.ParseQuery(queryFrag); err != nil {
+				return nil, err
+			} else {
+				for k, v := range parsed {
+					for _, v2 := range v {
+						queryValues.Add(k, v2)
+					}
+				}
+			}
+
+		}
+
+		queryURL.RawQuery = queryValues.Encode()
+	}
+
+	req, err := http.NewRequest("DELETE", queryURL.String(), nil)
+	if err != nil {
+		return nil, err
+	}
+
+	return req, nil
+}
+
 // NewPoliciesListRequest generates requests for PoliciesList
 func NewPoliciesListRequest(server string, params *PoliciesListParams) (*http.Request, error) {
 	var err error
@@ -6300,6 +7864,9 @@ type ClientWithResponsesInterface interface {
 
 	AgentsJobsStatusesCreateWithResponse(ctx context.Context, params *AgentsJobsStatusesCreateParams, body AgentsJobsStatusesCreateJSONRequestBody, reqEditors ...RequestEditorFn) (*AgentsJobsStatusesCreateResponse, error)
 
+	// AgentsJobsArtifactsResultRetrieveWithResponse request
+	AgentsJobsArtifactsResultRetrieveWithResponse(ctx context.Context, agentJobId string, params *AgentsJobsArtifactsResultRetrieveParams, reqEditors ...RequestEditorFn) (*AgentsJobsArtifactsResultRetrieveResponse, error)
+
 	// AgentsJobsReferencesRetrieveWithResponse request
 	AgentsJobsReferencesRetrieveWithResponse(ctx context.Context, agentJobId openapi_types.UUID, resourceId string, params *AgentsJobsReferencesRetrieveParams, reqEditors ...RequestEditorFn) (*AgentsJobsReferencesRetrieveResponse, error)
 
@@ -6432,6 +7999,60 @@ type ClientWithResponsesInterface interface {
 
 	// ConnectorsRetrieveByTypeWithResponse request
 	ConnectorsRetrieveByTypeWithResponse(ctx context.Context, connectorType string, reqEditors ...RequestEditorFn) (*ConnectorsRetrieveByTypeResponse, error)
+
+	// KnowledgeBaseListWithResponse request
+	KnowledgeBaseListWithResponse(ctx context.Context, params *KnowledgeBaseListParams, reqEditors ...RequestEditorFn) (*KnowledgeBaseListResponse, error)
+
+	// KnowledgeBaseCreateWithBodyWithResponse request with any body
+	KnowledgeBaseCreateWithBodyWithResponse(ctx context.Context, params *KnowledgeBaseCreateParams, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*KnowledgeBaseCreateResponse, error)
+
+	KnowledgeBaseCreateWithResponse(ctx context.Context, params *KnowledgeBaseCreateParams, body KnowledgeBaseCreateJSONRequestBody, reqEditors ...RequestEditorFn) (*KnowledgeBaseCreateResponse, error)
+
+	// KnowledgeBaseCatalogRetrieveWithResponse request
+	KnowledgeBaseCatalogRetrieveWithResponse(ctx context.Context, params *KnowledgeBaseCatalogRetrieveParams, reqEditors ...RequestEditorFn) (*KnowledgeBaseCatalogRetrieveResponse, error)
+
+	// KnowledgeBaseImportLensCreateWithBodyWithResponse request with any body
+	KnowledgeBaseImportLensCreateWithBodyWithResponse(ctx context.Context, params *KnowledgeBaseImportLensCreateParams, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*KnowledgeBaseImportLensCreateResponse, error)
+
+	KnowledgeBaseImportLensCreateWithResponse(ctx context.Context, params *KnowledgeBaseImportLensCreateParams, body KnowledgeBaseImportLensCreateJSONRequestBody, reqEditors ...RequestEditorFn) (*KnowledgeBaseImportLensCreateResponse, error)
+
+	// KnowledgeBaseLensRetrieveWithResponse request
+	KnowledgeBaseLensRetrieveWithResponse(ctx context.Context, atlasLensId string, params *KnowledgeBaseLensRetrieveParams, reqEditors ...RequestEditorFn) (*KnowledgeBaseLensRetrieveResponse, error)
+
+	// KnowledgeBaseDestroyWithResponse request
+	KnowledgeBaseDestroyWithResponse(ctx context.Context, id openapi_types.UUID, params *KnowledgeBaseDestroyParams, reqEditors ...RequestEditorFn) (*KnowledgeBaseDestroyResponse, error)
+
+	// KnowledgeBaseRetrieveWithResponse request
+	KnowledgeBaseRetrieveWithResponse(ctx context.Context, id openapi_types.UUID, params *KnowledgeBaseRetrieveParams, reqEditors ...RequestEditorFn) (*KnowledgeBaseRetrieveResponse, error)
+
+	// KnowledgeBaseDraftRetrieveWithResponse request
+	KnowledgeBaseDraftRetrieveWithResponse(ctx context.Context, id openapi_types.UUID, params *KnowledgeBaseDraftRetrieveParams, reqEditors ...RequestEditorFn) (*KnowledgeBaseDraftRetrieveResponse, error)
+
+	// KnowledgeBaseFinalizeCreateWithBodyWithResponse request with any body
+	KnowledgeBaseFinalizeCreateWithBodyWithResponse(ctx context.Context, id openapi_types.UUID, params *KnowledgeBaseFinalizeCreateParams, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*KnowledgeBaseFinalizeCreateResponse, error)
+
+	KnowledgeBaseFinalizeCreateWithResponse(ctx context.Context, id openapi_types.UUID, params *KnowledgeBaseFinalizeCreateParams, body KnowledgeBaseFinalizeCreateJSONRequestBody, reqEditors ...RequestEditorFn) (*KnowledgeBaseFinalizeCreateResponse, error)
+
+	// KnowledgeBaseRegenerateCreateWithBodyWithResponse request with any body
+	KnowledgeBaseRegenerateCreateWithBodyWithResponse(ctx context.Context, id openapi_types.UUID, params *KnowledgeBaseRegenerateCreateParams, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*KnowledgeBaseRegenerateCreateResponse, error)
+
+	KnowledgeBaseRegenerateCreateWithResponse(ctx context.Context, id openapi_types.UUID, params *KnowledgeBaseRegenerateCreateParams, body KnowledgeBaseRegenerateCreateJSONRequestBody, reqEditors ...RequestEditorFn) (*KnowledgeBaseRegenerateCreateResponse, error)
+
+	// KnowledgeBaseResolveCreateWithBodyWithResponse request with any body
+	KnowledgeBaseResolveCreateWithBodyWithResponse(ctx context.Context, id openapi_types.UUID, params *KnowledgeBaseResolveCreateParams, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*KnowledgeBaseResolveCreateResponse, error)
+
+	KnowledgeBaseResolveCreateWithResponse(ctx context.Context, id openapi_types.UUID, params *KnowledgeBaseResolveCreateParams, body KnowledgeBaseResolveCreateJSONRequestBody, reqEditors ...RequestEditorFn) (*KnowledgeBaseResolveCreateResponse, error)
+
+	// KnowledgeBaseSelectionPartialUpdateWithBodyWithResponse request with any body
+	KnowledgeBaseSelectionPartialUpdateWithBodyWithResponse(ctx context.Context, id openapi_types.UUID, params *KnowledgeBaseSelectionPartialUpdateParams, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*KnowledgeBaseSelectionPartialUpdateResponse, error)
+
+	KnowledgeBaseSelectionPartialUpdateWithResponse(ctx context.Context, id openapi_types.UUID, params *KnowledgeBaseSelectionPartialUpdateParams, body KnowledgeBaseSelectionPartialUpdateJSONRequestBody, reqEditors ...RequestEditorFn) (*KnowledgeBaseSelectionPartialUpdateResponse, error)
+
+	// KnowledgeBaseSyncCreateWithResponse request
+	KnowledgeBaseSyncCreateWithResponse(ctx context.Context, id openapi_types.UUID, params *KnowledgeBaseSyncCreateParams, reqEditors ...RequestEditorFn) (*KnowledgeBaseSyncCreateResponse, error)
+
+	// KnowledgeBaseUnlinkDestroyWithResponse request
+	KnowledgeBaseUnlinkDestroyWithResponse(ctx context.Context, id openapi_types.UUID, params *KnowledgeBaseUnlinkDestroyParams, reqEditors ...RequestEditorFn) (*KnowledgeBaseUnlinkDestroyResponse, error)
 
 	// PoliciesListWithResponse request
 	PoliciesListWithResponse(ctx context.Context, params *PoliciesListParams, reqEditors ...RequestEditorFn) (*PoliciesListResponse, error)
@@ -6606,6 +8227,28 @@ func (r AgentsJobsStatusesCreateResponse) Status() string {
 
 // StatusCode returns HTTPResponse.StatusCode
 func (r AgentsJobsStatusesCreateResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+type AgentsJobsArtifactsResultRetrieveResponse struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	JSON200      *AgentJobArtifactResult
+}
+
+// Status returns HTTPResponse.Status
+func (r AgentsJobsArtifactsResultRetrieveResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r AgentsJobsArtifactsResultRetrieveResponse) StatusCode() int {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.StatusCode
 	}
@@ -7121,8 +8764,7 @@ func (r AgentsDuplicateCreateResponse) StatusCode() int {
 type AgentsJobsCancelAllCreateResponse struct {
 	Body         []byte
 	HTTPResponse *http.Response
-	JSON403      *ErrorDetailResponse
-	JSON404      *ErrorDetailResponse
+	JSON200      *AgentJobCancelAllResponse
 }
 
 // Status returns HTTPResponse.Status
@@ -7598,6 +9240,311 @@ func (r ConnectorsRetrieveByTypeResponse) Status() string {
 
 // StatusCode returns HTTPResponse.StatusCode
 func (r ConnectorsRetrieveByTypeResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+type KnowledgeBaseListResponse struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	JSON200      *PaginatedKnowledgeBaseList
+}
+
+// Status returns HTTPResponse.Status
+func (r KnowledgeBaseListResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r KnowledgeBaseListResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+type KnowledgeBaseCreateResponse struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	JSON201      *CreateKnowledgeBase
+}
+
+// Status returns HTTPResponse.Status
+func (r KnowledgeBaseCreateResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r KnowledgeBaseCreateResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+type KnowledgeBaseCatalogRetrieveResponse struct {
+	Body         []byte
+	HTTPResponse *http.Response
+}
+
+// Status returns HTTPResponse.Status
+func (r KnowledgeBaseCatalogRetrieveResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r KnowledgeBaseCatalogRetrieveResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+type KnowledgeBaseImportLensCreateResponse struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	JSON200      *KnowledgeBase
+	JSON201      *KnowledgeBase
+}
+
+// Status returns HTTPResponse.Status
+func (r KnowledgeBaseImportLensCreateResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r KnowledgeBaseImportLensCreateResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+type KnowledgeBaseLensRetrieveResponse struct {
+	Body         []byte
+	HTTPResponse *http.Response
+}
+
+// Status returns HTTPResponse.Status
+func (r KnowledgeBaseLensRetrieveResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r KnowledgeBaseLensRetrieveResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+type KnowledgeBaseDestroyResponse struct {
+	Body         []byte
+	HTTPResponse *http.Response
+}
+
+// Status returns HTTPResponse.Status
+func (r KnowledgeBaseDestroyResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r KnowledgeBaseDestroyResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+type KnowledgeBaseRetrieveResponse struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	JSON200      *KnowledgeBase
+}
+
+// Status returns HTTPResponse.Status
+func (r KnowledgeBaseRetrieveResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r KnowledgeBaseRetrieveResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+type KnowledgeBaseDraftRetrieveResponse struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	JSON200      *Draft
+}
+
+// Status returns HTTPResponse.Status
+func (r KnowledgeBaseDraftRetrieveResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r KnowledgeBaseDraftRetrieveResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+type KnowledgeBaseFinalizeCreateResponse struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	JSON200      *KnowledgeBase
+}
+
+// Status returns HTTPResponse.Status
+func (r KnowledgeBaseFinalizeCreateResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r KnowledgeBaseFinalizeCreateResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+type KnowledgeBaseRegenerateCreateResponse struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	JSON202      *Draft
+}
+
+// Status returns HTTPResponse.Status
+func (r KnowledgeBaseRegenerateCreateResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r KnowledgeBaseRegenerateCreateResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+type KnowledgeBaseResolveCreateResponse struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	JSON200      *Draft
+}
+
+// Status returns HTTPResponse.Status
+func (r KnowledgeBaseResolveCreateResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r KnowledgeBaseResolveCreateResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+type KnowledgeBaseSelectionPartialUpdateResponse struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	JSON200      *Draft
+}
+
+// Status returns HTTPResponse.Status
+func (r KnowledgeBaseSelectionPartialUpdateResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r KnowledgeBaseSelectionPartialUpdateResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+type KnowledgeBaseSyncCreateResponse struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	JSON200      *KnowledgeBase
+}
+
+// Status returns HTTPResponse.Status
+func (r KnowledgeBaseSyncCreateResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r KnowledgeBaseSyncCreateResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+type KnowledgeBaseUnlinkDestroyResponse struct {
+	Body         []byte
+	HTTPResponse *http.Response
+}
+
+// Status returns HTTPResponse.Status
+func (r KnowledgeBaseUnlinkDestroyResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r KnowledgeBaseUnlinkDestroyResponse) StatusCode() int {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.StatusCode
 	}
@@ -8107,6 +10054,15 @@ func (c *ClientWithResponses) AgentsJobsStatusesCreateWithResponse(ctx context.C
 	return ParseAgentsJobsStatusesCreateResponse(rsp)
 }
 
+// AgentsJobsArtifactsResultRetrieveWithResponse request returning *AgentsJobsArtifactsResultRetrieveResponse
+func (c *ClientWithResponses) AgentsJobsArtifactsResultRetrieveWithResponse(ctx context.Context, agentJobId string, params *AgentsJobsArtifactsResultRetrieveParams, reqEditors ...RequestEditorFn) (*AgentsJobsArtifactsResultRetrieveResponse, error) {
+	rsp, err := c.AgentsJobsArtifactsResultRetrieve(ctx, agentJobId, params, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseAgentsJobsArtifactsResultRetrieveResponse(rsp)
+}
+
 // AgentsJobsReferencesRetrieveWithResponse request returning *AgentsJobsReferencesRetrieveResponse
 func (c *ClientWithResponses) AgentsJobsReferencesRetrieveWithResponse(ctx context.Context, agentJobId openapi_types.UUID, resourceId string, params *AgentsJobsReferencesRetrieveParams, reqEditors ...RequestEditorFn) (*AgentsJobsReferencesRetrieveResponse, error) {
 	rsp, err := c.AgentsJobsReferencesRetrieve(ctx, agentJobId, resourceId, params, reqEditors...)
@@ -8534,6 +10490,180 @@ func (c *ClientWithResponses) ConnectorsRetrieveByTypeWithResponse(ctx context.C
 	return ParseConnectorsRetrieveByTypeResponse(rsp)
 }
 
+// KnowledgeBaseListWithResponse request returning *KnowledgeBaseListResponse
+func (c *ClientWithResponses) KnowledgeBaseListWithResponse(ctx context.Context, params *KnowledgeBaseListParams, reqEditors ...RequestEditorFn) (*KnowledgeBaseListResponse, error) {
+	rsp, err := c.KnowledgeBaseList(ctx, params, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseKnowledgeBaseListResponse(rsp)
+}
+
+// KnowledgeBaseCreateWithBodyWithResponse request with arbitrary body returning *KnowledgeBaseCreateResponse
+func (c *ClientWithResponses) KnowledgeBaseCreateWithBodyWithResponse(ctx context.Context, params *KnowledgeBaseCreateParams, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*KnowledgeBaseCreateResponse, error) {
+	rsp, err := c.KnowledgeBaseCreateWithBody(ctx, params, contentType, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseKnowledgeBaseCreateResponse(rsp)
+}
+
+func (c *ClientWithResponses) KnowledgeBaseCreateWithResponse(ctx context.Context, params *KnowledgeBaseCreateParams, body KnowledgeBaseCreateJSONRequestBody, reqEditors ...RequestEditorFn) (*KnowledgeBaseCreateResponse, error) {
+	rsp, err := c.KnowledgeBaseCreate(ctx, params, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseKnowledgeBaseCreateResponse(rsp)
+}
+
+// KnowledgeBaseCatalogRetrieveWithResponse request returning *KnowledgeBaseCatalogRetrieveResponse
+func (c *ClientWithResponses) KnowledgeBaseCatalogRetrieveWithResponse(ctx context.Context, params *KnowledgeBaseCatalogRetrieveParams, reqEditors ...RequestEditorFn) (*KnowledgeBaseCatalogRetrieveResponse, error) {
+	rsp, err := c.KnowledgeBaseCatalogRetrieve(ctx, params, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseKnowledgeBaseCatalogRetrieveResponse(rsp)
+}
+
+// KnowledgeBaseImportLensCreateWithBodyWithResponse request with arbitrary body returning *KnowledgeBaseImportLensCreateResponse
+func (c *ClientWithResponses) KnowledgeBaseImportLensCreateWithBodyWithResponse(ctx context.Context, params *KnowledgeBaseImportLensCreateParams, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*KnowledgeBaseImportLensCreateResponse, error) {
+	rsp, err := c.KnowledgeBaseImportLensCreateWithBody(ctx, params, contentType, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseKnowledgeBaseImportLensCreateResponse(rsp)
+}
+
+func (c *ClientWithResponses) KnowledgeBaseImportLensCreateWithResponse(ctx context.Context, params *KnowledgeBaseImportLensCreateParams, body KnowledgeBaseImportLensCreateJSONRequestBody, reqEditors ...RequestEditorFn) (*KnowledgeBaseImportLensCreateResponse, error) {
+	rsp, err := c.KnowledgeBaseImportLensCreate(ctx, params, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseKnowledgeBaseImportLensCreateResponse(rsp)
+}
+
+// KnowledgeBaseLensRetrieveWithResponse request returning *KnowledgeBaseLensRetrieveResponse
+func (c *ClientWithResponses) KnowledgeBaseLensRetrieveWithResponse(ctx context.Context, atlasLensId string, params *KnowledgeBaseLensRetrieveParams, reqEditors ...RequestEditorFn) (*KnowledgeBaseLensRetrieveResponse, error) {
+	rsp, err := c.KnowledgeBaseLensRetrieve(ctx, atlasLensId, params, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseKnowledgeBaseLensRetrieveResponse(rsp)
+}
+
+// KnowledgeBaseDestroyWithResponse request returning *KnowledgeBaseDestroyResponse
+func (c *ClientWithResponses) KnowledgeBaseDestroyWithResponse(ctx context.Context, id openapi_types.UUID, params *KnowledgeBaseDestroyParams, reqEditors ...RequestEditorFn) (*KnowledgeBaseDestroyResponse, error) {
+	rsp, err := c.KnowledgeBaseDestroy(ctx, id, params, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseKnowledgeBaseDestroyResponse(rsp)
+}
+
+// KnowledgeBaseRetrieveWithResponse request returning *KnowledgeBaseRetrieveResponse
+func (c *ClientWithResponses) KnowledgeBaseRetrieveWithResponse(ctx context.Context, id openapi_types.UUID, params *KnowledgeBaseRetrieveParams, reqEditors ...RequestEditorFn) (*KnowledgeBaseRetrieveResponse, error) {
+	rsp, err := c.KnowledgeBaseRetrieve(ctx, id, params, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseKnowledgeBaseRetrieveResponse(rsp)
+}
+
+// KnowledgeBaseDraftRetrieveWithResponse request returning *KnowledgeBaseDraftRetrieveResponse
+func (c *ClientWithResponses) KnowledgeBaseDraftRetrieveWithResponse(ctx context.Context, id openapi_types.UUID, params *KnowledgeBaseDraftRetrieveParams, reqEditors ...RequestEditorFn) (*KnowledgeBaseDraftRetrieveResponse, error) {
+	rsp, err := c.KnowledgeBaseDraftRetrieve(ctx, id, params, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseKnowledgeBaseDraftRetrieveResponse(rsp)
+}
+
+// KnowledgeBaseFinalizeCreateWithBodyWithResponse request with arbitrary body returning *KnowledgeBaseFinalizeCreateResponse
+func (c *ClientWithResponses) KnowledgeBaseFinalizeCreateWithBodyWithResponse(ctx context.Context, id openapi_types.UUID, params *KnowledgeBaseFinalizeCreateParams, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*KnowledgeBaseFinalizeCreateResponse, error) {
+	rsp, err := c.KnowledgeBaseFinalizeCreateWithBody(ctx, id, params, contentType, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseKnowledgeBaseFinalizeCreateResponse(rsp)
+}
+
+func (c *ClientWithResponses) KnowledgeBaseFinalizeCreateWithResponse(ctx context.Context, id openapi_types.UUID, params *KnowledgeBaseFinalizeCreateParams, body KnowledgeBaseFinalizeCreateJSONRequestBody, reqEditors ...RequestEditorFn) (*KnowledgeBaseFinalizeCreateResponse, error) {
+	rsp, err := c.KnowledgeBaseFinalizeCreate(ctx, id, params, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseKnowledgeBaseFinalizeCreateResponse(rsp)
+}
+
+// KnowledgeBaseRegenerateCreateWithBodyWithResponse request with arbitrary body returning *KnowledgeBaseRegenerateCreateResponse
+func (c *ClientWithResponses) KnowledgeBaseRegenerateCreateWithBodyWithResponse(ctx context.Context, id openapi_types.UUID, params *KnowledgeBaseRegenerateCreateParams, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*KnowledgeBaseRegenerateCreateResponse, error) {
+	rsp, err := c.KnowledgeBaseRegenerateCreateWithBody(ctx, id, params, contentType, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseKnowledgeBaseRegenerateCreateResponse(rsp)
+}
+
+func (c *ClientWithResponses) KnowledgeBaseRegenerateCreateWithResponse(ctx context.Context, id openapi_types.UUID, params *KnowledgeBaseRegenerateCreateParams, body KnowledgeBaseRegenerateCreateJSONRequestBody, reqEditors ...RequestEditorFn) (*KnowledgeBaseRegenerateCreateResponse, error) {
+	rsp, err := c.KnowledgeBaseRegenerateCreate(ctx, id, params, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseKnowledgeBaseRegenerateCreateResponse(rsp)
+}
+
+// KnowledgeBaseResolveCreateWithBodyWithResponse request with arbitrary body returning *KnowledgeBaseResolveCreateResponse
+func (c *ClientWithResponses) KnowledgeBaseResolveCreateWithBodyWithResponse(ctx context.Context, id openapi_types.UUID, params *KnowledgeBaseResolveCreateParams, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*KnowledgeBaseResolveCreateResponse, error) {
+	rsp, err := c.KnowledgeBaseResolveCreateWithBody(ctx, id, params, contentType, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseKnowledgeBaseResolveCreateResponse(rsp)
+}
+
+func (c *ClientWithResponses) KnowledgeBaseResolveCreateWithResponse(ctx context.Context, id openapi_types.UUID, params *KnowledgeBaseResolveCreateParams, body KnowledgeBaseResolveCreateJSONRequestBody, reqEditors ...RequestEditorFn) (*KnowledgeBaseResolveCreateResponse, error) {
+	rsp, err := c.KnowledgeBaseResolveCreate(ctx, id, params, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseKnowledgeBaseResolveCreateResponse(rsp)
+}
+
+// KnowledgeBaseSelectionPartialUpdateWithBodyWithResponse request with arbitrary body returning *KnowledgeBaseSelectionPartialUpdateResponse
+func (c *ClientWithResponses) KnowledgeBaseSelectionPartialUpdateWithBodyWithResponse(ctx context.Context, id openapi_types.UUID, params *KnowledgeBaseSelectionPartialUpdateParams, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*KnowledgeBaseSelectionPartialUpdateResponse, error) {
+	rsp, err := c.KnowledgeBaseSelectionPartialUpdateWithBody(ctx, id, params, contentType, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseKnowledgeBaseSelectionPartialUpdateResponse(rsp)
+}
+
+func (c *ClientWithResponses) KnowledgeBaseSelectionPartialUpdateWithResponse(ctx context.Context, id openapi_types.UUID, params *KnowledgeBaseSelectionPartialUpdateParams, body KnowledgeBaseSelectionPartialUpdateJSONRequestBody, reqEditors ...RequestEditorFn) (*KnowledgeBaseSelectionPartialUpdateResponse, error) {
+	rsp, err := c.KnowledgeBaseSelectionPartialUpdate(ctx, id, params, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseKnowledgeBaseSelectionPartialUpdateResponse(rsp)
+}
+
+// KnowledgeBaseSyncCreateWithResponse request returning *KnowledgeBaseSyncCreateResponse
+func (c *ClientWithResponses) KnowledgeBaseSyncCreateWithResponse(ctx context.Context, id openapi_types.UUID, params *KnowledgeBaseSyncCreateParams, reqEditors ...RequestEditorFn) (*KnowledgeBaseSyncCreateResponse, error) {
+	rsp, err := c.KnowledgeBaseSyncCreate(ctx, id, params, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseKnowledgeBaseSyncCreateResponse(rsp)
+}
+
+// KnowledgeBaseUnlinkDestroyWithResponse request returning *KnowledgeBaseUnlinkDestroyResponse
+func (c *ClientWithResponses) KnowledgeBaseUnlinkDestroyWithResponse(ctx context.Context, id openapi_types.UUID, params *KnowledgeBaseUnlinkDestroyParams, reqEditors ...RequestEditorFn) (*KnowledgeBaseUnlinkDestroyResponse, error) {
+	rsp, err := c.KnowledgeBaseUnlinkDestroy(ctx, id, params, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseKnowledgeBaseUnlinkDestroyResponse(rsp)
+}
+
 // PoliciesListWithResponse request returning *PoliciesListResponse
 func (c *ClientWithResponses) PoliciesListWithResponse(ctx context.Context, params *PoliciesListParams, reqEditors ...RequestEditorFn) (*PoliciesListResponse, error) {
 	rsp, err := c.PoliciesList(ctx, params, reqEditors...)
@@ -8888,6 +11018,32 @@ func ParseAgentsJobsStatusesCreateResponse(rsp *http.Response) (*AgentsJobsStatu
 			return nil, err
 		}
 		response.JSON403 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseAgentsJobsArtifactsResultRetrieveResponse parses an HTTP response from a AgentsJobsArtifactsResultRetrieveWithResponse call
+func ParseAgentsJobsArtifactsResultRetrieveResponse(rsp *http.Response) (*AgentsJobsArtifactsResultRetrieveResponse, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &AgentsJobsArtifactsResultRetrieveResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest AgentJobArtifactResult
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
 
 	}
 
@@ -9677,19 +11833,12 @@ func ParseAgentsJobsCancelAllCreateResponse(rsp *http.Response) (*AgentsJobsCanc
 	}
 
 	switch {
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 403:
-		var dest ErrorDetailResponse
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest AgentJobCancelAllResponse
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
 			return nil, err
 		}
-		response.JSON403 = &dest
-
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 404:
-		var dest ErrorDetailResponse
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSON404 = &dest
+		response.JSON200 = &dest
 
 	}
 
@@ -10372,6 +12521,337 @@ func ParseConnectorsRetrieveByTypeResponse(rsp *http.Response) (*ConnectorsRetri
 		}
 		response.JSON404 = &dest
 
+	}
+
+	return response, nil
+}
+
+// ParseKnowledgeBaseListResponse parses an HTTP response from a KnowledgeBaseListWithResponse call
+func ParseKnowledgeBaseListResponse(rsp *http.Response) (*KnowledgeBaseListResponse, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &KnowledgeBaseListResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest PaginatedKnowledgeBaseList
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseKnowledgeBaseCreateResponse parses an HTTP response from a KnowledgeBaseCreateWithResponse call
+func ParseKnowledgeBaseCreateResponse(rsp *http.Response) (*KnowledgeBaseCreateResponse, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &KnowledgeBaseCreateResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 201:
+		var dest CreateKnowledgeBase
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON201 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseKnowledgeBaseCatalogRetrieveResponse parses an HTTP response from a KnowledgeBaseCatalogRetrieveWithResponse call
+func ParseKnowledgeBaseCatalogRetrieveResponse(rsp *http.Response) (*KnowledgeBaseCatalogRetrieveResponse, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &KnowledgeBaseCatalogRetrieveResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	return response, nil
+}
+
+// ParseKnowledgeBaseImportLensCreateResponse parses an HTTP response from a KnowledgeBaseImportLensCreateWithResponse call
+func ParseKnowledgeBaseImportLensCreateResponse(rsp *http.Response) (*KnowledgeBaseImportLensCreateResponse, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &KnowledgeBaseImportLensCreateResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest KnowledgeBase
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 201:
+		var dest KnowledgeBase
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON201 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseKnowledgeBaseLensRetrieveResponse parses an HTTP response from a KnowledgeBaseLensRetrieveWithResponse call
+func ParseKnowledgeBaseLensRetrieveResponse(rsp *http.Response) (*KnowledgeBaseLensRetrieveResponse, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &KnowledgeBaseLensRetrieveResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	return response, nil
+}
+
+// ParseKnowledgeBaseDestroyResponse parses an HTTP response from a KnowledgeBaseDestroyWithResponse call
+func ParseKnowledgeBaseDestroyResponse(rsp *http.Response) (*KnowledgeBaseDestroyResponse, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &KnowledgeBaseDestroyResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	return response, nil
+}
+
+// ParseKnowledgeBaseRetrieveResponse parses an HTTP response from a KnowledgeBaseRetrieveWithResponse call
+func ParseKnowledgeBaseRetrieveResponse(rsp *http.Response) (*KnowledgeBaseRetrieveResponse, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &KnowledgeBaseRetrieveResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest KnowledgeBase
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseKnowledgeBaseDraftRetrieveResponse parses an HTTP response from a KnowledgeBaseDraftRetrieveWithResponse call
+func ParseKnowledgeBaseDraftRetrieveResponse(rsp *http.Response) (*KnowledgeBaseDraftRetrieveResponse, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &KnowledgeBaseDraftRetrieveResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest Draft
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseKnowledgeBaseFinalizeCreateResponse parses an HTTP response from a KnowledgeBaseFinalizeCreateWithResponse call
+func ParseKnowledgeBaseFinalizeCreateResponse(rsp *http.Response) (*KnowledgeBaseFinalizeCreateResponse, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &KnowledgeBaseFinalizeCreateResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest KnowledgeBase
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseKnowledgeBaseRegenerateCreateResponse parses an HTTP response from a KnowledgeBaseRegenerateCreateWithResponse call
+func ParseKnowledgeBaseRegenerateCreateResponse(rsp *http.Response) (*KnowledgeBaseRegenerateCreateResponse, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &KnowledgeBaseRegenerateCreateResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 202:
+		var dest Draft
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON202 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseKnowledgeBaseResolveCreateResponse parses an HTTP response from a KnowledgeBaseResolveCreateWithResponse call
+func ParseKnowledgeBaseResolveCreateResponse(rsp *http.Response) (*KnowledgeBaseResolveCreateResponse, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &KnowledgeBaseResolveCreateResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest Draft
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseKnowledgeBaseSelectionPartialUpdateResponse parses an HTTP response from a KnowledgeBaseSelectionPartialUpdateWithResponse call
+func ParseKnowledgeBaseSelectionPartialUpdateResponse(rsp *http.Response) (*KnowledgeBaseSelectionPartialUpdateResponse, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &KnowledgeBaseSelectionPartialUpdateResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest Draft
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseKnowledgeBaseSyncCreateResponse parses an HTTP response from a KnowledgeBaseSyncCreateWithResponse call
+func ParseKnowledgeBaseSyncCreateResponse(rsp *http.Response) (*KnowledgeBaseSyncCreateResponse, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &KnowledgeBaseSyncCreateResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest KnowledgeBase
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseKnowledgeBaseUnlinkDestroyResponse parses an HTTP response from a KnowledgeBaseUnlinkDestroyWithResponse call
+func ParseKnowledgeBaseUnlinkDestroyResponse(rsp *http.Response) (*KnowledgeBaseUnlinkDestroyResponse, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &KnowledgeBaseUnlinkDestroyResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
 	}
 
 	return response, nil
