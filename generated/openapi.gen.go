@@ -1311,14 +1311,41 @@ type UserInfo struct {
 
 // AgentsListParams defines parameters for AgentsList.
 type AgentsListParams struct {
-	// EngineClassId Filter agents by engine type.
-	EngineClassId *string `form:"engine_class_id,omitempty" json:"engine_class_id,omitempty"`
+	// CreatedFrom Filter agents created at or after this timestamp.
+	CreatedFrom *time.Time `form:"created_from,omitempty" json:"created_from,omitempty"`
+
+	// CreatedTo Filter agents created at or before this timestamp.
+	CreatedTo *time.Time `form:"created_to,omitempty" json:"created_to,omitempty"`
+
+	// CreatorId Filter agents by creator user ID. Can be provided multiple times.
+	CreatorId *[]int `form:"creator_id,omitempty" json:"creator_id,omitempty"`
+
+	// EngineClassId Filter agents by engine type. Can be provided multiple times.
+	EngineClassId *[]string `form:"engine_class_id,omitempty" json:"engine_class_id,omitempty"`
 
 	// ExcludeEngineClassId Exclude agents with this engine type.
 	ExcludeEngineClassId *string `form:"exclude_engine_class_id,omitempty" json:"exclude_engine_class_id,omitempty"`
 
 	// IncludeJobStats Include job_count and most_recent_job in response (default: true). Set to false for faster response.
 	IncludeJobStats *bool `form:"include_job_stats,omitempty" json:"include_job_stats,omitempty"`
+
+	// IncludeUntagged Include agents with no visible user tags. Hidden agent-group tags are ignored.
+	IncludeUntagged *bool `form:"include_untagged,omitempty" json:"include_untagged,omitempty"`
+
+	// JobCountMax Filter agents whose served job count is less than or equal to this value.
+	JobCountMax *int `form:"job_count_max,omitempty" json:"job_count_max,omitempty"`
+
+	// JobCountMin Filter agents whose served job count is greater than or equal to this value.
+	JobCountMin *int `form:"job_count_min,omitempty" json:"job_count_min,omitempty"`
+
+	// MostRecentJobFrom Filter agents whose most recent job was at or after this timestamp.
+	MostRecentJobFrom *time.Time `form:"most_recent_job_from,omitempty" json:"most_recent_job_from,omitempty"`
+
+	// MostRecentJobTo Filter agents whose most recent job was at or before this timestamp.
+	MostRecentJobTo *time.Time `form:"most_recent_job_to,omitempty" json:"most_recent_job_to,omitempty"`
+
+	// Name Filter agents by a case-insensitive substring of the agent name.
+	Name *string `form:"name,omitempty" json:"name,omitempty"`
 
 	// Ordering Field to order results by. Prefix with '-' for descending. Options: name, created_at, most_recent_job, job_count, engine_class_id, creator.
 	Ordering *string `form:"ordering,omitempty" json:"ordering,omitempty"`
@@ -3449,9 +3476,57 @@ func NewAgentsListRequest(server string, params *AgentsListParams) (*http.Reques
 	if params != nil {
 		queryValues := queryURL.Query()
 
+		if params.CreatedFrom != nil {
+
+			if queryFrag, err := runtime.StyleParamWithOptions("form", true, "created_from", *params.CreatedFrom, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationQuery, Type: "string", Format: "date-time"}); err != nil {
+				return nil, err
+			} else if parsed, err := url.ParseQuery(queryFrag); err != nil {
+				return nil, err
+			} else {
+				for k, v := range parsed {
+					for _, v2 := range v {
+						queryValues.Add(k, v2)
+					}
+				}
+			}
+
+		}
+
+		if params.CreatedTo != nil {
+
+			if queryFrag, err := runtime.StyleParamWithOptions("form", true, "created_to", *params.CreatedTo, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationQuery, Type: "string", Format: "date-time"}); err != nil {
+				return nil, err
+			} else if parsed, err := url.ParseQuery(queryFrag); err != nil {
+				return nil, err
+			} else {
+				for k, v := range parsed {
+					for _, v2 := range v {
+						queryValues.Add(k, v2)
+					}
+				}
+			}
+
+		}
+
+		if params.CreatorId != nil {
+
+			if queryFrag, err := runtime.StyleParamWithOptions("form", true, "creator_id", *params.CreatorId, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationQuery, Type: "array", Format: ""}); err != nil {
+				return nil, err
+			} else if parsed, err := url.ParseQuery(queryFrag); err != nil {
+				return nil, err
+			} else {
+				for k, v := range parsed {
+					for _, v2 := range v {
+						queryValues.Add(k, v2)
+					}
+				}
+			}
+
+		}
+
 		if params.EngineClassId != nil {
 
-			if queryFrag, err := runtime.StyleParamWithOptions("form", true, "engine_class_id", *params.EngineClassId, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationQuery, Type: "string", Format: ""}); err != nil {
+			if queryFrag, err := runtime.StyleParamWithOptions("form", true, "engine_class_id", *params.EngineClassId, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationQuery, Type: "array", Format: ""}); err != nil {
 				return nil, err
 			} else if parsed, err := url.ParseQuery(queryFrag); err != nil {
 				return nil, err
@@ -3484,6 +3559,102 @@ func NewAgentsListRequest(server string, params *AgentsListParams) (*http.Reques
 		if params.IncludeJobStats != nil {
 
 			if queryFrag, err := runtime.StyleParamWithOptions("form", true, "include_job_stats", *params.IncludeJobStats, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationQuery, Type: "boolean", Format: ""}); err != nil {
+				return nil, err
+			} else if parsed, err := url.ParseQuery(queryFrag); err != nil {
+				return nil, err
+			} else {
+				for k, v := range parsed {
+					for _, v2 := range v {
+						queryValues.Add(k, v2)
+					}
+				}
+			}
+
+		}
+
+		if params.IncludeUntagged != nil {
+
+			if queryFrag, err := runtime.StyleParamWithOptions("form", true, "include_untagged", *params.IncludeUntagged, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationQuery, Type: "boolean", Format: ""}); err != nil {
+				return nil, err
+			} else if parsed, err := url.ParseQuery(queryFrag); err != nil {
+				return nil, err
+			} else {
+				for k, v := range parsed {
+					for _, v2 := range v {
+						queryValues.Add(k, v2)
+					}
+				}
+			}
+
+		}
+
+		if params.JobCountMax != nil {
+
+			if queryFrag, err := runtime.StyleParamWithOptions("form", true, "job_count_max", *params.JobCountMax, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationQuery, Type: "integer", Format: ""}); err != nil {
+				return nil, err
+			} else if parsed, err := url.ParseQuery(queryFrag); err != nil {
+				return nil, err
+			} else {
+				for k, v := range parsed {
+					for _, v2 := range v {
+						queryValues.Add(k, v2)
+					}
+				}
+			}
+
+		}
+
+		if params.JobCountMin != nil {
+
+			if queryFrag, err := runtime.StyleParamWithOptions("form", true, "job_count_min", *params.JobCountMin, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationQuery, Type: "integer", Format: ""}); err != nil {
+				return nil, err
+			} else if parsed, err := url.ParseQuery(queryFrag); err != nil {
+				return nil, err
+			} else {
+				for k, v := range parsed {
+					for _, v2 := range v {
+						queryValues.Add(k, v2)
+					}
+				}
+			}
+
+		}
+
+		if params.MostRecentJobFrom != nil {
+
+			if queryFrag, err := runtime.StyleParamWithOptions("form", true, "most_recent_job_from", *params.MostRecentJobFrom, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationQuery, Type: "string", Format: "date-time"}); err != nil {
+				return nil, err
+			} else if parsed, err := url.ParseQuery(queryFrag); err != nil {
+				return nil, err
+			} else {
+				for k, v := range parsed {
+					for _, v2 := range v {
+						queryValues.Add(k, v2)
+					}
+				}
+			}
+
+		}
+
+		if params.MostRecentJobTo != nil {
+
+			if queryFrag, err := runtime.StyleParamWithOptions("form", true, "most_recent_job_to", *params.MostRecentJobTo, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationQuery, Type: "string", Format: "date-time"}); err != nil {
+				return nil, err
+			} else if parsed, err := url.ParseQuery(queryFrag); err != nil {
+				return nil, err
+			} else {
+				for k, v := range parsed {
+					for _, v2 := range v {
+						queryValues.Add(k, v2)
+					}
+				}
+			}
+
+		}
+
+		if params.Name != nil {
+
+			if queryFrag, err := runtime.StyleParamWithOptions("form", true, "name", *params.Name, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationQuery, Type: "string", Format: ""}); err != nil {
 				return nil, err
 			} else if parsed, err := url.ParseQuery(queryFrag); err != nil {
 				return nil, err
