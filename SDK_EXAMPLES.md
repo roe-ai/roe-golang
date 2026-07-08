@@ -292,6 +292,28 @@ if err != nil {
 }
 ```
 
+#### `agents_jobs_list`
+
+List agent jobs or create a new agent job.
+
+```go
+result, err := client.Agents.Jobs.ListJobs(
+    "agentID",
+    1,
+    1,
+    "statusCode",
+    "versionName",
+    "metadata",
+    "createdFrom",
+    "createdTo",
+    "search",
+    "ordering",
+)
+if err != nil {
+    log.Fatal(err)
+}
+```
+
 #### `agents_jobs_cancel_all_create`
 
 Cancel all running agent jobs (:cancelAll)

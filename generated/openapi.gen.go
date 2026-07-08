@@ -187,6 +187,27 @@ func (e RelevanceEnum) Valid() bool {
 	}
 }
 
+// Defines values for ReviewStatusEnum.
+const (
+	Approved ReviewStatusEnum = "approved"
+	Pending  ReviewStatusEnum = "pending"
+	Rejected ReviewStatusEnum = "rejected"
+)
+
+// Valid indicates whether the value is a known member of the ReviewStatusEnum enum.
+func (e ReviewStatusEnum) Valid() bool {
+	switch e {
+	case Approved:
+		return true
+	case Pending:
+		return true
+	case Rejected:
+		return true
+	default:
+		return false
+	}
+}
+
 // Defines values for StatusEnum.
 const (
 	StatusEnumActive StatusEnum = "active"
@@ -229,6 +250,66 @@ func (e TableQueryStatusEnum) Valid() bool {
 	case STARTED:
 		return true
 	case SUCCESS:
+		return true
+	default:
+		return false
+	}
+}
+
+// Defines values for AgentsJobsListParamsOrdering.
+const (
+	AgentVersionName      AgentsJobsListParamsOrdering = "agent_version_name"
+	Cost                  AgentsJobsListParamsOrdering = "cost"
+	CreatedAt             AgentsJobsListParamsOrdering = "created_at"
+	Duration              AgentsJobsListParamsOrdering = "duration"
+	GraderScore           AgentsJobsListParamsOrdering = "grader_score"
+	Id                    AgentsJobsListParamsOrdering = "id"
+	LastUpdatedAt         AgentsJobsListParamsOrdering = "last_updated_at"
+	MinusAgentVersionName AgentsJobsListParamsOrdering = "-agent_version_name"
+	MinusCost             AgentsJobsListParamsOrdering = "-cost"
+	MinusCreatedAt        AgentsJobsListParamsOrdering = "-created_at"
+	MinusDuration         AgentsJobsListParamsOrdering = "-duration"
+	MinusGraderScore      AgentsJobsListParamsOrdering = "-grader_score"
+	MinusId               AgentsJobsListParamsOrdering = "-id"
+	MinusLastUpdatedAt    AgentsJobsListParamsOrdering = "-last_updated_at"
+	MinusStatusCode       AgentsJobsListParamsOrdering = "-status_code"
+	StatusCode            AgentsJobsListParamsOrdering = "status_code"
+)
+
+// Valid indicates whether the value is a known member of the AgentsJobsListParamsOrdering enum.
+func (e AgentsJobsListParamsOrdering) Valid() bool {
+	switch e {
+	case AgentVersionName:
+		return true
+	case Cost:
+		return true
+	case CreatedAt:
+		return true
+	case Duration:
+		return true
+	case GraderScore:
+		return true
+	case Id:
+		return true
+	case LastUpdatedAt:
+		return true
+	case MinusAgentVersionName:
+		return true
+	case MinusCost:
+		return true
+	case MinusCreatedAt:
+		return true
+	case MinusDuration:
+		return true
+	case MinusGraderScore:
+		return true
+	case MinusId:
+		return true
+	case MinusLastUpdatedAt:
+		return true
+	case MinusStatusCode:
+		return true
+	case StatusCode:
 		return true
 	default:
 		return false
@@ -327,6 +408,36 @@ type AgentJobDeleteDataResponse struct {
 	Status string `json:"status"`
 }
 
+// AgentJobEvaluation defines model for AgentJobEvaluation.
+type AgentJobEvaluation struct {
+	CreatedAt   *time.Time  `json:"created_at,omitempty"`
+	Feedback    *string     `json:"feedback,omitempty"`
+	GraderScore *float64    `json:"grader_score,omitempty"`
+	HumanScore  *float64    `json:"human_score,omitempty"`
+	Reference   interface{} `json:"reference,omitempty"`
+	UpdatedAt   *time.Time  `json:"updated_at,omitempty"`
+}
+
+// AgentJobFeedbackNested defines model for AgentJobFeedbackNested.
+type AgentJobFeedbackNested struct {
+	// CorrectedVerdict Human-selected correct verdict when they disagree with agent
+	CorrectedVerdict *string `json:"corrected_verdict,omitempty"`
+
+	// ReviewComment Reviewer's comment explaining their decision
+	ReviewComment *string `json:"review_comment,omitempty"`
+
+	// ReviewStatus Current review status of this job
+	//
+	// * `pending` - Pending Review
+	// * `approved` - Approved
+	// * `rejected` - Rejected
+	ReviewStatus *ReviewStatusEnum `json:"review_status,omitempty"`
+
+	// ReviewedAt Timestamp when the review was completed
+	ReviewedAt *time.Time `json:"reviewed_at,omitempty"`
+	ReviewedBy *string    `json:"reviewed_by,omitempty"`
+}
+
 // AgentJobResultItem Serializer for individual agent job result item.
 type AgentJobResultItem struct {
 	// AgentId Base agent ID
@@ -418,6 +529,17 @@ type AgentJobStatus struct {
 
 	// Timestamp Unix timestamp in seconds from the latest status event
 	Timestamp *float64 `json:"timestamp,omitempty"`
+}
+
+// AgentJobStatusEvent defines model for AgentJobStatusEvent.
+type AgentJobStatusEvent struct {
+	Count *int `json:"count,omitempty"`
+
+	// ErrorDetails Error details as key-value pairs
+	ErrorDetails *map[string]interface{} `json:"error_details,omitempty"`
+	ErrorMessage *string                 `json:"error_message,omitempty"`
+	StatusCode   int                     `json:"status_code"`
+	Timestamp    time.Time               `json:"timestamp"`
 }
 
 // AgentJobStatusManyRequest Serializer for bulk agent job status request.
@@ -838,6 +960,24 @@ type FinalizeRequest struct {
 	Public     *bool   `json:"public,omitempty"`
 }
 
+// JobInput Serializer for individual job input data
+type JobInput struct {
+	// DataType The data type of the input
+	DataType string `json:"data_type"`
+
+	// Description Description of the input
+	Description string `json:"description"`
+
+	// FileName File name if this input is a file
+	FileName *string `json:"file_name,omitempty"`
+
+	// Key The input key
+	Key string `json:"key"`
+
+	// Value The input value
+	Value string `json:"value"`
+}
+
 // KnowledgeBase defines model for KnowledgeBase.
 type KnowledgeBase struct {
 	AtlasDraftId   *string                  `json:"atlas_draft_id,omitempty"`
@@ -859,6 +999,36 @@ type KnowledgeBase struct {
 // * `active` - Active
 // * `orphaned` - Orphaned
 type KnowledgeBaseStatusEnum string
+
+// ListAgentJob defines model for ListAgentJob.
+type ListAgentJob struct {
+	// AgentVersionName Get the agent version name, handling null agent and annotation.
+	AgentVersionName *string `json:"agent_version_name,omitempty"`
+
+	// CreatedAt When the job was created
+	CreatedAt time.Time `json:"created_at"`
+	Creator   UserInfo  `json:"creator"`
+
+	// DurationMs Job duration in milliseconds, computed from status_events. End time is the last non-CACHED event so trailing cache hits don't inflate duration. Null while the job is still running or when timestamps are missing.
+	DurationMs     *int                   `json:"duration_ms,omitempty"`
+	Evaluation     AgentJobEvaluation     `json:"evaluation"`
+	FeedbackReview AgentJobFeedbackNested `json:"feedback_review"`
+	Id             *openapi_types.UUID    `json:"id,omitempty"`
+
+	// JobInputs List of input data provided to the agent job
+	JobInputs     *[]JobInput `json:"job_inputs,omitempty"`
+	LastUpdatedAt *time.Time  `json:"last_updated_at,omitempty"`
+
+	// Metadata Key-value pairs of metadata associated with the job
+	Metadata *map[string]string `json:"metadata,omitempty"`
+
+	// StatusCode Current status code of the job (0=PENDING, 1=STARTED, 2=RETRY, 3=SUCCESS, 4=FAILURE, 5=CANCELLED, 6=CACHED)
+	StatusCode   int                   `json:"status_code"`
+	StatusEvents []AgentJobStatusEvent `json:"status_events"`
+
+	// UiFields Denormalized fields from agent output for list/metrics without loading S3
+	UiFields interface{} `json:"ui_fields,omitempty"`
+}
 
 // MessageResponse Simple success acknowledgement body: `{"message": ...}`.
 type MessageResponse struct {
@@ -887,6 +1057,14 @@ type PaginatedKnowledgeBaseList struct {
 	Next     *string         `json:"next,omitempty"`
 	Previous *string         `json:"previous,omitempty"`
 	Results  []KnowledgeBase `json:"results"`
+}
+
+// PaginatedListAgentJobList defines model for PaginatedListAgentJobList.
+type PaginatedListAgentJobList struct {
+	Count    int            `json:"count"`
+	Next     *string        `json:"next,omitempty"`
+	Previous *string        `json:"previous,omitempty"`
+	Results  []ListAgentJob `json:"results"`
 }
 
 // PaginatedPolicyList defines model for PaginatedPolicyList.
@@ -1040,6 +1218,11 @@ type ResolveRequest struct {
 	Refs          *[]map[string]interface{} `json:"refs,omitempty"`
 	SuggestedName *string                   `json:"suggested_name,omitempty"`
 }
+
+// ReviewStatusEnum * `pending` - Pending Review
+// * `approved` - Approved
+// * `rejected` - Rejected
+type ReviewStatusEnum string
 
 // StatusEnum * `active` - Active
 // * `error` - Error
@@ -1488,6 +1671,58 @@ type AgentsDuplicateCreateParams struct {
 	// OrganizationId Organization ID. This is required for access control. It can be provided via query or request body depending on the endpoint.
 	OrganizationId *openapi_types.UUID `form:"organization_id,omitempty" json:"organization_id,omitempty"`
 }
+
+// AgentsJobsListParams defines parameters for AgentsJobsList.
+type AgentsJobsListParams struct {
+	CreatedFrom     *time.Time `form:"created_from,omitempty" json:"created_from,omitempty"`
+	CreatedTo       *time.Time `form:"created_to,omitempty" json:"created_to,omitempty"`
+	ExcludeMetadata *string    `form:"exclude_metadata,omitempty" json:"exclude_metadata,omitempty"`
+	JobId           *string    `form:"job_id,omitempty" json:"job_id,omitempty"`
+	JobInputs       *string    `form:"job_inputs,omitempty" json:"job_inputs,omitempty"`
+
+	// Limit Maximum number of most-recent jobs to consider and count. Caps the reported total so pagination stays fast for agents with large job histories. Defaults to 100000; pass 0 for no cap (full count, slower).
+	Limit    *int    `form:"limit,omitempty" json:"limit,omitempty"`
+	Metadata *string `form:"metadata,omitempty" json:"metadata,omitempty"`
+
+	// Ordering Ordering
+	//
+	// * `id` - Job ID
+	// * `-id` - Job ID (descending)
+	// * `agent_version_name` - Version
+	// * `-agent_version_name` - Version (descending)
+	// * `status_code` - Status
+	// * `-status_code` - Status (descending)
+	// * `created_at` - Created At
+	// * `-created_at` - Created At (descending)
+	// * `last_updated_at` - Last Updated At
+	// * `-last_updated_at` - Last Updated At (descending)
+	// * `cost` - Cost
+	// * `-cost` - Cost (descending)
+	// * `duration` - Time Elapsed
+	// * `-duration` - Time Elapsed (descending)
+	// * `grader_score` - Score
+	// * `-grader_score` - Score (descending)
+	Ordering *[]AgentsJobsListParamsOrdering `form:"ordering,omitempty" json:"ordering,omitempty"`
+
+	// Page A page number within the paginated result set.
+	Page *int `form:"page,omitempty" json:"page,omitempty"`
+
+	// PageSize Number of results to return per page.
+	PageSize *int    `form:"page_size,omitempty" json:"page_size,omitempty"`
+	Search   *string `form:"search,omitempty" json:"search,omitempty"`
+
+	// SemanticString Semantic search string for finding similar jobs using embeddings
+	SemanticString *string `form:"semantic_string,omitempty" json:"semantic_string,omitempty"`
+	StatusCode     *string `form:"status_code,omitempty" json:"status_code,omitempty"`
+	Verdict        *string `form:"verdict,omitempty" json:"verdict,omitempty"`
+	VersionName    *string `form:"version_name,omitempty" json:"version_name,omitempty"`
+
+	// OrganizationId Organization ID. This is required for access control. It can be provided via query or request body depending on the endpoint.
+	OrganizationId *openapi_types.UUID `form:"organization_id,omitempty" json:"organization_id,omitempty"`
+}
+
+// AgentsJobsListParamsOrdering defines parameters for AgentsJobsList.
+type AgentsJobsListParamsOrdering string
 
 // AgentsJobsCancelAllCreateParams defines parameters for AgentsJobsCancelAllCreate.
 type AgentsJobsCancelAllCreateParams struct {
@@ -2082,6 +2317,9 @@ type ClientInterface interface {
 	// AgentsDuplicateCreate request
 	AgentsDuplicateCreate(ctx context.Context, agentId openapi_types.UUID, params *AgentsDuplicateCreateParams, reqEditors ...RequestEditorFn) (*http.Response, error)
 
+	// AgentsJobsList request
+	AgentsJobsList(ctx context.Context, agentId openapi_types.UUID, params *AgentsJobsListParams, reqEditors ...RequestEditorFn) (*http.Response, error)
+
 	// AgentsJobsCancelAllCreate request
 	AgentsJobsCancelAllCreate(ctx context.Context, agentId openapi_types.UUID, params *AgentsJobsCancelAllCreateParams, reqEditors ...RequestEditorFn) (*http.Response, error)
 
@@ -2640,6 +2878,18 @@ func (c *Client) AgentsUpdate(ctx context.Context, agentId openapi_types.UUID, p
 
 func (c *Client) AgentsDuplicateCreate(ctx context.Context, agentId openapi_types.UUID, params *AgentsDuplicateCreateParams, reqEditors ...RequestEditorFn) (*http.Response, error) {
 	req, err := NewAgentsDuplicateCreateRequest(c.Server, agentId, params)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) AgentsJobsList(ctx context.Context, agentId openapi_types.UUID, params *AgentsJobsListParams, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewAgentsJobsListRequest(c.Server, agentId, params)
 	if err != nil {
 		return nil, err
 	}
@@ -5046,6 +5296,302 @@ func NewAgentsDuplicateCreateRequest(server string, agentId openapi_types.UUID, 
 	}
 
 	req, err := http.NewRequest("POST", queryURL.String(), nil)
+	if err != nil {
+		return nil, err
+	}
+
+	return req, nil
+}
+
+// NewAgentsJobsListRequest generates requests for AgentsJobsList
+func NewAgentsJobsListRequest(server string, agentId openapi_types.UUID, params *AgentsJobsListParams) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithOptions("simple", false, "agent_id", agentId, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationPath, Type: "string", Format: "uuid"})
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/v1/agents/%s/jobs/", pathParam0)
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	if params != nil {
+		queryValues := queryURL.Query()
+
+		if params.CreatedFrom != nil {
+
+			if queryFrag, err := runtime.StyleParamWithOptions("form", true, "created_from", *params.CreatedFrom, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationQuery, Type: "string", Format: "date-time"}); err != nil {
+				return nil, err
+			} else if parsed, err := url.ParseQuery(queryFrag); err != nil {
+				return nil, err
+			} else {
+				for k, v := range parsed {
+					for _, v2 := range v {
+						queryValues.Add(k, v2)
+					}
+				}
+			}
+
+		}
+
+		if params.CreatedTo != nil {
+
+			if queryFrag, err := runtime.StyleParamWithOptions("form", true, "created_to", *params.CreatedTo, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationQuery, Type: "string", Format: "date-time"}); err != nil {
+				return nil, err
+			} else if parsed, err := url.ParseQuery(queryFrag); err != nil {
+				return nil, err
+			} else {
+				for k, v := range parsed {
+					for _, v2 := range v {
+						queryValues.Add(k, v2)
+					}
+				}
+			}
+
+		}
+
+		if params.ExcludeMetadata != nil {
+
+			if queryFrag, err := runtime.StyleParamWithOptions("form", true, "exclude_metadata", *params.ExcludeMetadata, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationQuery, Type: "string", Format: ""}); err != nil {
+				return nil, err
+			} else if parsed, err := url.ParseQuery(queryFrag); err != nil {
+				return nil, err
+			} else {
+				for k, v := range parsed {
+					for _, v2 := range v {
+						queryValues.Add(k, v2)
+					}
+				}
+			}
+
+		}
+
+		if params.JobId != nil {
+
+			if queryFrag, err := runtime.StyleParamWithOptions("form", true, "job_id", *params.JobId, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationQuery, Type: "string", Format: ""}); err != nil {
+				return nil, err
+			} else if parsed, err := url.ParseQuery(queryFrag); err != nil {
+				return nil, err
+			} else {
+				for k, v := range parsed {
+					for _, v2 := range v {
+						queryValues.Add(k, v2)
+					}
+				}
+			}
+
+		}
+
+		if params.JobInputs != nil {
+
+			if queryFrag, err := runtime.StyleParamWithOptions("form", true, "job_inputs", *params.JobInputs, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationQuery, Type: "string", Format: ""}); err != nil {
+				return nil, err
+			} else if parsed, err := url.ParseQuery(queryFrag); err != nil {
+				return nil, err
+			} else {
+				for k, v := range parsed {
+					for _, v2 := range v {
+						queryValues.Add(k, v2)
+					}
+				}
+			}
+
+		}
+
+		if params.Limit != nil {
+
+			if queryFrag, err := runtime.StyleParamWithOptions("form", true, "limit", *params.Limit, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationQuery, Type: "integer", Format: ""}); err != nil {
+				return nil, err
+			} else if parsed, err := url.ParseQuery(queryFrag); err != nil {
+				return nil, err
+			} else {
+				for k, v := range parsed {
+					for _, v2 := range v {
+						queryValues.Add(k, v2)
+					}
+				}
+			}
+
+		}
+
+		if params.Metadata != nil {
+
+			if queryFrag, err := runtime.StyleParamWithOptions("form", true, "metadata", *params.Metadata, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationQuery, Type: "string", Format: ""}); err != nil {
+				return nil, err
+			} else if parsed, err := url.ParseQuery(queryFrag); err != nil {
+				return nil, err
+			} else {
+				for k, v := range parsed {
+					for _, v2 := range v {
+						queryValues.Add(k, v2)
+					}
+				}
+			}
+
+		}
+
+		if params.Ordering != nil {
+
+			if queryFrag, err := runtime.StyleParamWithOptions("form", false, "ordering", *params.Ordering, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationQuery, Type: "array", Format: ""}); err != nil {
+				return nil, err
+			} else if parsed, err := url.ParseQuery(queryFrag); err != nil {
+				return nil, err
+			} else {
+				for k, v := range parsed {
+					for _, v2 := range v {
+						queryValues.Add(k, v2)
+					}
+				}
+			}
+
+		}
+
+		if params.Page != nil {
+
+			if queryFrag, err := runtime.StyleParamWithOptions("form", true, "page", *params.Page, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationQuery, Type: "integer", Format: ""}); err != nil {
+				return nil, err
+			} else if parsed, err := url.ParseQuery(queryFrag); err != nil {
+				return nil, err
+			} else {
+				for k, v := range parsed {
+					for _, v2 := range v {
+						queryValues.Add(k, v2)
+					}
+				}
+			}
+
+		}
+
+		if params.PageSize != nil {
+
+			if queryFrag, err := runtime.StyleParamWithOptions("form", true, "page_size", *params.PageSize, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationQuery, Type: "integer", Format: ""}); err != nil {
+				return nil, err
+			} else if parsed, err := url.ParseQuery(queryFrag); err != nil {
+				return nil, err
+			} else {
+				for k, v := range parsed {
+					for _, v2 := range v {
+						queryValues.Add(k, v2)
+					}
+				}
+			}
+
+		}
+
+		if params.Search != nil {
+
+			if queryFrag, err := runtime.StyleParamWithOptions("form", true, "search", *params.Search, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationQuery, Type: "string", Format: ""}); err != nil {
+				return nil, err
+			} else if parsed, err := url.ParseQuery(queryFrag); err != nil {
+				return nil, err
+			} else {
+				for k, v := range parsed {
+					for _, v2 := range v {
+						queryValues.Add(k, v2)
+					}
+				}
+			}
+
+		}
+
+		if params.SemanticString != nil {
+
+			if queryFrag, err := runtime.StyleParamWithOptions("form", true, "semantic_string", *params.SemanticString, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationQuery, Type: "string", Format: ""}); err != nil {
+				return nil, err
+			} else if parsed, err := url.ParseQuery(queryFrag); err != nil {
+				return nil, err
+			} else {
+				for k, v := range parsed {
+					for _, v2 := range v {
+						queryValues.Add(k, v2)
+					}
+				}
+			}
+
+		}
+
+		if params.StatusCode != nil {
+
+			if queryFrag, err := runtime.StyleParamWithOptions("form", true, "status_code", *params.StatusCode, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationQuery, Type: "string", Format: ""}); err != nil {
+				return nil, err
+			} else if parsed, err := url.ParseQuery(queryFrag); err != nil {
+				return nil, err
+			} else {
+				for k, v := range parsed {
+					for _, v2 := range v {
+						queryValues.Add(k, v2)
+					}
+				}
+			}
+
+		}
+
+		if params.Verdict != nil {
+
+			if queryFrag, err := runtime.StyleParamWithOptions("form", true, "verdict", *params.Verdict, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationQuery, Type: "string", Format: ""}); err != nil {
+				return nil, err
+			} else if parsed, err := url.ParseQuery(queryFrag); err != nil {
+				return nil, err
+			} else {
+				for k, v := range parsed {
+					for _, v2 := range v {
+						queryValues.Add(k, v2)
+					}
+				}
+			}
+
+		}
+
+		if params.VersionName != nil {
+
+			if queryFrag, err := runtime.StyleParamWithOptions("form", true, "version_name", *params.VersionName, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationQuery, Type: "string", Format: ""}); err != nil {
+				return nil, err
+			} else if parsed, err := url.ParseQuery(queryFrag); err != nil {
+				return nil, err
+			} else {
+				for k, v := range parsed {
+					for _, v2 := range v {
+						queryValues.Add(k, v2)
+					}
+				}
+			}
+
+		}
+
+		if params.OrganizationId != nil {
+
+			if queryFrag, err := runtime.StyleParamWithOptions("form", true, "organization_id", *params.OrganizationId, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationQuery, Type: "string", Format: "uuid"}); err != nil {
+				return nil, err
+			} else if parsed, err := url.ParseQuery(queryFrag); err != nil {
+				return nil, err
+			} else {
+				for k, v := range parsed {
+					for _, v2 := range v {
+						queryValues.Add(k, v2)
+					}
+				}
+			}
+
+		}
+
+		queryURL.RawQuery = queryValues.Encode()
+	}
+
+	req, err := http.NewRequest("GET", queryURL.String(), nil)
 	if err != nil {
 		return nil, err
 	}
@@ -8103,6 +8649,9 @@ type ClientWithResponsesInterface interface {
 	// AgentsDuplicateCreateWithResponse request
 	AgentsDuplicateCreateWithResponse(ctx context.Context, agentId openapi_types.UUID, params *AgentsDuplicateCreateParams, reqEditors ...RequestEditorFn) (*AgentsDuplicateCreateResponse, error)
 
+	// AgentsJobsListWithResponse request
+	AgentsJobsListWithResponse(ctx context.Context, agentId openapi_types.UUID, params *AgentsJobsListParams, reqEditors ...RequestEditorFn) (*AgentsJobsListResponse, error)
+
 	// AgentsJobsCancelAllCreateWithResponse request
 	AgentsJobsCancelAllCreateWithResponse(ctx context.Context, agentId openapi_types.UUID, params *AgentsJobsCancelAllCreateParams, reqEditors ...RequestEditorFn) (*AgentsJobsCancelAllCreateResponse, error)
 
@@ -8926,6 +9475,36 @@ func (r AgentsDuplicateCreateResponse) Status() string {
 
 // StatusCode returns HTTPResponse.StatusCode
 func (r AgentsDuplicateCreateResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+type AgentsJobsListResponse struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	JSON200      *PaginatedListAgentJobList
+	JSON400      *map[string]AgentsJobsList_400_AdditionalProperties
+	JSON403      *ErrorDetailResponse
+	JSON404      *ErrorDetailResponse
+}
+type AgentsJobsList4000 = []string
+type AgentsJobsList4001 = string
+type AgentsJobsList_400_AdditionalProperties struct {
+	union json.RawMessage
+}
+
+// Status returns HTTPResponse.Status
+func (r AgentsJobsListResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r AgentsJobsListResponse) StatusCode() int {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.StatusCode
 	}
@@ -10441,6 +11020,15 @@ func (c *ClientWithResponses) AgentsDuplicateCreateWithResponse(ctx context.Cont
 		return nil, err
 	}
 	return ParseAgentsDuplicateCreateResponse(rsp)
+}
+
+// AgentsJobsListWithResponse request returning *AgentsJobsListResponse
+func (c *ClientWithResponses) AgentsJobsListWithResponse(ctx context.Context, agentId openapi_types.UUID, params *AgentsJobsListParams, reqEditors ...RequestEditorFn) (*AgentsJobsListResponse, error) {
+	rsp, err := c.AgentsJobsList(ctx, agentId, params, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseAgentsJobsListResponse(rsp)
 }
 
 // AgentsJobsCancelAllCreateWithResponse request returning *AgentsJobsCancelAllCreateResponse
@@ -11970,6 +12558,53 @@ func ParseAgentsDuplicateCreateResponse(rsp *http.Response) (*AgentsDuplicateCre
 			return nil, err
 		}
 		response.JSON201 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 403:
+		var dest ErrorDetailResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON403 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 404:
+		var dest ErrorDetailResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON404 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseAgentsJobsListResponse parses an HTTP response from a AgentsJobsListWithResponse call
+func ParseAgentsJobsListResponse(rsp *http.Response) (*AgentsJobsListResponse, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &AgentsJobsListResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest PaginatedListAgentJobList
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 400:
+		var dest map[string]AgentsJobsList_400_AdditionalProperties
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON400 = &dest
 
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 403:
 		var dest ErrorDetailResponse
