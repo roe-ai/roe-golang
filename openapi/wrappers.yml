@@ -444,6 +444,72 @@ apis:
         docstring: handles job operations.
         operations:
         - kind: body
+          method_name: ListJobs
+          docstring: returns an agent's jobs (paginated) with filter and sort options.
+          method: GET
+          path: /v1/agents/{agent_id}/jobs/
+          return_type: PaginatedResponse[ListAgentJob]
+          inject_organization_id: true
+          set_api_hook: paginated
+          parameters:
+          - name: agentID
+            location: path
+            go_type: string
+          - name: page
+            location: query
+            wire_name: page
+            go_type: int
+            optional: true
+            omit_when_empty: true
+          - name: pageSize
+            location: query
+            wire_name: page_size
+            go_type: int
+            optional: true
+            omit_when_empty: true
+          - name: statusCode
+            location: query
+            wire_name: status_code
+            go_type: string
+            optional: true
+            omit_when_empty: true
+          - name: versionName
+            location: query
+            wire_name: version_name
+            go_type: string
+            optional: true
+            omit_when_empty: true
+          - name: metadata
+            location: query
+            wire_name: metadata
+            go_type: string
+            optional: true
+            omit_when_empty: true
+          - name: createdFrom
+            location: query
+            wire_name: created_from
+            go_type: string
+            optional: true
+            omit_when_empty: true
+          - name: createdTo
+            location: query
+            wire_name: created_to
+            go_type: string
+            optional: true
+            omit_when_empty: true
+          - name: search
+            location: query
+            wire_name: search
+            go_type: string
+            optional: true
+            omit_when_empty: true
+          - name: ordering
+            location: query
+            wire_name: ordering
+            go_type: string
+            optional: true
+            omit_when_empty: true
+        - kind: body
           method_name: RetrieveStatus
           docstring: ''
           method: GET
