@@ -3,6 +3,8 @@ package roe
 import (
 	"context"
 	"fmt"
+
+	"github.com/roe-ai/roe-golang/generated"
 )
 
 const maxBatchSize = 1000
@@ -580,6 +582,46 @@ func (j *AgentJobsAPI) RetrieveResultManyWithContext(ctx context.Context, jobIDs
 	}
 
 	return results, nil
+}
+
+// ListJobs returns an agent's jobs (paginated) with filter and sort options.
+// Pass 0 to omit page/pageSize and "" to omit any string filter.
+func (j *AgentJobsAPI) ListJobs(agentID string, page, pageSize int, statusCode, versionName, metadata, createdFrom, createdTo, search, ordering string) (PaginatedResponse[generated.ListAgentJob], error) {
+	return j.ListJobsWithContext(context.Background(), agentID, page, pageSize, statusCode, versionName, metadata, createdFrom, createdTo, search, ordering)
+}
+
+// ListJobsWithContext returns an agent's jobs with a caller-supplied context.
+func (j *AgentJobsAPI) ListJobsWithContext(ctx context.Context, agentID string, page, pageSize int, statusCode, versionName, metadata, createdFrom, createdTo, search, ordering string) (PaginatedResponse[generated.ListAgentJob], error) {
+	if agentID == "" {
+		return PaginatedResponse[generated.ListAgentJob]{}, fmt.Errorf("agentID cannot be empty")
+	}
+	params := map[string]string{
+		"organization_id": j.agentsAPI.cfg.OrganizationID,
+	}
+	if page > 0 {
+		params["page"] = fmt.Sprintf("%d", page)
+	}
+	if pageSize > 0 {
+		params["page_size"] = fmt.Sprintf("%d", pageSize)
+	}
+	for wire, value := range map[string]string{
+		"status_code":  statusCode,
+		"version_name": versionName,
+		"metadata":     metadata,
+		"created_from": createdFrom,
+		"created_to":   createdTo,
+		"search":       search,
+		"ordering":     ordering,
+	} {
+		if value != "" {
+			params[wire] = value
+		}
+	}
+	var resp PaginatedResponse[generated.ListAgentJob]
+	if err := j.agentsAPI.httpClient.getWithContext(ctx, fmt.Sprintf("/v1/agents/%s/jobs/", agentID), params, &resp); err != nil {
+		return PaginatedResponse[generated.ListAgentJob]{}, err
+	}
+	return resp, nil
 }
 
 func (j *AgentJobsAPI) DownloadReference(jobID, resourceID string, asAttachment bool) ([]byte, error) {

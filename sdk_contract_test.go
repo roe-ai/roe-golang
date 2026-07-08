@@ -144,6 +144,7 @@ var handMaintainedTransports = map[string]map[string]operationTransport{
 		"RetrieveCurrentWithEval": {Method: "GET", Path: "/v1/agents/{agent_id}/versions/current/"},
 	},
 	"agents.jobs": {
+		"ListJobs":           {Method: "GET", Path: "/v1/agents/{agent_id}/jobs/"},
 		"RetrieveStatus":     {Method: "GET", Path: "/v1/agents/jobs/{job_id}/status/"},
 		"RetrieveResult":     {Method: "GET", Path: "/v1/agents/jobs/{agent_job_id}/result/"},
 		"RetrieveArtifact":   {Method: "GET", Path: "/v1/agents/jobs/{agent_job_id}/artifacts/result/"},
