@@ -45,6 +45,9 @@ type (
 	// File uploads.
 	FileUpload = root.FileUpload
 
+	// Per-run options.
+	RunOptions = root.RunOptions
+
 	// Errors.
 	APIError                 = root.APIError
 	BadRequestError          = root.BadRequestError

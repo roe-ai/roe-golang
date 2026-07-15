@@ -287,6 +287,208 @@ func TestAgentsAPIRunManyWithContextStopsAfterCancel(t *testing.T) {
 	}
 }
 
+func TestAgentsAPIRunWithSkipCacheSendsHeader(t *testing.T) {
+	server := newTestServer(t, http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		if r.URL.Path != "/v1/agents/run/agent-id/async/" {
+			t.Fatalf("unexpected path: %s", r.URL.Path)
+		}
+		if got := r.Header.Get("X-Skip-Cache"); got != "true" {
+			t.Fatalf("expected X-Skip-Cache=true, got %q", got)
+		}
+		w.Header().Set("Content-Type", "application/json")
+		_, _ = w.Write([]byte(`"job-1"`))
+	}))
+	defer server.Close()
+
+	client := newAgentsTestClient(t, server.URL)
+	defer client.Close()
+
+	job, err := client.Agents.Run("agent-id", 0, map[string]any{"text": "hi"}, nil, RunOptions{SkipCache: true})
+	if err != nil {
+		t.Fatalf("run: %v", err)
+	}
+	if job.ID() != "job-1" {
+		t.Fatalf("expected job-1, got %s", job.ID())
+	}
+}
+
+func TestAgentsAPIRunWithoutSkipCacheOmitsHeader(t *testing.T) {
+	server := newTestServer(t, http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		if _, present := r.Header["X-Skip-Cache"]; present {
+			t.Fatalf("expected no X-Skip-Cache header, got %q", r.Header.Get("X-Skip-Cache"))
+		}
+		w.Header().Set("Content-Type", "application/json")
+		_, _ = w.Write([]byte(`"job-1"`))
+	}))
+	defer server.Close()
+
+	client := newAgentsTestClient(t, server.URL)
+	defer client.Close()
+
+	if _, err := client.Agents.Run("agent-id", 0, map[string]any{"text": "hi"}, nil); err != nil {
+		t.Fatalf("run: %v", err)
+	}
+}
+
+func TestAgentsAPIRunWithSkipCacheFalseOmitsHeader(t *testing.T) {
+	server := newTestServer(t, http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		if _, present := r.Header["X-Skip-Cache"]; present {
+			t.Fatalf("expected no X-Skip-Cache header, got %q", r.Header.Get("X-Skip-Cache"))
+		}
+		w.Header().Set("Content-Type", "application/json")
+		_, _ = w.Write([]byte(`"job-1"`))
+	}))
+	defer server.Close()
+
+	client := newAgentsTestClient(t, server.URL)
+	defer client.Close()
+
+	if _, err := client.Agents.Run("agent-id", 0, map[string]any{"text": "hi"}, nil, RunOptions{SkipCache: false}); err != nil {
+		t.Fatalf("run: %v", err)
+	}
+}
+
+func TestAgentsAPIRunWithSkipCacheSendsHeaderOnMultipart(t *testing.T) {
+	server := newTestServer(t, http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		if got := r.Header.Get("Content-Type"); !strings.HasPrefix(got, "multipart/form-data") {
+			t.Fatalf("expected multipart request, got Content-Type %q", got)
+		}
+		if got := r.Header.Get("X-Skip-Cache"); got != "true" {
+			t.Fatalf("expected X-Skip-Cache=true on multipart request, got %q", got)
+		}
+		w.Header().Set("Content-Type", "application/json")
+		_, _ = w.Write([]byte(`"job-1"`))
+	}))
+	defer server.Close()
+
+	client := newAgentsTestClient(t, server.URL)
+	defer client.Close()
+
+	inputs := map[string]any{"doc": []byte("file bytes"), "text": "hi"}
+	if _, err := client.Agents.Run("agent-id", 0, inputs, nil, RunOptions{SkipCache: true}); err != nil {
+		t.Fatalf("run: %v", err)
+	}
+}
+
+func TestAgentsAPIRunSkipCacheOverridesConfigExtraHeaders(t *testing.T) {
+	server := newTestServer(t, http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		values := r.Header.Values("X-Skip-Cache")
+		if len(values) != 1 || values[0] != "true" {
+			t.Fatalf("expected exactly one X-Skip-Cache=true header, got %v", values)
+		}
+		w.Header().Set("Content-Type", "application/json")
+		_, _ = w.Write([]byte(`"job-1"`))
+	}))
+	defer server.Close()
+
+	extra := http.Header{}
+	extra.Set("X-Skip-Cache", "false")
+	client, err := NewClientWithConfig(Config{
+		APIKey:         "k",
+		OrganizationID: "org",
+		BaseURL:        server.URL,
+		Timeout:        time.Second,
+		MaxRetries:     0,
+		ExtraHeaders:   extra,
+	})
+	if err != nil {
+		t.Fatalf("new client: %v", err)
+	}
+	defer client.Close()
+
+	if _, err := client.Agents.Run("agent-id", 0, map[string]any{"text": "hi"}, nil, RunOptions{SkipCache: true}); err != nil {
+		t.Fatalf("run: %v", err)
+	}
+}
+
+func TestAgentsAPIRunManyWithSkipCacheSendsHeader(t *testing.T) {
+	server := newTestServer(t, http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		if r.URL.Path != "/v1/agents/run/agent-id/async/many/" {
+			t.Fatalf("unexpected path: %s", r.URL.Path)
+		}
+		if got := r.Header.Get("X-Skip-Cache"); got != "true" {
+			t.Fatalf("expected X-Skip-Cache=true, got %q", got)
+		}
+		w.Header().Set("Content-Type", "application/json")
+		_, _ = w.Write([]byte(`["job-1"]`))
+	}))
+	defer server.Close()
+
+	client := newAgentsTestClient(t, server.URL)
+	defer client.Close()
+
+	batch, err := client.Agents.RunMany("agent-id", []map[string]any{{"text": "hi"}}, 0, nil, RunOptions{SkipCache: true})
+	if err != nil {
+		t.Fatalf("run many: %v", err)
+	}
+	if got := batch.jobIDs; len(got) != 1 || got[0] != "job-1" {
+		t.Fatalf("unexpected job ids: %v", got)
+	}
+}
+
+func TestAgentsAPIRunSyncWithSkipCacheSendsHeader(t *testing.T) {
+	server := newTestServer(t, http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		if r.URL.Path != "/v1/agents/run/agent-id/" {
+			t.Fatalf("unexpected path: %s", r.URL.Path)
+		}
+		if got := r.Header.Get("X-Skip-Cache"); got != "true" {
+			t.Fatalf("expected X-Skip-Cache=true, got %q", got)
+		}
+		w.Header().Set("Content-Type", "application/json")
+		_, _ = w.Write([]byte(`[]`))
+	}))
+	defer server.Close()
+
+	client := newAgentsTestClient(t, server.URL)
+	defer client.Close()
+
+	if _, err := client.Agents.RunSync("agent-id", map[string]any{"text": "hi"}, nil, RunOptions{SkipCache: true}); err != nil {
+		t.Fatalf("run sync: %v", err)
+	}
+}
+
+func TestAgentsAPIRunVersionWithSkipCacheSendsHeader(t *testing.T) {
+	server := newTestServer(t, http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		if r.URL.Path != "/v1/agents/run/agent-id/versions/version-id/async/" {
+			t.Fatalf("unexpected path: %s", r.URL.Path)
+		}
+		if got := r.Header.Get("X-Skip-Cache"); got != "true" {
+			t.Fatalf("expected X-Skip-Cache=true, got %q", got)
+		}
+		w.Header().Set("Content-Type", "application/json")
+		_, _ = w.Write([]byte(`"job-1"`))
+	}))
+	defer server.Close()
+
+	client := newAgentsTestClient(t, server.URL)
+	defer client.Close()
+
+	if _, err := client.Agents.RunVersion("agent-id", "version-id", 0, map[string]any{"text": "hi"}, nil, RunOptions{SkipCache: true}); err != nil {
+		t.Fatalf("run version: %v", err)
+	}
+}
+
+func TestAgentsAPIRunVersionSyncWithSkipCacheSendsHeader(t *testing.T) {
+	server := newTestServer(t, http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		if r.URL.Path != "/v1/agents/run/agent-id/versions/version-id/" {
+			t.Fatalf("unexpected path: %s", r.URL.Path)
+		}
+		if got := r.Header.Get("X-Skip-Cache"); got != "true" {
+			t.Fatalf("expected X-Skip-Cache=true, got %q", got)
+		}
+		w.Header().Set("Content-Type", "application/json")
+		_, _ = w.Write([]byte(`[]`))
+	}))
+	defer server.Close()
+
+	client := newAgentsTestClient(t, server.URL)
+	defer client.Close()
+
+	if _, err := client.Agents.RunVersionSync("agent-id", "version-id", map[string]any{"text": "hi"}, nil, RunOptions{SkipCache: true}); err != nil {
+		t.Fatalf("run version sync: %v", err)
+	}
+}
+
 func newAgentsTestClient(t *testing.T, baseURL string) *RoeClient {
 	t.Helper()
 	client, err := NewClientWithConfig(Config{
