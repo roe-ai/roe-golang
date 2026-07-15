@@ -303,7 +303,7 @@ func TestAgentsAPIRunWithSkipCacheSendsHeader(t *testing.T) {
 	client := newAgentsTestClient(t, server.URL)
 	defer client.Close()
 
-	job, err := client.Agents.Run("agent-id", 0, map[string]any{"text": "hi"}, nil, WithSkipCache(true))
+	job, err := client.Agents.Run("agent-id", 0, map[string]any{"text": "hi"}, nil, RunOptions{SkipCache: true})
 	if err != nil {
 		t.Fatalf("run: %v", err)
 	}
@@ -343,7 +343,7 @@ func TestAgentsAPIRunWithSkipCacheFalseOmitsHeader(t *testing.T) {
 	client := newAgentsTestClient(t, server.URL)
 	defer client.Close()
 
-	if _, err := client.Agents.Run("agent-id", 0, map[string]any{"text": "hi"}, nil, WithSkipCache(false)); err != nil {
+	if _, err := client.Agents.Run("agent-id", 0, map[string]any{"text": "hi"}, nil, RunOptions{SkipCache: false}); err != nil {
 		t.Fatalf("run: %v", err)
 	}
 }
@@ -365,7 +365,7 @@ func TestAgentsAPIRunWithSkipCacheSendsHeaderOnMultipart(t *testing.T) {
 	defer client.Close()
 
 	inputs := map[string]any{"doc": []byte("file bytes"), "text": "hi"}
-	if _, err := client.Agents.Run("agent-id", 0, inputs, nil, WithSkipCache(true)); err != nil {
+	if _, err := client.Agents.Run("agent-id", 0, inputs, nil, RunOptions{SkipCache: true}); err != nil {
 		t.Fatalf("run: %v", err)
 	}
 }
@@ -396,7 +396,7 @@ func TestAgentsAPIRunSkipCacheOverridesConfigExtraHeaders(t *testing.T) {
 	}
 	defer client.Close()
 
-	if _, err := client.Agents.Run("agent-id", 0, map[string]any{"text": "hi"}, nil, WithSkipCache(true)); err != nil {
+	if _, err := client.Agents.Run("agent-id", 0, map[string]any{"text": "hi"}, nil, RunOptions{SkipCache: true}); err != nil {
 		t.Fatalf("run: %v", err)
 	}
 }
@@ -417,7 +417,7 @@ func TestAgentsAPIRunManyWithSkipCacheSendsHeader(t *testing.T) {
 	client := newAgentsTestClient(t, server.URL)
 	defer client.Close()
 
-	batch, err := client.Agents.RunMany("agent-id", []map[string]any{{"text": "hi"}}, 0, nil, WithSkipCache(true))
+	batch, err := client.Agents.RunMany("agent-id", []map[string]any{{"text": "hi"}}, 0, nil, RunOptions{SkipCache: true})
 	if err != nil {
 		t.Fatalf("run many: %v", err)
 	}
@@ -442,7 +442,7 @@ func TestAgentsAPIRunSyncWithSkipCacheSendsHeader(t *testing.T) {
 	client := newAgentsTestClient(t, server.URL)
 	defer client.Close()
 
-	if _, err := client.Agents.RunSync("agent-id", map[string]any{"text": "hi"}, nil, WithSkipCache(true)); err != nil {
+	if _, err := client.Agents.RunSync("agent-id", map[string]any{"text": "hi"}, nil, RunOptions{SkipCache: true}); err != nil {
 		t.Fatalf("run sync: %v", err)
 	}
 }
@@ -463,7 +463,7 @@ func TestAgentsAPIRunVersionWithSkipCacheSendsHeader(t *testing.T) {
 	client := newAgentsTestClient(t, server.URL)
 	defer client.Close()
 
-	if _, err := client.Agents.RunVersion("agent-id", "version-id", 0, map[string]any{"text": "hi"}, nil, WithSkipCache(true)); err != nil {
+	if _, err := client.Agents.RunVersion("agent-id", "version-id", 0, map[string]any{"text": "hi"}, nil, RunOptions{SkipCache: true}); err != nil {
 		t.Fatalf("run version: %v", err)
 	}
 }
@@ -484,7 +484,7 @@ func TestAgentsAPIRunVersionSyncWithSkipCacheSendsHeader(t *testing.T) {
 	client := newAgentsTestClient(t, server.URL)
 	defer client.Close()
 
-	if _, err := client.Agents.RunVersionSync("agent-id", "version-id", map[string]any{"text": "hi"}, nil, WithSkipCache(true)); err != nil {
+	if _, err := client.Agents.RunVersionSync("agent-id", "version-id", map[string]any{"text": "hi"}, nil, RunOptions{SkipCache: true}); err != nil {
 		t.Fatalf("run version sync: %v", err)
 	}
 }

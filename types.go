@@ -48,12 +48,12 @@ func (a *BaseAgent) setAgentsAPI(api *AgentsAPI) {
 }
 
 // Run executes the agent using its current version.
-func (a *BaseAgent) Run(inputs map[string]any, metadata map[string]any, opts ...RunOption) (*Job, error) {
+func (a *BaseAgent) Run(inputs map[string]any, metadata map[string]any, opts ...RunOptions) (*Job, error) {
 	return a.RunWithContext(context.Background(), inputs, metadata, opts...)
 }
 
 // RunWithContext executes the agent using its current version with a caller-supplied context.
-func (a *BaseAgent) RunWithContext(ctx context.Context, inputs map[string]any, metadata map[string]any, opts ...RunOption) (*Job, error) {
+func (a *BaseAgent) RunWithContext(ctx context.Context, inputs map[string]any, metadata map[string]any, opts ...RunOptions) (*Job, error) {
 	if a.agentsAPI == nil {
 		return nil, fmt.Errorf("agents API not set; use client.Agents.Run instead")
 	}
@@ -118,12 +118,12 @@ func (v *AgentVersion) setAgentsAPI(api *AgentsAPI) {
 }
 
 // Run executes this version directly.
-func (v *AgentVersion) Run(inputs map[string]any, metadata map[string]any, opts ...RunOption) (*Job, error) {
+func (v *AgentVersion) Run(inputs map[string]any, metadata map[string]any, opts ...RunOptions) (*Job, error) {
 	return v.RunWithContext(context.Background(), inputs, metadata, opts...)
 }
 
 // RunWithContext executes this version directly with a caller-supplied context.
-func (v *AgentVersion) RunWithContext(ctx context.Context, inputs map[string]any, metadata map[string]any, opts ...RunOption) (*Job, error) {
+func (v *AgentVersion) RunWithContext(ctx context.Context, inputs map[string]any, metadata map[string]any, opts ...RunOptions) (*Job, error) {
 	if v.agentsAPI == nil {
 		return nil, fmt.Errorf("agents API not set; use client.Agents.Run instead")
 	}
