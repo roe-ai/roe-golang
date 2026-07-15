@@ -3,7 +3,7 @@
 Go SDK for the [Roe](https://www.roe-ai.com/) API.
 
 <!-- ROE-SDK:RELEASE-BANNER:START -->
-> **v1.1.5** - SDK operation coverage is synchronized across Python,
+> **v1.2.0** - SDK operation coverage is synchronized across Python,
 > TypeScript, and Go. See `SDK_EXAMPLES.md` for copy-ready examples and use cases.
 > The module path remains `github.com/roe-ai/roe-golang`.
 <!-- ROE-SDK:RELEASE-BANNER:END -->
