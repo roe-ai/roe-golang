@@ -257,7 +257,12 @@ func (c *httpClient) applyHeaders(req *http.Request, headers http.Header) {
 			req.Header.Add(k, v)
 		}
 	}
+	// Per-request headers override client-wide ones of the same name instead
+	// of stacking: a duplicated header (e.g. X-Skip-Cache set both in
+	// Config.ExtraHeaders and via WithSkipCache) would be folded to
+	// "true,true" by the backend and fail its exact-value match.
 	for k, vals := range headers {
+		req.Header.Del(k)
 		for _, v := range vals {
 			req.Header.Add(k, v)
 		}
@@ -419,6 +424,12 @@ func (c *httpClient) deleteWithContext(ctx context.Context, path string, query m
 }
 
 func (c *httpClient) postJSONWithContext(ctx context.Context, path string, payload any, query map[string]string, out any) error {
+	return c.postJSONHeadersWithContext(ctx, path, payload, query, out, nil)
+}
+
+// postJSONHeadersWithContext is postJSONWithContext plus per-request extra
+// headers (e.g. X-Skip-Cache on agent run requests).
+func (c *httpClient) postJSONHeadersWithContext(ctx context.Context, path string, payload any, query map[string]string, out any, extraHeaders http.Header) error {
 	buf := &bytes.Buffer{}
 	if payload != nil {
 		if err := json.NewEncoder(buf).Encode(payload); err != nil {
@@ -427,6 +438,7 @@ func (c *httpClient) postJSONWithContext(ctx context.Context, path string, paylo
 	}
 	headers := http.Header{}
 	headers.Set("Content-Type", "application/json")
+	mergeHeaderValues(headers, extraHeaders)
 
 	data, err := c.doRequest(ctx, http.MethodPost, path, headers, buf, query)
 	if err != nil {
@@ -436,6 +448,15 @@ func (c *httpClient) postJSONWithContext(ctx context.Context, path string, paylo
 		return nil
 	}
 	return json.Unmarshal(data, out)
+}
+
+// mergeHeaderValues adds every value in src to dst, preserving existing keys.
+func mergeHeaderValues(dst, src http.Header) {
+	for k, vals := range src {
+		for _, v := range vals {
+			dst.Add(k, v)
+		}
+	}
 }
 
 func (c *httpClient) putJSONWithContext(ctx context.Context, path string, payload any, query map[string]string, out any) error {
@@ -488,6 +509,12 @@ func (c *httpClient) postDynamicInputs(path string, inputs map[string]any, query
 }
 
 func (c *httpClient) postDynamicInputsWithContext(ctx context.Context, path string, inputs map[string]any, query map[string]string, out any, metadata map[string]any) error {
+	return c.postDynamicInputsHeadersWithContext(ctx, path, inputs, query, out, metadata, nil)
+}
+
+// postDynamicInputsHeadersWithContext is postDynamicInputsWithContext plus
+// per-request extra headers (e.g. X-Skip-Cache on agent run requests).
+func (c *httpClient) postDynamicInputsHeadersWithContext(ctx context.Context, path string, inputs map[string]any, query map[string]string, out any, metadata map[string]any, extraHeaders http.Header) error {
 	if metadata != nil {
 		if _, exists := inputs["metadata"]; exists {
 			return fmt.Errorf("inputs must not contain key \"metadata\" when metadata parameter is set")
@@ -551,6 +578,7 @@ func (c *httpClient) postDynamicInputsWithContext(ctx context.Context, path stri
 	if len(files) == 0 {
 		headers := http.Header{}
 		headers.Set("Content-Type", "application/x-www-form-urlencoded")
+		mergeHeaderValues(headers, extraHeaders)
 		data, err := c.doRequest(ctx, http.MethodPost, path, headers, strings.NewReader(form.Encode()), query)
 		if err != nil {
 			return err
@@ -616,6 +644,7 @@ func (c *httpClient) postDynamicInputsWithContext(ctx context.Context, path stri
 
 	headers := http.Header{}
 	headers.Set("Content-Type", writer.FormDataContentType())
+	mergeHeaderValues(headers, extraHeaders)
 	data, err := c.doRequest(ctx, http.MethodPost, path, headers, body, query)
 	if err != nil {
 		return err

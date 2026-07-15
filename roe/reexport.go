@@ -45,6 +45,9 @@ type (
 	// File uploads.
 	FileUpload = root.FileUpload
 
+	// Per-run options.
+	RunOption = root.RunOption
+
 	// Errors.
 	APIError                 = root.APIError
 	BadRequestError          = root.BadRequestError
@@ -89,4 +92,9 @@ func LoadConfig(apiKey, orgID, baseURL string, timeoutSeconds float64, maxRetrie
 
 func LoadConfigWithParams(params ConfigParams) (Config, error) {
 	return root.LoadConfigWithParams(params)
+}
+
+// WithSkipCache bypasses the job-result cache for a single run request.
+func WithSkipCache(skip bool) RunOption {
+	return root.WithSkipCache(skip)
 }

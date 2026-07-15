@@ -3,11 +3,45 @@ package roe
 import (
 	"context"
 	"fmt"
+	"net/http"
 
 	"github.com/roe-ai/roe-golang/generated"
 )
 
 const maxBatchSize = 1000
+
+// RunOption customizes a single agent run request. Options apply per call,
+// unlike Config.ExtraHeaders which applies to every request from the client.
+type RunOption func(*runOptions)
+
+type runOptions struct {
+	skipCache bool
+}
+
+// WithSkipCache bypasses the job-result cache for this run, forcing a fresh
+// execution. The fresh result still refreshes the cache afterwards.
+func WithSkipCache(skip bool) RunOption {
+	return func(o *runOptions) { o.skipCache = skip }
+}
+
+func buildRunOptions(opts []RunOption) runOptions {
+	var ro runOptions
+	for _, opt := range opts {
+		if opt != nil {
+			opt(&ro)
+		}
+	}
+	return ro
+}
+
+func (o runOptions) extraHeaders() http.Header {
+	if !o.skipCache {
+		return nil
+	}
+	h := http.Header{}
+	h.Set("X-Skip-Cache", "true")
+	return h
+}
 
 // AgentsAPI manages agent operations.
 type AgentsAPI struct {
@@ -189,35 +223,36 @@ func (a *AgentsAPI) DuplicateWithContext(ctx context.Context, agentID string) (B
 }
 
 // Run starts an async job for the given agent.
-func (a *AgentsAPI) Run(agentID string, timeoutSeconds int, inputs map[string]any, metadata map[string]any) (*Job, error) {
-	return a.RunWithContext(context.Background(), agentID, timeoutSeconds, inputs, metadata)
+func (a *AgentsAPI) Run(agentID string, timeoutSeconds int, inputs map[string]any, metadata map[string]any, opts ...RunOption) (*Job, error) {
+	return a.RunWithContext(context.Background(), agentID, timeoutSeconds, inputs, metadata, opts...)
 }
 
 // RunWithContext starts an async job with a caller-supplied context.
-func (a *AgentsAPI) RunWithContext(ctx context.Context, agentID string, timeoutSeconds int, inputs map[string]any, metadata map[string]any) (*Job, error) {
+func (a *AgentsAPI) RunWithContext(ctx context.Context, agentID string, timeoutSeconds int, inputs map[string]any, metadata map[string]any, opts ...RunOption) (*Job, error) {
 	if agentID == "" {
 		return nil, fmt.Errorf("agentID cannot be empty")
 	}
 	var jobID string
-	if err := a.httpClient.postDynamicInputsWithContext(ctx, fmt.Sprintf("/v1/agents/run/%s/async/", agentID), inputs, nil, &jobID, metadata); err != nil {
+	if err := a.httpClient.postDynamicInputsHeadersWithContext(ctx, fmt.Sprintf("/v1/agents/run/%s/async/", agentID), inputs, nil, &jobID, metadata, buildRunOptions(opts).extraHeaders()); err != nil {
 		return nil, fmt.Errorf("run agent %s: %w", agentID, err)
 	}
 	return newJob(a, jobID, timeoutSeconds), nil
 }
 
 // RunMany submits batch jobs.
-func (a *AgentsAPI) RunMany(agentID string, batchInputs []map[string]any, timeoutSeconds int, metadata map[string]any) (*JobBatch, error) {
-	return a.RunManyWithContext(context.Background(), agentID, batchInputs, timeoutSeconds, metadata)
+func (a *AgentsAPI) RunMany(agentID string, batchInputs []map[string]any, timeoutSeconds int, metadata map[string]any, opts ...RunOption) (*JobBatch, error) {
+	return a.RunManyWithContext(context.Background(), agentID, batchInputs, timeoutSeconds, metadata, opts...)
 }
 
 // RunManyWithContext submits batch jobs with a caller-supplied context.
-func (a *AgentsAPI) RunManyWithContext(ctx context.Context, agentID string, batchInputs []map[string]any, timeoutSeconds int, metadata map[string]any) (*JobBatch, error) {
+func (a *AgentsAPI) RunManyWithContext(ctx context.Context, agentID string, batchInputs []map[string]any, timeoutSeconds int, metadata map[string]any, opts ...RunOption) (*JobBatch, error) {
 	if agentID == "" {
 		return nil, fmt.Errorf("agentID cannot be empty")
 	}
 	if len(batchInputs) == 0 {
 		return nil, fmt.Errorf("batchInputs cannot be empty")
 	}
+	extraHeaders := buildRunOptions(opts).extraHeaders()
 	jobIDs := []string{}
 	for _, chunk := range chunkAny(batchInputs, maxBatchSize) {
 		if err := ctx.Err(); err != nil {
@@ -228,7 +263,7 @@ func (a *AgentsAPI) RunManyWithContext(ctx context.Context, agentID string, batc
 		if metadata != nil {
 			payload["metadata"] = metadata
 		}
-		if err := a.httpClient.postJSONWithContext(ctx, fmt.Sprintf("/v1/agents/run/%s/async/many/", agentID), payload, nil, &ids); err != nil {
+		if err := a.httpClient.postJSONHeadersWithContext(ctx, fmt.Sprintf("/v1/agents/run/%s/async/many/", agentID), payload, nil, &ids, extraHeaders); err != nil {
 			return nil, err
 		}
 		jobIDs = append(jobIDs, ids...)
@@ -237,29 +272,29 @@ func (a *AgentsAPI) RunManyWithContext(ctx context.Context, agentID string, batc
 }
 
 // RunSync runs synchronously and returns outputs.
-func (a *AgentsAPI) RunSync(agentID string, inputs map[string]any, metadata map[string]any) ([]AgentDatum, error) {
-	return a.RunSyncWithContext(context.Background(), agentID, inputs, metadata)
+func (a *AgentsAPI) RunSync(agentID string, inputs map[string]any, metadata map[string]any, opts ...RunOption) ([]AgentDatum, error) {
+	return a.RunSyncWithContext(context.Background(), agentID, inputs, metadata, opts...)
 }
 
 // RunSyncWithContext runs synchronously with a caller-supplied context.
-func (a *AgentsAPI) RunSyncWithContext(ctx context.Context, agentID string, inputs map[string]any, metadata map[string]any) ([]AgentDatum, error) {
+func (a *AgentsAPI) RunSyncWithContext(ctx context.Context, agentID string, inputs map[string]any, metadata map[string]any, opts ...RunOption) ([]AgentDatum, error) {
 	if agentID == "" {
 		return nil, fmt.Errorf("agentID cannot be empty")
 	}
 	var resp []AgentDatum
-	if err := a.httpClient.postDynamicInputsWithContext(ctx, fmt.Sprintf("/v1/agents/run/%s/", agentID), inputs, nil, &resp, metadata); err != nil {
+	if err := a.httpClient.postDynamicInputsHeadersWithContext(ctx, fmt.Sprintf("/v1/agents/run/%s/", agentID), inputs, nil, &resp, metadata, buildRunOptions(opts).extraHeaders()); err != nil {
 		return nil, fmt.Errorf("run agent %s sync: %w", agentID, err)
 	}
 	return resp, nil
 }
 
 // RunVersion runs a specific version asynchronously.
-func (a *AgentsAPI) RunVersion(agentID, versionID string, timeoutSeconds int, inputs map[string]any, metadata map[string]any) (*Job, error) {
-	return a.RunVersionWithContext(context.Background(), agentID, versionID, timeoutSeconds, inputs, metadata)
+func (a *AgentsAPI) RunVersion(agentID, versionID string, timeoutSeconds int, inputs map[string]any, metadata map[string]any, opts ...RunOption) (*Job, error) {
+	return a.RunVersionWithContext(context.Background(), agentID, versionID, timeoutSeconds, inputs, metadata, opts...)
 }
 
 // RunVersionWithContext runs a specific version asynchronously with a caller-supplied context.
-func (a *AgentsAPI) RunVersionWithContext(ctx context.Context, agentID, versionID string, timeoutSeconds int, inputs map[string]any, metadata map[string]any) (*Job, error) {
+func (a *AgentsAPI) RunVersionWithContext(ctx context.Context, agentID, versionID string, timeoutSeconds int, inputs map[string]any, metadata map[string]any, opts ...RunOption) (*Job, error) {
 	if agentID == "" {
 		return nil, fmt.Errorf("agentID cannot be empty")
 	}
@@ -268,19 +303,19 @@ func (a *AgentsAPI) RunVersionWithContext(ctx context.Context, agentID, versionI
 	}
 	var jobID string
 	url := fmt.Sprintf("/v1/agents/run/%s/versions/%s/async/", agentID, versionID)
-	if err := a.httpClient.postDynamicInputsWithContext(ctx, url, inputs, nil, &jobID, metadata); err != nil {
+	if err := a.httpClient.postDynamicInputsHeadersWithContext(ctx, url, inputs, nil, &jobID, metadata, buildRunOptions(opts).extraHeaders()); err != nil {
 		return nil, fmt.Errorf("run agent %s version %s: %w", agentID, versionID, err)
 	}
 	return newJob(a, jobID, timeoutSeconds), nil
 }
 
 // RunVersionSync runs a specific version synchronously.
-func (a *AgentsAPI) RunVersionSync(agentID, versionID string, inputs map[string]any, metadata map[string]any) ([]AgentDatum, error) {
-	return a.RunVersionSyncWithContext(context.Background(), agentID, versionID, inputs, metadata)
+func (a *AgentsAPI) RunVersionSync(agentID, versionID string, inputs map[string]any, metadata map[string]any, opts ...RunOption) ([]AgentDatum, error) {
+	return a.RunVersionSyncWithContext(context.Background(), agentID, versionID, inputs, metadata, opts...)
 }
 
 // RunVersionSyncWithContext runs a specific version synchronously with a caller-supplied context.
-func (a *AgentsAPI) RunVersionSyncWithContext(ctx context.Context, agentID, versionID string, inputs map[string]any, metadata map[string]any) ([]AgentDatum, error) {
+func (a *AgentsAPI) RunVersionSyncWithContext(ctx context.Context, agentID, versionID string, inputs map[string]any, metadata map[string]any, opts ...RunOption) ([]AgentDatum, error) {
 	if agentID == "" {
 		return nil, fmt.Errorf("agentID cannot be empty")
 	}
@@ -289,7 +324,7 @@ func (a *AgentsAPI) RunVersionSyncWithContext(ctx context.Context, agentID, vers
 	}
 	var resp []AgentDatum
 	url := fmt.Sprintf("/v1/agents/run/%s/versions/%s/", agentID, versionID)
-	if err := a.httpClient.postDynamicInputsWithContext(ctx, url, inputs, nil, &resp, metadata); err != nil {
+	if err := a.httpClient.postDynamicInputsHeadersWithContext(ctx, url, inputs, nil, &resp, metadata, buildRunOptions(opts).extraHeaders()); err != nil {
 		return nil, fmt.Errorf("run agent %s version %s sync: %w", agentID, versionID, err)
 	}
 	return resp, nil

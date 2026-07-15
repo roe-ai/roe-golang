@@ -357,6 +357,10 @@ batch, _ := client.Agents.RunMany("agent-uuid", []map[string]any{
 }, 0, nil)
 results, _ := batch.Wait(5*time.Second, 0)
 
+// Skip the job-result cache and force a fresh run (the fresh result still
+// refreshes the cache). All Run* methods accept the option.
+job, _ = client.Agents.Run("agent-uuid", 0, map[string]any{"text": "input"}, nil, roe.WithSkipCache(true))
+
 // Run a specific version
 job, _ := client.Agents.RunVersion("agent-uuid", "version-uuid", 0, map[string]any{
     "text": "input",

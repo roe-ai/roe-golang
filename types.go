@@ -48,16 +48,16 @@ func (a *BaseAgent) setAgentsAPI(api *AgentsAPI) {
 }
 
 // Run executes the agent using its current version.
-func (a *BaseAgent) Run(inputs map[string]any, metadata map[string]any) (*Job, error) {
-	return a.RunWithContext(context.Background(), inputs, metadata)
+func (a *BaseAgent) Run(inputs map[string]any, metadata map[string]any, opts ...RunOption) (*Job, error) {
+	return a.RunWithContext(context.Background(), inputs, metadata, opts...)
 }
 
 // RunWithContext executes the agent using its current version with a caller-supplied context.
-func (a *BaseAgent) RunWithContext(ctx context.Context, inputs map[string]any, metadata map[string]any) (*Job, error) {
+func (a *BaseAgent) RunWithContext(ctx context.Context, inputs map[string]any, metadata map[string]any, opts ...RunOption) (*Job, error) {
 	if a.agentsAPI == nil {
 		return nil, fmt.Errorf("agents API not set; use client.Agents.Run instead")
 	}
-	return a.agentsAPI.RunWithContext(ctx, a.ID, 0, inputs, metadata)
+	return a.agentsAPI.RunWithContext(ctx, a.ID, 0, inputs, metadata, opts...)
 }
 
 // ListVersions lists versions of this agent.
@@ -118,16 +118,16 @@ func (v *AgentVersion) setAgentsAPI(api *AgentsAPI) {
 }
 
 // Run executes this version directly.
-func (v *AgentVersion) Run(inputs map[string]any, metadata map[string]any) (*Job, error) {
-	return v.RunWithContext(context.Background(), inputs, metadata)
+func (v *AgentVersion) Run(inputs map[string]any, metadata map[string]any, opts ...RunOption) (*Job, error) {
+	return v.RunWithContext(context.Background(), inputs, metadata, opts...)
 }
 
 // RunWithContext executes this version directly with a caller-supplied context.
-func (v *AgentVersion) RunWithContext(ctx context.Context, inputs map[string]any, metadata map[string]any) (*Job, error) {
+func (v *AgentVersion) RunWithContext(ctx context.Context, inputs map[string]any, metadata map[string]any, opts ...RunOption) (*Job, error) {
 	if v.agentsAPI == nil {
 		return nil, fmt.Errorf("agents API not set; use client.Agents.Run instead")
 	}
-	return v.agentsAPI.RunVersionWithContext(ctx, v.BaseAgent.ID, v.ID, 0, inputs, metadata)
+	return v.agentsAPI.RunVersionWithContext(ctx, v.BaseAgent.ID, v.ID, 0, inputs, metadata, opts...)
 }
 
 // JobStatus enum values.
