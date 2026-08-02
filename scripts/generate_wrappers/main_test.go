@@ -62,3 +62,28 @@ func TestIsGeneratedAPISkipsManualNamespaces(t *testing.T) {
 		t.Fatal("expected generated namespace to be generated")
 	}
 }
+
+func TestOmitWhenEmptyConditionSupportsTypedMaps(t *testing.T) {
+	// map[string]string reached the contract via roe-main's connector-level
+	// dynamic runtime inputs and panicked the generator, stalling the Go
+	// release fan-out. Any map type must produce a condition, not an error.
+	cases := map[string]string{
+		"map[string]any":    "dynamicInputs != nil",
+		"map[string]string": "len(dynamicInputs) > 0",
+		"map[string]int":    "len(dynamicInputs) > 0",
+	}
+
+	for goType, want := range cases {
+		got, err := omitWhenEmptyCondition(parameter{Name: "dynamicInputs", GoType: goType})
+		if err != nil {
+			t.Fatalf("%s: unexpected error: %v", goType, err)
+		}
+		if got != want {
+			t.Fatalf("%s: expected %s, got %s", goType, want, got)
+		}
+	}
+
+	if _, err := omitWhenEmptyCondition(parameter{Name: "thing", GoType: "chan int"}); err == nil {
+		t.Fatal("expected an error for a genuinely unsupported go_type")
+	}
+}
