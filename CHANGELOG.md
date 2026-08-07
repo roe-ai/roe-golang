@@ -5,6 +5,61 @@ All notable changes to the Roe Go SDK will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.3.0] - 2026-08-06
+
+> ### ⚠️ This release contains source-breaking changes
+>
+> Existing code will not compile after upgrading. Go's minimal version
+> selection means a pinned `go.mod` will not move on its own — you are only
+> affected when you explicitly `go get -u`. Both breaks and their migrations
+> are listed under **Changed** below.
+>
+> This is a minor bump rather than a major one because the module path
+> `github.com/roe-ai/roe-golang` has no `/v2` suffix, and introducing one
+> would force every consumer to rewrite imports for what amounts to one extra
+> argument. Strict SemVer would call this 2.0.0; the trade was made
+> deliberately.
+
+Catch-up release covering roe-main `1-0-88` through `1-0-91`. The Go SDK was
+stalled at `1-0-87` for four releases while the wrapper generator panicked on
+the `map[string]string` contract type (fixed in #38), so this bundles the
+whole gap into one release. The equivalent Python and TypeScript changes ship
+separately through their own release PRs.
+
+### Added
+- `dynamicInputs map[string]string` on `Connections.Create`, `Update`,
+  `Replace`, and `TestCredentials` (and their `WithContext` variants), for
+  connector-level dynamic runtime inputs. Omitted from the request body when
+  empty — note that an allocated-but-empty map is also omitted, so this
+  cannot be used to clear existing dynamic inputs.
+- `CredentialsConfigured`, `DynamicInputs`, and
+  `DynamicInputTestDisabledReason` on the connection response types.
+- `DynamicInputFields` and `DynamicInputTestFields` on `ConnectorMetadata`.
+  These are required, non-pointer fields.
+- `UpdatedAt` on the agent response type, and `UpdatedFrom` / `UpdatedTo`
+  filters on `AgentsListParams`.
+- `ordering` query parameter on the connections list endpoint. Available on
+  the generated client only — the friendly `Connections.List` wrapper does
+  not expose it, because `openapi/wrappers.yml` was not updated for that
+  operation upstream.
+
+### Changed
+- **Breaking.** The four `Connections` methods above gained a trailing
+  positional `dynamicInputs` parameter. Unlike the variadic `RunOptions`
+  change in 1.2.0, this does not compile unchanged.
+
+  ```go
+  // before
+  client.Connections.Update(id, name, desc, config, authConfig)
+  // after — nil preserves the previous behavior exactly
+  client.Connections.Update(id, name, desc, config, authConfig, nil)
+  ```
+
+### Removed
+- **Breaking.** `AgentJobStatusEvent` is renamed `PublicAgentJobStatusEvent`
+  to match the spec component name. The only place it was reachable is
+  `ListAgentJob.StatusEvents`, whose element type changes accordingly.
+
 ## [1.2.0] - 2026-07-14
 
 ### Added

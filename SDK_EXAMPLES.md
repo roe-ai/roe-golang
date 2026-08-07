@@ -152,6 +152,7 @@ result, err := client.Agents.RunSync(
     "agent_id",
     map[string]any{"text": "text"},
     map[string]any{},
+    // optional: roe.RunOptions{SkipCache: true} bypasses the job-result cache
 )
 if err != nil {
     log.Fatal(err)
@@ -168,6 +169,7 @@ job, err := client.Agents.Run(
     300,
     map[string]any{"text": "text"},
     map[string]any{},
+    // optional: roe.RunOptions{SkipCache: true} bypasses the job-result cache
 )
 if err != nil {
     log.Fatal(err)
@@ -184,6 +186,7 @@ batch, err := client.Agents.RunMany(
     []map[string]any{{"text": "text"}},
     300,
     map[string]any{},
+    // optional: roe.RunOptions{SkipCache: true} bypasses the job-result cache
 )
 if err != nil {
     log.Fatal(err)
@@ -200,6 +203,7 @@ result, err := client.Agents.RunVersionSync(
     "version_id",
     map[string]any{"text": "text"},
     map[string]any{},
+    // optional: roe.RunOptions{SkipCache: true} bypasses the job-result cache
 )
 if err != nil {
     log.Fatal(err)
@@ -217,6 +221,7 @@ job, err := client.Agents.RunVersion(
     300,
     map[string]any{"text": "text"},
     map[string]any{},
+    // optional: roe.RunOptions{SkipCache: true} bypasses the job-result cache
 )
 if err != nil {
     log.Fatal(err)
@@ -319,7 +324,7 @@ if err != nil {
 Cancel all running agent jobs (:cancelAll)
 
 ```go
-err := client.Agents.Jobs.CancelAll(
+result, err := client.Agents.Jobs.CancelAll(
     "agentID",
 )
 if err != nil {
@@ -466,6 +471,7 @@ result, err := client.Connections.Create(
     map[string]any{},
     "description",
     map[string]any{},
+    map[string]string{},
 )
 if err != nil {
     log.Fatal(err)
@@ -481,6 +487,7 @@ result, err := client.Connections.TestCredentials(
     "connectorType",
     map[string]any{},
     map[string]any{},
+    map[string]string{},
 )
 if err != nil {
     log.Fatal(err)
@@ -524,6 +531,7 @@ result, err := client.Connections.Update(
     "description",
     map[string]any{},
     map[string]any{},
+    map[string]string{},
 )
 if err != nil {
     log.Fatal(err)
@@ -541,6 +549,7 @@ result, err := client.Connections.Replace(
     "description",
     map[string]any{},
     map[string]any{},
+    map[string]string{},
 )
 if err != nil {
     log.Fatal(err)

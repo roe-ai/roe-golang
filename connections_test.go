@@ -20,7 +20,7 @@ func TestConnectionsAPIUpdateAndReplaceUseDistinctHTTPMethods(t *testing.T) {
 			name:       "update",
 			wantMethod: http.MethodPatch,
 			call: func(client *RoeClient) error {
-				_, err := client.Connections.Update("conn_1", "Updated", "desc", map[string]any{"database": "analytics"}, nil)
+				_, err := client.Connections.Update("conn_1", "Updated", "desc", map[string]any{"database": "analytics"}, nil, nil)
 				return err
 			},
 			wantBody: map[string]any{
@@ -34,7 +34,7 @@ func TestConnectionsAPIUpdateAndReplaceUseDistinctHTTPMethods(t *testing.T) {
 			name:       "replace",
 			wantMethod: http.MethodPut,
 			call: func(client *RoeClient) error {
-				_, err := client.Connections.Replace("conn_1", "Updated", "", map[string]any{}, map[string]any{})
+				_, err := client.Connections.Replace("conn_1", "Updated", "", map[string]any{}, map[string]any{}, nil)
 				return err
 			},
 			wantBody: map[string]any{

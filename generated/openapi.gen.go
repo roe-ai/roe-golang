@@ -531,17 +531,6 @@ type AgentJobStatus struct {
 	Timestamp *float64 `json:"timestamp,omitempty"`
 }
 
-// AgentJobStatusEvent defines model for AgentJobStatusEvent.
-type AgentJobStatusEvent struct {
-	Count *int `json:"count,omitempty"`
-
-	// ErrorDetails Error details as key-value pairs
-	ErrorDetails *map[string]interface{} `json:"error_details,omitempty"`
-	ErrorMessage *string                 `json:"error_message,omitempty"`
-	StatusCode   int                     `json:"status_code"`
-	Timestamp    time.Time               `json:"timestamp"`
-}
-
 // AgentJobStatusManyRequest Serializer for bulk agent job status request.
 type AgentJobStatusManyRequest struct {
 	// JobIds List of agent job IDs to retrieve statuses for
@@ -663,6 +652,7 @@ type BaseAgent struct {
 	// OrganizationId Organization ID that owns this agent.
 	OrganizationId openapi_types.UUID `json:"organization_id"`
 	Tags           *[]AgentTag        `json:"tags,omitempty"`
+	UpdatedAt      *time.Time         `json:"updated_at,omitempty"`
 }
 
 // BaseAgentCreateRequest Serializer for creating base agents with proper JSON field handling
@@ -720,13 +710,16 @@ type Connection struct {
 	Config     interface{}             `json:"config,omitempty"`
 
 	// ConnectorDisplayName Get the display name for the connector type.
-	ConnectorDisplayName *string             `json:"connector_display_name,omitempty"`
-	ConnectorType        string              `json:"connector_type"`
-	CreatedAt            *time.Time          `json:"created_at,omitempty"`
-	Description          *string             `json:"description,omitempty"`
-	Id                   *openapi_types.UUID `json:"id,omitempty"`
-	Name                 string              `json:"name"`
-	Organization         openapi_types.UUID  `json:"organization"`
+	ConnectorDisplayName           *string             `json:"connector_display_name,omitempty"`
+	ConnectorType                  string              `json:"connector_type"`
+	CreatedAt                      *time.Time          `json:"created_at,omitempty"`
+	CredentialsConfigured          *bool               `json:"credentials_configured,omitempty"`
+	Description                    *string             `json:"description,omitempty"`
+	DynamicInputTestDisabledReason *string             `json:"dynamic_input_test_disabled_reason,omitempty"`
+	DynamicInputs                  *map[string]string  `json:"dynamic_inputs,omitempty"`
+	Id                             *openapi_types.UUID `json:"id,omitempty"`
+	Name                           string              `json:"name"`
+	Organization                   openapi_types.UUID  `json:"organization"`
 
 	// Status * `active` - Active
 	// * `error` - Error
@@ -746,13 +739,16 @@ type ConnectionList struct {
 	Config interface{} `json:"config,omitempty"`
 
 	// ConnectorDisplayName Get the display name for the connector type.
-	ConnectorDisplayName *string             `json:"connector_display_name,omitempty"`
-	ConnectorType        string              `json:"connector_type"`
-	CreatedAt            *time.Time          `json:"created_at,omitempty"`
-	Description          *string             `json:"description,omitempty"`
-	Id                   *openapi_types.UUID `json:"id,omitempty"`
-	Name                 string              `json:"name"`
-	Organization         openapi_types.UUID  `json:"organization"`
+	ConnectorDisplayName           *string             `json:"connector_display_name,omitempty"`
+	ConnectorType                  string              `json:"connector_type"`
+	CreatedAt                      *time.Time          `json:"created_at,omitempty"`
+	CredentialsConfigured          *bool               `json:"credentials_configured,omitempty"`
+	Description                    *string             `json:"description,omitempty"`
+	DynamicInputTestDisabledReason *string             `json:"dynamic_input_test_disabled_reason,omitempty"`
+	DynamicInputs                  *map[string]string  `json:"dynamic_inputs,omitempty"`
+	Id                             *openapi_types.UUID `json:"id,omitempty"`
+	Name                           string              `json:"name"`
+	Organization                   openapi_types.UUID  `json:"organization"`
 
 	// Status * `active` - Active
 	// * `error` - Error
@@ -768,15 +764,17 @@ type ConnectorListResponse struct {
 
 // ConnectorMetadata Serializer for connector metadata.
 type ConnectorMetadata struct {
-	AuthSchema           interface{} `json:"auth_schema"`
-	Category             string      `json:"category"`
-	ConfigSchema         interface{} `json:"config_schema"`
-	DeliveryConfigSchema interface{} `json:"delivery_config_schema"`
-	Description          string      `json:"description"`
-	DisplayName          string      `json:"display_name"`
-	Icon                 string      `json:"icon"`
-	Id                   string      `json:"id"`
-	SupportsDelivery     bool        `json:"supports_delivery"`
+	AuthSchema             interface{}         `json:"auth_schema"`
+	Category               string              `json:"category"`
+	ConfigSchema           interface{}         `json:"config_schema"`
+	DeliveryConfigSchema   interface{}         `json:"delivery_config_schema"`
+	Description            string              `json:"description"`
+	DisplayName            string              `json:"display_name"`
+	DynamicInputFields     map[string][]string `json:"dynamic_input_fields"`
+	DynamicInputTestFields []string            `json:"dynamic_input_test_fields"`
+	Icon                   string              `json:"icon"`
+	Id                     string              `json:"id"`
+	SupportsDelivery       bool                `json:"supports_delivery"`
 }
 
 // ConnectorTypeEnum * `snowflake` - SNOWFLAKE
@@ -825,6 +823,7 @@ type CreateConnectionRequest struct {
 	// * `custom_mcp` - CUSTOM_MCP
 	ConnectorType  ConnectorTypeEnum   `json:"connector_type"`
 	Description    *string             `json:"description,omitempty"`
+	DynamicInputs  *map[string]string  `json:"dynamic_inputs,omitempty"`
 	Name           string              `json:"name"`
 	OrganizationId *openapi_types.UUID `json:"organization_id,omitempty"`
 }
@@ -1023,8 +1022,8 @@ type ListAgentJob struct {
 	Metadata *map[string]string `json:"metadata,omitempty"`
 
 	// StatusCode Current status code of the job (0=PENDING, 1=STARTED, 2=RETRY, 3=SUCCESS, 4=FAILURE, 5=CANCELLED, 6=CACHED)
-	StatusCode   int                   `json:"status_code"`
-	StatusEvents []AgentJobStatusEvent `json:"status_events"`
+	StatusCode   int                         `json:"status_code"`
+	StatusEvents []PublicAgentJobStatusEvent `json:"status_events"`
 
 	// UiFields Denormalized fields from agent output for list/metrics without loading S3
 	UiFields interface{} `json:"ui_fields,omitempty"`
@@ -1124,10 +1123,11 @@ type PatchedPatchSelectionRequest struct {
 // and (c) leak Pydantic field/value details through DRF's generic 400
 // handler. The serializer only does shape checks.
 type PatchedUpdateConnectionRequest struct {
-	AuthConfig  *map[string]interface{} `json:"auth_config,omitempty"`
-	Config      *map[string]interface{} `json:"config,omitempty"`
-	Description *string                 `json:"description,omitempty"`
-	Name        *string                 `json:"name,omitempty"`
+	AuthConfig    *map[string]interface{} `json:"auth_config,omitempty"`
+	Config        *map[string]interface{} `json:"config,omitempty"`
+	Description   *string                 `json:"description,omitempty"`
+	DynamicInputs *map[string]string      `json:"dynamic_inputs,omitempty"`
+	Name          *string                 `json:"name,omitempty"`
 }
 
 // PatchedUpdatePolicyRequest Serializer for updating policy metadata (name, description)
@@ -1186,6 +1186,22 @@ type PolicyVersionCreatedBy struct {
 	DisplayName *string              `json:"display_name,omitempty"`
 	Email       *openapi_types.Email `json:"email,omitempty"`
 	Id          *int                 `json:"id,omitempty"`
+}
+
+// PublicAgentJobStatusEvent Customer-facing view of a status event.
+//
+// Same stored shape, but error text and error_details are passed through the
+// read-time sanitizer so raw technical detail never reaches a customer. Use this
+// on any endpoint a customer can reach; use the parent for staff-only surfaces
+// (e.g. diagnostic runs) and for writes.
+type PublicAgentJobStatusEvent struct {
+	Count *int `json:"count,omitempty"`
+
+	// ErrorDetails Error details as key-value pairs
+	ErrorDetails *map[string]interface{} `json:"error_details,omitempty"`
+	ErrorMessage *string                 `json:"error_message,omitempty"`
+	StatusCode   int                     `json:"status_code"`
+	Timestamp    time.Time               `json:"timestamp"`
 }
 
 // QdrantCleanupErrorResponse 500 body when deleting an agent/version fails Qdrant collection cleanup.
@@ -1427,7 +1443,8 @@ type TestConnectionCredentialsRequest struct {
 	// * `checkout_com` - CHECKOUT_COM
 	// * `socure` - SOCURE
 	// * `custom_mcp` - CUSTOM_MCP
-	ConnectorType ConnectorTypeEnum `json:"connector_type"`
+	ConnectorType ConnectorTypeEnum  `json:"connector_type"`
+	DynamicInputs *map[string]string `json:"dynamic_inputs,omitempty"`
 }
 
 // UpdateConnectionRequest Serializer for updating connections.
@@ -1444,10 +1461,11 @@ type TestConnectionCredentialsRequest struct {
 // and (c) leak Pydantic field/value details through DRF's generic 400
 // handler. The serializer only does shape checks.
 type UpdateConnectionRequest struct {
-	AuthConfig  *map[string]interface{} `json:"auth_config,omitempty"`
-	Config      *map[string]interface{} `json:"config,omitempty"`
-	Description *string                 `json:"description,omitempty"`
-	Name        *string                 `json:"name,omitempty"`
+	AuthConfig    *map[string]interface{} `json:"auth_config,omitempty"`
+	Config        *map[string]interface{} `json:"config,omitempty"`
+	Description   *string                 `json:"description,omitempty"`
+	DynamicInputs *map[string]string      `json:"dynamic_inputs,omitempty"`
+	Name          *string                 `json:"name,omitempty"`
 }
 
 // UpdatePolicy Serializer for updating policy metadata (name, description)
@@ -1530,7 +1548,7 @@ type AgentsListParams struct {
 	// Name Filter agents by a case-insensitive substring of the agent name.
 	Name *string `form:"name,omitempty" json:"name,omitempty"`
 
-	// Ordering Field to order results by. Prefix with '-' for descending. Options: name, created_at, most_recent_job, job_count, engine_class_id, creator.
+	// Ordering Field to order results by. Prefix with '-' for descending. Options: name, created_at, updated_at, most_recent_job, job_count, engine_class_id, creator.
 	Ordering *string `form:"ordering,omitempty" json:"ordering,omitempty"`
 
 	// OrganizationId Organization ID to list agents from.
@@ -1547,6 +1565,12 @@ type AgentsListParams struct {
 
 	// Tags Filter agents by tag IDs. Can be provided multiple times.
 	Tags *[]string `form:"tags,omitempty" json:"tags,omitempty"`
+
+	// UpdatedFrom Filter agents whose last config update was at or after this timestamp.
+	UpdatedFrom *time.Time `form:"updated_from,omitempty" json:"updated_from,omitempty"`
+
+	// UpdatedTo Filter agents whose last config update was at or before this timestamp.
+	UpdatedTo *time.Time `form:"updated_to,omitempty" json:"updated_to,omitempty"`
 }
 
 // AgentsCreateParams defines parameters for AgentsCreate.
@@ -1782,6 +1806,9 @@ type AgentsVersionsUpdateParams struct {
 type ConnectionsListParams struct {
 	// ConnectorType Filter by connector type (e.g., 'snowflake', 'postgres')
 	ConnectorType *string `form:"connector_type,omitempty" json:"connector_type,omitempty"`
+
+	// Ordering Which field to use when ordering the results.
+	Ordering *string `form:"ordering,omitempty" json:"ordering,omitempty"`
 
 	// OrganizationId Organization ID to list connections from. Required for JWT auth; inferred from API key when using an Organization API Key.
 	OrganizationId *openapi_types.UUID `form:"organization_id,omitempty" json:"organization_id,omitempty"`
@@ -4010,6 +4037,38 @@ func NewAgentsListRequest(server string, params *AgentsListParams) (*http.Reques
 
 		}
 
+		if params.UpdatedFrom != nil {
+
+			if queryFrag, err := runtime.StyleParamWithOptions("form", true, "updated_from", *params.UpdatedFrom, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationQuery, Type: "string", Format: "date-time"}); err != nil {
+				return nil, err
+			} else if parsed, err := url.ParseQuery(queryFrag); err != nil {
+				return nil, err
+			} else {
+				for k, v := range parsed {
+					for _, v2 := range v {
+						queryValues.Add(k, v2)
+					}
+				}
+			}
+
+		}
+
+		if params.UpdatedTo != nil {
+
+			if queryFrag, err := runtime.StyleParamWithOptions("form", true, "updated_to", *params.UpdatedTo, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationQuery, Type: "string", Format: "date-time"}); err != nil {
+				return nil, err
+			} else if parsed, err := url.ParseQuery(queryFrag); err != nil {
+				return nil, err
+			} else {
+				for k, v := range parsed {
+					for _, v2 := range v {
+						queryValues.Add(k, v2)
+					}
+				}
+			}
+
+		}
+
 		queryURL.RawQuery = queryValues.Encode()
 	}
 
@@ -6171,6 +6230,22 @@ func NewConnectionsListRequest(server string, params *ConnectionsListParams) (*h
 		if params.ConnectorType != nil {
 
 			if queryFrag, err := runtime.StyleParamWithOptions("form", true, "connector_type", *params.ConnectorType, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationQuery, Type: "string", Format: ""}); err != nil {
+				return nil, err
+			} else if parsed, err := url.ParseQuery(queryFrag); err != nil {
+				return nil, err
+			} else {
+				for k, v := range parsed {
+					for _, v2 := range v {
+						queryValues.Add(k, v2)
+					}
+				}
+			}
+
+		}
+
+		if params.Ordering != nil {
+
+			if queryFrag, err := runtime.StyleParamWithOptions("form", true, "ordering", *params.Ordering, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationQuery, Type: "string", Format: ""}); err != nil {
 				return nil, err
 			} else if parsed, err := url.ParseQuery(queryFrag); err != nil {
 				return nil, err
