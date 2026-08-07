@@ -47,12 +47,12 @@ func (a *ConnectionsAPI) ListWithContext(ctx context.Context, connectorType stri
 }
 
 // Create Create a connection.
-func (a *ConnectionsAPI) Create(connectorType string, name string, config map[string]any, description string, authConfig map[string]any) (generated.Connection, error) {
-	return a.CreateWithContext(context.Background(), connectorType, name, config, description, authConfig)
+func (a *ConnectionsAPI) Create(connectorType string, name string, config map[string]any, description string, authConfig map[string]any, dynamicInputs map[string]string) (generated.Connection, error) {
+	return a.CreateWithContext(context.Background(), connectorType, name, config, description, authConfig, dynamicInputs)
 }
 
 // CreateWithContext Create a connection.
-func (a *ConnectionsAPI) CreateWithContext(ctx context.Context, connectorType string, name string, config map[string]any, description string, authConfig map[string]any) (generated.Connection, error) {
+func (a *ConnectionsAPI) CreateWithContext(ctx context.Context, connectorType string, name string, config map[string]any, description string, authConfig map[string]any, dynamicInputs map[string]string) (generated.Connection, error) {
 	query := map[string]string{}
 	query["organization_id"] = a.cfg.OrganizationID
 	payload := map[string]any{}
@@ -65,6 +65,9 @@ func (a *ConnectionsAPI) CreateWithContext(ctx context.Context, connectorType st
 	if authConfig != nil {
 		payload["auth_config"] = authConfig
 	}
+	if len(dynamicInputs) > 0 {
+		payload["dynamic_inputs"] = dynamicInputs
+	}
 	var resp generated.Connection
 	if err := a.httpClient.postJSONWithContext(ctx, "/v1/connections/", payload, query, &resp); err != nil {
 		return generated.Connection{}, err
@@ -73,18 +76,21 @@ func (a *ConnectionsAPI) CreateWithContext(ctx context.Context, connectorType st
 }
 
 // TestCredentials Test connection credentials without saving a connection.
-func (a *ConnectionsAPI) TestCredentials(connectorType string, config map[string]any, authConfig map[string]any) (generated.TestConnection, error) {
-	return a.TestCredentialsWithContext(context.Background(), connectorType, config, authConfig)
+func (a *ConnectionsAPI) TestCredentials(connectorType string, config map[string]any, authConfig map[string]any, dynamicInputs map[string]string) (generated.TestConnection, error) {
+	return a.TestCredentialsWithContext(context.Background(), connectorType, config, authConfig, dynamicInputs)
 }
 
 // TestCredentialsWithContext Test connection credentials without saving a connection.
-func (a *ConnectionsAPI) TestCredentialsWithContext(ctx context.Context, connectorType string, config map[string]any, authConfig map[string]any) (generated.TestConnection, error) {
+func (a *ConnectionsAPI) TestCredentialsWithContext(ctx context.Context, connectorType string, config map[string]any, authConfig map[string]any, dynamicInputs map[string]string) (generated.TestConnection, error) {
 	query := map[string]string{}
 	payload := map[string]any{}
 	payload["connector_type"] = connectorType
 	payload["config"] = config
 	if authConfig != nil {
 		payload["auth_config"] = authConfig
+	}
+	if len(dynamicInputs) > 0 {
+		payload["dynamic_inputs"] = dynamicInputs
 	}
 	var resp generated.TestConnection
 	if err := a.httpClient.postJSONWithContext(ctx, "/v1/connections/test-credentials/", payload, query, &resp); err != nil {
@@ -110,12 +116,12 @@ func (a *ConnectionsAPI) RetrieveWithContext(ctx context.Context, connectionID s
 }
 
 // Update Update mutable connection fields.
-func (a *ConnectionsAPI) Update(connectionID string, name string, description string, config map[string]any, authConfig map[string]any) (generated.Connection, error) {
-	return a.UpdateWithContext(context.Background(), connectionID, name, description, config, authConfig)
+func (a *ConnectionsAPI) Update(connectionID string, name string, description string, config map[string]any, authConfig map[string]any, dynamicInputs map[string]string) (generated.Connection, error) {
+	return a.UpdateWithContext(context.Background(), connectionID, name, description, config, authConfig, dynamicInputs)
 }
 
 // UpdateWithContext Update mutable connection fields.
-func (a *ConnectionsAPI) UpdateWithContext(ctx context.Context, connectionID string, name string, description string, config map[string]any, authConfig map[string]any) (generated.Connection, error) {
+func (a *ConnectionsAPI) UpdateWithContext(ctx context.Context, connectionID string, name string, description string, config map[string]any, authConfig map[string]any, dynamicInputs map[string]string) (generated.Connection, error) {
 	query := map[string]string{}
 	query["organization_id"] = a.cfg.OrganizationID
 	payload := map[string]any{}
@@ -131,6 +137,9 @@ func (a *ConnectionsAPI) UpdateWithContext(ctx context.Context, connectionID str
 	if authConfig != nil {
 		payload["auth_config"] = authConfig
 	}
+	if len(dynamicInputs) > 0 {
+		payload["dynamic_inputs"] = dynamicInputs
+	}
 	var resp generated.Connection
 	if err := a.httpClient.patchJSONWithContext(ctx, fmt.Sprintf("/v1/connections/%s/", connectionID), payload, query, &resp); err != nil {
 		return generated.Connection{}, err
@@ -139,12 +148,12 @@ func (a *ConnectionsAPI) UpdateWithContext(ctx context.Context, connectionID str
 }
 
 // Replace Replace a connection.
-func (a *ConnectionsAPI) Replace(connectionID string, name string, description string, config map[string]any, authConfig map[string]any) (generated.Connection, error) {
-	return a.ReplaceWithContext(context.Background(), connectionID, name, description, config, authConfig)
+func (a *ConnectionsAPI) Replace(connectionID string, name string, description string, config map[string]any, authConfig map[string]any, dynamicInputs map[string]string) (generated.Connection, error) {
+	return a.ReplaceWithContext(context.Background(), connectionID, name, description, config, authConfig, dynamicInputs)
 }
 
 // ReplaceWithContext Replace a connection.
-func (a *ConnectionsAPI) ReplaceWithContext(ctx context.Context, connectionID string, name string, description string, config map[string]any, authConfig map[string]any) (generated.Connection, error) {
+func (a *ConnectionsAPI) ReplaceWithContext(ctx context.Context, connectionID string, name string, description string, config map[string]any, authConfig map[string]any, dynamicInputs map[string]string) (generated.Connection, error) {
 	query := map[string]string{}
 	query["organization_id"] = a.cfg.OrganizationID
 	payload := map[string]any{}
@@ -155,6 +164,9 @@ func (a *ConnectionsAPI) ReplaceWithContext(ctx context.Context, connectionID st
 	}
 	if authConfig != nil {
 		payload["auth_config"] = authConfig
+	}
+	if len(dynamicInputs) > 0 {
+		payload["dynamic_inputs"] = dynamicInputs
 	}
 	var resp generated.Connection
 	if err := a.httpClient.putJSONWithContext(ctx, fmt.Sprintf("/v1/connections/%s/", connectionID), payload, query, &resp); err != nil {

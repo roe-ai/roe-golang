@@ -739,6 +739,12 @@ apis:
         go_type: map[string]any
         optional: true
         omit_when_empty: true
+      - name: dynamicInputs
+        location: body
+        wire_name: dynamic_inputs
+        go_type: map[string]string
+        optional: true
+        omit_when_empty: true
     - kind: body
       method_name: TestCredentials
       docstring: Test connection credentials without saving a connection.
@@ -763,6 +769,12 @@ apis:
         location: body
         wire_name: auth_config
         go_type: map[string]any
+        optional: true
+        omit_when_empty: true
+      - name: dynamicInputs
+        location: body
+        wire_name: dynamic_inputs
+        go_type: map[string]string
         optional: true
         omit_when_empty: true
     - kind: body
@@ -818,6 +830,12 @@ apis:
         go_type: map[string]any
         optional: true
         omit_when_empty: true
+      - name: dynamicInputs
+        location: body
+        wire_name: dynamic_inputs
+        go_type: map[string]string
+        optional: true
+        omit_when_empty: true
     - kind: body
       method_name: Replace
       docstring: Replace a connection.
@@ -855,6 +873,12 @@ apis:
         location: body
         wire_name: auth_config
         go_type: map[string]any
+        optional: true
+        omit_when_empty: true
+      - name: dynamicInputs
+        location: body
+        wire_name: dynamic_inputs
+        go_type: map[string]string
         optional: true
         omit_when_empty: true
     - kind: body
