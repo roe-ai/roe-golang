@@ -137,6 +137,7 @@ Resend agent job webhook
 ```go
 result, err := client.Agents.Jobs.ResendWebhook(
     "jobID",
+    "webhookID",
 )
 if err != nil {
     log.Fatal(err)
