@@ -563,6 +563,11 @@ apis:
             location: path
             go_type: string
             validate_nonempty: true
+          - name: webhookID
+            location: body
+            wire_name: webhook_id
+            go_type: string
+            optional: true
         - kind: body
           method_name: CancelAll
           docstring: cancels all running jobs for an agent.
