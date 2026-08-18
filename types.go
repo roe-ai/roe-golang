@@ -319,6 +319,14 @@ type AgentJobCancelAllResponse struct {
 	Note          string  `json:"note"`
 }
 
+// AgentJobWebhookResendResponse reports how many webhook deliveries were
+// queued for a replayed job. Queued is zero when the agent has no active
+// webhook, which is the usual reason a callback never arrives.
+type AgentJobWebhookResendResponse struct {
+	Status string `json:"status"`
+	Queued int    `json:"queued"`
+}
+
 // AgentJobArtifactResult is the artifact result payload returned by
 // GET /v1/agents/jobs/{agent_job_id}/artifacts/result/.
 type AgentJobArtifactResult struct {

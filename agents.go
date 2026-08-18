@@ -713,6 +713,26 @@ func (j *AgentJobsAPI) CancelWithContext(ctx context.Context, jobID string) erro
 	return j.agentsAPI.httpClient.postJSONWithContext(ctx, fmt.Sprintf("/v1/agents/jobs/%s/cancel/", jobID), nil, nil, nil)
 }
 
+// ResendWebhook re-sends the completion webhook for a finished job. The job is
+// not re-run and its status is unchanged; the delivery goes to every webhook
+// attached to the job's agent.
+func (j *AgentJobsAPI) ResendWebhook(jobID string) (AgentJobWebhookResendResponse, error) {
+	return j.ResendWebhookWithContext(context.Background(), jobID)
+}
+
+// ResendWebhookWithContext re-sends a finished job's completion webhook with a
+// caller-supplied context.
+func (j *AgentJobsAPI) ResendWebhookWithContext(ctx context.Context, jobID string) (AgentJobWebhookResendResponse, error) {
+	if jobID == "" {
+		return AgentJobWebhookResendResponse{}, fmt.Errorf("jobID cannot be empty")
+	}
+	var resp AgentJobWebhookResendResponse
+	if err := j.agentsAPI.httpClient.postJSONWithContext(ctx, fmt.Sprintf("/v1/agents/jobs/%s/webhook/resend/", jobID), nil, nil, &resp); err != nil {
+		return AgentJobWebhookResendResponse{}, err
+	}
+	return resp, nil
+}
+
 // CancelAll cancels all running jobs for an agent and returns the structured
 // cancellation summary.
 func (j *AgentJobsAPI) CancelAll(agentID string) (AgentJobCancelAllResponse, error) {

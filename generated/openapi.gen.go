@@ -537,6 +537,13 @@ type AgentJobStatusManyRequest struct {
 	JobIds []openapi_types.UUID `json:"job_ids"`
 }
 
+// AgentJobWebhookResendResponse defines model for AgentJobWebhookResendResponse.
+type AgentJobWebhookResendResponse struct {
+	// Queued How many deliveries were queued. 0 means the agent has no active webhook subscription, which is the usual reason a callback never arrives.
+	Queued int    `json:"queued"`
+	Status string `json:"status"`
+}
+
 // AgentRunAsyncManyRequest Serializer for agent async many execution requests.
 type AgentRunAsyncManyRequest struct {
 	// Inputs List of agent execution requests to process
@@ -1223,6 +1230,12 @@ type RegenerateRequest struct {
 // * `edge` - edge
 type RelevanceEnum string
 
+// ResendAgentJobWebhookRequest Serializer for re-sending a job's completion webhook.
+type ResendAgentJobWebhookRequest struct {
+	// WebhookId Send to only this webhook. Omit to send to every active webhook on the agent.
+	WebhookId *openapi_types.UUID `json:"webhook_id,omitempty"`
+}
+
 // ResolveRequest Body for POST /knowledge-base/<id>/resolve/.
 //
 // discard=True declines the pending proposal. Otherwise refs is the reviewer's
@@ -1626,6 +1639,12 @@ type AgentsJobsDeleteDataCreateParams struct {
 
 // AgentsJobsStatusRetrieveParams defines parameters for AgentsJobsStatusRetrieve.
 type AgentsJobsStatusRetrieveParams struct {
+	// OrganizationId Organization ID. This is required for access control. It can be provided via query or request body depending on the endpoint.
+	OrganizationId *openapi_types.UUID `form:"organization_id,omitempty" json:"organization_id,omitempty"`
+}
+
+// AgentsJobsWebhookResendCreateParams defines parameters for AgentsJobsWebhookResendCreate.
+type AgentsJobsWebhookResendCreateParams struct {
 	// OrganizationId Organization ID. This is required for access control. It can be provided via query or request body depending on the endpoint.
 	OrganizationId *openapi_types.UUID `form:"organization_id,omitempty" json:"organization_id,omitempty"`
 }
@@ -2039,6 +2058,9 @@ type AgentsJobsResultsCreateJSONRequestBody = AgentJobResultManyRequest
 // AgentsJobsStatusesCreateJSONRequestBody defines body for AgentsJobsStatusesCreate for application/json ContentType.
 type AgentsJobsStatusesCreateJSONRequestBody = AgentJobStatusManyRequest
 
+// AgentsJobsWebhookResendCreateJSONRequestBody defines body for AgentsJobsWebhookResendCreate for application/json ContentType.
+type AgentsJobsWebhookResendCreateJSONRequestBody = ResendAgentJobWebhookRequest
+
 // AgentsRunJSONRequestBody defines body for AgentsRun for application/json ContentType.
 type AgentsRunJSONRequestBody = AgentExecutionRequest
 
@@ -2293,6 +2315,11 @@ type ClientInterface interface {
 
 	// AgentsJobsStatusRetrieve request
 	AgentsJobsStatusRetrieve(ctx context.Context, jobId openapi_types.UUID, params *AgentsJobsStatusRetrieveParams, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// AgentsJobsWebhookResendCreateWithBody request with any body
+	AgentsJobsWebhookResendCreateWithBody(ctx context.Context, jobId openapi_types.UUID, params *AgentsJobsWebhookResendCreateParams, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	AgentsJobsWebhookResendCreate(ctx context.Context, jobId openapi_types.UUID, params *AgentsJobsWebhookResendCreateParams, body AgentsJobsWebhookResendCreateJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
 
 	// DiscoverySupportedModelsList request
 	DiscoverySupportedModelsList(ctx context.Context, params *DiscoverySupportedModelsListParams, reqEditors ...RequestEditorFn) (*http.Response, error)
@@ -2677,6 +2704,30 @@ func (c *Client) AgentsJobsDeleteDataCreate(ctx context.Context, jobId openapi_t
 
 func (c *Client) AgentsJobsStatusRetrieve(ctx context.Context, jobId openapi_types.UUID, params *AgentsJobsStatusRetrieveParams, reqEditors ...RequestEditorFn) (*http.Response, error) {
 	req, err := NewAgentsJobsStatusRetrieveRequest(c.Server, jobId, params)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) AgentsJobsWebhookResendCreateWithBody(ctx context.Context, jobId openapi_types.UUID, params *AgentsJobsWebhookResendCreateParams, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewAgentsJobsWebhookResendCreateRequestWithBody(c.Server, jobId, params, contentType, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) AgentsJobsWebhookResendCreate(ctx context.Context, jobId openapi_types.UUID, params *AgentsJobsWebhookResendCreateParams, body AgentsJobsWebhookResendCreateJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewAgentsJobsWebhookResendCreateRequest(c.Server, jobId, params, body)
 	if err != nil {
 		return nil, err
 	}
@@ -4617,6 +4668,75 @@ func NewAgentsJobsStatusRetrieveRequest(server string, jobId openapi_types.UUID,
 	if err != nil {
 		return nil, err
 	}
+
+	return req, nil
+}
+
+// NewAgentsJobsWebhookResendCreateRequest calls the generic AgentsJobsWebhookResendCreate builder with application/json body
+func NewAgentsJobsWebhookResendCreateRequest(server string, jobId openapi_types.UUID, params *AgentsJobsWebhookResendCreateParams, body AgentsJobsWebhookResendCreateJSONRequestBody) (*http.Request, error) {
+	var bodyReader io.Reader
+	buf, err := json.Marshal(body)
+	if err != nil {
+		return nil, err
+	}
+	bodyReader = bytes.NewReader(buf)
+	return NewAgentsJobsWebhookResendCreateRequestWithBody(server, jobId, params, "application/json", bodyReader)
+}
+
+// NewAgentsJobsWebhookResendCreateRequestWithBody generates requests for AgentsJobsWebhookResendCreate with any type of body
+func NewAgentsJobsWebhookResendCreateRequestWithBody(server string, jobId openapi_types.UUID, params *AgentsJobsWebhookResendCreateParams, contentType string, body io.Reader) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithOptions("simple", false, "job_id", jobId, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationPath, Type: "string", Format: "uuid"})
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/v1/agents/jobs/%s/webhook/resend/", pathParam0)
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	if params != nil {
+		queryValues := queryURL.Query()
+
+		if params.OrganizationId != nil {
+
+			if queryFrag, err := runtime.StyleParamWithOptions("form", true, "organization_id", *params.OrganizationId, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationQuery, Type: "string", Format: "uuid"}); err != nil {
+				return nil, err
+			} else if parsed, err := url.ParseQuery(queryFrag); err != nil {
+				return nil, err
+			} else {
+				for k, v := range parsed {
+					for _, v2 := range v {
+						queryValues.Add(k, v2)
+					}
+				}
+			}
+
+		}
+
+		queryURL.RawQuery = queryValues.Encode()
+	}
+
+	req, err := http.NewRequest("POST", queryURL.String(), body)
+	if err != nil {
+		return nil, err
+	}
+
+	req.Header.Add("Content-Type", contentType)
 
 	return req, nil
 }
@@ -8674,6 +8794,11 @@ type ClientWithResponsesInterface interface {
 	// AgentsJobsStatusRetrieveWithResponse request
 	AgentsJobsStatusRetrieveWithResponse(ctx context.Context, jobId openapi_types.UUID, params *AgentsJobsStatusRetrieveParams, reqEditors ...RequestEditorFn) (*AgentsJobsStatusRetrieveResponse, error)
 
+	// AgentsJobsWebhookResendCreateWithBodyWithResponse request with any body
+	AgentsJobsWebhookResendCreateWithBodyWithResponse(ctx context.Context, jobId openapi_types.UUID, params *AgentsJobsWebhookResendCreateParams, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*AgentsJobsWebhookResendCreateResponse, error)
+
+	AgentsJobsWebhookResendCreateWithResponse(ctx context.Context, jobId openapi_types.UUID, params *AgentsJobsWebhookResendCreateParams, body AgentsJobsWebhookResendCreateJSONRequestBody, reqEditors ...RequestEditorFn) (*AgentsJobsWebhookResendCreateResponse, error)
+
 	// DiscoverySupportedModelsListWithResponse request
 	DiscoverySupportedModelsListWithResponse(ctx context.Context, params *DiscoverySupportedModelsListParams, reqEditors ...RequestEditorFn) (*DiscoverySupportedModelsListResponse, error)
 
@@ -9178,6 +9303,30 @@ func (r AgentsJobsStatusRetrieveResponse) Status() string {
 
 // StatusCode returns HTTPResponse.StatusCode
 func (r AgentsJobsStatusRetrieveResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+type AgentsJobsWebhookResendCreateResponse struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	JSON200      *AgentJobWebhookResendResponse
+	JSON400      *ApiErrorResponse
+	JSON404      *ErrorDetailResponse
+}
+
+// Status returns HTTPResponse.Status
+func (r AgentsJobsWebhookResendCreateResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r AgentsJobsWebhookResendCreateResponse) StatusCode() int {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.StatusCode
 	}
@@ -10933,6 +11082,23 @@ func (c *ClientWithResponses) AgentsJobsStatusRetrieveWithResponse(ctx context.C
 	return ParseAgentsJobsStatusRetrieveResponse(rsp)
 }
 
+// AgentsJobsWebhookResendCreateWithBodyWithResponse request with arbitrary body returning *AgentsJobsWebhookResendCreateResponse
+func (c *ClientWithResponses) AgentsJobsWebhookResendCreateWithBodyWithResponse(ctx context.Context, jobId openapi_types.UUID, params *AgentsJobsWebhookResendCreateParams, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*AgentsJobsWebhookResendCreateResponse, error) {
+	rsp, err := c.AgentsJobsWebhookResendCreateWithBody(ctx, jobId, params, contentType, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseAgentsJobsWebhookResendCreateResponse(rsp)
+}
+
+func (c *ClientWithResponses) AgentsJobsWebhookResendCreateWithResponse(ctx context.Context, jobId openapi_types.UUID, params *AgentsJobsWebhookResendCreateParams, body AgentsJobsWebhookResendCreateJSONRequestBody, reqEditors ...RequestEditorFn) (*AgentsJobsWebhookResendCreateResponse, error) {
+	rsp, err := c.AgentsJobsWebhookResendCreate(ctx, jobId, params, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseAgentsJobsWebhookResendCreateResponse(rsp)
+}
+
 // DiscoverySupportedModelsListWithResponse request returning *DiscoverySupportedModelsListResponse
 func (c *ClientWithResponses) DiscoverySupportedModelsListWithResponse(ctx context.Context, params *DiscoverySupportedModelsListParams, reqEditors ...RequestEditorFn) (*DiscoverySupportedModelsListResponse, error) {
 	rsp, err := c.DiscoverySupportedModelsList(ctx, params, reqEditors...)
@@ -12087,6 +12253,46 @@ func ParseAgentsJobsStatusRetrieveResponse(rsp *http.Response) (*AgentsJobsStatu
 			return nil, err
 		}
 		response.JSON403 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 404:
+		var dest ErrorDetailResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON404 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseAgentsJobsWebhookResendCreateResponse parses an HTTP response from a AgentsJobsWebhookResendCreateWithResponse call
+func ParseAgentsJobsWebhookResendCreateResponse(rsp *http.Response) (*AgentsJobsWebhookResendCreateResponse, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &AgentsJobsWebhookResendCreateResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest AgentJobWebhookResendResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 400:
+		var dest ApiErrorResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON400 = &dest
 
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 404:
 		var dest ErrorDetailResponse
