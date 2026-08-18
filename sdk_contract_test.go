@@ -149,6 +149,7 @@ var handMaintainedTransports = map[string]map[string]operationTransport{
 		"RetrieveResult":     {Method: "GET", Path: "/v1/agents/jobs/{agent_job_id}/result/"},
 		"RetrieveArtifact":   {Method: "GET", Path: "/v1/agents/jobs/{agent_job_id}/artifacts/result/"},
 		"Cancel":             {Method: "POST", Path: "/v1/agents/jobs/{job_id}/cancel/"},
+		"ResendWebhook":      {Method: "POST", Path: "/v1/agents/jobs/{job_id}/webhook/resend/"},
 		"CancelAll":          {Method: "POST", Path: "/v1/agents/{agent_id}/jobs/cancel-all/"},
 		"DeleteData":         {Method: "POST", Path: "/v1/agents/jobs/{job_id}/delete-data/"},
 		"RetrieveStatusMany": {Method: "POST", Path: "/v1/agents/jobs/statuses/"},
