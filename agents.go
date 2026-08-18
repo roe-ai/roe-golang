@@ -714,20 +714,30 @@ func (j *AgentJobsAPI) CancelWithContext(ctx context.Context, jobID string) erro
 }
 
 // ResendWebhook re-sends the completion webhook for a finished job. The job is
-// not re-run and its status is unchanged; the delivery goes to every webhook
-// attached to the job's agent.
-func (j *AgentJobsAPI) ResendWebhook(jobID string) (AgentJobWebhookResendResponse, error) {
-	return j.ResendWebhookWithContext(context.Background(), jobID)
+// not re-run and its status is unchanged. Passing a webhookID sends only to
+// that webhook; with none, every webhook attached to the job's agent is sent.
+func (j *AgentJobsAPI) ResendWebhook(jobID string, webhookID ...string) (AgentJobWebhookResendResponse, error) {
+	return j.ResendWebhookWithContext(context.Background(), jobID, webhookID...)
 }
 
 // ResendWebhookWithContext re-sends a finished job's completion webhook with a
 // caller-supplied context.
-func (j *AgentJobsAPI) ResendWebhookWithContext(ctx context.Context, jobID string) (AgentJobWebhookResendResponse, error) {
+func (j *AgentJobsAPI) ResendWebhookWithContext(ctx context.Context, jobID string, webhookID ...string) (AgentJobWebhookResendResponse, error) {
 	if jobID == "" {
 		return AgentJobWebhookResendResponse{}, fmt.Errorf("jobID cannot be empty")
 	}
+	if len(webhookID) > 1 {
+		return AgentJobWebhookResendResponse{}, fmt.Errorf("at most one webhookID may be provided")
+	}
+	payload := map[string]string{}
+	if len(webhookID) == 1 {
+		if webhookID[0] == "" {
+			return AgentJobWebhookResendResponse{}, fmt.Errorf("webhookID cannot be empty")
+		}
+		payload["webhook_id"] = webhookID[0]
+	}
 	var resp AgentJobWebhookResendResponse
-	if err := j.agentsAPI.httpClient.postJSONWithContext(ctx, fmt.Sprintf("/v1/agents/jobs/%s/webhook/resend/", jobID), nil, nil, &resp); err != nil {
+	if err := j.agentsAPI.httpClient.postJSONWithContext(ctx, fmt.Sprintf("/v1/agents/jobs/%s/webhook/resend/", jobID), payload, nil, &resp); err != nil {
 		return AgentJobWebhookResendResponse{}, err
 	}
 	return resp, nil
