@@ -130,6 +130,19 @@ if err != nil {
 }
 ```
 
+#### `agents_jobs_webhook_resend_create`
+
+Resend agent job webhook
+
+```go
+result, err := client.Agents.Jobs.ResendWebhook(
+    "jobID",
+)
+if err != nil {
+    log.Fatal(err)
+}
+```
+
 #### `agents_jobs_status_retrieve`
 
 Get agent job status.

@@ -554,6 +554,16 @@ apis:
             go_type: string
             validate_nonempty: true
         - kind: body
+          method_name: ResendWebhook
+          docstring: re-sends the completion webhook for a finished job.
+          method: POST
+          path: /v1/agents/jobs/{job_id}/webhook/resend/
+          parameters:
+          - name: jobID
+            location: path
+            go_type: string
+            validate_nonempty: true
+        - kind: body
           method_name: CancelAll
           docstring: cancels all running jobs for an agent.
           method: POST
