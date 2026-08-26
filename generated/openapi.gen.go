@@ -597,6 +597,9 @@ type AgentVersion struct {
 	OrganizationId *openapi_types.UUID `json:"organization_id,omitempty"`
 	Readonly       *bool               `json:"readonly,omitempty"`
 
+	// SupportsMemory True when this engine has a built-in memory profile, so memory profiles can be configured on it. Independent of whether memory is currently switched on.
+	SupportsMemory *bool `json:"supports_memory,omitempty"`
+
 	// VersionName Version name for the agent version. Defaults to 'unnamed version' if not provided.
 	VersionName string `json:"version_name"`
 }
