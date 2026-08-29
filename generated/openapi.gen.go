@@ -73,6 +73,7 @@ const (
 	Salesforce     ConnectorTypeEnum = "salesforce"
 	Sardine        ConnectorTypeEnum = "sardine"
 	Sharepoint     ConnectorTypeEnum = "sharepoint"
+	Shield         ConnectorTypeEnum = "shield"
 	Snowflake      ConnectorTypeEnum = "snowflake"
 	Socure         ConnectorTypeEnum = "socure"
 	Stripe         ConnectorTypeEnum = "stripe"
@@ -108,6 +109,8 @@ func (e ConnectorTypeEnum) Valid() bool {
 	case Sardine:
 		return true
 	case Sharepoint:
+		return true
+	case Shield:
 		return true
 	case Snowflake:
 		return true
@@ -358,7 +361,7 @@ type AgentInputDefinition struct {
 	// AcceptsMultipleFiles Whether this input accepts multiple files
 	AcceptsMultipleFiles *bool `json:"accepts_multiple_files,omitempty"`
 
-	// DataType The data type of the input (e.g., text, file, etc.)
+	// DataType MIME type of the input, from the closed DataType set. Use 'text/plain' for ordinary strings such as URLs, names and free text; other values include 'application/pdf', 'application/json', 'image/png', 'audio/mpeg', 'video/mp4' and the wildcards 'text/*', 'image/*', 'audio/*', 'video/*', '*/*'.
 	DataType string `json:"data_type"`
 
 	// Description Description of what this input is for
@@ -597,6 +600,9 @@ type AgentVersion struct {
 	OrganizationId *openapi_types.UUID `json:"organization_id,omitempty"`
 	Readonly       *bool               `json:"readonly,omitempty"`
 
+	// SupportsMemory True when this engine has a built-in memory profile, so memory profiles can be configured on it. Independent of whether memory is currently switched on.
+	SupportsMemory *bool `json:"supports_memory,omitempty"`
+
 	// VersionName Version name for the agent version. Defaults to 'unnamed version' if not provided.
 	VersionName string `json:"version_name"`
 }
@@ -793,6 +799,7 @@ type ConnectorMetadata struct {
 // * `google_sheets` - GOOGLE_SHEETS
 // * `salesforce` - SALESFORCE
 // * `web_application` - WEB_APPLICATION
+// * `shield` - SHIELD
 // * `custom_api` - CUSTOM_API
 // * `lexis_nexis` - LEXIS_NEXIS
 // * `sardine` - SARDINE
@@ -819,6 +826,7 @@ type CreateConnectionRequest struct {
 	// * `google_sheets` - GOOGLE_SHEETS
 	// * `salesforce` - SALESFORCE
 	// * `web_application` - WEB_APPLICATION
+	// * `shield` - SHIELD
 	// * `custom_api` - CUSTOM_API
 	// * `lexis_nexis` - LEXIS_NEXIS
 	// * `sardine` - SARDINE
@@ -1278,6 +1286,7 @@ type SupportedLLMModel struct {
 	SupportsReasoningEffort bool     `json:"supports_reasoning_effort"`
 	SupportsSystemMessage   bool     `json:"supports_system_message"`
 	SupportsTemperature     bool     `json:"supports_temperature"`
+	SupportsThinking        bool     `json:"supports_thinking"`
 }
 
 // SupportedLLMModelList Serializer for non-deprecated LLM discovery.
@@ -1447,6 +1456,7 @@ type TestConnectionCredentialsRequest struct {
 	// * `google_sheets` - GOOGLE_SHEETS
 	// * `salesforce` - SALESFORCE
 	// * `web_application` - WEB_APPLICATION
+	// * `shield` - SHIELD
 	// * `custom_api` - CUSTOM_API
 	// * `lexis_nexis` - LEXIS_NEXIS
 	// * `sardine` - SARDINE
@@ -9838,6 +9848,7 @@ func (r AgentsVersionsCurrentRetrieveResponse) StatusCode() int {
 type AgentsVersionsDestroyResponse struct {
 	Body         []byte
 	HTTPResponse *http.Response
+	JSON400      *ErrorDetailResponse
 	JSON403      *ErrorDetailResponse
 	JSON404      *ErrorDetailResponse
 	JSON500      *QdrantCleanupErrorResponse
@@ -13073,6 +13084,13 @@ func ParseAgentsVersionsDestroyResponse(rsp *http.Response) (*AgentsVersionsDest
 	}
 
 	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 400:
+		var dest ErrorDetailResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON400 = &dest
+
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 403:
 		var dest ErrorDetailResponse
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
