@@ -766,6 +766,186 @@ if err != nil {
 }
 ```
 
+### Skill Sets
+
+#### `skill_sets_list`
+
+List the org's skill sets and create a new one.
+
+```go
+result, err := client.SkillSets.List(
+    "ordering",
+    1,
+    1,
+    "search",
+)
+if err != nil {
+    log.Fatal(err)
+}
+```
+
+#### `skill_sets_create`
+
+List the org's skill sets and create a new one.
+
+```go
+result, err := client.SkillSets.Create(
+    "name",
+    "description",
+)
+if err != nil {
+    log.Fatal(err)
+}
+```
+
+#### `skill_sets_retrieve`
+
+Retrieve, update, or delete a single skill set.
+
+```go
+result, err := client.SkillSets.Retrieve(
+    "id",
+)
+if err != nil {
+    log.Fatal(err)
+}
+```
+
+#### `skill_sets_partial_update`
+
+Retrieve, update, or delete a single skill set.
+
+```go
+result, err := client.SkillSets.Update(
+    "id",
+    "name",
+    "description",
+)
+if err != nil {
+    log.Fatal(err)
+}
+```
+
+#### `skill_sets_destroy`
+
+Retrieve, update, or delete a single skill set.
+
+```go
+result, err := client.SkillSets.Delete(
+    "id",
+)
+if err != nil {
+    log.Fatal(err)
+}
+```
+
+#### `skill_sets_versions_list`
+
+List a skill set's versions, or create a new version.
+
+```go
+result, err := client.SkillSets.ListVersions(
+    "skillSetId",
+    1,
+    1,
+)
+if err != nil {
+    log.Fatal(err)
+}
+```
+
+#### `skill_sets_versions_create`
+
+List a skill set's versions, or create a new version.
+
+```go
+result, err := client.SkillSets.CreateVersion(
+    "skillSetId",
+    []map[string]any{{"key": "text", "data_type": "text/plain"}},
+    "versionName",
+    "baseVersionId",
+    "summary",
+    []map[string]any{{"key": "text", "data_type": "text/plain"}},
+)
+if err != nil {
+    log.Fatal(err)
+}
+```
+
+#### `skill_sets_versions_retrieve`
+
+Retrieve a version by its id, or by a set id (-> that set's current version).
+
+```go
+result, err := client.SkillSets.RetrieveVersion(
+    "id",
+)
+if err != nil {
+    log.Fatal(err)
+}
+```
+
+#### `skill_sets_set_current_version`
+
+Point a skill set at a specific version (set-current / rollback).
+
+```go
+result, err := client.SkillSets.SetCurrentVersion(
+    "skillSetId",
+    "versionId",
+)
+if err != nil {
+    log.Fatal(err)
+}
+```
+
+#### `skill_sets_generate_version`
+
+Author the next version of a skill set with an agent.
+
+```go
+result, err := client.SkillSets.GenerateVersion(
+    "skillSetId",
+    "useCase",
+    "baseVersionId",
+    true,
+    []string{"value"},
+    []string{"value"},
+    "policyId",
+    "policyVersionId",
+)
+if err != nil {
+    log.Fatal(err)
+}
+```
+
+#### `skill_sets_generation_retrieve`
+
+Returns the last generation and its status, or generation: null when no run exists.
+
+```go
+result, err := client.SkillSets.GetGeneration(
+    "skillSetId",
+)
+if err != nil {
+    log.Fatal(err)
+}
+```
+
+#### `skill_sets_generation_cancel`
+
+Stop tracking a generation, cancelling it if it is still running
+
+```go
+result, err := client.SkillSets.CancelGeneration(
+    "runId",
+    "skillSetId",
+)
+if err != nil {
+    log.Fatal(err)
+}
+```
+
 ### Tables
 
 #### `tables_list`

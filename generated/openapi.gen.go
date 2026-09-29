@@ -58,6 +58,30 @@ func (e ColorEnum) Valid() bool {
 	}
 }
 
+// Defines values for ConnectionAuthenticationCheckStatusEnum.
+const (
+	ConnectionAuthenticationCheckStatusEnumFailed        ConnectionAuthenticationCheckStatusEnum = "failed"
+	ConnectionAuthenticationCheckStatusEnumNotConfigured ConnectionAuthenticationCheckStatusEnum = "not_configured"
+	ConnectionAuthenticationCheckStatusEnumPassed        ConnectionAuthenticationCheckStatusEnum = "passed"
+	ConnectionAuthenticationCheckStatusEnumUnsupported   ConnectionAuthenticationCheckStatusEnum = "unsupported"
+)
+
+// Valid indicates whether the value is a known member of the ConnectionAuthenticationCheckStatusEnum enum.
+func (e ConnectionAuthenticationCheckStatusEnum) Valid() bool {
+	switch e {
+	case ConnectionAuthenticationCheckStatusEnumFailed:
+		return true
+	case ConnectionAuthenticationCheckStatusEnumNotConfigured:
+		return true
+	case ConnectionAuthenticationCheckStatusEnumPassed:
+		return true
+	case ConnectionAuthenticationCheckStatusEnumUnsupported:
+		return true
+	default:
+		return false
+	}
+}
+
 // Defines values for ConnectorTypeEnum.
 const (
 	CheckoutCom    ConnectorTypeEnum = "checkout_com"
@@ -156,16 +180,16 @@ func (e ReviewStatusEnum) Valid() bool {
 
 // Defines values for SkillGenerationStateEnum.
 const (
-	Failed     SkillGenerationStateEnum = "failed"
-	Generating SkillGenerationStateEnum = "generating"
+	SkillGenerationStateEnumFailed     SkillGenerationStateEnum = "failed"
+	SkillGenerationStateEnumGenerating SkillGenerationStateEnum = "generating"
 )
 
 // Valid indicates whether the value is a known member of the SkillGenerationStateEnum enum.
 func (e SkillGenerationStateEnum) Valid() bool {
 	switch e {
-	case Failed:
+	case SkillGenerationStateEnumFailed:
 		return true
-	case Generating:
+	case SkillGenerationStateEnumGenerating:
 		return true
 	default:
 		return false
@@ -553,7 +577,7 @@ type AgentVersion struct {
 	EngineName *string             `json:"engine_name,omitempty"`
 	Id         *openapi_types.UUID `json:"id,omitempty"`
 
-	// InputDefinitions List of input definitions for this agent version.
+	// InputDefinitions List of input definitions for this agent version. Engines with fixed job inputs (the policy-aware investigation engines) accept only the keys they declare; any additional key is rejected. Per-case detail belongs inside the value of an accepted field, which is free text.
 	InputDefinitions []AgentInputDefinition `json:"input_definitions"`
 	Name             *string                `json:"name,omitempty"`
 
@@ -579,7 +603,7 @@ type AgentVersionCreateRequest struct {
 	// EngineConfig Engine configuration as a dictionary of string key-value pairs.
 	EngineConfig interface{} `json:"engine_config,omitempty"`
 
-	// InputDefinitions List of input definitions for this agent version.
+	// InputDefinitions List of input definitions for this agent version. Engines with fixed job inputs (the policy-aware investigation engines) accept only the keys they declare; any additional key is rejected. Per-case detail belongs inside the value of an accepted field, which is free text.
 	InputDefinitions interface{} `json:"input_definitions,omitempty"`
 
 	// PostActions Connector write actions for this version. Omitted: the new version keeps the current version's actions. A list: those become the new version's actions. []: the new version has none.
@@ -647,7 +671,7 @@ type BaseAgentCreateRequest struct {
 	// EngineConfig Engine configuration for the first version.
 	EngineConfig interface{} `json:"engine_config,omitempty"`
 
-	// InputDefinitions Input definitions for the first version.
+	// InputDefinitions Input definitions for the first version. Engines with fixed job inputs (the policy-aware investigation engines) accept only the keys they declare; any additional key is rejected. Per-case detail belongs inside the value of an accepted field, which is free text.
 	InputDefinitions interface{} `json:"input_definitions,omitempty"`
 
 	// Name Name of the base agent.
@@ -687,8 +711,9 @@ type ColorEnum string
 // - config: Non-sensitive config from DB
 // - auth_config: Actual auth credentials from Secrets Manager (not the internal reference)
 type Connection struct {
-	AuthConfig *map[string]interface{} `json:"auth_config,omitempty"`
-	Config     interface{}             `json:"config,omitempty"`
+	AuthConfig              *map[string]interface{} `json:"auth_config,omitempty"`
+	BrowserSessionExpiresAt *time.Time              `json:"browser_session_expires_at,omitempty"`
+	Config                  interface{}             `json:"config,omitempty"`
 
 	// ConnectorDisplayName Get the display name for the connector type.
 	ConnectorDisplayName           *string             `json:"connector_display_name,omitempty"`
@@ -707,6 +732,29 @@ type Connection struct {
 	Status    *StatusEnum `json:"status,omitempty"`
 	UpdatedAt *time.Time  `json:"updated_at,omitempty"`
 	User      *int        `json:"user,omitempty"`
+}
+
+// ConnectionAuthenticationCheck defines model for ConnectionAuthenticationCheck.
+type ConnectionAuthenticationCheck struct {
+	Message string `json:"message"`
+
+	// Status * `passed` - passed
+	// * `failed` - failed
+	// * `not_configured` - not_configured
+	// * `unsupported` - unsupported
+	Status ConnectionAuthenticationCheckStatusEnum `json:"status"`
+}
+
+// ConnectionAuthenticationCheckStatusEnum * `passed` - passed
+// * `failed` - failed
+// * `not_configured` - not_configured
+// * `unsupported` - unsupported
+type ConnectionAuthenticationCheckStatusEnum string
+
+// ConnectionAuthenticationChecks defines model for ConnectionAuthenticationChecks.
+type ConnectionAuthenticationChecks struct {
+	Api       ConnectionAuthenticationCheck `json:"api"`
+	Dashboard ConnectionAuthenticationCheck `json:"dashboard"`
 }
 
 // ConnectionDeleteErrorResponse defines model for ConnectionDeleteErrorResponse.
@@ -738,6 +786,15 @@ type ConnectionList struct {
 	User      *int        `json:"user,omitempty"`
 }
 
+// ConnectorBrowserSession defines model for ConnectorBrowserSession.
+type ConnectorBrowserSession struct {
+	// Field Auth field the capture button sits beside.
+	Field string `json:"field"`
+
+	// RequiredConfig Config values required before signing in.
+	RequiredConfig map[string]interface{} `json:"required_config"`
+}
+
 // ConnectorListResponse defines model for ConnectorListResponse.
 type ConnectorListResponse struct {
 	Connectors []ConnectorMetadata `json:"connectors"`
@@ -745,17 +802,18 @@ type ConnectorListResponse struct {
 
 // ConnectorMetadata Serializer for connector metadata.
 type ConnectorMetadata struct {
-	AuthSchema             interface{}         `json:"auth_schema"`
-	Category               string              `json:"category"`
-	ConfigSchema           interface{}         `json:"config_schema"`
-	DeliveryConfigSchema   interface{}         `json:"delivery_config_schema"`
-	Description            string              `json:"description"`
-	DisplayName            string              `json:"display_name"`
-	DynamicInputFields     map[string][]string `json:"dynamic_input_fields"`
-	DynamicInputTestFields []string            `json:"dynamic_input_test_fields"`
-	Icon                   string              `json:"icon"`
-	Id                     string              `json:"id"`
-	SupportsDelivery       bool                `json:"supports_delivery"`
+	AuthSchema             interface{}              `json:"auth_schema"`
+	BrowserSession         *ConnectorBrowserSession `json:"browser_session"`
+	Category               string                   `json:"category"`
+	ConfigSchema           interface{}              `json:"config_schema"`
+	DeliveryConfigSchema   interface{}              `json:"delivery_config_schema"`
+	Description            string                   `json:"description"`
+	DisplayName            string                   `json:"display_name"`
+	DynamicInputFields     map[string][]string      `json:"dynamic_input_fields"`
+	DynamicInputTestFields []string                 `json:"dynamic_input_test_fields"`
+	Icon                   string                   `json:"icon"`
+	Id                     string                   `json:"id"`
+	SupportsDelivery       bool                     `json:"supports_delivery"`
 }
 
 // ConnectorTypeEnum * `snowflake` - SNOWFLAKE
@@ -856,6 +914,65 @@ type CreatePolicyVersionRequest struct {
 	VersionName *string `json:"version_name,omitempty"`
 }
 
+// CreateSkillSet Create a new skill set. Its version 0 is always the base skill.
+//
+// Every set starts from the same built-in base content; customization happens
+// by creating a new version on top of it (“POST .../versions/“), which is
+// also what makes the edit downloadable and rollback-able.
+type CreateSkillSet struct {
+	CreatedAt        *time.Time          `json:"created_at,omitempty"`
+	CurrentVersionId *openapi_types.UUID `json:"current_version_id,omitempty"`
+	Description      *string             `json:"description,omitempty"`
+	Id               *openapi_types.UUID `json:"id,omitempty"`
+	Name             string              `json:"name"`
+	OrganizationId   *openapi_types.UUID `json:"organization_id,omitempty"`
+	UpdatedAt        *time.Time          `json:"updated_at,omitempty"`
+}
+
+// CreateSkillSetRequest Create a new skill set. Its version 0 is always the base skill.
+//
+// Every set starts from the same built-in base content; customization happens
+// by creating a new version on top of it (“POST .../versions/“), which is
+// also what makes the edit downloadable and rollback-able.
+type CreateSkillSetRequest struct {
+	Description *string `json:"description,omitempty"`
+	Name        string  `json:"name"`
+}
+
+// CreateSkillSetVersion Create a new (full) version of an existing skill set.
+type CreateSkillSetVersion struct {
+	// FileChanges Per-file walkthrough: [{path, status, note, added_lines, removed_lines}]. status is created, edited, or untouched.
+	FileChanges *[]map[string]interface{} `json:"file_changes,omitempty"`
+
+	// Files The complete file set for this new version.
+	Files []SkillFile         `json:"files"`
+	Id    *openapi_types.UUID `json:"id,omitempty"`
+
+	// Summary What this version changed and why, in plain language.
+	Summary *string `json:"summary,omitempty"`
+
+	// VersionName Version name (auto-generated if not provided).
+	VersionName *string `json:"version_name,omitempty"`
+}
+
+// CreateSkillSetVersionRequest Create a new (full) version of an existing skill set.
+type CreateSkillSetVersionRequest struct {
+	// BaseVersionId ID of the version this was derived from.
+	BaseVersionId *openapi_types.UUID `json:"base_version_id,omitempty"`
+
+	// FileChanges Per-file walkthrough: [{path, status, note, added_lines, removed_lines}]. status is created, edited, or untouched.
+	FileChanges *[]map[string]interface{} `json:"file_changes,omitempty"`
+
+	// Files The complete file set for this new version.
+	Files []SkillFileRequest `json:"files"`
+
+	// Summary What this version changed and why, in plain language.
+	Summary *string `json:"summary,omitempty"`
+
+	// VersionName Version name (auto-generated if not provided).
+	VersionName *string `json:"version_name,omitempty"`
+}
+
 // DependentAgentInfo An agent version that references a policy (see get_agents_using_policy).
 type DependentAgentInfo struct {
 	AgentName   string             `json:"agent_name"`
@@ -882,6 +999,49 @@ type DuplicateConnectionResponse struct {
 type ErrorDetailResponse struct {
 	// Detail Human-readable error detail
 	Detail string `json:"detail"`
+}
+
+// GenerateSkillSetVersionRequest Request to author the next version of a skill set with an agent.
+//
+// “base_version_id“ is the version the draft is derived from; omit it to
+// start from the set's current version. By default nothing here writes a
+// version — the generated file set comes back for review and is saved
+// through the normal version-create path. With “auto_commit“ the workflow
+// saves it itself on success, through that same path. At least one table name
+// or attachment is required; a use case or policy alone is not a data source.
+type GenerateSkillSetVersionRequest struct {
+	// Attachments File IDs (file_<uuid>) of CSVs or documents to read.
+	Attachments *[]string `json:"attachments,omitempty"`
+
+	// AutoCommit Save the generated draft as the set's next version automatically when the run succeeds, skipping draft review. Agents following the set pick the new version up the moment it lands.
+	AutoCommit *bool `json:"auto_commit,omitempty"`
+
+	// BaseVersionId Version to start from. Defaults to the set's current version.
+	BaseVersionId *openapi_types.UUID `json:"base_version_id,omitempty"`
+
+	// PolicyId Policy whose dispositions the generated skill must use as its label list. Omit to let the agent choose labels from the use case.
+	PolicyId *openapi_types.UUID `json:"policy_id,omitempty"`
+
+	// PolicyVersionId Requires policy_id. Which version of that policy to read. Defaults to the policy's current version. An agent may be pinned to an older one.
+	PolicyVersionId *openapi_types.UUID `json:"policy_version_id,omitempty"`
+
+	// TableNames Roe table names the agent may profile to learn the data shape.
+	TableNames *[]string `json:"table_names,omitempty"`
+
+	// UseCase What the company does and what this agent decides: the decision scope, the labels it may apply, and anything it must always do.
+	UseCase string `json:"use_case"`
+}
+
+// GenerateSkillSetVersionResponse Where to stream the generation run's progress and result.
+type GenerateSkillSetVersionResponse struct {
+	// RunId Identifies this run for reattaching to it or cancelling it.
+	RunId *openapi_types.UUID `json:"run_id,omitempty"`
+
+	// SseEndpoint SSE endpoint URL for real-time status updates
+	SseEndpoint *string `json:"sse_endpoint,omitempty"`
+
+	// WorkflowId Temporal workflow ID for tracking the process
+	WorkflowId *string `json:"workflow_id,omitempty"`
 }
 
 // JobInput Serializer for individual job input data
@@ -977,6 +1137,22 @@ type PaginatedPolicyVersionList struct {
 	Results  []PolicyVersion `json:"results"`
 }
 
+// PaginatedSkillSetList defines model for PaginatedSkillSetList.
+type PaginatedSkillSetList struct {
+	Count    int        `json:"count"`
+	Next     *string    `json:"next,omitempty"`
+	Previous *string    `json:"previous,omitempty"`
+	Results  []SkillSet `json:"results"`
+}
+
+// PaginatedSkillSetVersionList defines model for PaginatedSkillSetVersionList.
+type PaginatedSkillSetVersionList struct {
+	Count    int               `json:"count"`
+	Next     *string           `json:"next,omitempty"`
+	Previous *string           `json:"previous,omitempty"`
+	Results  []SkillSetVersion `json:"results"`
+}
+
 // PatchedAgentVersionUpdateRequest defines model for PatchedAgentVersionUpdateRequest.
 type PatchedAgentVersionUpdateRequest struct {
 	// Description New description for the agent version.
@@ -1021,6 +1197,12 @@ type PatchedUpdateConnectionRequest struct {
 
 // PatchedUpdatePolicyRequest Serializer for updating policy metadata (name, description)
 type PatchedUpdatePolicyRequest struct {
+	Description *string `json:"description,omitempty"`
+	Name        *string `json:"name,omitempty"`
+}
+
+// PatchedUpdateSkillSetRequest Update skill set metadata (name, description) only.
+type PatchedUpdateSkillSetRequest struct {
 	Description *string `json:"description,omitempty"`
 	Name        *string `json:"name,omitempty"`
 }
@@ -1103,6 +1285,11 @@ type PublicAgentJobStatusEvent struct {
 	Timestamp    time.Time               `json:"timestamp"`
 }
 
+// PublicSkillSetGeneration defines model for PublicSkillSetGeneration.
+type PublicSkillSetGeneration struct {
+	Generation *SkillSetGenerationRun `json:"generation"`
+}
+
 // QdrantCleanupErrorResponse 500 body when deleting an agent/version fails Qdrant collection cleanup.
 type QdrantCleanupErrorResponse struct {
 	// Detail Human-readable error detail
@@ -1123,9 +1310,84 @@ type ResendAgentJobWebhookRequest struct {
 // * `rejected` - Rejected
 type ReviewStatusEnum string
 
+// SkillFile One markdown file (relative_path + content) inside a skill set version.
+type SkillFile struct {
+	Content      string `json:"content"`
+	RelativePath string `json:"relative_path"`
+}
+
+// SkillFileRequest One markdown file (relative_path + content) inside a skill set version.
+type SkillFileRequest struct {
+	Content      string `json:"content"`
+	RelativePath string `json:"relative_path"`
+}
+
 // SkillGenerationStateEnum * `generating` - generating
 // * `failed` - failed
 type SkillGenerationStateEnum string
+
+// SkillSet Skill set metadata (read).
+type SkillSet struct {
+	CreatedAt        *time.Time          `json:"created_at,omitempty"`
+	CurrentVersionId *openapi_types.UUID `json:"current_version_id,omitempty"`
+	Description      *string             `json:"description,omitempty"`
+	Id               *openapi_types.UUID `json:"id,omitempty"`
+	Name             *string             `json:"name,omitempty"`
+	OrganizationId   *openapi_types.UUID `json:"organization_id,omitempty"`
+	UpdatedAt        *time.Time          `json:"updated_at,omitempty"`
+}
+
+// SkillSetDeleteConflict 409 body when a skill set cannot be deleted because agents reference it.
+type SkillSetDeleteConflict struct {
+	DependentAgents []SkillSetDependentAgentInfo `json:"dependent_agents"`
+	Error           string                       `json:"error"`
+}
+
+// SkillSetDependentAgentInfo An agent version that references a skill set (see get_agents_using_skill_set).
+type SkillSetDependentAgentInfo struct {
+	AgentName   string             `json:"agent_name"`
+	BaseAgentId openapi_types.UUID `json:"base_agent_id"`
+	VersionId   openapi_types.UUID `json:"version_id"`
+	VersionName string             `json:"version_name"`
+}
+
+// SkillSetGenerationRun A generation already in flight, so a page can reattach to it.
+type SkillSetGenerationRun struct {
+	Id *openapi_types.UUID `json:"id,omitempty"`
+
+	// SseEndpoint SSE endpoint URL for real-time status updates
+	SseEndpoint *string `json:"sse_endpoint,omitempty"`
+
+	// StartedAt When the run started — the UI shows elapsed time from this.
+	StartedAt *time.Time `json:"started_at,omitempty"`
+
+	// Status building, succeeded, or failed.
+	Status *string `json:"status,omitempty"`
+
+	// WorkflowId Temporal workflow ID for tracking the process
+	WorkflowId *string `json:"workflow_id,omitempty"`
+}
+
+// SkillSetVersion Full skill set version (nested set + files) for read responses.
+type SkillSetVersion struct {
+	BaseVersionId *openapi_types.UUID       `json:"base_version_id,omitempty"`
+	CreatedAt     *time.Time                `json:"created_at,omitempty"`
+	CreatedBy     *SkillSetVersionCreatedBy `json:"created_by,omitempty"`
+	FileChanges   interface{}               `json:"file_changes,omitempty"`
+	Files         *[]SkillFile              `json:"files,omitempty"`
+	Id            *openapi_types.UUID       `json:"id,omitempty"`
+	SkillSet      *SkillSet                 `json:"skill_set,omitempty"`
+	Summary       *string                   `json:"summary,omitempty"`
+	UpdatedAt     *time.Time                `json:"updated_at,omitempty"`
+	VersionName   string                    `json:"version_name"`
+}
+
+// SkillSetVersionCreatedBy Minimal user serializer for audit metadata on skill set versions.
+type SkillSetVersionCreatedBy struct {
+	DisplayName *string              `json:"display_name,omitempty"`
+	Email       *openapi_types.Email `json:"email,omitempty"`
+	Id          *int                 `json:"id,omitempty"`
+}
 
 // StatusEnum * `active` - Active
 // * `error` - Error
@@ -1303,9 +1565,10 @@ type TableUploadResponse struct {
 
 // TestConnection Serializer for connection test response.
 type TestConnection struct {
-	Message  string    `json:"message"`
-	Success  bool      `json:"success"`
-	TestedAt time.Time `json:"tested_at"`
+	Checks   *ConnectionAuthenticationChecks `json:"checks,omitempty"`
+	Message  string                          `json:"message"`
+	Success  bool                            `json:"success"`
+	TestedAt time.Time                       `json:"tested_at"`
 }
 
 // TestConnectionCredentialsRequest Serializer for testing connector credentials without saving a connection.
@@ -1374,6 +1637,17 @@ type UpdatePolicy struct {
 type UpdatePolicyRequest struct {
 	Description *string `json:"description,omitempty"`
 	Name        string  `json:"name"`
+}
+
+// UpdateSkillSet Update skill set metadata (name, description) only.
+type UpdateSkillSet struct {
+	CreatedAt        *time.Time          `json:"created_at,omitempty"`
+	CurrentVersionId *openapi_types.UUID `json:"current_version_id,omitempty"`
+	Description      *string             `json:"description,omitempty"`
+	Id               *openapi_types.UUID `json:"id,omitempty"`
+	Name             string              `json:"name"`
+	OrganizationId   *openapi_types.UUID `json:"organization_id,omitempty"`
+	UpdatedAt        *time.Time          `json:"updated_at,omitempty"`
 }
 
 // User defines model for User.
@@ -1828,6 +2102,96 @@ type PoliciesVersionsRetrieveParams struct {
 	OrganizationId *openapi_types.UUID `form:"organization_id,omitempty" json:"organization_id,omitempty"`
 }
 
+// SkillSetsListParams defines parameters for SkillSetsList.
+type SkillSetsListParams struct {
+	// Ordering Which field to use when ordering the results.
+	Ordering *string `form:"ordering,omitempty" json:"ordering,omitempty"`
+
+	// Page A page number within the paginated result set.
+	Page *int `form:"page,omitempty" json:"page,omitempty"`
+
+	// PageSize Number of results to return per page.
+	PageSize *int `form:"page_size,omitempty" json:"page_size,omitempty"`
+
+	// Search A search term.
+	Search *string `form:"search,omitempty" json:"search,omitempty"`
+
+	// OrganizationId Organization ID. This is required for access control. It can be provided via query or request body depending on the endpoint.
+	OrganizationId *openapi_types.UUID `form:"organization_id,omitempty" json:"organization_id,omitempty"`
+}
+
+// SkillSetsCreateParams defines parameters for SkillSetsCreate.
+type SkillSetsCreateParams struct {
+	// OrganizationId Organization ID. This is required for access control. It can be provided via query or request body depending on the endpoint.
+	OrganizationId *openapi_types.UUID `form:"organization_id,omitempty" json:"organization_id,omitempty"`
+}
+
+// SkillSetsVersionsRetrieveParams defines parameters for SkillSetsVersionsRetrieve.
+type SkillSetsVersionsRetrieveParams struct {
+	// OrganizationId Organization ID. This is required for access control. It can be provided via query or request body depending on the endpoint.
+	OrganizationId *openapi_types.UUID `form:"organization_id,omitempty" json:"organization_id,omitempty"`
+}
+
+// SkillSetsDestroyParams defines parameters for SkillSetsDestroy.
+type SkillSetsDestroyParams struct {
+	// OrganizationId Organization ID. This is required for access control. It can be provided via query or request body depending on the endpoint.
+	OrganizationId *openapi_types.UUID `form:"organization_id,omitempty" json:"organization_id,omitempty"`
+}
+
+// SkillSetsRetrieveParams defines parameters for SkillSetsRetrieve.
+type SkillSetsRetrieveParams struct {
+	// OrganizationId Organization ID. This is required for access control. It can be provided via query or request body depending on the endpoint.
+	OrganizationId *openapi_types.UUID `form:"organization_id,omitempty" json:"organization_id,omitempty"`
+}
+
+// SkillSetsPartialUpdateParams defines parameters for SkillSetsPartialUpdate.
+type SkillSetsPartialUpdateParams struct {
+	// OrganizationId Organization ID. This is required for access control. It can be provided via query or request body depending on the endpoint.
+	OrganizationId *openapi_types.UUID `form:"organization_id,omitempty" json:"organization_id,omitempty"`
+}
+
+// SkillSetsGenerateVersionParams defines parameters for SkillSetsGenerateVersion.
+type SkillSetsGenerateVersionParams struct {
+	// OrganizationId Organization ID. This is required for access control. It can be provided via query or request body depending on the endpoint.
+	OrganizationId *openapi_types.UUID `form:"organization_id,omitempty" json:"organization_id,omitempty"`
+}
+
+// SkillSetsGenerationRetrieveParams defines parameters for SkillSetsGenerationRetrieve.
+type SkillSetsGenerationRetrieveParams struct {
+	// OrganizationId Organization ID. This is required for access control. It can be provided via query or request body depending on the endpoint.
+	OrganizationId *openapi_types.UUID `form:"organization_id,omitempty" json:"organization_id,omitempty"`
+}
+
+// SkillSetsGenerationCancelParams defines parameters for SkillSetsGenerationCancel.
+type SkillSetsGenerationCancelParams struct {
+	// OrganizationId Organization ID. This is required for access control. It can be provided via query or request body depending on the endpoint.
+	OrganizationId *openapi_types.UUID `form:"organization_id,omitempty" json:"organization_id,omitempty"`
+}
+
+// SkillSetsSetCurrentVersionParams defines parameters for SkillSetsSetCurrentVersion.
+type SkillSetsSetCurrentVersionParams struct {
+	// OrganizationId Organization ID. This is required for access control. It can be provided via query or request body depending on the endpoint.
+	OrganizationId *openapi_types.UUID `form:"organization_id,omitempty" json:"organization_id,omitempty"`
+}
+
+// SkillSetsVersionsListParams defines parameters for SkillSetsVersionsList.
+type SkillSetsVersionsListParams struct {
+	// Page A page number within the paginated result set.
+	Page *int `form:"page,omitempty" json:"page,omitempty"`
+
+	// PageSize Number of results to return per page.
+	PageSize *int `form:"page_size,omitempty" json:"page_size,omitempty"`
+
+	// OrganizationId Organization ID. This is required for access control. It can be provided via query or request body depending on the endpoint.
+	OrganizationId *openapi_types.UUID `form:"organization_id,omitempty" json:"organization_id,omitempty"`
+}
+
+// SkillSetsVersionsCreateParams defines parameters for SkillSetsVersionsCreate.
+type SkillSetsVersionsCreateParams struct {
+	// OrganizationId Organization ID. This is required for access control. It can be provided via query or request body depending on the endpoint.
+	OrganizationId *openapi_types.UUID `form:"organization_id,omitempty" json:"organization_id,omitempty"`
+}
+
 // TablesPreviewRetrieveParams defines parameters for TablesPreviewRetrieve.
 type TablesPreviewRetrieveParams struct {
 	// Limit Maximum number of sample rows to return. Use 0 to return only table and column metadata without reading sample rows.
@@ -1899,6 +2263,18 @@ type PoliciesUpdateJSONRequestBody = UpdatePolicyRequest
 
 // PoliciesVersionsCreateJSONRequestBody defines body for PoliciesVersionsCreate for application/json ContentType.
 type PoliciesVersionsCreateJSONRequestBody = CreatePolicyVersionRequest
+
+// SkillSetsCreateJSONRequestBody defines body for SkillSetsCreate for application/json ContentType.
+type SkillSetsCreateJSONRequestBody = CreateSkillSetRequest
+
+// SkillSetsPartialUpdateJSONRequestBody defines body for SkillSetsPartialUpdate for application/json ContentType.
+type SkillSetsPartialUpdateJSONRequestBody = PatchedUpdateSkillSetRequest
+
+// SkillSetsGenerateVersionJSONRequestBody defines body for SkillSetsGenerateVersion for application/json ContentType.
+type SkillSetsGenerateVersionJSONRequestBody = GenerateSkillSetVersionRequest
+
+// SkillSetsVersionsCreateJSONRequestBody defines body for SkillSetsVersionsCreate for application/json ContentType.
+type SkillSetsVersionsCreateJSONRequestBody = CreateSkillSetVersionRequest
 
 // TablesQueryCreateJSONRequestBody defines body for TablesQueryCreate for application/json ContentType.
 type TablesQueryCreateJSONRequestBody = TableQueryRequest
@@ -2243,6 +2619,50 @@ type ClientInterface interface {
 
 	// PoliciesVersionsRetrieve request
 	PoliciesVersionsRetrieve(ctx context.Context, policyId openapi_types.UUID, versionId openapi_types.UUID, params *PoliciesVersionsRetrieveParams, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// SkillSetsList request
+	SkillSetsList(ctx context.Context, params *SkillSetsListParams, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// SkillSetsCreateWithBody request with any body
+	SkillSetsCreateWithBody(ctx context.Context, params *SkillSetsCreateParams, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	SkillSetsCreate(ctx context.Context, params *SkillSetsCreateParams, body SkillSetsCreateJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// SkillSetsVersionsRetrieve request
+	SkillSetsVersionsRetrieve(ctx context.Context, id openapi_types.UUID, params *SkillSetsVersionsRetrieveParams, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// SkillSetsDestroy request
+	SkillSetsDestroy(ctx context.Context, id openapi_types.UUID, params *SkillSetsDestroyParams, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// SkillSetsRetrieve request
+	SkillSetsRetrieve(ctx context.Context, id openapi_types.UUID, params *SkillSetsRetrieveParams, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// SkillSetsPartialUpdateWithBody request with any body
+	SkillSetsPartialUpdateWithBody(ctx context.Context, id openapi_types.UUID, params *SkillSetsPartialUpdateParams, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	SkillSetsPartialUpdate(ctx context.Context, id openapi_types.UUID, params *SkillSetsPartialUpdateParams, body SkillSetsPartialUpdateJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// SkillSetsGenerateVersionWithBody request with any body
+	SkillSetsGenerateVersionWithBody(ctx context.Context, skillSetId openapi_types.UUID, params *SkillSetsGenerateVersionParams, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	SkillSetsGenerateVersion(ctx context.Context, skillSetId openapi_types.UUID, params *SkillSetsGenerateVersionParams, body SkillSetsGenerateVersionJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// SkillSetsGenerationRetrieve request
+	SkillSetsGenerationRetrieve(ctx context.Context, skillSetId openapi_types.UUID, params *SkillSetsGenerationRetrieveParams, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// SkillSetsGenerationCancel request
+	SkillSetsGenerationCancel(ctx context.Context, skillSetId openapi_types.UUID, runId openapi_types.UUID, params *SkillSetsGenerationCancelParams, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// SkillSetsSetCurrentVersion request
+	SkillSetsSetCurrentVersion(ctx context.Context, skillSetId openapi_types.UUID, versionId openapi_types.UUID, params *SkillSetsSetCurrentVersionParams, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// SkillSetsVersionsList request
+	SkillSetsVersionsList(ctx context.Context, skillSetId openapi_types.UUID, params *SkillSetsVersionsListParams, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// SkillSetsVersionsCreateWithBody request with any body
+	SkillSetsVersionsCreateWithBody(ctx context.Context, skillSetId openapi_types.UUID, params *SkillSetsVersionsCreateParams, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	SkillSetsVersionsCreate(ctx context.Context, skillSetId openapi_types.UUID, params *SkillSetsVersionsCreateParams, body SkillSetsVersionsCreateJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
 
 	// TablesList request
 	TablesList(ctx context.Context, reqEditors ...RequestEditorFn) (*http.Response, error)
@@ -3137,6 +3557,198 @@ func (c *Client) PoliciesVersionsCreate(ctx context.Context, policyId openapi_ty
 
 func (c *Client) PoliciesVersionsRetrieve(ctx context.Context, policyId openapi_types.UUID, versionId openapi_types.UUID, params *PoliciesVersionsRetrieveParams, reqEditors ...RequestEditorFn) (*http.Response, error) {
 	req, err := NewPoliciesVersionsRetrieveRequest(c.Server, policyId, versionId, params)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) SkillSetsList(ctx context.Context, params *SkillSetsListParams, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewSkillSetsListRequest(c.Server, params)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) SkillSetsCreateWithBody(ctx context.Context, params *SkillSetsCreateParams, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewSkillSetsCreateRequestWithBody(c.Server, params, contentType, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) SkillSetsCreate(ctx context.Context, params *SkillSetsCreateParams, body SkillSetsCreateJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewSkillSetsCreateRequest(c.Server, params, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) SkillSetsVersionsRetrieve(ctx context.Context, id openapi_types.UUID, params *SkillSetsVersionsRetrieveParams, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewSkillSetsVersionsRetrieveRequest(c.Server, id, params)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) SkillSetsDestroy(ctx context.Context, id openapi_types.UUID, params *SkillSetsDestroyParams, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewSkillSetsDestroyRequest(c.Server, id, params)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) SkillSetsRetrieve(ctx context.Context, id openapi_types.UUID, params *SkillSetsRetrieveParams, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewSkillSetsRetrieveRequest(c.Server, id, params)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) SkillSetsPartialUpdateWithBody(ctx context.Context, id openapi_types.UUID, params *SkillSetsPartialUpdateParams, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewSkillSetsPartialUpdateRequestWithBody(c.Server, id, params, contentType, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) SkillSetsPartialUpdate(ctx context.Context, id openapi_types.UUID, params *SkillSetsPartialUpdateParams, body SkillSetsPartialUpdateJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewSkillSetsPartialUpdateRequest(c.Server, id, params, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) SkillSetsGenerateVersionWithBody(ctx context.Context, skillSetId openapi_types.UUID, params *SkillSetsGenerateVersionParams, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewSkillSetsGenerateVersionRequestWithBody(c.Server, skillSetId, params, contentType, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) SkillSetsGenerateVersion(ctx context.Context, skillSetId openapi_types.UUID, params *SkillSetsGenerateVersionParams, body SkillSetsGenerateVersionJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewSkillSetsGenerateVersionRequest(c.Server, skillSetId, params, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) SkillSetsGenerationRetrieve(ctx context.Context, skillSetId openapi_types.UUID, params *SkillSetsGenerationRetrieveParams, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewSkillSetsGenerationRetrieveRequest(c.Server, skillSetId, params)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) SkillSetsGenerationCancel(ctx context.Context, skillSetId openapi_types.UUID, runId openapi_types.UUID, params *SkillSetsGenerationCancelParams, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewSkillSetsGenerationCancelRequest(c.Server, skillSetId, runId, params)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) SkillSetsSetCurrentVersion(ctx context.Context, skillSetId openapi_types.UUID, versionId openapi_types.UUID, params *SkillSetsSetCurrentVersionParams, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewSkillSetsSetCurrentVersionRequest(c.Server, skillSetId, versionId, params)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) SkillSetsVersionsList(ctx context.Context, skillSetId openapi_types.UUID, params *SkillSetsVersionsListParams, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewSkillSetsVersionsListRequest(c.Server, skillSetId, params)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) SkillSetsVersionsCreateWithBody(ctx context.Context, skillSetId openapi_types.UUID, params *SkillSetsVersionsCreateParams, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewSkillSetsVersionsCreateRequestWithBody(c.Server, skillSetId, params, contentType, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) SkillSetsVersionsCreate(ctx context.Context, skillSetId openapi_types.UUID, params *SkillSetsVersionsCreateParams, body SkillSetsVersionsCreateJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewSkillSetsVersionsCreateRequest(c.Server, skillSetId, params, body)
 	if err != nil {
 		return nil, err
 	}
@@ -7041,6 +7653,826 @@ func NewPoliciesVersionsRetrieveRequest(server string, policyId openapi_types.UU
 	return req, nil
 }
 
+// NewSkillSetsListRequest generates requests for SkillSetsList
+func NewSkillSetsListRequest(server string, params *SkillSetsListParams) (*http.Request, error) {
+	var err error
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/v1/skills/")
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	if params != nil {
+		queryValues := queryURL.Query()
+
+		if params.Ordering != nil {
+
+			if queryFrag, err := runtime.StyleParamWithOptions("form", true, "ordering", *params.Ordering, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationQuery, Type: "string", Format: ""}); err != nil {
+				return nil, err
+			} else if parsed, err := url.ParseQuery(queryFrag); err != nil {
+				return nil, err
+			} else {
+				for k, v := range parsed {
+					for _, v2 := range v {
+						queryValues.Add(k, v2)
+					}
+				}
+			}
+
+		}
+
+		if params.Page != nil {
+
+			if queryFrag, err := runtime.StyleParamWithOptions("form", true, "page", *params.Page, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationQuery, Type: "integer", Format: ""}); err != nil {
+				return nil, err
+			} else if parsed, err := url.ParseQuery(queryFrag); err != nil {
+				return nil, err
+			} else {
+				for k, v := range parsed {
+					for _, v2 := range v {
+						queryValues.Add(k, v2)
+					}
+				}
+			}
+
+		}
+
+		if params.PageSize != nil {
+
+			if queryFrag, err := runtime.StyleParamWithOptions("form", true, "page_size", *params.PageSize, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationQuery, Type: "integer", Format: ""}); err != nil {
+				return nil, err
+			} else if parsed, err := url.ParseQuery(queryFrag); err != nil {
+				return nil, err
+			} else {
+				for k, v := range parsed {
+					for _, v2 := range v {
+						queryValues.Add(k, v2)
+					}
+				}
+			}
+
+		}
+
+		if params.Search != nil {
+
+			if queryFrag, err := runtime.StyleParamWithOptions("form", true, "search", *params.Search, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationQuery, Type: "string", Format: ""}); err != nil {
+				return nil, err
+			} else if parsed, err := url.ParseQuery(queryFrag); err != nil {
+				return nil, err
+			} else {
+				for k, v := range parsed {
+					for _, v2 := range v {
+						queryValues.Add(k, v2)
+					}
+				}
+			}
+
+		}
+
+		if params.OrganizationId != nil {
+
+			if queryFrag, err := runtime.StyleParamWithOptions("form", true, "organization_id", *params.OrganizationId, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationQuery, Type: "string", Format: "uuid"}); err != nil {
+				return nil, err
+			} else if parsed, err := url.ParseQuery(queryFrag); err != nil {
+				return nil, err
+			} else {
+				for k, v := range parsed {
+					for _, v2 := range v {
+						queryValues.Add(k, v2)
+					}
+				}
+			}
+
+		}
+
+		queryURL.RawQuery = queryValues.Encode()
+	}
+
+	req, err := http.NewRequest("GET", queryURL.String(), nil)
+	if err != nil {
+		return nil, err
+	}
+
+	return req, nil
+}
+
+// NewSkillSetsCreateRequest calls the generic SkillSetsCreate builder with application/json body
+func NewSkillSetsCreateRequest(server string, params *SkillSetsCreateParams, body SkillSetsCreateJSONRequestBody) (*http.Request, error) {
+	var bodyReader io.Reader
+	buf, err := json.Marshal(body)
+	if err != nil {
+		return nil, err
+	}
+	bodyReader = bytes.NewReader(buf)
+	return NewSkillSetsCreateRequestWithBody(server, params, "application/json", bodyReader)
+}
+
+// NewSkillSetsCreateRequestWithBody generates requests for SkillSetsCreate with any type of body
+func NewSkillSetsCreateRequestWithBody(server string, params *SkillSetsCreateParams, contentType string, body io.Reader) (*http.Request, error) {
+	var err error
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/v1/skills/")
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	if params != nil {
+		queryValues := queryURL.Query()
+
+		if params.OrganizationId != nil {
+
+			if queryFrag, err := runtime.StyleParamWithOptions("form", true, "organization_id", *params.OrganizationId, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationQuery, Type: "string", Format: "uuid"}); err != nil {
+				return nil, err
+			} else if parsed, err := url.ParseQuery(queryFrag); err != nil {
+				return nil, err
+			} else {
+				for k, v := range parsed {
+					for _, v2 := range v {
+						queryValues.Add(k, v2)
+					}
+				}
+			}
+
+		}
+
+		queryURL.RawQuery = queryValues.Encode()
+	}
+
+	req, err := http.NewRequest("POST", queryURL.String(), body)
+	if err != nil {
+		return nil, err
+	}
+
+	req.Header.Add("Content-Type", contentType)
+
+	return req, nil
+}
+
+// NewSkillSetsVersionsRetrieveRequest generates requests for SkillSetsVersionsRetrieve
+func NewSkillSetsVersionsRetrieveRequest(server string, id openapi_types.UUID, params *SkillSetsVersionsRetrieveParams) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithOptions("simple", false, "id", id, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationPath, Type: "string", Format: "uuid"})
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/v1/skills/versions/%s/", pathParam0)
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	if params != nil {
+		queryValues := queryURL.Query()
+
+		if params.OrganizationId != nil {
+
+			if queryFrag, err := runtime.StyleParamWithOptions("form", true, "organization_id", *params.OrganizationId, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationQuery, Type: "string", Format: "uuid"}); err != nil {
+				return nil, err
+			} else if parsed, err := url.ParseQuery(queryFrag); err != nil {
+				return nil, err
+			} else {
+				for k, v := range parsed {
+					for _, v2 := range v {
+						queryValues.Add(k, v2)
+					}
+				}
+			}
+
+		}
+
+		queryURL.RawQuery = queryValues.Encode()
+	}
+
+	req, err := http.NewRequest("GET", queryURL.String(), nil)
+	if err != nil {
+		return nil, err
+	}
+
+	return req, nil
+}
+
+// NewSkillSetsDestroyRequest generates requests for SkillSetsDestroy
+func NewSkillSetsDestroyRequest(server string, id openapi_types.UUID, params *SkillSetsDestroyParams) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithOptions("simple", false, "id", id, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationPath, Type: "string", Format: "uuid"})
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/v1/skills/%s/", pathParam0)
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	if params != nil {
+		queryValues := queryURL.Query()
+
+		if params.OrganizationId != nil {
+
+			if queryFrag, err := runtime.StyleParamWithOptions("form", true, "organization_id", *params.OrganizationId, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationQuery, Type: "string", Format: "uuid"}); err != nil {
+				return nil, err
+			} else if parsed, err := url.ParseQuery(queryFrag); err != nil {
+				return nil, err
+			} else {
+				for k, v := range parsed {
+					for _, v2 := range v {
+						queryValues.Add(k, v2)
+					}
+				}
+			}
+
+		}
+
+		queryURL.RawQuery = queryValues.Encode()
+	}
+
+	req, err := http.NewRequest("DELETE", queryURL.String(), nil)
+	if err != nil {
+		return nil, err
+	}
+
+	return req, nil
+}
+
+// NewSkillSetsRetrieveRequest generates requests for SkillSetsRetrieve
+func NewSkillSetsRetrieveRequest(server string, id openapi_types.UUID, params *SkillSetsRetrieveParams) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithOptions("simple", false, "id", id, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationPath, Type: "string", Format: "uuid"})
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/v1/skills/%s/", pathParam0)
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	if params != nil {
+		queryValues := queryURL.Query()
+
+		if params.OrganizationId != nil {
+
+			if queryFrag, err := runtime.StyleParamWithOptions("form", true, "organization_id", *params.OrganizationId, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationQuery, Type: "string", Format: "uuid"}); err != nil {
+				return nil, err
+			} else if parsed, err := url.ParseQuery(queryFrag); err != nil {
+				return nil, err
+			} else {
+				for k, v := range parsed {
+					for _, v2 := range v {
+						queryValues.Add(k, v2)
+					}
+				}
+			}
+
+		}
+
+		queryURL.RawQuery = queryValues.Encode()
+	}
+
+	req, err := http.NewRequest("GET", queryURL.String(), nil)
+	if err != nil {
+		return nil, err
+	}
+
+	return req, nil
+}
+
+// NewSkillSetsPartialUpdateRequest calls the generic SkillSetsPartialUpdate builder with application/json body
+func NewSkillSetsPartialUpdateRequest(server string, id openapi_types.UUID, params *SkillSetsPartialUpdateParams, body SkillSetsPartialUpdateJSONRequestBody) (*http.Request, error) {
+	var bodyReader io.Reader
+	buf, err := json.Marshal(body)
+	if err != nil {
+		return nil, err
+	}
+	bodyReader = bytes.NewReader(buf)
+	return NewSkillSetsPartialUpdateRequestWithBody(server, id, params, "application/json", bodyReader)
+}
+
+// NewSkillSetsPartialUpdateRequestWithBody generates requests for SkillSetsPartialUpdate with any type of body
+func NewSkillSetsPartialUpdateRequestWithBody(server string, id openapi_types.UUID, params *SkillSetsPartialUpdateParams, contentType string, body io.Reader) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithOptions("simple", false, "id", id, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationPath, Type: "string", Format: "uuid"})
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/v1/skills/%s/", pathParam0)
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	if params != nil {
+		queryValues := queryURL.Query()
+
+		if params.OrganizationId != nil {
+
+			if queryFrag, err := runtime.StyleParamWithOptions("form", true, "organization_id", *params.OrganizationId, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationQuery, Type: "string", Format: "uuid"}); err != nil {
+				return nil, err
+			} else if parsed, err := url.ParseQuery(queryFrag); err != nil {
+				return nil, err
+			} else {
+				for k, v := range parsed {
+					for _, v2 := range v {
+						queryValues.Add(k, v2)
+					}
+				}
+			}
+
+		}
+
+		queryURL.RawQuery = queryValues.Encode()
+	}
+
+	req, err := http.NewRequest("PATCH", queryURL.String(), body)
+	if err != nil {
+		return nil, err
+	}
+
+	req.Header.Add("Content-Type", contentType)
+
+	return req, nil
+}
+
+// NewSkillSetsGenerateVersionRequest calls the generic SkillSetsGenerateVersion builder with application/json body
+func NewSkillSetsGenerateVersionRequest(server string, skillSetId openapi_types.UUID, params *SkillSetsGenerateVersionParams, body SkillSetsGenerateVersionJSONRequestBody) (*http.Request, error) {
+	var bodyReader io.Reader
+	buf, err := json.Marshal(body)
+	if err != nil {
+		return nil, err
+	}
+	bodyReader = bytes.NewReader(buf)
+	return NewSkillSetsGenerateVersionRequestWithBody(server, skillSetId, params, "application/json", bodyReader)
+}
+
+// NewSkillSetsGenerateVersionRequestWithBody generates requests for SkillSetsGenerateVersion with any type of body
+func NewSkillSetsGenerateVersionRequestWithBody(server string, skillSetId openapi_types.UUID, params *SkillSetsGenerateVersionParams, contentType string, body io.Reader) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithOptions("simple", false, "skill_set_id", skillSetId, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationPath, Type: "string", Format: "uuid"})
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/v1/skills/%s/generate-version/", pathParam0)
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	if params != nil {
+		queryValues := queryURL.Query()
+
+		if params.OrganizationId != nil {
+
+			if queryFrag, err := runtime.StyleParamWithOptions("form", true, "organization_id", *params.OrganizationId, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationQuery, Type: "string", Format: "uuid"}); err != nil {
+				return nil, err
+			} else if parsed, err := url.ParseQuery(queryFrag); err != nil {
+				return nil, err
+			} else {
+				for k, v := range parsed {
+					for _, v2 := range v {
+						queryValues.Add(k, v2)
+					}
+				}
+			}
+
+		}
+
+		queryURL.RawQuery = queryValues.Encode()
+	}
+
+	req, err := http.NewRequest("POST", queryURL.String(), body)
+	if err != nil {
+		return nil, err
+	}
+
+	req.Header.Add("Content-Type", contentType)
+
+	return req, nil
+}
+
+// NewSkillSetsGenerationRetrieveRequest generates requests for SkillSetsGenerationRetrieve
+func NewSkillSetsGenerationRetrieveRequest(server string, skillSetId openapi_types.UUID, params *SkillSetsGenerationRetrieveParams) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithOptions("simple", false, "skill_set_id", skillSetId, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationPath, Type: "string", Format: "uuid"})
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/v1/skills/%s/generation/", pathParam0)
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	if params != nil {
+		queryValues := queryURL.Query()
+
+		if params.OrganizationId != nil {
+
+			if queryFrag, err := runtime.StyleParamWithOptions("form", true, "organization_id", *params.OrganizationId, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationQuery, Type: "string", Format: "uuid"}); err != nil {
+				return nil, err
+			} else if parsed, err := url.ParseQuery(queryFrag); err != nil {
+				return nil, err
+			} else {
+				for k, v := range parsed {
+					for _, v2 := range v {
+						queryValues.Add(k, v2)
+					}
+				}
+			}
+
+		}
+
+		queryURL.RawQuery = queryValues.Encode()
+	}
+
+	req, err := http.NewRequest("GET", queryURL.String(), nil)
+	if err != nil {
+		return nil, err
+	}
+
+	return req, nil
+}
+
+// NewSkillSetsGenerationCancelRequest generates requests for SkillSetsGenerationCancel
+func NewSkillSetsGenerationCancelRequest(server string, skillSetId openapi_types.UUID, runId openapi_types.UUID, params *SkillSetsGenerationCancelParams) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithOptions("simple", false, "skill_set_id", skillSetId, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationPath, Type: "string", Format: "uuid"})
+	if err != nil {
+		return nil, err
+	}
+
+	var pathParam1 string
+
+	pathParam1, err = runtime.StyleParamWithOptions("simple", false, "run_id", runId, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationPath, Type: "string", Format: "uuid"})
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/v1/skills/%s/generation/%s/", pathParam0, pathParam1)
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	if params != nil {
+		queryValues := queryURL.Query()
+
+		if params.OrganizationId != nil {
+
+			if queryFrag, err := runtime.StyleParamWithOptions("form", true, "organization_id", *params.OrganizationId, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationQuery, Type: "string", Format: "uuid"}); err != nil {
+				return nil, err
+			} else if parsed, err := url.ParseQuery(queryFrag); err != nil {
+				return nil, err
+			} else {
+				for k, v := range parsed {
+					for _, v2 := range v {
+						queryValues.Add(k, v2)
+					}
+				}
+			}
+
+		}
+
+		queryURL.RawQuery = queryValues.Encode()
+	}
+
+	req, err := http.NewRequest("DELETE", queryURL.String(), nil)
+	if err != nil {
+		return nil, err
+	}
+
+	return req, nil
+}
+
+// NewSkillSetsSetCurrentVersionRequest generates requests for SkillSetsSetCurrentVersion
+func NewSkillSetsSetCurrentVersionRequest(server string, skillSetId openapi_types.UUID, versionId openapi_types.UUID, params *SkillSetsSetCurrentVersionParams) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithOptions("simple", false, "skill_set_id", skillSetId, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationPath, Type: "string", Format: "uuid"})
+	if err != nil {
+		return nil, err
+	}
+
+	var pathParam1 string
+
+	pathParam1, err = runtime.StyleParamWithOptions("simple", false, "version_id", versionId, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationPath, Type: "string", Format: "uuid"})
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/v1/skills/%s/set-current-version/%s/", pathParam0, pathParam1)
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	if params != nil {
+		queryValues := queryURL.Query()
+
+		if params.OrganizationId != nil {
+
+			if queryFrag, err := runtime.StyleParamWithOptions("form", true, "organization_id", *params.OrganizationId, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationQuery, Type: "string", Format: "uuid"}); err != nil {
+				return nil, err
+			} else if parsed, err := url.ParseQuery(queryFrag); err != nil {
+				return nil, err
+			} else {
+				for k, v := range parsed {
+					for _, v2 := range v {
+						queryValues.Add(k, v2)
+					}
+				}
+			}
+
+		}
+
+		queryURL.RawQuery = queryValues.Encode()
+	}
+
+	req, err := http.NewRequest("PATCH", queryURL.String(), nil)
+	if err != nil {
+		return nil, err
+	}
+
+	return req, nil
+}
+
+// NewSkillSetsVersionsListRequest generates requests for SkillSetsVersionsList
+func NewSkillSetsVersionsListRequest(server string, skillSetId openapi_types.UUID, params *SkillSetsVersionsListParams) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithOptions("simple", false, "skill_set_id", skillSetId, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationPath, Type: "string", Format: "uuid"})
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/v1/skills/%s/versions/", pathParam0)
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	if params != nil {
+		queryValues := queryURL.Query()
+
+		if params.Page != nil {
+
+			if queryFrag, err := runtime.StyleParamWithOptions("form", true, "page", *params.Page, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationQuery, Type: "integer", Format: ""}); err != nil {
+				return nil, err
+			} else if parsed, err := url.ParseQuery(queryFrag); err != nil {
+				return nil, err
+			} else {
+				for k, v := range parsed {
+					for _, v2 := range v {
+						queryValues.Add(k, v2)
+					}
+				}
+			}
+
+		}
+
+		if params.PageSize != nil {
+
+			if queryFrag, err := runtime.StyleParamWithOptions("form", true, "page_size", *params.PageSize, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationQuery, Type: "integer", Format: ""}); err != nil {
+				return nil, err
+			} else if parsed, err := url.ParseQuery(queryFrag); err != nil {
+				return nil, err
+			} else {
+				for k, v := range parsed {
+					for _, v2 := range v {
+						queryValues.Add(k, v2)
+					}
+				}
+			}
+
+		}
+
+		if params.OrganizationId != nil {
+
+			if queryFrag, err := runtime.StyleParamWithOptions("form", true, "organization_id", *params.OrganizationId, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationQuery, Type: "string", Format: "uuid"}); err != nil {
+				return nil, err
+			} else if parsed, err := url.ParseQuery(queryFrag); err != nil {
+				return nil, err
+			} else {
+				for k, v := range parsed {
+					for _, v2 := range v {
+						queryValues.Add(k, v2)
+					}
+				}
+			}
+
+		}
+
+		queryURL.RawQuery = queryValues.Encode()
+	}
+
+	req, err := http.NewRequest("GET", queryURL.String(), nil)
+	if err != nil {
+		return nil, err
+	}
+
+	return req, nil
+}
+
+// NewSkillSetsVersionsCreateRequest calls the generic SkillSetsVersionsCreate builder with application/json body
+func NewSkillSetsVersionsCreateRequest(server string, skillSetId openapi_types.UUID, params *SkillSetsVersionsCreateParams, body SkillSetsVersionsCreateJSONRequestBody) (*http.Request, error) {
+	var bodyReader io.Reader
+	buf, err := json.Marshal(body)
+	if err != nil {
+		return nil, err
+	}
+	bodyReader = bytes.NewReader(buf)
+	return NewSkillSetsVersionsCreateRequestWithBody(server, skillSetId, params, "application/json", bodyReader)
+}
+
+// NewSkillSetsVersionsCreateRequestWithBody generates requests for SkillSetsVersionsCreate with any type of body
+func NewSkillSetsVersionsCreateRequestWithBody(server string, skillSetId openapi_types.UUID, params *SkillSetsVersionsCreateParams, contentType string, body io.Reader) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithOptions("simple", false, "skill_set_id", skillSetId, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationPath, Type: "string", Format: "uuid"})
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/v1/skills/%s/versions/", pathParam0)
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	if params != nil {
+		queryValues := queryURL.Query()
+
+		if params.OrganizationId != nil {
+
+			if queryFrag, err := runtime.StyleParamWithOptions("form", true, "organization_id", *params.OrganizationId, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationQuery, Type: "string", Format: "uuid"}); err != nil {
+				return nil, err
+			} else if parsed, err := url.ParseQuery(queryFrag); err != nil {
+				return nil, err
+			} else {
+				for k, v := range parsed {
+					for _, v2 := range v {
+						queryValues.Add(k, v2)
+					}
+				}
+			}
+
+		}
+
+		queryURL.RawQuery = queryValues.Encode()
+	}
+
+	req, err := http.NewRequest("POST", queryURL.String(), body)
+	if err != nil {
+		return nil, err
+	}
+
+	req.Header.Add("Content-Type", contentType)
+
+	return req, nil
+}
+
 // NewTablesListRequest generates requests for TablesList
 func NewTablesListRequest(server string) (*http.Request, error) {
 	var err error
@@ -7561,6 +8993,50 @@ type ClientWithResponsesInterface interface {
 
 	// PoliciesVersionsRetrieveWithResponse request
 	PoliciesVersionsRetrieveWithResponse(ctx context.Context, policyId openapi_types.UUID, versionId openapi_types.UUID, params *PoliciesVersionsRetrieveParams, reqEditors ...RequestEditorFn) (*PoliciesVersionsRetrieveResponse, error)
+
+	// SkillSetsListWithResponse request
+	SkillSetsListWithResponse(ctx context.Context, params *SkillSetsListParams, reqEditors ...RequestEditorFn) (*SkillSetsListResponse, error)
+
+	// SkillSetsCreateWithBodyWithResponse request with any body
+	SkillSetsCreateWithBodyWithResponse(ctx context.Context, params *SkillSetsCreateParams, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*SkillSetsCreateResponse, error)
+
+	SkillSetsCreateWithResponse(ctx context.Context, params *SkillSetsCreateParams, body SkillSetsCreateJSONRequestBody, reqEditors ...RequestEditorFn) (*SkillSetsCreateResponse, error)
+
+	// SkillSetsVersionsRetrieveWithResponse request
+	SkillSetsVersionsRetrieveWithResponse(ctx context.Context, id openapi_types.UUID, params *SkillSetsVersionsRetrieveParams, reqEditors ...RequestEditorFn) (*SkillSetsVersionsRetrieveResponse, error)
+
+	// SkillSetsDestroyWithResponse request
+	SkillSetsDestroyWithResponse(ctx context.Context, id openapi_types.UUID, params *SkillSetsDestroyParams, reqEditors ...RequestEditorFn) (*SkillSetsDestroyResponse, error)
+
+	// SkillSetsRetrieveWithResponse request
+	SkillSetsRetrieveWithResponse(ctx context.Context, id openapi_types.UUID, params *SkillSetsRetrieveParams, reqEditors ...RequestEditorFn) (*SkillSetsRetrieveResponse, error)
+
+	// SkillSetsPartialUpdateWithBodyWithResponse request with any body
+	SkillSetsPartialUpdateWithBodyWithResponse(ctx context.Context, id openapi_types.UUID, params *SkillSetsPartialUpdateParams, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*SkillSetsPartialUpdateResponse, error)
+
+	SkillSetsPartialUpdateWithResponse(ctx context.Context, id openapi_types.UUID, params *SkillSetsPartialUpdateParams, body SkillSetsPartialUpdateJSONRequestBody, reqEditors ...RequestEditorFn) (*SkillSetsPartialUpdateResponse, error)
+
+	// SkillSetsGenerateVersionWithBodyWithResponse request with any body
+	SkillSetsGenerateVersionWithBodyWithResponse(ctx context.Context, skillSetId openapi_types.UUID, params *SkillSetsGenerateVersionParams, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*SkillSetsGenerateVersionResponse, error)
+
+	SkillSetsGenerateVersionWithResponse(ctx context.Context, skillSetId openapi_types.UUID, params *SkillSetsGenerateVersionParams, body SkillSetsGenerateVersionJSONRequestBody, reqEditors ...RequestEditorFn) (*SkillSetsGenerateVersionResponse, error)
+
+	// SkillSetsGenerationRetrieveWithResponse request
+	SkillSetsGenerationRetrieveWithResponse(ctx context.Context, skillSetId openapi_types.UUID, params *SkillSetsGenerationRetrieveParams, reqEditors ...RequestEditorFn) (*SkillSetsGenerationRetrieveResponse, error)
+
+	// SkillSetsGenerationCancelWithResponse request
+	SkillSetsGenerationCancelWithResponse(ctx context.Context, skillSetId openapi_types.UUID, runId openapi_types.UUID, params *SkillSetsGenerationCancelParams, reqEditors ...RequestEditorFn) (*SkillSetsGenerationCancelResponse, error)
+
+	// SkillSetsSetCurrentVersionWithResponse request
+	SkillSetsSetCurrentVersionWithResponse(ctx context.Context, skillSetId openapi_types.UUID, versionId openapi_types.UUID, params *SkillSetsSetCurrentVersionParams, reqEditors ...RequestEditorFn) (*SkillSetsSetCurrentVersionResponse, error)
+
+	// SkillSetsVersionsListWithResponse request
+	SkillSetsVersionsListWithResponse(ctx context.Context, skillSetId openapi_types.UUID, params *SkillSetsVersionsListParams, reqEditors ...RequestEditorFn) (*SkillSetsVersionsListResponse, error)
+
+	// SkillSetsVersionsCreateWithBodyWithResponse request with any body
+	SkillSetsVersionsCreateWithBodyWithResponse(ctx context.Context, skillSetId openapi_types.UUID, params *SkillSetsVersionsCreateParams, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*SkillSetsVersionsCreateResponse, error)
+
+	SkillSetsVersionsCreateWithResponse(ctx context.Context, skillSetId openapi_types.UUID, params *SkillSetsVersionsCreateParams, body SkillSetsVersionsCreateJSONRequestBody, reqEditors ...RequestEditorFn) (*SkillSetsVersionsCreateResponse, error)
 
 	// TablesListWithResponse request
 	TablesListWithResponse(ctx context.Context, reqEditors ...RequestEditorFn) (*TablesListResponse, error)
@@ -9004,6 +10480,278 @@ func (r PoliciesVersionsRetrieveResponse) StatusCode() int {
 	return 0
 }
 
+type SkillSetsListResponse struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	JSON200      *PaginatedSkillSetList
+}
+
+// Status returns HTTPResponse.Status
+func (r SkillSetsListResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r SkillSetsListResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+type SkillSetsCreateResponse struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	JSON201      *CreateSkillSet
+	JSON400      *map[string]interface{}
+}
+
+// Status returns HTTPResponse.Status
+func (r SkillSetsCreateResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r SkillSetsCreateResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+type SkillSetsVersionsRetrieveResponse struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	JSON200      *SkillSetVersion
+}
+
+// Status returns HTTPResponse.Status
+func (r SkillSetsVersionsRetrieveResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r SkillSetsVersionsRetrieveResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+type SkillSetsDestroyResponse struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	JSON404      *ErrorDetailResponse
+	JSON409      *SkillSetDeleteConflict
+}
+
+// Status returns HTTPResponse.Status
+func (r SkillSetsDestroyResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r SkillSetsDestroyResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+type SkillSetsRetrieveResponse struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	JSON200      *SkillSet
+	JSON404      *ErrorDetailResponse
+}
+
+// Status returns HTTPResponse.Status
+func (r SkillSetsRetrieveResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r SkillSetsRetrieveResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+type SkillSetsPartialUpdateResponse struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	JSON200      *UpdateSkillSet
+}
+
+// Status returns HTTPResponse.Status
+func (r SkillSetsPartialUpdateResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r SkillSetsPartialUpdateResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+type SkillSetsGenerateVersionResponse struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	JSON200      *GenerateSkillSetVersionResponse
+	JSON400      *map[string]interface{}
+	JSON404      *ErrorDetailResponse
+}
+
+// Status returns HTTPResponse.Status
+func (r SkillSetsGenerateVersionResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r SkillSetsGenerateVersionResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+type SkillSetsGenerationRetrieveResponse struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	JSON200      *PublicSkillSetGeneration
+}
+
+// Status returns HTTPResponse.Status
+func (r SkillSetsGenerationRetrieveResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r SkillSetsGenerationRetrieveResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+type SkillSetsGenerationCancelResponse struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	JSON404      *ErrorDetailResponse
+	JSON502      *ErrorDetailResponse
+}
+
+// Status returns HTTPResponse.Status
+func (r SkillSetsGenerationCancelResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r SkillSetsGenerationCancelResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+type SkillSetsSetCurrentVersionResponse struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	JSON200      *SkillSet
+}
+
+// Status returns HTTPResponse.Status
+func (r SkillSetsSetCurrentVersionResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r SkillSetsSetCurrentVersionResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+type SkillSetsVersionsListResponse struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	JSON200      *PaginatedSkillSetVersionList
+}
+
+// Status returns HTTPResponse.Status
+func (r SkillSetsVersionsListResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r SkillSetsVersionsListResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+type SkillSetsVersionsCreateResponse struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	JSON201      *CreateSkillSetVersion
+	JSON400      *map[string]interface{}
+	JSON404      *ErrorDetailResponse
+}
+
+// Status returns HTTPResponse.Status
+func (r SkillSetsVersionsCreateResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r SkillSetsVersionsCreateResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
 type TablesListResponse struct {
 	Body         []byte
 	HTTPResponse *http.Response
@@ -9851,6 +11599,146 @@ func (c *ClientWithResponses) PoliciesVersionsRetrieveWithResponse(ctx context.C
 		return nil, err
 	}
 	return ParsePoliciesVersionsRetrieveResponse(rsp)
+}
+
+// SkillSetsListWithResponse request returning *SkillSetsListResponse
+func (c *ClientWithResponses) SkillSetsListWithResponse(ctx context.Context, params *SkillSetsListParams, reqEditors ...RequestEditorFn) (*SkillSetsListResponse, error) {
+	rsp, err := c.SkillSetsList(ctx, params, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseSkillSetsListResponse(rsp)
+}
+
+// SkillSetsCreateWithBodyWithResponse request with arbitrary body returning *SkillSetsCreateResponse
+func (c *ClientWithResponses) SkillSetsCreateWithBodyWithResponse(ctx context.Context, params *SkillSetsCreateParams, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*SkillSetsCreateResponse, error) {
+	rsp, err := c.SkillSetsCreateWithBody(ctx, params, contentType, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseSkillSetsCreateResponse(rsp)
+}
+
+func (c *ClientWithResponses) SkillSetsCreateWithResponse(ctx context.Context, params *SkillSetsCreateParams, body SkillSetsCreateJSONRequestBody, reqEditors ...RequestEditorFn) (*SkillSetsCreateResponse, error) {
+	rsp, err := c.SkillSetsCreate(ctx, params, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseSkillSetsCreateResponse(rsp)
+}
+
+// SkillSetsVersionsRetrieveWithResponse request returning *SkillSetsVersionsRetrieveResponse
+func (c *ClientWithResponses) SkillSetsVersionsRetrieveWithResponse(ctx context.Context, id openapi_types.UUID, params *SkillSetsVersionsRetrieveParams, reqEditors ...RequestEditorFn) (*SkillSetsVersionsRetrieveResponse, error) {
+	rsp, err := c.SkillSetsVersionsRetrieve(ctx, id, params, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseSkillSetsVersionsRetrieveResponse(rsp)
+}
+
+// SkillSetsDestroyWithResponse request returning *SkillSetsDestroyResponse
+func (c *ClientWithResponses) SkillSetsDestroyWithResponse(ctx context.Context, id openapi_types.UUID, params *SkillSetsDestroyParams, reqEditors ...RequestEditorFn) (*SkillSetsDestroyResponse, error) {
+	rsp, err := c.SkillSetsDestroy(ctx, id, params, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseSkillSetsDestroyResponse(rsp)
+}
+
+// SkillSetsRetrieveWithResponse request returning *SkillSetsRetrieveResponse
+func (c *ClientWithResponses) SkillSetsRetrieveWithResponse(ctx context.Context, id openapi_types.UUID, params *SkillSetsRetrieveParams, reqEditors ...RequestEditorFn) (*SkillSetsRetrieveResponse, error) {
+	rsp, err := c.SkillSetsRetrieve(ctx, id, params, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseSkillSetsRetrieveResponse(rsp)
+}
+
+// SkillSetsPartialUpdateWithBodyWithResponse request with arbitrary body returning *SkillSetsPartialUpdateResponse
+func (c *ClientWithResponses) SkillSetsPartialUpdateWithBodyWithResponse(ctx context.Context, id openapi_types.UUID, params *SkillSetsPartialUpdateParams, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*SkillSetsPartialUpdateResponse, error) {
+	rsp, err := c.SkillSetsPartialUpdateWithBody(ctx, id, params, contentType, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseSkillSetsPartialUpdateResponse(rsp)
+}
+
+func (c *ClientWithResponses) SkillSetsPartialUpdateWithResponse(ctx context.Context, id openapi_types.UUID, params *SkillSetsPartialUpdateParams, body SkillSetsPartialUpdateJSONRequestBody, reqEditors ...RequestEditorFn) (*SkillSetsPartialUpdateResponse, error) {
+	rsp, err := c.SkillSetsPartialUpdate(ctx, id, params, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseSkillSetsPartialUpdateResponse(rsp)
+}
+
+// SkillSetsGenerateVersionWithBodyWithResponse request with arbitrary body returning *SkillSetsGenerateVersionResponse
+func (c *ClientWithResponses) SkillSetsGenerateVersionWithBodyWithResponse(ctx context.Context, skillSetId openapi_types.UUID, params *SkillSetsGenerateVersionParams, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*SkillSetsGenerateVersionResponse, error) {
+	rsp, err := c.SkillSetsGenerateVersionWithBody(ctx, skillSetId, params, contentType, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseSkillSetsGenerateVersionResponse(rsp)
+}
+
+func (c *ClientWithResponses) SkillSetsGenerateVersionWithResponse(ctx context.Context, skillSetId openapi_types.UUID, params *SkillSetsGenerateVersionParams, body SkillSetsGenerateVersionJSONRequestBody, reqEditors ...RequestEditorFn) (*SkillSetsGenerateVersionResponse, error) {
+	rsp, err := c.SkillSetsGenerateVersion(ctx, skillSetId, params, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseSkillSetsGenerateVersionResponse(rsp)
+}
+
+// SkillSetsGenerationRetrieveWithResponse request returning *SkillSetsGenerationRetrieveResponse
+func (c *ClientWithResponses) SkillSetsGenerationRetrieveWithResponse(ctx context.Context, skillSetId openapi_types.UUID, params *SkillSetsGenerationRetrieveParams, reqEditors ...RequestEditorFn) (*SkillSetsGenerationRetrieveResponse, error) {
+	rsp, err := c.SkillSetsGenerationRetrieve(ctx, skillSetId, params, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseSkillSetsGenerationRetrieveResponse(rsp)
+}
+
+// SkillSetsGenerationCancelWithResponse request returning *SkillSetsGenerationCancelResponse
+func (c *ClientWithResponses) SkillSetsGenerationCancelWithResponse(ctx context.Context, skillSetId openapi_types.UUID, runId openapi_types.UUID, params *SkillSetsGenerationCancelParams, reqEditors ...RequestEditorFn) (*SkillSetsGenerationCancelResponse, error) {
+	rsp, err := c.SkillSetsGenerationCancel(ctx, skillSetId, runId, params, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseSkillSetsGenerationCancelResponse(rsp)
+}
+
+// SkillSetsSetCurrentVersionWithResponse request returning *SkillSetsSetCurrentVersionResponse
+func (c *ClientWithResponses) SkillSetsSetCurrentVersionWithResponse(ctx context.Context, skillSetId openapi_types.UUID, versionId openapi_types.UUID, params *SkillSetsSetCurrentVersionParams, reqEditors ...RequestEditorFn) (*SkillSetsSetCurrentVersionResponse, error) {
+	rsp, err := c.SkillSetsSetCurrentVersion(ctx, skillSetId, versionId, params, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseSkillSetsSetCurrentVersionResponse(rsp)
+}
+
+// SkillSetsVersionsListWithResponse request returning *SkillSetsVersionsListResponse
+func (c *ClientWithResponses) SkillSetsVersionsListWithResponse(ctx context.Context, skillSetId openapi_types.UUID, params *SkillSetsVersionsListParams, reqEditors ...RequestEditorFn) (*SkillSetsVersionsListResponse, error) {
+	rsp, err := c.SkillSetsVersionsList(ctx, skillSetId, params, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseSkillSetsVersionsListResponse(rsp)
+}
+
+// SkillSetsVersionsCreateWithBodyWithResponse request with arbitrary body returning *SkillSetsVersionsCreateResponse
+func (c *ClientWithResponses) SkillSetsVersionsCreateWithBodyWithResponse(ctx context.Context, skillSetId openapi_types.UUID, params *SkillSetsVersionsCreateParams, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*SkillSetsVersionsCreateResponse, error) {
+	rsp, err := c.SkillSetsVersionsCreateWithBody(ctx, skillSetId, params, contentType, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseSkillSetsVersionsCreateResponse(rsp)
+}
+
+func (c *ClientWithResponses) SkillSetsVersionsCreateWithResponse(ctx context.Context, skillSetId openapi_types.UUID, params *SkillSetsVersionsCreateParams, body SkillSetsVersionsCreateJSONRequestBody, reqEditors ...RequestEditorFn) (*SkillSetsVersionsCreateResponse, error) {
+	rsp, err := c.SkillSetsVersionsCreate(ctx, skillSetId, params, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseSkillSetsVersionsCreateResponse(rsp)
 }
 
 // TablesListWithResponse request returning *TablesListResponse
@@ -12001,6 +13889,374 @@ func ParsePoliciesVersionsRetrieveResponse(rsp *http.Response) (*PoliciesVersion
 			return nil, err
 		}
 		response.JSON200 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 404:
+		var dest ErrorDetailResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON404 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseSkillSetsListResponse parses an HTTP response from a SkillSetsListWithResponse call
+func ParseSkillSetsListResponse(rsp *http.Response) (*SkillSetsListResponse, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &SkillSetsListResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest PaginatedSkillSetList
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseSkillSetsCreateResponse parses an HTTP response from a SkillSetsCreateWithResponse call
+func ParseSkillSetsCreateResponse(rsp *http.Response) (*SkillSetsCreateResponse, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &SkillSetsCreateResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 201:
+		var dest CreateSkillSet
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON201 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 400:
+		var dest map[string]interface{}
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON400 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseSkillSetsVersionsRetrieveResponse parses an HTTP response from a SkillSetsVersionsRetrieveWithResponse call
+func ParseSkillSetsVersionsRetrieveResponse(rsp *http.Response) (*SkillSetsVersionsRetrieveResponse, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &SkillSetsVersionsRetrieveResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest SkillSetVersion
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseSkillSetsDestroyResponse parses an HTTP response from a SkillSetsDestroyWithResponse call
+func ParseSkillSetsDestroyResponse(rsp *http.Response) (*SkillSetsDestroyResponse, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &SkillSetsDestroyResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 404:
+		var dest ErrorDetailResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON404 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 409:
+		var dest SkillSetDeleteConflict
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON409 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseSkillSetsRetrieveResponse parses an HTTP response from a SkillSetsRetrieveWithResponse call
+func ParseSkillSetsRetrieveResponse(rsp *http.Response) (*SkillSetsRetrieveResponse, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &SkillSetsRetrieveResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest SkillSet
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 404:
+		var dest ErrorDetailResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON404 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseSkillSetsPartialUpdateResponse parses an HTTP response from a SkillSetsPartialUpdateWithResponse call
+func ParseSkillSetsPartialUpdateResponse(rsp *http.Response) (*SkillSetsPartialUpdateResponse, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &SkillSetsPartialUpdateResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest UpdateSkillSet
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseSkillSetsGenerateVersionResponse parses an HTTP response from a SkillSetsGenerateVersionWithResponse call
+func ParseSkillSetsGenerateVersionResponse(rsp *http.Response) (*SkillSetsGenerateVersionResponse, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &SkillSetsGenerateVersionResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest GenerateSkillSetVersionResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 400:
+		var dest map[string]interface{}
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON400 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 404:
+		var dest ErrorDetailResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON404 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseSkillSetsGenerationRetrieveResponse parses an HTTP response from a SkillSetsGenerationRetrieveWithResponse call
+func ParseSkillSetsGenerationRetrieveResponse(rsp *http.Response) (*SkillSetsGenerationRetrieveResponse, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &SkillSetsGenerationRetrieveResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest PublicSkillSetGeneration
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseSkillSetsGenerationCancelResponse parses an HTTP response from a SkillSetsGenerationCancelWithResponse call
+func ParseSkillSetsGenerationCancelResponse(rsp *http.Response) (*SkillSetsGenerationCancelResponse, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &SkillSetsGenerationCancelResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 404:
+		var dest ErrorDetailResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON404 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 502:
+		var dest ErrorDetailResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON502 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseSkillSetsSetCurrentVersionResponse parses an HTTP response from a SkillSetsSetCurrentVersionWithResponse call
+func ParseSkillSetsSetCurrentVersionResponse(rsp *http.Response) (*SkillSetsSetCurrentVersionResponse, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &SkillSetsSetCurrentVersionResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest SkillSet
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseSkillSetsVersionsListResponse parses an HTTP response from a SkillSetsVersionsListWithResponse call
+func ParseSkillSetsVersionsListResponse(rsp *http.Response) (*SkillSetsVersionsListResponse, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &SkillSetsVersionsListResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest PaginatedSkillSetVersionList
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseSkillSetsVersionsCreateResponse parses an HTTP response from a SkillSetsVersionsCreateWithResponse call
+func ParseSkillSetsVersionsCreateResponse(rsp *http.Response) (*SkillSetsVersionsCreateResponse, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &SkillSetsVersionsCreateResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 201:
+		var dest CreateSkillSetVersion
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON201 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 400:
+		var dest map[string]interface{}
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON400 = &dest
 
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 404:
 		var dest ErrorDetailResponse
