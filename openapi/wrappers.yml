@@ -1050,3 +1050,310 @@ apis:
       docstring: retrieves the currently authenticated user.
       method: GET
       path: /v1/users/current_user/
+  skill_sets:
+    struct_name: SkillSetsAPI
+    field_name: SkillSets
+    docstring: Manage skill sets, immutable versions, and generation.
+    operations:
+    - kind: body
+      method_name: List
+      docstring: List skill sets.
+      method: GET
+      path: /v1/skills/
+      return_type: generated.PaginatedSkillSetList
+      inject_organization_id: true
+      parameters:
+      - name: ordering
+        location: query
+        wire_name: ordering
+        go_type: string
+        optional: true
+        omit_when_empty: true
+      - name: page
+        location: query
+        wire_name: page
+        go_type: int
+        optional: true
+        omit_when_empty: true
+      - name: pageSize
+        location: query
+        wire_name: page_size
+        go_type: int
+        optional: true
+        omit_when_empty: true
+      - name: search
+        location: query
+        wire_name: search
+        go_type: string
+        optional: true
+        omit_when_empty: true
+    - kind: body
+      method_name: Create
+      docstring: Create a skill set with its initial base version.
+      method: POST
+      path: /v1/skills/
+      return_type: generated.CreateSkillSet
+      body_type: generated.CreateSkillSetRequest
+      inject_organization_id: true
+      parameters:
+      - name: name
+        location: body
+        wire_name: name
+        go_type: string
+        optional: false
+        omit_when_empty: false
+      - name: description
+        location: body
+        wire_name: description
+        go_type: string
+        optional: true
+        omit_when_empty: false
+    - kind: body
+      method_name: Retrieve
+      docstring: Retrieve skill-set metadata.
+      method: GET
+      path: /v1/skills/{id}/
+      return_type: generated.SkillSet
+      inject_organization_id: true
+      parameters:
+      - name: id
+        location: path
+        wire_name: id
+        go_type: string
+        optional: false
+        omit_when_empty: false
+    - kind: body
+      method_name: Update
+      docstring: Update skill-set metadata.
+      method: PATCH
+      path: /v1/skills/{id}/
+      return_type: generated.UpdateSkillSet
+      body_type: generated.PatchedUpdateSkillSetRequest
+      inject_organization_id: true
+      parameters:
+      - name: id
+        location: path
+        wire_name: id
+        go_type: string
+        optional: false
+        omit_when_empty: false
+      - name: name
+        location: body
+        wire_name: name
+        go_type: string
+        optional: true
+        omit_when_empty: true
+      - name: description
+        location: body
+        wire_name: description
+        go_type: string
+        optional: true
+        omit_when_empty: true
+    - kind: body
+      method_name: Delete
+      docstring: Delete a skill set and its versions unless referenced by agents.
+      method: DELETE
+      path: /v1/skills/{id}/
+      inject_organization_id: true
+      parameters:
+      - name: id
+        location: path
+        wire_name: id
+        go_type: string
+        optional: false
+        omit_when_empty: false
+    - kind: body
+      method_name: GenerateVersion
+      docstring: Start asynchronous generation. Pass empty slices for unused tables and attachments.
+      method: POST
+      path: /v1/skills/{skill_set_id}/generate-version/
+      return_type: generated.GenerateSkillSetVersionResponse
+      body_type: generated.GenerateSkillSetVersionRequest
+      inject_organization_id: true
+      parameters:
+      - name: skillSetId
+        location: path
+        wire_name: skill_set_id
+        go_type: string
+        optional: false
+        omit_when_empty: false
+      - name: useCase
+        location: body
+        wire_name: use_case
+        go_type: string
+        optional: false
+        omit_when_empty: false
+      - name: baseVersionId
+        location: body
+        wire_name: base_version_id
+        go_type: string
+        optional: true
+        omit_when_empty: true
+      - name: autoCommit
+        location: body
+        wire_name: auto_commit
+        go_type: bool
+        optional: true
+        omit_when_empty: false
+      - name: tableNames
+        location: body
+        wire_name: table_names
+        go_type: '[]string'
+        optional: true
+        omit_when_empty: true
+      - name: attachments
+        location: body
+        wire_name: attachments
+        go_type: '[]string'
+        optional: true
+        omit_when_empty: true
+      - name: policyId
+        location: body
+        wire_name: policy_id
+        go_type: string
+        optional: true
+        omit_when_empty: true
+      - name: policyVersionId
+        location: body
+        wire_name: policy_version_id
+        go_type: string
+        optional: true
+        omit_when_empty: true
+    - kind: body
+      method_name: GetGeneration
+      docstring: Read the tracked generation, or null when none exists.
+      method: GET
+      path: /v1/skills/{skill_set_id}/generation/
+      return_type: generated.PublicSkillSetGeneration
+      inject_organization_id: true
+      parameters:
+      - name: skillSetId
+        location: path
+        wire_name: skill_set_id
+        go_type: string
+        optional: false
+        omit_when_empty: false
+    - kind: body
+      method_name: CancelGeneration
+      docstring: Cancel and stop tracking a generation.
+      method: DELETE
+      path: /v1/skills/{skill_set_id}/generation/{run_id}/
+      inject_organization_id: true
+      parameters:
+      - name: skillSetId
+        location: path
+        wire_name: skill_set_id
+        go_type: string
+        optional: false
+        omit_when_empty: false
+      - name: runId
+        location: path
+        wire_name: run_id
+        go_type: string
+        optional: false
+        omit_when_empty: false
+    - kind: body
+      method_name: SetCurrentVersion
+      docstring: Select the current version of a skill set.
+      method: PATCH
+      path: /v1/skills/{skill_set_id}/set-current-version/{version_id}/
+      return_type: generated.SkillSet
+      inject_organization_id: true
+      parameters:
+      - name: skillSetId
+        location: path
+        wire_name: skill_set_id
+        go_type: string
+        optional: false
+        omit_when_empty: false
+      - name: versionId
+        location: path
+        wire_name: version_id
+        go_type: string
+        optional: false
+        omit_when_empty: false
+    - kind: body
+      method_name: ListVersions
+      docstring: List versions of a skill set.
+      method: GET
+      path: /v1/skills/{skill_set_id}/versions/
+      return_type: generated.PaginatedSkillSetVersionList
+      inject_organization_id: true
+      parameters:
+      - name: skillSetId
+        location: path
+        wire_name: skill_set_id
+        go_type: string
+        optional: false
+        omit_when_empty: false
+      - name: page
+        location: query
+        wire_name: page
+        go_type: int
+        optional: true
+        omit_when_empty: true
+      - name: pageSize
+        location: query
+        wire_name: page_size
+        go_type: int
+        optional: true
+        omit_when_empty: true
+    - kind: body
+      method_name: CreateVersion
+      docstring: Create a complete version and make it current.
+      method: POST
+      path: /v1/skills/{skill_set_id}/versions/
+      return_type: generated.CreateSkillSetVersion
+      body_type: generated.CreateSkillSetVersionRequest
+      inject_organization_id: true
+      parameters:
+      - name: skillSetId
+        location: path
+        wire_name: skill_set_id
+        go_type: string
+        optional: false
+        omit_when_empty: false
+      - name: files
+        location: body
+        wire_name: files
+        go_type: '[]map[string]any'
+        optional: false
+        omit_when_empty: false
+      - name: versionName
+        location: body
+        wire_name: version_name
+        go_type: string
+        optional: true
+        omit_when_empty: true
+      - name: baseVersionId
+        location: body
+        wire_name: base_version_id
+        go_type: string
+        optional: true
+        omit_when_empty: true
+      - name: summary
+        location: body
+        wire_name: summary
+        go_type: string
+        optional: true
+        omit_when_empty: false
+      - name: fileChanges
+        location: body
+        wire_name: file_changes
+        go_type: '[]map[string]any'
+        optional: true
+        omit_when_empty: true
+    - kind: body
+      method_name: RetrieveVersion
+      docstring: Read a version and its complete file collection.
+      method: GET
+      path: /v1/skills/versions/{id}/
+      return_type: generated.SkillSetVersion
+      inject_organization_id: true
+      parameters:
+      - name: id
+        location: path
+        wire_name: id
+        go_type: string
+        optional: false
+        omit_when_empty: false
