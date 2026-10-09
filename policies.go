@@ -156,26 +156,33 @@ func (v *PolicyVersionsAPI) ListWithContext(ctx context.Context, policyID string
 		return nil, fmt.Errorf("policyID cannot be empty")
 	}
 	// The endpoint may return either a paginated response or a raw array.
-	raw, err := v.policiesAPI.httpClient.getBytesWithContext(ctx, fmt.Sprintf("/v1/policies/%s/versions/", policyID), nil)
-	if err != nil {
-		return nil, err
-	}
-	// Try paginated format first.
-	var paginated struct {
-		Results []PolicyVersion `json:"results"`
-	}
-	if len(raw) > 0 && raw[0] == '{' {
-		if err := json.Unmarshal(raw, &paginated); err != nil {
+	var all []PolicyVersion
+	var query map[string]string
+	for nextPage := 2; ; nextPage++ {
+		raw, err := v.policiesAPI.httpClient.getBytesWithContext(ctx, fmt.Sprintf("/v1/policies/%s/versions/", policyID), query)
+		if err != nil {
+			return nil, err
+		}
+		// Try paginated format first, following pages until there is no next.
+		if len(raw) > 0 && raw[0] == '{' {
+			var paginated PaginatedResponse[PolicyVersion]
+			if err := json.Unmarshal(raw, &paginated); err != nil {
+				return nil, fmt.Errorf("parse policy versions response: %w", err)
+			}
+			all = append(all, paginated.Results...)
+			if !paginated.HasNext() {
+				return all, nil
+			}
+			query = map[string]string{"page": fmt.Sprintf("%d", nextPage)}
+			continue
+		}
+		// Fall back to raw array.
+		var versions []PolicyVersion
+		if err := json.Unmarshal(raw, &versions); err != nil {
 			return nil, fmt.Errorf("parse policy versions response: %w", err)
 		}
-		return paginated.Results, nil
+		return versions, nil
 	}
-	// Fall back to raw array.
-	var versions []PolicyVersion
-	if err := json.Unmarshal(raw, &versions); err != nil {
-		return nil, fmt.Errorf("parse policy versions response: %w", err)
-	}
-	return versions, nil
 }
 
 // Retrieve fetches a specific policy version.
