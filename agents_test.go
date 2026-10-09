@@ -489,6 +489,50 @@ func TestAgentsAPIRunVersionSyncWithSkipCacheSendsHeader(t *testing.T) {
 	}
 }
 
+func TestAgentsAPIEmptyIDsDoNotSendRequest(t *testing.T) {
+	server := newTestServer(t, http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		t.Errorf("unexpected request: %s %s", r.Method, r.URL.Path)
+	}))
+	defer server.Close()
+
+	client := newAgentsTestClient(t, server.URL)
+	defer client.Close()
+	agents, versions, jobs := client.Agents, client.Agents.Versions, client.Agents.Jobs
+
+	tests := []struct {
+		name string
+		want string
+		call func() error
+	}{
+		{"Update", "agentID", func() error { _, err := agents.Update("", "n", nil, nil); return err }},
+		{"Replace", "agentID", func() error { _, err := agents.Replace("", "n", nil, nil); return err }},
+		{"Duplicate", "agentID", func() error { _, err := agents.Duplicate(""); return err }},
+		{"Versions.Retrieve agent", "agentID", func() error { _, err := versions.Retrieve("", "v", nil); return err }},
+		{"Versions.Retrieve version", "versionID", func() error { _, err := versions.Retrieve("a", "", nil); return err }},
+		{"Versions.RetrieveCurrent", "agentID", func() error { _, err := versions.RetrieveCurrent(""); return err }},
+		{"Versions.Create", "agentID", func() error { _, err := versions.Create("", nil, nil, "", ""); return err }},
+		{"Versions.Update agent", "agentID", func() error { return versions.Update("", "v", "n", "") }},
+		{"Versions.Update version", "versionID", func() error { return versions.Update("a", "", "n", "") }},
+		{"Versions.Replace agent", "agentID", func() error { return versions.Replace("", "v", "n", "") }},
+		{"Versions.Replace version", "versionID", func() error { return versions.Replace("a", "", "n", "") }},
+		{"Versions.Delete agent", "agentID", func() error { return versions.Delete("", "v") }},
+		{"Versions.Delete version", "versionID", func() error { return versions.Delete("a", "") }},
+		{"Jobs.RetrieveStatus", "jobID", func() error { _, err := jobs.RetrieveStatus(""); return err }},
+		{"Jobs.RetrieveResult", "jobID", func() error { _, err := jobs.RetrieveResult(""); return err }},
+		{"Jobs.DownloadReference job", "jobID", func() error { _, err := jobs.DownloadReference("", "r", false); return err }},
+		{"Jobs.DownloadReference resource", "resourceID", func() error { _, err := jobs.DownloadReference("j", "", false); return err }},
+		{"Jobs.DeleteData", "jobID", func() error { _, err := jobs.DeleteData(""); return err }},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			err := tt.call()
+			if err == nil || err.Error() != tt.want+" cannot be empty" {
+				t.Fatalf("expected %q error, got %v", tt.want+" cannot be empty", err)
+			}
+		})
+	}
+}
+
 func newAgentsTestClient(t *testing.T, baseURL string) *RoeClient {
 	t.Helper()
 	client, err := NewClientWithConfig(Config{

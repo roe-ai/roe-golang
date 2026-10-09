@@ -133,6 +133,9 @@ func (a *AgentsAPI) Update(agentID string, name string, disableCache, cacheFaile
 
 // UpdateWithContext updates mutable fields on an agent with a caller-supplied context.
 func (a *AgentsAPI) UpdateWithContext(ctx context.Context, agentID string, name string, disableCache, cacheFailedJobs *bool) (BaseAgent, error) {
+	if agentID == "" {
+		return BaseAgent{}, fmt.Errorf("agentID cannot be empty")
+	}
 	payload := agentUpdatePayload(name, disableCache, cacheFailedJobs)
 	var resp BaseAgent
 	if err := a.httpClient.patchJSONWithContext(ctx, fmt.Sprintf("/v1/agents/%s/", agentID), payload, nil, &resp); err != nil {
@@ -149,6 +152,9 @@ func (a *AgentsAPI) Replace(agentID string, name string, disableCache, cacheFail
 
 // ReplaceWithContext replaces an agent with a caller-supplied context.
 func (a *AgentsAPI) ReplaceWithContext(ctx context.Context, agentID string, name string, disableCache, cacheFailedJobs *bool) (BaseAgent, error) {
+	if agentID == "" {
+		return BaseAgent{}, fmt.Errorf("agentID cannot be empty")
+	}
 	payload := agentReplacePayload(name, disableCache, cacheFailedJobs)
 	var resp BaseAgent
 	if err := a.httpClient.putJSONWithContext(ctx, fmt.Sprintf("/v1/agents/%s/", agentID), payload, nil, &resp); err != nil {
@@ -208,6 +214,9 @@ func (a *AgentsAPI) Duplicate(agentID string) (BaseAgent, error) {
 
 // DuplicateWithContext clones an agent with a caller-supplied context.
 func (a *AgentsAPI) DuplicateWithContext(ctx context.Context, agentID string) (BaseAgent, error) {
+	if agentID == "" {
+		return BaseAgent{}, fmt.Errorf("agentID cannot be empty")
+	}
 	var resp struct {
 		BaseAgent BaseAgent `json:"base_agent"`
 	}
@@ -388,6 +397,12 @@ func (v *AgentVersionsAPI) Retrieve(agentID, versionID string, getSupportsEval *
 }
 
 func (v *AgentVersionsAPI) RetrieveWithContext(ctx context.Context, agentID, versionID string, getSupportsEval *bool) (AgentVersion, error) {
+	if agentID == "" {
+		return AgentVersion{}, fmt.Errorf("agentID cannot be empty")
+	}
+	if versionID == "" {
+		return AgentVersion{}, fmt.Errorf("versionID cannot be empty")
+	}
 	params := map[string]string{}
 	if getSupportsEval != nil {
 		params["get_supports_eval"] = fmt.Sprintf("%t", *getSupportsEval)
@@ -413,6 +428,9 @@ func (v *AgentVersionsAPI) RetrieveCurrentWithEval(agentID string, getSupportsEv
 }
 
 func (v *AgentVersionsAPI) RetrieveCurrentWithEvalWithContext(ctx context.Context, agentID string, getSupportsEval *bool) (AgentVersion, error) {
+	if agentID == "" {
+		return AgentVersion{}, fmt.Errorf("agentID cannot be empty")
+	}
 	params := map[string]string{}
 	if getSupportsEval != nil {
 		params["get_supports_eval"] = fmt.Sprintf("%t", *getSupportsEval)
@@ -430,6 +448,9 @@ func (v *AgentVersionsAPI) Create(agentID string, inputDefs []map[string]any, en
 }
 
 func (v *AgentVersionsAPI) CreateWithContext(ctx context.Context, agentID string, inputDefs []map[string]any, engineConfig map[string]any, versionName, description string) (AgentVersion, error) {
+	if agentID == "" {
+		return AgentVersion{}, fmt.Errorf("agentID cannot be empty")
+	}
 	payload := map[string]any{
 		"input_definitions": inputDefs,
 		"engine_config":     engineConfig,
@@ -454,6 +475,12 @@ func (v *AgentVersionsAPI) Update(agentID, versionID, versionName, description s
 }
 
 func (v *AgentVersionsAPI) UpdateWithContext(ctx context.Context, agentID, versionID, versionName, description string) error {
+	if agentID == "" {
+		return fmt.Errorf("agentID cannot be empty")
+	}
+	if versionID == "" {
+		return fmt.Errorf("versionID cannot be empty")
+	}
 	payload := agentVersionUpdatePayload(versionName, description)
 	return v.agentsAPI.httpClient.patchJSONWithContext(ctx, fmt.Sprintf("/v1/agents/%s/versions/%s/", agentID, versionID), payload, nil, nil)
 }
@@ -463,6 +490,12 @@ func (v *AgentVersionsAPI) Replace(agentID, versionID, versionName, description 
 }
 
 func (v *AgentVersionsAPI) ReplaceWithContext(ctx context.Context, agentID, versionID, versionName, description string) error {
+	if agentID == "" {
+		return fmt.Errorf("agentID cannot be empty")
+	}
+	if versionID == "" {
+		return fmt.Errorf("versionID cannot be empty")
+	}
 	payload := agentVersionReplacePayload(versionName, description)
 	return v.agentsAPI.httpClient.putJSONWithContext(ctx, fmt.Sprintf("/v1/agents/%s/versions/%s/", agentID, versionID), payload, nil, nil)
 }
@@ -491,6 +524,12 @@ func (v *AgentVersionsAPI) Delete(agentID, versionID string) error {
 }
 
 func (v *AgentVersionsAPI) DeleteWithContext(ctx context.Context, agentID, versionID string) error {
+	if agentID == "" {
+		return fmt.Errorf("agentID cannot be empty")
+	}
+	if versionID == "" {
+		return fmt.Errorf("versionID cannot be empty")
+	}
 	return v.agentsAPI.httpClient.deleteWithContext(ctx, fmt.Sprintf("/v1/agents/%s/versions/%s/", agentID, versionID), nil)
 }
 
@@ -504,6 +543,9 @@ func (j *AgentJobsAPI) RetrieveStatus(jobID string) (AgentJobStatus, error) {
 }
 
 func (j *AgentJobsAPI) RetrieveStatusWithContext(ctx context.Context, jobID string) (AgentJobStatus, error) {
+	if jobID == "" {
+		return AgentJobStatus{}, fmt.Errorf("jobID cannot be empty")
+	}
 	var resp AgentJobStatus
 	if err := j.agentsAPI.httpClient.getWithContext(ctx, fmt.Sprintf("/v1/agents/jobs/%s/status/", jobID), nil, &resp); err != nil {
 		return AgentJobStatus{}, err
@@ -516,6 +558,9 @@ func (j *AgentJobsAPI) RetrieveResult(jobID string) (AgentJobResult, error) {
 }
 
 func (j *AgentJobsAPI) RetrieveResultWithContext(ctx context.Context, jobID string) (AgentJobResult, error) {
+	if jobID == "" {
+		return AgentJobResult{}, fmt.Errorf("jobID cannot be empty")
+	}
 	var resp AgentJobResult
 	if err := j.agentsAPI.httpClient.getWithContext(ctx, fmt.Sprintf("/v1/agents/jobs/%s/result/", jobID), nil, &resp); err != nil {
 		return AgentJobResult{}, err
@@ -660,6 +705,12 @@ func (j *AgentJobsAPI) DownloadReference(jobID, resourceID string, asAttachment 
 }
 
 func (j *AgentJobsAPI) DownloadReferenceWithContext(ctx context.Context, jobID, resourceID string, asAttachment bool) ([]byte, error) {
+	if jobID == "" {
+		return nil, fmt.Errorf("jobID cannot be empty")
+	}
+	if resourceID == "" {
+		return nil, fmt.Errorf("resourceID cannot be empty")
+	}
 	params := map[string]string{}
 	if asAttachment {
 		params["download"] = "true"
@@ -693,6 +744,9 @@ func (j *AgentJobsAPI) DeleteData(jobID string) (JobDataDeleteResponse, error) {
 }
 
 func (j *AgentJobsAPI) DeleteDataWithContext(ctx context.Context, jobID string) (JobDataDeleteResponse, error) {
+	if jobID == "" {
+		return JobDataDeleteResponse{}, fmt.Errorf("jobID cannot be empty")
+	}
 	var resp JobDataDeleteResponse
 	if err := j.agentsAPI.httpClient.postJSONWithContext(ctx, fmt.Sprintf("/v1/agents/jobs/%s/delete-data/", jobID), nil, nil, &resp); err != nil {
 		return JobDataDeleteResponse{}, err
