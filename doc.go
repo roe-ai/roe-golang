@@ -67,7 +67,7 @@
 //   - ROE_API_KEY: Your Roe API key
 //   - ROE_ORGANIZATION_ID: Your organization UUID
 //   - ROE_BASE_URL: Optional API base URL (defaults to https://api.roe-ai.com)
-//   - ROE_TIMEOUT_SECONDS: Optional request timeout (defaults to 60s)
+//   - ROE_TIMEOUT: Optional request timeout (defaults to 60s)
 //   - ROE_MAX_RETRIES: Optional max retries (defaults to 3)
 //
 // # Links

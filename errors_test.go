@@ -1,6 +1,8 @@
 package roe
 
 import (
+	"errors"
+	"fmt"
 	"net/http"
 	"testing"
 	"time"
@@ -351,3 +353,12 @@ func findSubstring(s, substr string) bool {
 
 // Ensure time import is used
 var _ = time.Second
+
+func TestTypedErrorsMatchAPIError(t *testing.T) {
+	err := fmt.Errorf("run agent: %w", apiErrorFromResponse(http.StatusNotFound, []byte(`{"detail":"missing"}`), http.Header{}, ""))
+
+	var apiErr *APIError
+	if !errors.As(err, &apiErr) || apiErr.StatusCode != http.StatusNotFound {
+		t.Fatalf("errors.As(*APIError) = %v, %+v", errors.As(err, &apiErr), apiErr)
+	}
+}
