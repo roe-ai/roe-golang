@@ -34,6 +34,15 @@ func (e *APIError) Error() string {
 	return fmt.Sprintf("roe api error (%d): %s", e.StatusCode, e.Message)
 }
 
+// As lets errors.As(err, &apiErr) match the typed errors below, which embed *APIError.
+func (e *APIError) As(target any) bool {
+	if t, ok := target.(**APIError); ok {
+		*t = e
+		return true
+	}
+	return false
+}
+
 type BadRequestError struct{ *APIError }
 type AuthenticationError struct{ *APIError }
 type InsufficientCreditsError struct{ *APIError }
