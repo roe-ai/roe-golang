@@ -531,3 +531,29 @@ func TestMetadataKeyCollisionReturnsError(t *testing.T) {
 		t.Fatalf("expected error about metadata collision, got: %v", err)
 	}
 }
+
+func TestPolicyVersionsListFollowsPages(t *testing.T) {
+	server := newTestServer(t, http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		w.Header().Set("Content-Type", "application/json")
+		if r.URL.Query().Get("page") == "2" {
+			_, _ = w.Write([]byte(`{"count":2,"next":null,"results":[{"id":"v2"}]}`))
+			return
+		}
+		_, _ = w.Write([]byte(`{"count":2,"next":"http://x/?page=2","results":[{"id":"v1"}]}`))
+	}))
+	defer server.Close()
+
+	client, err := NewClientWithConfig(Config{APIKey: "k", OrganizationID: "org", BaseURL: server.URL, Timeout: time.Second})
+	if err != nil {
+		t.Fatalf("new client: %v", err)
+	}
+	defer client.Close()
+
+	versions, err := client.Policies.Versions.List("p1")
+	if err != nil {
+		t.Fatalf("list versions: %v", err)
+	}
+	if len(versions) != 2 || versions[1].ID != "v2" {
+		t.Fatalf("expected both pages, got %+v", versions)
+	}
+}

@@ -112,6 +112,12 @@ func (a *AgentsAPI) CreateWithContext(ctx context.Context, name, engineClassID s
 		"input_definitions": inputDefs,
 		"engine_config":     engineConfig,
 	}
+	if inputDefs == nil {
+		payload["input_definitions"] = []map[string]any{}
+	}
+	if engineConfig == nil {
+		payload["engine_config"] = map[string]any{}
+	}
 	if versionName != "" {
 		payload["version_name"] = versionName
 	}
@@ -173,8 +179,9 @@ func agentUpdatePayload(name string, disableCache, cacheFailedJobs *bool) map[st
 }
 
 func agentReplacePayload(name string, disableCache, cacheFailedJobs *bool) map[string]any {
-	payload := map[string]any{
-		"name": name,
+	payload := map[string]any{}
+	if name != "" {
+		payload["name"] = name
 	}
 	if disableCache != nil {
 		payload["disable_cache"] = *disableCache
@@ -235,12 +242,15 @@ func (a *AgentsAPI) RunWithContext(ctx context.Context, agentID string, timeoutS
 	return newJob(a, jobID, timeoutSeconds), nil
 }
 
-// RunMany submits batch jobs.
+// RunMany submits batch jobs. If a later chunk of inputs fails, the error comes
+// with a non-nil batch holding the jobs already submitted.
 func (a *AgentsAPI) RunMany(agentID string, batchInputs []map[string]any, timeoutSeconds int, metadata map[string]any, opts ...RunOptions) (*JobBatch, error) {
 	return a.RunManyWithContext(context.Background(), agentID, batchInputs, timeoutSeconds, metadata, opts...)
 }
 
-// RunManyWithContext submits batch jobs with a caller-supplied context.
+// RunManyWithContext submits batch jobs with a caller-supplied context. If a
+// later chunk of inputs fails, the error comes with a non-nil batch holding
+// the jobs already submitted.
 func (a *AgentsAPI) RunManyWithContext(ctx context.Context, agentID string, batchInputs []map[string]any, timeoutSeconds int, metadata map[string]any, opts ...RunOptions) (*JobBatch, error) {
 	if agentID == "" {
 		return nil, fmt.Errorf("agentID cannot be empty")
@@ -250,9 +260,15 @@ func (a *AgentsAPI) RunManyWithContext(ctx context.Context, agentID string, batc
 	}
 	extraHeaders := resolveRunOptions(opts).extraHeaders()
 	jobIDs := []string{}
+	partial := func(err error) (*JobBatch, error) {
+		if len(jobIDs) == 0 {
+			return nil, err
+		}
+		return newJobBatch(a, jobIDs, timeoutSeconds), err
+	}
 	for _, chunk := range chunkAny(batchInputs, maxBatchSize) {
 		if err := ctx.Err(); err != nil {
-			return nil, err
+			return partial(err)
 		}
 		var ids []string
 		payload := map[string]any{"inputs": chunk}
@@ -260,7 +276,7 @@ func (a *AgentsAPI) RunManyWithContext(ctx context.Context, agentID string, batc
 			payload["metadata"] = metadata
 		}
 		if err := a.httpClient.postJSONHeadersWithContext(ctx, fmt.Sprintf("/v1/agents/run/%s/async/many/", agentID), payload, nil, &ids, extraHeaders); err != nil {
-			return nil, err
+			return partial(err)
 		}
 		jobIDs = append(jobIDs, ids...)
 	}
@@ -360,27 +376,14 @@ func (v *AgentVersionsAPI) ListPaginated(agentID string, params *ListVersionsPar
 	return v.ListPaginatedWithContext(context.Background(), agentID, params)
 }
 
+// ListPaginatedWithContext returns every version in Results: the endpoint
+// returns a plain list and does not paginate, so params are ignored.
 func (v *AgentVersionsAPI) ListPaginatedWithContext(ctx context.Context, agentID string, params *ListVersionsParams) (PaginatedResponse[AgentVersion], error) {
-	query := map[string]string{}
-	if params != nil {
-		if params.Page > 0 {
-			query["page"] = fmt.Sprintf("%d", params.Page)
-		}
-		if params.PageSize > 0 {
-			query["page_size"] = fmt.Sprintf("%d", params.PageSize)
-		}
-		if params.GetSupportsEval != nil {
-			query["get_supports_eval"] = fmt.Sprintf("%t", *params.GetSupportsEval)
-		}
-	}
-	var resp PaginatedResponse[AgentVersion]
-	if err := v.agentsAPI.httpClient.getWithContext(ctx, fmt.Sprintf("/v1/agents/%s/versions/", agentID), query, &resp); err != nil {
+	versions, err := v.ListWithContext(ctx, agentID)
+	if err != nil {
 		return PaginatedResponse[AgentVersion]{}, err
 	}
-	for i := range resp.Results {
-		resp.Results[i].setAgentsAPI(v.agentsAPI)
-	}
-	return resp, nil
+	return PaginatedResponse[AgentVersion]{Count: len(versions), Results: versions}, nil
 }
 
 func (v *AgentVersionsAPI) Retrieve(agentID, versionID string, getSupportsEval *bool) (AgentVersion, error) {
@@ -434,6 +437,12 @@ func (v *AgentVersionsAPI) CreateWithContext(ctx context.Context, agentID string
 		"input_definitions": inputDefs,
 		"engine_config":     engineConfig,
 	}
+	if inputDefs == nil {
+		payload["input_definitions"] = []map[string]any{}
+	}
+	if engineConfig == nil {
+		payload["engine_config"] = map[string]any{}
+	}
 	if versionName != "" {
 		payload["version_name"] = versionName
 	}
@@ -479,9 +488,12 @@ func agentVersionUpdatePayload(versionName, description string) map[string]any {
 }
 
 func agentVersionReplacePayload(versionName, description string) map[string]any {
-	payload := map[string]any{
-		"version_name": versionName,
-		"description":  description,
+	payload := map[string]any{}
+	if versionName != "" {
+		payload["version_name"] = versionName
+	}
+	if description != "" {
+		payload["description"] = description
 	}
 	return payload
 }
