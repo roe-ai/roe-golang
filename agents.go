@@ -541,7 +541,7 @@ func (j *AgentJobsAPI) RetrieveStatusManyWithContext(ctx context.Context, jobIDs
 	}
 	received := make(map[string]bool, len(jobIDs))
 
-	for _, chunk := range chunkStrings(jobIDs, maxBatchSize) {
+	for _, chunk := range chunkAny(jobIDs, maxBatchSize) {
 		payload := map[string]any{"job_ids": chunk}
 		var resp []AgentJobStatusBatch
 		if err := j.agentsAPI.httpClient.postJSONWithContext(ctx, "/v1/agents/jobs/statuses/", payload, nil, &resp); err != nil {
@@ -587,7 +587,7 @@ func (j *AgentJobsAPI) RetrieveResultManyWithContext(ctx context.Context, jobIDs
 	}
 	received := make(map[string]bool, len(jobIDs))
 
-	for _, chunk := range chunkStrings(jobIDs, maxBatchSize) {
+	for _, chunk := range chunkAny(jobIDs, maxBatchSize) {
 		payload := map[string]any{"job_ids": chunk}
 		var resp []AgentJobResultBatch
 		if err := j.agentsAPI.httpClient.postJSONWithContext(ctx, "/v1/agents/jobs/results/", payload, nil, &resp); err != nil {
@@ -762,21 +762,6 @@ func (j *AgentJobsAPI) CancelAllWithContext(ctx context.Context, agentID string)
 }
 
 // helpers
-func chunkStrings(items []string, size int) [][]string {
-	if size <= 0 || size >= len(items) {
-		return [][]string{items}
-	}
-	var chunks [][]string
-	for i := 0; i < len(items); i += size {
-		end := i + size
-		if end > len(items) {
-			end = len(items)
-		}
-		chunks = append(chunks, items[i:end])
-	}
-	return chunks
-}
-
 func chunkAny[T any](items []T, size int) [][]T {
 	if size <= 0 || size >= len(items) {
 		return [][]T{items}

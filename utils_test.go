@@ -280,7 +280,7 @@ func TestIsFilePath(t *testing.T) {
 	}
 }
 
-func TestChunkStrings(t *testing.T) {
+func TestChunkAnyStrings(t *testing.T) {
 	tests := []struct {
 		name     string
 		items    []string
@@ -341,9 +341,9 @@ func TestChunkStrings(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			got := chunkStrings(tt.items, tt.size)
+			got := chunkAny(tt.items, tt.size)
 			if len(got) != tt.wantLen {
-				t.Errorf("chunkStrings() returned %d chunks, want %d", len(got), tt.wantLen)
+				t.Errorf("chunkAny() returned %d chunks, want %d", len(got), tt.wantLen)
 			}
 			if len(got) > 0 && len(got[len(got)-1]) != tt.wantLast {
 				t.Errorf("last chunk has %d items, want %d", len(got[len(got)-1]), tt.wantLast)
