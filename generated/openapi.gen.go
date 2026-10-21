@@ -99,6 +99,7 @@ const (
 	Sardine        ConnectorTypeEnum = "sardine"
 	Sharepoint     ConnectorTypeEnum = "sharepoint"
 	Shield         ConnectorTypeEnum = "shield"
+	ShieldApi      ConnectorTypeEnum = "shield_api"
 	Sift           ConnectorTypeEnum = "sift"
 	SiftApi        ConnectorTypeEnum = "sift_api"
 	Slack          ConnectorTypeEnum = "slack"
@@ -142,6 +143,8 @@ func (e ConnectorTypeEnum) Valid() bool {
 	case Sharepoint:
 		return true
 	case Shield:
+		return true
+	case ShieldApi:
 		return true
 	case Sift:
 		return true
@@ -877,6 +880,7 @@ type ConnectorMetadata struct {
 // * `salesforce` - SALESFORCE
 // * `web_application` - WEB_APPLICATION
 // * `shield` - SHIELD
+// * `shield_api` - SHIELD_API
 // * `sift` - SIFT
 // * `sift_api` - SIFT_API
 // * `custom_api` - CUSTOM_API
@@ -909,6 +913,7 @@ type CreateConnectionRequest struct {
 	// * `salesforce` - SALESFORCE
 	// * `web_application` - WEB_APPLICATION
 	// * `shield` - SHIELD
+	// * `shield_api` - SHIELD_API
 	// * `sift` - SIFT
 	// * `sift_api` - SIFT_API
 	// * `custom_api` - CUSTOM_API
@@ -1654,6 +1659,7 @@ type TestConnectionCredentialsRequest struct {
 	// * `salesforce` - SALESFORCE
 	// * `web_application` - WEB_APPLICATION
 	// * `shield` - SHIELD
+	// * `shield_api` - SHIELD_API
 	// * `sift` - SIFT
 	// * `sift_api` - SIFT_API
 	// * `custom_api` - CUSTOM_API
