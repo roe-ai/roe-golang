@@ -7,6 +7,7 @@ import (
 	"bytes"
 	"context"
 	"encoding/json"
+	"errors"
 	"fmt"
 	"io"
 	"net/http"
@@ -52,6 +53,24 @@ func (e ColorEnum) Valid() bool {
 	case Red:
 		return true
 	case Yellow:
+		return true
+	default:
+		return false
+	}
+}
+
+// Defines values for CombineEnum.
+const (
+	CombineEnumAll CombineEnum = "all"
+	CombineEnumAny CombineEnum = "any"
+)
+
+// Valid indicates whether the value is a known member of the CombineEnum enum.
+func (e CombineEnum) Valid() bool {
+	switch e {
+	case CombineEnumAll:
+		return true
+	case CombineEnumAny:
 		return true
 	default:
 		return false
@@ -169,6 +188,81 @@ func (e ConnectorTypeEnum) Valid() bool {
 	}
 }
 
+// Defines values for GateKind.
+const (
+	Feedback GateKind = "feedback"
+	Manual   GateKind = "manual"
+)
+
+// Valid indicates whether the value is a known member of the GateKind enum.
+func (e GateKind) Valid() bool {
+	switch e {
+	case Feedback:
+		return true
+	case Manual:
+		return true
+	default:
+		return false
+	}
+}
+
+// Defines values for ModeEnum.
+const (
+	Append  ModeEnum = "append"
+	Combine ModeEnum = "combine"
+)
+
+// Valid indicates whether the value is a known member of the ModeEnum enum.
+func (e ModeEnum) Valid() bool {
+	switch e {
+	case Append:
+		return true
+	case Combine:
+		return true
+	default:
+		return false
+	}
+}
+
+// Defines values for OperatorEnum.
+const (
+	Contains    OperatorEnum = "contains"
+	Equals      OperatorEnum = "equals"
+	GreaterThan OperatorEnum = "greater_than"
+	IsEmpty     OperatorEnum = "is_empty"
+	IsFalse     OperatorEnum = "is_false"
+	IsNotEmpty  OperatorEnum = "is_not_empty"
+	IsTrue      OperatorEnum = "is_true"
+	LessThan    OperatorEnum = "less_than"
+	NotEquals   OperatorEnum = "not_equals"
+)
+
+// Valid indicates whether the value is a known member of the OperatorEnum enum.
+func (e OperatorEnum) Valid() bool {
+	switch e {
+	case Contains:
+		return true
+	case Equals:
+		return true
+	case GreaterThan:
+		return true
+	case IsEmpty:
+		return true
+	case IsFalse:
+		return true
+	case IsNotEmpty:
+		return true
+	case IsTrue:
+		return true
+	case LessThan:
+		return true
+	case NotEquals:
+		return true
+	default:
+		return false
+	}
+}
+
 // Defines values for ReviewStateEnum.
 const (
 	Agreed     ReviewStateEnum = "agreed"
@@ -192,19 +286,19 @@ func (e ReviewStateEnum) Valid() bool {
 
 // Defines values for ReviewStatusEnum.
 const (
-	Approved ReviewStatusEnum = "approved"
-	Pending  ReviewStatusEnum = "pending"
-	Rejected ReviewStatusEnum = "rejected"
+	ReviewStatusEnumApproved ReviewStatusEnum = "approved"
+	ReviewStatusEnumPending  ReviewStatusEnum = "pending"
+	ReviewStatusEnumRejected ReviewStatusEnum = "rejected"
 )
 
 // Valid indicates whether the value is a known member of the ReviewStatusEnum enum.
 func (e ReviewStatusEnum) Valid() bool {
 	switch e {
-	case Approved:
+	case ReviewStatusEnumApproved:
 		return true
-	case Pending:
+	case ReviewStatusEnumPending:
 		return true
-	case Rejected:
+	case ReviewStatusEnumRejected:
 		return true
 	default:
 		return false
@@ -247,6 +341,51 @@ func (e StatusEnum) Valid() bool {
 	}
 }
 
+// Defines values for StepRunDeliveryEnum.
+const (
+	Sending StepRunDeliveryEnum = "sending"
+	Sent    StepRunDeliveryEnum = "sent"
+	Unknown StepRunDeliveryEnum = "unknown"
+)
+
+// Valid indicates whether the value is a known member of the StepRunDeliveryEnum enum.
+func (e StepRunDeliveryEnum) Valid() bool {
+	switch e {
+	case Sending:
+		return true
+	case Sent:
+		return true
+	case Unknown:
+		return true
+	default:
+		return false
+	}
+}
+
+// Defines values for StepRunStatusEnum.
+const (
+	Cancelled StepRunStatusEnum = "cancelled"
+	Failed    StepRunStatusEnum = "failed"
+	Skipped   StepRunStatusEnum = "skipped"
+	Succeeded StepRunStatusEnum = "succeeded"
+)
+
+// Valid indicates whether the value is a known member of the StepRunStatusEnum enum.
+func (e StepRunStatusEnum) Valid() bool {
+	switch e {
+	case Cancelled:
+		return true
+	case Failed:
+		return true
+	case Skipped:
+		return true
+	case Succeeded:
+		return true
+	default:
+		return false
+	}
+}
+
 // Defines values for TableQueryStatusEnum.
 const (
 	FAILURE TableQueryStatusEnum = "FAILURE"
@@ -277,18 +416,45 @@ func (e TableQueryStatusEnum) Valid() bool {
 	}
 }
 
+// Defines values for WorkflowRunStatusEnum.
+const (
+	WorkflowRunStatusEnumCancelled WorkflowRunStatusEnum = "cancelled"
+	WorkflowRunStatusEnumFailed    WorkflowRunStatusEnum = "failed"
+	WorkflowRunStatusEnumPending   WorkflowRunStatusEnum = "pending"
+	WorkflowRunStatusEnumRunning   WorkflowRunStatusEnum = "running"
+	WorkflowRunStatusEnumSucceeded WorkflowRunStatusEnum = "succeeded"
+)
+
+// Valid indicates whether the value is a known member of the WorkflowRunStatusEnum enum.
+func (e WorkflowRunStatusEnum) Valid() bool {
+	switch e {
+	case WorkflowRunStatusEnumCancelled:
+		return true
+	case WorkflowRunStatusEnumFailed:
+		return true
+	case WorkflowRunStatusEnumPending:
+		return true
+	case WorkflowRunStatusEnumRunning:
+		return true
+	case WorkflowRunStatusEnumSucceeded:
+		return true
+	default:
+		return false
+	}
+}
+
 // Defines values for AgentsListParamsTagsMatch.
 const (
-	All AgentsListParamsTagsMatch = "all"
-	Any AgentsListParamsTagsMatch = "any"
+	AgentsListParamsTagsMatchAll AgentsListParamsTagsMatch = "all"
+	AgentsListParamsTagsMatchAny AgentsListParamsTagsMatch = "any"
 )
 
 // Valid indicates whether the value is a known member of the AgentsListParamsTagsMatch enum.
 func (e AgentsListParamsTagsMatch) Valid() bool {
 	switch e {
-	case All:
+	case AgentsListParamsTagsMatchAll:
 		return true
-	case Any:
+	case AgentsListParamsTagsMatchAny:
 		return true
 	default:
 		return false
@@ -589,6 +755,15 @@ type AgentRunAsyncManyRequest struct {
 	Inputs []AgentExecutionRequest `json:"inputs"`
 }
 
+// AgentStep defines model for AgentStep.
+type AgentStep struct {
+	AgentVersionId string             `json:"agent_version_id"`
+	BaseAgentId    string             `json:"base_agent_id"`
+	Id             string             `json:"id"`
+	InputMapping   *map[string]string `json:"input_mapping,omitempty"`
+	Kind           string             `json:"kind"`
+}
+
 // AgentTag Serializer for AgentTag model
 type AgentTag struct {
 	// Color * `blue` - Blue
@@ -682,6 +857,21 @@ type ApiErrorResponse struct {
 	Error string `json:"error"`
 }
 
+// ApprovalBlock Steps that run once someone approves the agent step just before.
+type ApprovalBlock struct {
+	// Approval What opens a gate: an org admin's explicit approval (manual) or the
+	// reviewer's verdict decision on the source agent's result (feedback).
+	Approval *GateKind                  `json:"approval,omitempty"`
+	Id       string                     `json:"id"`
+	Kind     string                     `json:"kind"`
+	Steps    []ApprovalBlock_Steps_Item `json:"steps"`
+}
+
+// ApprovalBlock_Steps_Item defines model for ApprovalBlock.steps.Item.
+type ApprovalBlock_Steps_Item struct {
+	union json.RawMessage
+}
+
 // BaseAgent Serializer for BaseAgent (agent config)
 type BaseAgent struct {
 	// CacheFailedJobs Whether to cache failed jobs for this agent.
@@ -759,6 +949,16 @@ type BaseAgentUpdateRequest struct {
 // * `gray` - Gray
 // * `pink` - Pink
 type ColorEnum string
+
+// CombineEnum defines model for CombineEnum.
+type CombineEnum string
+
+// Condition defines model for Condition.
+type Condition struct {
+	Field    string        `json:"field"`
+	Operator *OperatorEnum `json:"operator,omitempty"`
+	Value    interface{}   `json:"value,omitempty"`
+}
 
 // Connection Serializer for Connection model.
 // Returns:
@@ -838,6 +1038,17 @@ type ConnectionList struct {
 	Status    *StatusEnum `json:"status,omitempty"`
 	UpdatedAt *time.Time  `json:"updated_at,omitempty"`
 	User      *int        `json:"user,omitempty"`
+}
+
+// ConnectionStep Calls one operation of a saved connection, such as an API lookup or a
+// Slack message. Credentials stay with the connection.
+type ConnectionStep struct {
+	ConnectionId string             `json:"connection_id"`
+	Id           string             `json:"id"`
+	InputMapping *map[string]string `json:"input_mapping,omitempty"`
+	Kind         string             `json:"kind"`
+	Operation    string             `json:"operation"`
+	SetupId      *string            `json:"setup_id,omitempty"`
 }
 
 // ConnectorBrowserSession defines model for ConnectorBrowserSession.
@@ -1059,11 +1270,37 @@ type DuplicateConnectionResponse struct {
 	ExistingConnection DuplicateConnectionExisting `json:"existing_connection"`
 }
 
+// EditFieldsStep defines model for EditFieldsStep.
+type EditFieldsStep struct {
+	Fields map[string]string `json:"fields"`
+	Id     string            `json:"id"`
+	Kind   string            `json:"kind"`
+}
+
 // ErrorDetailResponse DRF default error body: NotFound, PermissionDenied, Http404, etc.
 type ErrorDetailResponse struct {
 	// Detail Human-readable error detail
 	Detail string `json:"detail"`
 }
+
+// ForEachBlock defines model for ForEachBlock.
+type ForEachBlock struct {
+	Id       string                    `json:"id"`
+	ItemName *string                   `json:"item_name,omitempty"`
+	Items    string                    `json:"items"`
+	Kind     string                    `json:"kind"`
+	Parallel *bool                     `json:"parallel,omitempty"`
+	Steps    []ForEachBlock_Steps_Item `json:"steps"`
+}
+
+// ForEachBlock_Steps_Item defines model for ForEachBlock.steps.Item.
+type ForEachBlock_Steps_Item struct {
+	union json.RawMessage
+}
+
+// GateKind What opens a gate: an org admin's explicit approval (manual) or the
+// reviewer's verdict decision on the source agent's result (feedback).
+type GateKind string
 
 // GenerateSkillSetVersionRequest Request to author the next version of a skill set with an agent.
 //
@@ -1106,6 +1343,35 @@ type GenerateSkillSetVersionResponse struct {
 
 	// WorkflowId Temporal workflow ID for tracking the process
 	WorkflowId *string `json:"workflow_id,omitempty"`
+}
+
+// IfBlock defines model for IfBlock.
+type IfBlock struct {
+	Combine    *CombineEnum              `json:"combine,omitempty"`
+	Conditions []Condition               `json:"conditions"`
+	Id         string                    `json:"id"`
+	Kind       string                    `json:"kind"`
+	Otherwise  *[]IfBlock_Otherwise_Item `json:"otherwise,omitempty"`
+	Then       *[]IfBlock_Then_Item      `json:"then,omitempty"`
+}
+
+// IfBlock_Otherwise_Item defines model for IfBlock.otherwise.Item.
+type IfBlock_Otherwise_Item struct {
+	union json.RawMessage
+}
+
+// IfBlock_Then_Item defines model for IfBlock.then.Item.
+type IfBlock_Then_Item struct {
+	union json.RawMessage
+}
+
+// InputField One input a step needs or a workflow declares.
+type InputField struct {
+	AcceptsMultipleFiles *bool   `json:"accepts_multiple_files,omitempty"`
+	DataType             *string `json:"data_type,omitempty"`
+	Description          *string `json:"description,omitempty"`
+	Key                  string  `json:"key"`
+	Required             *bool   `json:"required,omitempty"`
 }
 
 // JobInput Serializer for individual job input data
@@ -1157,10 +1423,25 @@ type ListAgentJob struct {
 	UiFields interface{} `json:"ui_fields,omitempty"`
 }
 
+// MergeStep One value from several steps' outputs, leaving out any that didn't run,
+// such as the side of an If that wasn't taken.
+type MergeStep struct {
+	Id      string    `json:"id"`
+	Kind    string    `json:"kind"`
+	Mode    *ModeEnum `json:"mode,omitempty"`
+	Sources []string  `json:"sources"`
+}
+
 // MessageResponse Simple success acknowledgement body: `{"message": ...}`.
 type MessageResponse struct {
 	Message string `json:"message"`
 }
+
+// ModeEnum defines model for ModeEnum.
+type ModeEnum string
+
+// OperatorEnum defines model for OperatorEnum.
+type OperatorEnum string
 
 // PaginatedBaseAgentList defines model for PaginatedBaseAgentList.
 type PaginatedBaseAgentList struct {
@@ -1218,6 +1499,42 @@ type PaginatedSkillSetVersionList struct {
 	Results  []SkillSetVersion `json:"results"`
 }
 
+// PaginatedWorkflowList defines model for PaginatedWorkflowList.
+type PaginatedWorkflowList struct {
+	Count    int        `json:"count"`
+	Next     *string    `json:"next,omitempty"`
+	Previous *string    `json:"previous,omitempty"`
+	Results  []Workflow `json:"results"`
+}
+
+// PaginatedWorkflowRunList defines model for PaginatedWorkflowRunList.
+type PaginatedWorkflowRunList struct {
+	Count    int           `json:"count"`
+	Next     *string       `json:"next,omitempty"`
+	Previous *string       `json:"previous,omitempty"`
+	Results  []WorkflowRun `json:"results"`
+}
+
+// PaginatedWorkflowVersionList defines model for PaginatedWorkflowVersionList.
+type PaginatedWorkflowVersionList struct {
+	Count    int               `json:"count"`
+	Next     *string           `json:"next,omitempty"`
+	Previous *string           `json:"previous,omitempty"`
+	Results  []WorkflowVersion `json:"results"`
+}
+
+// ParallelBlock defines model for ParallelBlock.
+type ParallelBlock struct {
+	Id    string                       `json:"id"`
+	Kind  string                       `json:"kind"`
+	Lanes [][]ParallelBlock_Lanes_Item `json:"lanes"`
+}
+
+// ParallelBlock_Lanes_Item defines model for ParallelBlock.lanes.Item.
+type ParallelBlock_Lanes_Item struct {
+	union json.RawMessage
+}
+
 // PatchedAgentVersionUpdateRequest defines model for PatchedAgentVersionUpdateRequest.
 type PatchedAgentVersionUpdateRequest struct {
 	// Description New description for the agent version.
@@ -1270,6 +1587,11 @@ type PatchedUpdateSkillSetRequest struct {
 	Description        *string             `json:"description,omitempty"`
 	KnowledgeBaseKeyId *openapi_types.UUID `json:"knowledge_base_key_id,omitempty"`
 	Name               *string             `json:"name,omitempty"`
+}
+
+// PatchedWorkflowUpdateRequest defines model for PatchedWorkflowUpdateRequest.
+type PatchedWorkflowUpdateRequest struct {
+	Name *string `json:"name,omitempty"`
 }
 
 // Policy Policy serializer
@@ -1465,6 +1787,43 @@ type SkillSetVersionCreatedBy struct {
 // StatusEnum * `active` - Active
 // * `error` - Error
 type StatusEnum string
+
+// StepRun defines model for StepRun.
+type StepRun struct {
+	Cached     *bool               `json:"cached,omitempty"`
+	ChildJobId *openapi_types.UUID `json:"child_job_id,omitempty"`
+
+	// Delivery For a step that sends: sending, sent, or unknown when Roe couldn't tell whether the send went through.
+	//
+	// * `sending` - Sending
+	// * `sent` - Sent
+	// * `unknown` - Unknown
+	Delivery      *StepRunDeliveryEnum `json:"delivery,omitempty"`
+	Error         *string              `json:"error,omitempty"`
+	ExecutionPath interface{}          `json:"execution_path"`
+	FinishedAt    *time.Time           `json:"finished_at,omitempty"`
+	Input         interface{}          `json:"input,omitempty"`
+	Output        interface{}          `json:"output,omitempty"`
+	StartedAt     *time.Time           `json:"started_at,omitempty"`
+
+	// Status * `succeeded` - succeeded
+	// * `failed` - failed
+	// * `skipped` - skipped
+	// * `cancelled` - cancelled
+	Status StepRunStatusEnum `json:"status"`
+	StepId string            `json:"step_id"`
+}
+
+// StepRunDeliveryEnum * `sending` - Sending
+// * `sent` - Sent
+// * `unknown` - Unknown
+type StepRunDeliveryEnum string
+
+// StepRunStatusEnum * `succeeded` - succeeded
+// * `failed` - failed
+// * `skipped` - skipped
+// * `cancelled` - cancelled
+type StepRunStatusEnum string
 
 // SupportedLLMModel Serializer for tenant-agnostic supported LLM metadata.
 type SupportedLLMModel struct {
@@ -1750,6 +2109,177 @@ type UserInfo struct {
 	FirstName   *string             `json:"first_name,omitempty"`
 	Id          *int                `json:"id,omitempty"`
 	LastName    *string             `json:"last_name,omitempty"`
+}
+
+// Workflow defines model for Workflow.
+type Workflow struct {
+	// AgentId The workflow's id as an agent. Calling a workflow by it is deprecated; the agent_id filter finds the workflow it belongs to.
+	AgentId          *openapi_types.UUID `json:"agent_id,omitempty"`
+	CreatedAt        *time.Time          `json:"created_at,omitempty"`
+	Creator          *UserInfo           `json:"creator,omitempty"`
+	CurrentVersionId *openapi_types.UUID `json:"current_version_id,omitempty"`
+	Id               *openapi_types.UUID `json:"id,omitempty"`
+	Name             string              `json:"name"`
+	UpdatedAt        *time.Time          `json:"updated_at,omitempty"`
+}
+
+// WorkflowCreateRequest defines model for WorkflowCreateRequest.
+type WorkflowCreateRequest struct {
+	Definition  WorkflowDefinitionRequest `json:"definition"`
+	Description *string                   `json:"description,omitempty"`
+	Name        string                    `json:"name"`
+	VersionName *string                   `json:"version_name,omitempty"`
+}
+
+// WorkflowDefinition defines model for WorkflowDefinition.
+type WorkflowDefinition struct {
+	FormatVersion *int                            `json:"format_version,omitempty"`
+	Inputs        *[]InputField                   `json:"inputs,omitempty"`
+	Result        string                          `json:"result"`
+	Steps         []WorkflowDefinition_Steps_Item `json:"steps"`
+}
+
+// WorkflowDefinition_Steps_Item defines model for WorkflowDefinition.steps.Item.
+type WorkflowDefinition_Steps_Item struct {
+	union json.RawMessage
+}
+
+// WorkflowDefinitionRequest defines model for WorkflowDefinitionRequest.
+type WorkflowDefinitionRequest struct {
+	FormatVersion *int                                   `json:"format_version,omitempty"`
+	Inputs        *[]InputField                          `json:"inputs,omitempty"`
+	Result        string                                 `json:"result"`
+	Steps         []WorkflowDefinitionRequest_Steps_Item `json:"steps"`
+}
+
+// WorkflowDefinitionRequest_Steps_Item defines model for WorkflowDefinitionRequest.steps.Item.
+type WorkflowDefinitionRequest_Steps_Item struct {
+	union json.RawMessage
+}
+
+// WorkflowDetail defines model for WorkflowDetail.
+type WorkflowDetail struct {
+	// AgentId The workflow's id as an agent. Calling a workflow by it is deprecated; the agent_id filter finds the workflow it belongs to.
+	AgentId          *openapi_types.UUID    `json:"agent_id,omitempty"`
+	CreatedAt        *time.Time             `json:"created_at,omitempty"`
+	Creator          *UserInfo              `json:"creator,omitempty"`
+	CurrentVersion   *WorkflowVersionDetail `json:"current_version,omitempty"`
+	CurrentVersionId *openapi_types.UUID    `json:"current_version_id,omitempty"`
+	Id               *openapi_types.UUID    `json:"id,omitempty"`
+	Name             string                 `json:"name"`
+	UpdatedAt        *time.Time             `json:"updated_at,omitempty"`
+}
+
+// WorkflowRun defines model for WorkflowRun.
+type WorkflowRun struct {
+	CreatedAt    time.Time          `json:"created_at"`
+	ErrorMessage *string            `json:"error_message"`
+	Id           openapi_types.UUID `json:"id"`
+
+	// Status * `pending` - pending
+	// * `running` - running
+	// * `succeeded` - succeeded
+	// * `failed` - failed
+	// * `cancelled` - cancelled
+	Status     WorkflowRunStatusEnum `json:"status"`
+	VersionId  *openapi_types.UUID   `json:"version_id"`
+	WorkflowId openapi_types.UUID    `json:"workflow_id"`
+}
+
+// WorkflowRunBatch defines model for WorkflowRunBatch.
+type WorkflowRunBatch struct {
+	Runs []WorkflowRun `json:"runs"`
+}
+
+// WorkflowRunBatchCreateRequest defines model for WorkflowRunBatchCreateRequest.
+type WorkflowRunBatchCreateRequest struct {
+	// Inputs One object of input values per run.
+	Inputs []map[string]interface{} `json:"inputs"`
+
+	// VersionId The version to run. Defaults to the current one.
+	VersionId *openapi_types.UUID `json:"version_id,omitempty"`
+}
+
+// WorkflowRunCreateRequest defines model for WorkflowRunCreateRequest.
+type WorkflowRunCreateRequest struct {
+	// Inputs Values for the workflow's inputs, keyed by input. A file input takes a file id or URL, or the file itself in a multipart request.
+	Inputs   *map[string]interface{} `json:"inputs,omitempty"`
+	Metadata *map[string]interface{} `json:"metadata,omitempty"`
+
+	// VersionId The version to run. Defaults to the current one.
+	VersionId *openapi_types.UUID `json:"version_id,omitempty"`
+
+	// Wait Wait up to 60 seconds for the run to finish, then return it as it stands.
+	Wait *bool `json:"wait,omitempty"`
+}
+
+// WorkflowRunDetail defines model for WorkflowRunDetail.
+type WorkflowRunDetail struct {
+	CreatedAt    time.Time          `json:"created_at"`
+	ErrorMessage *string            `json:"error_message"`
+	Id           openapi_types.UUID `json:"id"`
+	Inputs       interface{}        `json:"inputs"`
+
+	// Outputs The result step's output, once the run has finished.
+	Outputs *[]interface{} `json:"outputs"`
+
+	// Status * `pending` - pending
+	// * `running` - running
+	// * `succeeded` - succeeded
+	// * `failed` - failed
+	// * `cancelled` - cancelled
+	Status     WorkflowRunStatusEnum `json:"status"`
+	Steps      []StepRun             `json:"steps"`
+	VersionId  *openapi_types.UUID   `json:"version_id"`
+	WorkflowId openapi_types.UUID    `json:"workflow_id"`
+}
+
+// WorkflowRunStatusEnum * `pending` - pending
+// * `running` - running
+// * `succeeded` - succeeded
+// * `failed` - failed
+// * `cancelled` - cancelled
+type WorkflowRunStatusEnum string
+
+// WorkflowVersion defines model for WorkflowVersion.
+type WorkflowVersion struct {
+	CreatedAt     *time.Time          `json:"created_at,omitempty"`
+	Description   *string             `json:"description,omitempty"`
+	FormatVersion *int                `json:"format_version,omitempty"`
+	Id            *openapi_types.UUID `json:"id,omitempty"`
+	IsCurrent     *bool               `json:"is_current,omitempty"`
+
+	// ReadOnly Saved in the old graph format: it still runs, but can only be edited by saving a new version.
+	ReadOnly    *bool               `json:"read_only,omitempty"`
+	VersionName *string             `json:"version_name,omitempty"`
+	WorkflowId  *openapi_types.UUID `json:"workflow_id,omitempty"`
+}
+
+// WorkflowVersionCreateRequest defines model for WorkflowVersionCreateRequest.
+type WorkflowVersionCreateRequest struct {
+	Definition  WorkflowDefinitionRequest `json:"definition"`
+	Description *string                   `json:"description,omitempty"`
+	VersionName *string                   `json:"version_name,omitempty"`
+}
+
+// WorkflowVersionDetail defines model for WorkflowVersionDetail.
+type WorkflowVersionDetail struct {
+	// ConversionReasons Why a read-only version couldn't be converted to the block format.
+	ConversionReasons *[]string  `json:"conversion_reasons,omitempty"`
+	CreatedAt         *time.Time `json:"created_at,omitempty"`
+
+	// Definition The steps, in the block format. Null for a read-only version.
+	Definition       *WorkflowDefinition `json:"definition,omitempty"`
+	Description      *string             `json:"description,omitempty"`
+	FormatVersion    *int                `json:"format_version,omitempty"`
+	Id               *openapi_types.UUID `json:"id,omitempty"`
+	InputDefinitions interface{}         `json:"input_definitions,omitempty"`
+	IsCurrent        *bool               `json:"is_current,omitempty"`
+
+	// ReadOnly Saved in the old graph format: it still runs, but can only be edited by saving a new version.
+	ReadOnly    *bool               `json:"read_only,omitempty"`
+	VersionName *string             `json:"version_name,omitempty"`
+	WorkflowId  *openapi_types.UUID `json:"workflow_id,omitempty"`
 }
 
 // AgentsListParams defines parameters for AgentsList.
@@ -2282,6 +2812,111 @@ type TablesPreviewRetrieveParams struct {
 	Limit *int `form:"limit,omitempty" json:"limit,omitempty"`
 }
 
+// WorkflowsListParams defines parameters for WorkflowsList.
+type WorkflowsListParams struct {
+	// AgentId Only the workflow with this agent id.
+	AgentId *openapi_types.UUID `form:"agent_id,omitempty" json:"agent_id,omitempty"`
+
+	// Page A page number within the paginated result set.
+	Page *int `form:"page,omitempty" json:"page,omitempty"`
+
+	// PageSize Number of results to return per page.
+	PageSize *int `form:"page_size,omitempty" json:"page_size,omitempty"`
+
+	// Search A search term.
+	Search *string `form:"search,omitempty" json:"search,omitempty"`
+
+	// OrganizationId Organization ID. This is required for access control. It can be provided via query or request body depending on the endpoint.
+	OrganizationId *openapi_types.UUID `form:"organization_id,omitempty" json:"organization_id,omitempty"`
+}
+
+// WorkflowsCreateParams defines parameters for WorkflowsCreate.
+type WorkflowsCreateParams struct {
+	// OrganizationId Organization ID. This is required for access control. It can be provided via query or request body depending on the endpoint.
+	OrganizationId *openapi_types.UUID `form:"organization_id,omitempty" json:"organization_id,omitempty"`
+}
+
+// WorkflowsRunsRetrieveParams defines parameters for WorkflowsRunsRetrieve.
+type WorkflowsRunsRetrieveParams struct {
+	// OrganizationId Organization ID. This is required for access control. It can be provided via query or request body depending on the endpoint.
+	OrganizationId *openapi_types.UUID `form:"organization_id,omitempty" json:"organization_id,omitempty"`
+}
+
+// WorkflowsDestroyParams defines parameters for WorkflowsDestroy.
+type WorkflowsDestroyParams struct {
+	// OrganizationId Organization ID. This is required for access control. It can be provided via query or request body depending on the endpoint.
+	OrganizationId *openapi_types.UUID `form:"organization_id,omitempty" json:"organization_id,omitempty"`
+}
+
+// WorkflowsRetrieveParams defines parameters for WorkflowsRetrieve.
+type WorkflowsRetrieveParams struct {
+	// OrganizationId Organization ID. This is required for access control. It can be provided via query or request body depending on the endpoint.
+	OrganizationId *openapi_types.UUID `form:"organization_id,omitempty" json:"organization_id,omitempty"`
+}
+
+// WorkflowsPartialUpdateParams defines parameters for WorkflowsPartialUpdate.
+type WorkflowsPartialUpdateParams struct {
+	// OrganizationId Organization ID. This is required for access control. It can be provided via query or request body depending on the endpoint.
+	OrganizationId *openapi_types.UUID `form:"organization_id,omitempty" json:"organization_id,omitempty"`
+}
+
+// WorkflowsRunsListParams defines parameters for WorkflowsRunsList.
+type WorkflowsRunsListParams struct {
+	// Limit Maximum number of most-recent jobs to consider and count. Caps the reported total so pagination stays fast for agents with large job histories. Defaults to 100000; pass 0 for no cap (full count, slower).
+	Limit *int `form:"limit,omitempty" json:"limit,omitempty"`
+
+	// Page A page number within the paginated result set.
+	Page *int `form:"page,omitempty" json:"page,omitempty"`
+
+	// PageSize Number of results to return per page.
+	PageSize *int `form:"page_size,omitempty" json:"page_size,omitempty"`
+
+	// OrganizationId Organization ID. This is required for access control. It can be provided via query or request body depending on the endpoint.
+	OrganizationId *openapi_types.UUID `form:"organization_id,omitempty" json:"organization_id,omitempty"`
+}
+
+// WorkflowsRunsCreateParams defines parameters for WorkflowsRunsCreate.
+type WorkflowsRunsCreateParams struct {
+	// OrganizationId Organization ID. This is required for access control. It can be provided via query or request body depending on the endpoint.
+	OrganizationId *openapi_types.UUID `form:"organization_id,omitempty" json:"organization_id,omitempty"`
+}
+
+// WorkflowsRunsBatchCreateParams defines parameters for WorkflowsRunsBatchCreate.
+type WorkflowsRunsBatchCreateParams struct {
+	// OrganizationId Organization ID. This is required for access control. It can be provided via query or request body depending on the endpoint.
+	OrganizationId *openapi_types.UUID `form:"organization_id,omitempty" json:"organization_id,omitempty"`
+}
+
+// WorkflowsVersionsListParams defines parameters for WorkflowsVersionsList.
+type WorkflowsVersionsListParams struct {
+	// Page A page number within the paginated result set.
+	Page *int `form:"page,omitempty" json:"page,omitempty"`
+
+	// PageSize Number of results to return per page.
+	PageSize *int `form:"page_size,omitempty" json:"page_size,omitempty"`
+
+	// OrganizationId Organization ID. This is required for access control. It can be provided via query or request body depending on the endpoint.
+	OrganizationId *openapi_types.UUID `form:"organization_id,omitempty" json:"organization_id,omitempty"`
+}
+
+// WorkflowsVersionsCreateParams defines parameters for WorkflowsVersionsCreate.
+type WorkflowsVersionsCreateParams struct {
+	// OrganizationId Organization ID. This is required for access control. It can be provided via query or request body depending on the endpoint.
+	OrganizationId *openapi_types.UUID `form:"organization_id,omitempty" json:"organization_id,omitempty"`
+}
+
+// WorkflowsVersionsRetrieveParams defines parameters for WorkflowsVersionsRetrieve.
+type WorkflowsVersionsRetrieveParams struct {
+	// OrganizationId Organization ID. This is required for access control. It can be provided via query or request body depending on the endpoint.
+	OrganizationId *openapi_types.UUID `form:"organization_id,omitempty" json:"organization_id,omitempty"`
+}
+
+// WorkflowsVersionsSetCurrentCreateParams defines parameters for WorkflowsVersionsSetCurrentCreate.
+type WorkflowsVersionsSetCurrentCreateParams struct {
+	// OrganizationId Organization ID. This is required for access control. It can be provided via query or request body depending on the endpoint.
+	OrganizationId *openapi_types.UUID `form:"organization_id,omitempty" json:"organization_id,omitempty"`
+}
+
 // AgentsCreateJSONRequestBody defines body for AgentsCreate for application/json ContentType.
 type AgentsCreateJSONRequestBody = BaseAgentCreateRequest
 
@@ -2366,6 +3001,21 @@ type TablesQueryCreateJSONRequestBody = TableQueryRequest
 // UploadTableMultipartRequestBody defines body for UploadTable for multipart/form-data ContentType.
 type UploadTableMultipartRequestBody = TableUploadRequest
 
+// WorkflowsCreateJSONRequestBody defines body for WorkflowsCreate for application/json ContentType.
+type WorkflowsCreateJSONRequestBody = WorkflowCreateRequest
+
+// WorkflowsPartialUpdateJSONRequestBody defines body for WorkflowsPartialUpdate for application/json ContentType.
+type WorkflowsPartialUpdateJSONRequestBody = PatchedWorkflowUpdateRequest
+
+// WorkflowsRunsCreateJSONRequestBody defines body for WorkflowsRunsCreate for application/json ContentType.
+type WorkflowsRunsCreateJSONRequestBody = WorkflowRunCreateRequest
+
+// WorkflowsRunsBatchCreateJSONRequestBody defines body for WorkflowsRunsBatchCreate for application/json ContentType.
+type WorkflowsRunsBatchCreateJSONRequestBody = WorkflowRunBatchCreateRequest
+
+// WorkflowsVersionsCreateJSONRequestBody defines body for WorkflowsVersionsCreate for application/json ContentType.
+type WorkflowsVersionsCreateJSONRequestBody = WorkflowVersionCreateRequest
+
 // Getter for additional properties for AgentExecutionRequest. Returns the specified
 // element and whether it was found
 func (a AgentExecutionRequest) Get(fieldName string) (value interface{}, found bool) {
@@ -2432,6 +3082,1889 @@ func (a AgentExecutionRequest) MarshalJSON() ([]byte, error) {
 		}
 	}
 	return json.Marshal(object)
+}
+
+// AsAgentStep returns the union data inside the ApprovalBlock_Steps_Item as a AgentStep
+func (t ApprovalBlock_Steps_Item) AsAgentStep() (AgentStep, error) {
+	var body AgentStep
+	err := json.Unmarshal(t.union, &body)
+	return body, err
+}
+
+// FromAgentStep overwrites any union data inside the ApprovalBlock_Steps_Item as the provided AgentStep
+func (t *ApprovalBlock_Steps_Item) FromAgentStep(v AgentStep) error {
+	v.Kind = "agent"
+	b, err := json.Marshal(v)
+	t.union = b
+	return err
+}
+
+// MergeAgentStep performs a merge with any union data inside the ApprovalBlock_Steps_Item, using the provided AgentStep
+func (t *ApprovalBlock_Steps_Item) MergeAgentStep(v AgentStep) error {
+	v.Kind = "agent"
+	b, err := json.Marshal(v)
+	if err != nil {
+		return err
+	}
+
+	merged, err := runtime.JSONMerge(t.union, b)
+	t.union = merged
+	return err
+}
+
+// AsConnectionStep returns the union data inside the ApprovalBlock_Steps_Item as a ConnectionStep
+func (t ApprovalBlock_Steps_Item) AsConnectionStep() (ConnectionStep, error) {
+	var body ConnectionStep
+	err := json.Unmarshal(t.union, &body)
+	return body, err
+}
+
+// FromConnectionStep overwrites any union data inside the ApprovalBlock_Steps_Item as the provided ConnectionStep
+func (t *ApprovalBlock_Steps_Item) FromConnectionStep(v ConnectionStep) error {
+	v.Kind = "connection"
+	b, err := json.Marshal(v)
+	t.union = b
+	return err
+}
+
+// MergeConnectionStep performs a merge with any union data inside the ApprovalBlock_Steps_Item, using the provided ConnectionStep
+func (t *ApprovalBlock_Steps_Item) MergeConnectionStep(v ConnectionStep) error {
+	v.Kind = "connection"
+	b, err := json.Marshal(v)
+	if err != nil {
+		return err
+	}
+
+	merged, err := runtime.JSONMerge(t.union, b)
+	t.union = merged
+	return err
+}
+
+// AsEditFieldsStep returns the union data inside the ApprovalBlock_Steps_Item as a EditFieldsStep
+func (t ApprovalBlock_Steps_Item) AsEditFieldsStep() (EditFieldsStep, error) {
+	var body EditFieldsStep
+	err := json.Unmarshal(t.union, &body)
+	return body, err
+}
+
+// FromEditFieldsStep overwrites any union data inside the ApprovalBlock_Steps_Item as the provided EditFieldsStep
+func (t *ApprovalBlock_Steps_Item) FromEditFieldsStep(v EditFieldsStep) error {
+	v.Kind = "edit_fields"
+	b, err := json.Marshal(v)
+	t.union = b
+	return err
+}
+
+// MergeEditFieldsStep performs a merge with any union data inside the ApprovalBlock_Steps_Item, using the provided EditFieldsStep
+func (t *ApprovalBlock_Steps_Item) MergeEditFieldsStep(v EditFieldsStep) error {
+	v.Kind = "edit_fields"
+	b, err := json.Marshal(v)
+	if err != nil {
+		return err
+	}
+
+	merged, err := runtime.JSONMerge(t.union, b)
+	t.union = merged
+	return err
+}
+
+// AsMergeStep returns the union data inside the ApprovalBlock_Steps_Item as a MergeStep
+func (t ApprovalBlock_Steps_Item) AsMergeStep() (MergeStep, error) {
+	var body MergeStep
+	err := json.Unmarshal(t.union, &body)
+	return body, err
+}
+
+// FromMergeStep overwrites any union data inside the ApprovalBlock_Steps_Item as the provided MergeStep
+func (t *ApprovalBlock_Steps_Item) FromMergeStep(v MergeStep) error {
+	v.Kind = "merge"
+	b, err := json.Marshal(v)
+	t.union = b
+	return err
+}
+
+// MergeMergeStep performs a merge with any union data inside the ApprovalBlock_Steps_Item, using the provided MergeStep
+func (t *ApprovalBlock_Steps_Item) MergeMergeStep(v MergeStep) error {
+	v.Kind = "merge"
+	b, err := json.Marshal(v)
+	if err != nil {
+		return err
+	}
+
+	merged, err := runtime.JSONMerge(t.union, b)
+	t.union = merged
+	return err
+}
+
+// AsIfBlock returns the union data inside the ApprovalBlock_Steps_Item as a IfBlock
+func (t ApprovalBlock_Steps_Item) AsIfBlock() (IfBlock, error) {
+	var body IfBlock
+	err := json.Unmarshal(t.union, &body)
+	return body, err
+}
+
+// FromIfBlock overwrites any union data inside the ApprovalBlock_Steps_Item as the provided IfBlock
+func (t *ApprovalBlock_Steps_Item) FromIfBlock(v IfBlock) error {
+	v.Kind = "if"
+	b, err := json.Marshal(v)
+	t.union = b
+	return err
+}
+
+// MergeIfBlock performs a merge with any union data inside the ApprovalBlock_Steps_Item, using the provided IfBlock
+func (t *ApprovalBlock_Steps_Item) MergeIfBlock(v IfBlock) error {
+	v.Kind = "if"
+	b, err := json.Marshal(v)
+	if err != nil {
+		return err
+	}
+
+	merged, err := runtime.JSONMerge(t.union, b)
+	t.union = merged
+	return err
+}
+
+// AsForEachBlock returns the union data inside the ApprovalBlock_Steps_Item as a ForEachBlock
+func (t ApprovalBlock_Steps_Item) AsForEachBlock() (ForEachBlock, error) {
+	var body ForEachBlock
+	err := json.Unmarshal(t.union, &body)
+	return body, err
+}
+
+// FromForEachBlock overwrites any union data inside the ApprovalBlock_Steps_Item as the provided ForEachBlock
+func (t *ApprovalBlock_Steps_Item) FromForEachBlock(v ForEachBlock) error {
+	v.Kind = "for_each"
+	b, err := json.Marshal(v)
+	t.union = b
+	return err
+}
+
+// MergeForEachBlock performs a merge with any union data inside the ApprovalBlock_Steps_Item, using the provided ForEachBlock
+func (t *ApprovalBlock_Steps_Item) MergeForEachBlock(v ForEachBlock) error {
+	v.Kind = "for_each"
+	b, err := json.Marshal(v)
+	if err != nil {
+		return err
+	}
+
+	merged, err := runtime.JSONMerge(t.union, b)
+	t.union = merged
+	return err
+}
+
+// AsApprovalBlock returns the union data inside the ApprovalBlock_Steps_Item as a ApprovalBlock
+func (t ApprovalBlock_Steps_Item) AsApprovalBlock() (ApprovalBlock, error) {
+	var body ApprovalBlock
+	err := json.Unmarshal(t.union, &body)
+	return body, err
+}
+
+// FromApprovalBlock overwrites any union data inside the ApprovalBlock_Steps_Item as the provided ApprovalBlock
+func (t *ApprovalBlock_Steps_Item) FromApprovalBlock(v ApprovalBlock) error {
+	v.Kind = "approval"
+	b, err := json.Marshal(v)
+	t.union = b
+	return err
+}
+
+// MergeApprovalBlock performs a merge with any union data inside the ApprovalBlock_Steps_Item, using the provided ApprovalBlock
+func (t *ApprovalBlock_Steps_Item) MergeApprovalBlock(v ApprovalBlock) error {
+	v.Kind = "approval"
+	b, err := json.Marshal(v)
+	if err != nil {
+		return err
+	}
+
+	merged, err := runtime.JSONMerge(t.union, b)
+	t.union = merged
+	return err
+}
+
+// AsParallelBlock returns the union data inside the ApprovalBlock_Steps_Item as a ParallelBlock
+func (t ApprovalBlock_Steps_Item) AsParallelBlock() (ParallelBlock, error) {
+	var body ParallelBlock
+	err := json.Unmarshal(t.union, &body)
+	return body, err
+}
+
+// FromParallelBlock overwrites any union data inside the ApprovalBlock_Steps_Item as the provided ParallelBlock
+func (t *ApprovalBlock_Steps_Item) FromParallelBlock(v ParallelBlock) error {
+	v.Kind = "parallel"
+	b, err := json.Marshal(v)
+	t.union = b
+	return err
+}
+
+// MergeParallelBlock performs a merge with any union data inside the ApprovalBlock_Steps_Item, using the provided ParallelBlock
+func (t *ApprovalBlock_Steps_Item) MergeParallelBlock(v ParallelBlock) error {
+	v.Kind = "parallel"
+	b, err := json.Marshal(v)
+	if err != nil {
+		return err
+	}
+
+	merged, err := runtime.JSONMerge(t.union, b)
+	t.union = merged
+	return err
+}
+
+func (t ApprovalBlock_Steps_Item) Discriminator() (string, error) {
+	var discriminator struct {
+		Discriminator string `json:"kind"`
+	}
+	err := json.Unmarshal(t.union, &discriminator)
+	return discriminator.Discriminator, err
+}
+
+func (t ApprovalBlock_Steps_Item) ValueByDiscriminator() (interface{}, error) {
+	discriminator, err := t.Discriminator()
+	if err != nil {
+		return nil, err
+	}
+	switch discriminator {
+	case "agent":
+		return t.AsAgentStep()
+	case "approval":
+		return t.AsApprovalBlock()
+	case "connection":
+		return t.AsConnectionStep()
+	case "edit_fields":
+		return t.AsEditFieldsStep()
+	case "for_each":
+		return t.AsForEachBlock()
+	case "if":
+		return t.AsIfBlock()
+	case "merge":
+		return t.AsMergeStep()
+	case "parallel":
+		return t.AsParallelBlock()
+	default:
+		return nil, errors.New("unknown discriminator value: " + discriminator)
+	}
+}
+
+func (t ApprovalBlock_Steps_Item) MarshalJSON() ([]byte, error) {
+	b, err := t.union.MarshalJSON()
+	return b, err
+}
+
+func (t *ApprovalBlock_Steps_Item) UnmarshalJSON(b []byte) error {
+	err := t.union.UnmarshalJSON(b)
+	return err
+}
+
+// AsAgentStep returns the union data inside the ForEachBlock_Steps_Item as a AgentStep
+func (t ForEachBlock_Steps_Item) AsAgentStep() (AgentStep, error) {
+	var body AgentStep
+	err := json.Unmarshal(t.union, &body)
+	return body, err
+}
+
+// FromAgentStep overwrites any union data inside the ForEachBlock_Steps_Item as the provided AgentStep
+func (t *ForEachBlock_Steps_Item) FromAgentStep(v AgentStep) error {
+	v.Kind = "agent"
+	b, err := json.Marshal(v)
+	t.union = b
+	return err
+}
+
+// MergeAgentStep performs a merge with any union data inside the ForEachBlock_Steps_Item, using the provided AgentStep
+func (t *ForEachBlock_Steps_Item) MergeAgentStep(v AgentStep) error {
+	v.Kind = "agent"
+	b, err := json.Marshal(v)
+	if err != nil {
+		return err
+	}
+
+	merged, err := runtime.JSONMerge(t.union, b)
+	t.union = merged
+	return err
+}
+
+// AsConnectionStep returns the union data inside the ForEachBlock_Steps_Item as a ConnectionStep
+func (t ForEachBlock_Steps_Item) AsConnectionStep() (ConnectionStep, error) {
+	var body ConnectionStep
+	err := json.Unmarshal(t.union, &body)
+	return body, err
+}
+
+// FromConnectionStep overwrites any union data inside the ForEachBlock_Steps_Item as the provided ConnectionStep
+func (t *ForEachBlock_Steps_Item) FromConnectionStep(v ConnectionStep) error {
+	v.Kind = "connection"
+	b, err := json.Marshal(v)
+	t.union = b
+	return err
+}
+
+// MergeConnectionStep performs a merge with any union data inside the ForEachBlock_Steps_Item, using the provided ConnectionStep
+func (t *ForEachBlock_Steps_Item) MergeConnectionStep(v ConnectionStep) error {
+	v.Kind = "connection"
+	b, err := json.Marshal(v)
+	if err != nil {
+		return err
+	}
+
+	merged, err := runtime.JSONMerge(t.union, b)
+	t.union = merged
+	return err
+}
+
+// AsEditFieldsStep returns the union data inside the ForEachBlock_Steps_Item as a EditFieldsStep
+func (t ForEachBlock_Steps_Item) AsEditFieldsStep() (EditFieldsStep, error) {
+	var body EditFieldsStep
+	err := json.Unmarshal(t.union, &body)
+	return body, err
+}
+
+// FromEditFieldsStep overwrites any union data inside the ForEachBlock_Steps_Item as the provided EditFieldsStep
+func (t *ForEachBlock_Steps_Item) FromEditFieldsStep(v EditFieldsStep) error {
+	v.Kind = "edit_fields"
+	b, err := json.Marshal(v)
+	t.union = b
+	return err
+}
+
+// MergeEditFieldsStep performs a merge with any union data inside the ForEachBlock_Steps_Item, using the provided EditFieldsStep
+func (t *ForEachBlock_Steps_Item) MergeEditFieldsStep(v EditFieldsStep) error {
+	v.Kind = "edit_fields"
+	b, err := json.Marshal(v)
+	if err != nil {
+		return err
+	}
+
+	merged, err := runtime.JSONMerge(t.union, b)
+	t.union = merged
+	return err
+}
+
+// AsMergeStep returns the union data inside the ForEachBlock_Steps_Item as a MergeStep
+func (t ForEachBlock_Steps_Item) AsMergeStep() (MergeStep, error) {
+	var body MergeStep
+	err := json.Unmarshal(t.union, &body)
+	return body, err
+}
+
+// FromMergeStep overwrites any union data inside the ForEachBlock_Steps_Item as the provided MergeStep
+func (t *ForEachBlock_Steps_Item) FromMergeStep(v MergeStep) error {
+	v.Kind = "merge"
+	b, err := json.Marshal(v)
+	t.union = b
+	return err
+}
+
+// MergeMergeStep performs a merge with any union data inside the ForEachBlock_Steps_Item, using the provided MergeStep
+func (t *ForEachBlock_Steps_Item) MergeMergeStep(v MergeStep) error {
+	v.Kind = "merge"
+	b, err := json.Marshal(v)
+	if err != nil {
+		return err
+	}
+
+	merged, err := runtime.JSONMerge(t.union, b)
+	t.union = merged
+	return err
+}
+
+// AsIfBlock returns the union data inside the ForEachBlock_Steps_Item as a IfBlock
+func (t ForEachBlock_Steps_Item) AsIfBlock() (IfBlock, error) {
+	var body IfBlock
+	err := json.Unmarshal(t.union, &body)
+	return body, err
+}
+
+// FromIfBlock overwrites any union data inside the ForEachBlock_Steps_Item as the provided IfBlock
+func (t *ForEachBlock_Steps_Item) FromIfBlock(v IfBlock) error {
+	v.Kind = "if"
+	b, err := json.Marshal(v)
+	t.union = b
+	return err
+}
+
+// MergeIfBlock performs a merge with any union data inside the ForEachBlock_Steps_Item, using the provided IfBlock
+func (t *ForEachBlock_Steps_Item) MergeIfBlock(v IfBlock) error {
+	v.Kind = "if"
+	b, err := json.Marshal(v)
+	if err != nil {
+		return err
+	}
+
+	merged, err := runtime.JSONMerge(t.union, b)
+	t.union = merged
+	return err
+}
+
+// AsForEachBlock returns the union data inside the ForEachBlock_Steps_Item as a ForEachBlock
+func (t ForEachBlock_Steps_Item) AsForEachBlock() (ForEachBlock, error) {
+	var body ForEachBlock
+	err := json.Unmarshal(t.union, &body)
+	return body, err
+}
+
+// FromForEachBlock overwrites any union data inside the ForEachBlock_Steps_Item as the provided ForEachBlock
+func (t *ForEachBlock_Steps_Item) FromForEachBlock(v ForEachBlock) error {
+	v.Kind = "for_each"
+	b, err := json.Marshal(v)
+	t.union = b
+	return err
+}
+
+// MergeForEachBlock performs a merge with any union data inside the ForEachBlock_Steps_Item, using the provided ForEachBlock
+func (t *ForEachBlock_Steps_Item) MergeForEachBlock(v ForEachBlock) error {
+	v.Kind = "for_each"
+	b, err := json.Marshal(v)
+	if err != nil {
+		return err
+	}
+
+	merged, err := runtime.JSONMerge(t.union, b)
+	t.union = merged
+	return err
+}
+
+// AsApprovalBlock returns the union data inside the ForEachBlock_Steps_Item as a ApprovalBlock
+func (t ForEachBlock_Steps_Item) AsApprovalBlock() (ApprovalBlock, error) {
+	var body ApprovalBlock
+	err := json.Unmarshal(t.union, &body)
+	return body, err
+}
+
+// FromApprovalBlock overwrites any union data inside the ForEachBlock_Steps_Item as the provided ApprovalBlock
+func (t *ForEachBlock_Steps_Item) FromApprovalBlock(v ApprovalBlock) error {
+	v.Kind = "approval"
+	b, err := json.Marshal(v)
+	t.union = b
+	return err
+}
+
+// MergeApprovalBlock performs a merge with any union data inside the ForEachBlock_Steps_Item, using the provided ApprovalBlock
+func (t *ForEachBlock_Steps_Item) MergeApprovalBlock(v ApprovalBlock) error {
+	v.Kind = "approval"
+	b, err := json.Marshal(v)
+	if err != nil {
+		return err
+	}
+
+	merged, err := runtime.JSONMerge(t.union, b)
+	t.union = merged
+	return err
+}
+
+// AsParallelBlock returns the union data inside the ForEachBlock_Steps_Item as a ParallelBlock
+func (t ForEachBlock_Steps_Item) AsParallelBlock() (ParallelBlock, error) {
+	var body ParallelBlock
+	err := json.Unmarshal(t.union, &body)
+	return body, err
+}
+
+// FromParallelBlock overwrites any union data inside the ForEachBlock_Steps_Item as the provided ParallelBlock
+func (t *ForEachBlock_Steps_Item) FromParallelBlock(v ParallelBlock) error {
+	v.Kind = "parallel"
+	b, err := json.Marshal(v)
+	t.union = b
+	return err
+}
+
+// MergeParallelBlock performs a merge with any union data inside the ForEachBlock_Steps_Item, using the provided ParallelBlock
+func (t *ForEachBlock_Steps_Item) MergeParallelBlock(v ParallelBlock) error {
+	v.Kind = "parallel"
+	b, err := json.Marshal(v)
+	if err != nil {
+		return err
+	}
+
+	merged, err := runtime.JSONMerge(t.union, b)
+	t.union = merged
+	return err
+}
+
+func (t ForEachBlock_Steps_Item) Discriminator() (string, error) {
+	var discriminator struct {
+		Discriminator string `json:"kind"`
+	}
+	err := json.Unmarshal(t.union, &discriminator)
+	return discriminator.Discriminator, err
+}
+
+func (t ForEachBlock_Steps_Item) ValueByDiscriminator() (interface{}, error) {
+	discriminator, err := t.Discriminator()
+	if err != nil {
+		return nil, err
+	}
+	switch discriminator {
+	case "agent":
+		return t.AsAgentStep()
+	case "approval":
+		return t.AsApprovalBlock()
+	case "connection":
+		return t.AsConnectionStep()
+	case "edit_fields":
+		return t.AsEditFieldsStep()
+	case "for_each":
+		return t.AsForEachBlock()
+	case "if":
+		return t.AsIfBlock()
+	case "merge":
+		return t.AsMergeStep()
+	case "parallel":
+		return t.AsParallelBlock()
+	default:
+		return nil, errors.New("unknown discriminator value: " + discriminator)
+	}
+}
+
+func (t ForEachBlock_Steps_Item) MarshalJSON() ([]byte, error) {
+	b, err := t.union.MarshalJSON()
+	return b, err
+}
+
+func (t *ForEachBlock_Steps_Item) UnmarshalJSON(b []byte) error {
+	err := t.union.UnmarshalJSON(b)
+	return err
+}
+
+// AsAgentStep returns the union data inside the IfBlock_Otherwise_Item as a AgentStep
+func (t IfBlock_Otherwise_Item) AsAgentStep() (AgentStep, error) {
+	var body AgentStep
+	err := json.Unmarshal(t.union, &body)
+	return body, err
+}
+
+// FromAgentStep overwrites any union data inside the IfBlock_Otherwise_Item as the provided AgentStep
+func (t *IfBlock_Otherwise_Item) FromAgentStep(v AgentStep) error {
+	v.Kind = "agent"
+	b, err := json.Marshal(v)
+	t.union = b
+	return err
+}
+
+// MergeAgentStep performs a merge with any union data inside the IfBlock_Otherwise_Item, using the provided AgentStep
+func (t *IfBlock_Otherwise_Item) MergeAgentStep(v AgentStep) error {
+	v.Kind = "agent"
+	b, err := json.Marshal(v)
+	if err != nil {
+		return err
+	}
+
+	merged, err := runtime.JSONMerge(t.union, b)
+	t.union = merged
+	return err
+}
+
+// AsConnectionStep returns the union data inside the IfBlock_Otherwise_Item as a ConnectionStep
+func (t IfBlock_Otherwise_Item) AsConnectionStep() (ConnectionStep, error) {
+	var body ConnectionStep
+	err := json.Unmarshal(t.union, &body)
+	return body, err
+}
+
+// FromConnectionStep overwrites any union data inside the IfBlock_Otherwise_Item as the provided ConnectionStep
+func (t *IfBlock_Otherwise_Item) FromConnectionStep(v ConnectionStep) error {
+	v.Kind = "connection"
+	b, err := json.Marshal(v)
+	t.union = b
+	return err
+}
+
+// MergeConnectionStep performs a merge with any union data inside the IfBlock_Otherwise_Item, using the provided ConnectionStep
+func (t *IfBlock_Otherwise_Item) MergeConnectionStep(v ConnectionStep) error {
+	v.Kind = "connection"
+	b, err := json.Marshal(v)
+	if err != nil {
+		return err
+	}
+
+	merged, err := runtime.JSONMerge(t.union, b)
+	t.union = merged
+	return err
+}
+
+// AsEditFieldsStep returns the union data inside the IfBlock_Otherwise_Item as a EditFieldsStep
+func (t IfBlock_Otherwise_Item) AsEditFieldsStep() (EditFieldsStep, error) {
+	var body EditFieldsStep
+	err := json.Unmarshal(t.union, &body)
+	return body, err
+}
+
+// FromEditFieldsStep overwrites any union data inside the IfBlock_Otherwise_Item as the provided EditFieldsStep
+func (t *IfBlock_Otherwise_Item) FromEditFieldsStep(v EditFieldsStep) error {
+	v.Kind = "edit_fields"
+	b, err := json.Marshal(v)
+	t.union = b
+	return err
+}
+
+// MergeEditFieldsStep performs a merge with any union data inside the IfBlock_Otherwise_Item, using the provided EditFieldsStep
+func (t *IfBlock_Otherwise_Item) MergeEditFieldsStep(v EditFieldsStep) error {
+	v.Kind = "edit_fields"
+	b, err := json.Marshal(v)
+	if err != nil {
+		return err
+	}
+
+	merged, err := runtime.JSONMerge(t.union, b)
+	t.union = merged
+	return err
+}
+
+// AsMergeStep returns the union data inside the IfBlock_Otherwise_Item as a MergeStep
+func (t IfBlock_Otherwise_Item) AsMergeStep() (MergeStep, error) {
+	var body MergeStep
+	err := json.Unmarshal(t.union, &body)
+	return body, err
+}
+
+// FromMergeStep overwrites any union data inside the IfBlock_Otherwise_Item as the provided MergeStep
+func (t *IfBlock_Otherwise_Item) FromMergeStep(v MergeStep) error {
+	v.Kind = "merge"
+	b, err := json.Marshal(v)
+	t.union = b
+	return err
+}
+
+// MergeMergeStep performs a merge with any union data inside the IfBlock_Otherwise_Item, using the provided MergeStep
+func (t *IfBlock_Otherwise_Item) MergeMergeStep(v MergeStep) error {
+	v.Kind = "merge"
+	b, err := json.Marshal(v)
+	if err != nil {
+		return err
+	}
+
+	merged, err := runtime.JSONMerge(t.union, b)
+	t.union = merged
+	return err
+}
+
+// AsIfBlock returns the union data inside the IfBlock_Otherwise_Item as a IfBlock
+func (t IfBlock_Otherwise_Item) AsIfBlock() (IfBlock, error) {
+	var body IfBlock
+	err := json.Unmarshal(t.union, &body)
+	return body, err
+}
+
+// FromIfBlock overwrites any union data inside the IfBlock_Otherwise_Item as the provided IfBlock
+func (t *IfBlock_Otherwise_Item) FromIfBlock(v IfBlock) error {
+	v.Kind = "if"
+	b, err := json.Marshal(v)
+	t.union = b
+	return err
+}
+
+// MergeIfBlock performs a merge with any union data inside the IfBlock_Otherwise_Item, using the provided IfBlock
+func (t *IfBlock_Otherwise_Item) MergeIfBlock(v IfBlock) error {
+	v.Kind = "if"
+	b, err := json.Marshal(v)
+	if err != nil {
+		return err
+	}
+
+	merged, err := runtime.JSONMerge(t.union, b)
+	t.union = merged
+	return err
+}
+
+// AsForEachBlock returns the union data inside the IfBlock_Otherwise_Item as a ForEachBlock
+func (t IfBlock_Otherwise_Item) AsForEachBlock() (ForEachBlock, error) {
+	var body ForEachBlock
+	err := json.Unmarshal(t.union, &body)
+	return body, err
+}
+
+// FromForEachBlock overwrites any union data inside the IfBlock_Otherwise_Item as the provided ForEachBlock
+func (t *IfBlock_Otherwise_Item) FromForEachBlock(v ForEachBlock) error {
+	v.Kind = "for_each"
+	b, err := json.Marshal(v)
+	t.union = b
+	return err
+}
+
+// MergeForEachBlock performs a merge with any union data inside the IfBlock_Otherwise_Item, using the provided ForEachBlock
+func (t *IfBlock_Otherwise_Item) MergeForEachBlock(v ForEachBlock) error {
+	v.Kind = "for_each"
+	b, err := json.Marshal(v)
+	if err != nil {
+		return err
+	}
+
+	merged, err := runtime.JSONMerge(t.union, b)
+	t.union = merged
+	return err
+}
+
+// AsApprovalBlock returns the union data inside the IfBlock_Otherwise_Item as a ApprovalBlock
+func (t IfBlock_Otherwise_Item) AsApprovalBlock() (ApprovalBlock, error) {
+	var body ApprovalBlock
+	err := json.Unmarshal(t.union, &body)
+	return body, err
+}
+
+// FromApprovalBlock overwrites any union data inside the IfBlock_Otherwise_Item as the provided ApprovalBlock
+func (t *IfBlock_Otherwise_Item) FromApprovalBlock(v ApprovalBlock) error {
+	v.Kind = "approval"
+	b, err := json.Marshal(v)
+	t.union = b
+	return err
+}
+
+// MergeApprovalBlock performs a merge with any union data inside the IfBlock_Otherwise_Item, using the provided ApprovalBlock
+func (t *IfBlock_Otherwise_Item) MergeApprovalBlock(v ApprovalBlock) error {
+	v.Kind = "approval"
+	b, err := json.Marshal(v)
+	if err != nil {
+		return err
+	}
+
+	merged, err := runtime.JSONMerge(t.union, b)
+	t.union = merged
+	return err
+}
+
+// AsParallelBlock returns the union data inside the IfBlock_Otherwise_Item as a ParallelBlock
+func (t IfBlock_Otherwise_Item) AsParallelBlock() (ParallelBlock, error) {
+	var body ParallelBlock
+	err := json.Unmarshal(t.union, &body)
+	return body, err
+}
+
+// FromParallelBlock overwrites any union data inside the IfBlock_Otherwise_Item as the provided ParallelBlock
+func (t *IfBlock_Otherwise_Item) FromParallelBlock(v ParallelBlock) error {
+	v.Kind = "parallel"
+	b, err := json.Marshal(v)
+	t.union = b
+	return err
+}
+
+// MergeParallelBlock performs a merge with any union data inside the IfBlock_Otherwise_Item, using the provided ParallelBlock
+func (t *IfBlock_Otherwise_Item) MergeParallelBlock(v ParallelBlock) error {
+	v.Kind = "parallel"
+	b, err := json.Marshal(v)
+	if err != nil {
+		return err
+	}
+
+	merged, err := runtime.JSONMerge(t.union, b)
+	t.union = merged
+	return err
+}
+
+func (t IfBlock_Otherwise_Item) Discriminator() (string, error) {
+	var discriminator struct {
+		Discriminator string `json:"kind"`
+	}
+	err := json.Unmarshal(t.union, &discriminator)
+	return discriminator.Discriminator, err
+}
+
+func (t IfBlock_Otherwise_Item) ValueByDiscriminator() (interface{}, error) {
+	discriminator, err := t.Discriminator()
+	if err != nil {
+		return nil, err
+	}
+	switch discriminator {
+	case "agent":
+		return t.AsAgentStep()
+	case "approval":
+		return t.AsApprovalBlock()
+	case "connection":
+		return t.AsConnectionStep()
+	case "edit_fields":
+		return t.AsEditFieldsStep()
+	case "for_each":
+		return t.AsForEachBlock()
+	case "if":
+		return t.AsIfBlock()
+	case "merge":
+		return t.AsMergeStep()
+	case "parallel":
+		return t.AsParallelBlock()
+	default:
+		return nil, errors.New("unknown discriminator value: " + discriminator)
+	}
+}
+
+func (t IfBlock_Otherwise_Item) MarshalJSON() ([]byte, error) {
+	b, err := t.union.MarshalJSON()
+	return b, err
+}
+
+func (t *IfBlock_Otherwise_Item) UnmarshalJSON(b []byte) error {
+	err := t.union.UnmarshalJSON(b)
+	return err
+}
+
+// AsAgentStep returns the union data inside the IfBlock_Then_Item as a AgentStep
+func (t IfBlock_Then_Item) AsAgentStep() (AgentStep, error) {
+	var body AgentStep
+	err := json.Unmarshal(t.union, &body)
+	return body, err
+}
+
+// FromAgentStep overwrites any union data inside the IfBlock_Then_Item as the provided AgentStep
+func (t *IfBlock_Then_Item) FromAgentStep(v AgentStep) error {
+	v.Kind = "agent"
+	b, err := json.Marshal(v)
+	t.union = b
+	return err
+}
+
+// MergeAgentStep performs a merge with any union data inside the IfBlock_Then_Item, using the provided AgentStep
+func (t *IfBlock_Then_Item) MergeAgentStep(v AgentStep) error {
+	v.Kind = "agent"
+	b, err := json.Marshal(v)
+	if err != nil {
+		return err
+	}
+
+	merged, err := runtime.JSONMerge(t.union, b)
+	t.union = merged
+	return err
+}
+
+// AsConnectionStep returns the union data inside the IfBlock_Then_Item as a ConnectionStep
+func (t IfBlock_Then_Item) AsConnectionStep() (ConnectionStep, error) {
+	var body ConnectionStep
+	err := json.Unmarshal(t.union, &body)
+	return body, err
+}
+
+// FromConnectionStep overwrites any union data inside the IfBlock_Then_Item as the provided ConnectionStep
+func (t *IfBlock_Then_Item) FromConnectionStep(v ConnectionStep) error {
+	v.Kind = "connection"
+	b, err := json.Marshal(v)
+	t.union = b
+	return err
+}
+
+// MergeConnectionStep performs a merge with any union data inside the IfBlock_Then_Item, using the provided ConnectionStep
+func (t *IfBlock_Then_Item) MergeConnectionStep(v ConnectionStep) error {
+	v.Kind = "connection"
+	b, err := json.Marshal(v)
+	if err != nil {
+		return err
+	}
+
+	merged, err := runtime.JSONMerge(t.union, b)
+	t.union = merged
+	return err
+}
+
+// AsEditFieldsStep returns the union data inside the IfBlock_Then_Item as a EditFieldsStep
+func (t IfBlock_Then_Item) AsEditFieldsStep() (EditFieldsStep, error) {
+	var body EditFieldsStep
+	err := json.Unmarshal(t.union, &body)
+	return body, err
+}
+
+// FromEditFieldsStep overwrites any union data inside the IfBlock_Then_Item as the provided EditFieldsStep
+func (t *IfBlock_Then_Item) FromEditFieldsStep(v EditFieldsStep) error {
+	v.Kind = "edit_fields"
+	b, err := json.Marshal(v)
+	t.union = b
+	return err
+}
+
+// MergeEditFieldsStep performs a merge with any union data inside the IfBlock_Then_Item, using the provided EditFieldsStep
+func (t *IfBlock_Then_Item) MergeEditFieldsStep(v EditFieldsStep) error {
+	v.Kind = "edit_fields"
+	b, err := json.Marshal(v)
+	if err != nil {
+		return err
+	}
+
+	merged, err := runtime.JSONMerge(t.union, b)
+	t.union = merged
+	return err
+}
+
+// AsMergeStep returns the union data inside the IfBlock_Then_Item as a MergeStep
+func (t IfBlock_Then_Item) AsMergeStep() (MergeStep, error) {
+	var body MergeStep
+	err := json.Unmarshal(t.union, &body)
+	return body, err
+}
+
+// FromMergeStep overwrites any union data inside the IfBlock_Then_Item as the provided MergeStep
+func (t *IfBlock_Then_Item) FromMergeStep(v MergeStep) error {
+	v.Kind = "merge"
+	b, err := json.Marshal(v)
+	t.union = b
+	return err
+}
+
+// MergeMergeStep performs a merge with any union data inside the IfBlock_Then_Item, using the provided MergeStep
+func (t *IfBlock_Then_Item) MergeMergeStep(v MergeStep) error {
+	v.Kind = "merge"
+	b, err := json.Marshal(v)
+	if err != nil {
+		return err
+	}
+
+	merged, err := runtime.JSONMerge(t.union, b)
+	t.union = merged
+	return err
+}
+
+// AsIfBlock returns the union data inside the IfBlock_Then_Item as a IfBlock
+func (t IfBlock_Then_Item) AsIfBlock() (IfBlock, error) {
+	var body IfBlock
+	err := json.Unmarshal(t.union, &body)
+	return body, err
+}
+
+// FromIfBlock overwrites any union data inside the IfBlock_Then_Item as the provided IfBlock
+func (t *IfBlock_Then_Item) FromIfBlock(v IfBlock) error {
+	v.Kind = "if"
+	b, err := json.Marshal(v)
+	t.union = b
+	return err
+}
+
+// MergeIfBlock performs a merge with any union data inside the IfBlock_Then_Item, using the provided IfBlock
+func (t *IfBlock_Then_Item) MergeIfBlock(v IfBlock) error {
+	v.Kind = "if"
+	b, err := json.Marshal(v)
+	if err != nil {
+		return err
+	}
+
+	merged, err := runtime.JSONMerge(t.union, b)
+	t.union = merged
+	return err
+}
+
+// AsForEachBlock returns the union data inside the IfBlock_Then_Item as a ForEachBlock
+func (t IfBlock_Then_Item) AsForEachBlock() (ForEachBlock, error) {
+	var body ForEachBlock
+	err := json.Unmarshal(t.union, &body)
+	return body, err
+}
+
+// FromForEachBlock overwrites any union data inside the IfBlock_Then_Item as the provided ForEachBlock
+func (t *IfBlock_Then_Item) FromForEachBlock(v ForEachBlock) error {
+	v.Kind = "for_each"
+	b, err := json.Marshal(v)
+	t.union = b
+	return err
+}
+
+// MergeForEachBlock performs a merge with any union data inside the IfBlock_Then_Item, using the provided ForEachBlock
+func (t *IfBlock_Then_Item) MergeForEachBlock(v ForEachBlock) error {
+	v.Kind = "for_each"
+	b, err := json.Marshal(v)
+	if err != nil {
+		return err
+	}
+
+	merged, err := runtime.JSONMerge(t.union, b)
+	t.union = merged
+	return err
+}
+
+// AsApprovalBlock returns the union data inside the IfBlock_Then_Item as a ApprovalBlock
+func (t IfBlock_Then_Item) AsApprovalBlock() (ApprovalBlock, error) {
+	var body ApprovalBlock
+	err := json.Unmarshal(t.union, &body)
+	return body, err
+}
+
+// FromApprovalBlock overwrites any union data inside the IfBlock_Then_Item as the provided ApprovalBlock
+func (t *IfBlock_Then_Item) FromApprovalBlock(v ApprovalBlock) error {
+	v.Kind = "approval"
+	b, err := json.Marshal(v)
+	t.union = b
+	return err
+}
+
+// MergeApprovalBlock performs a merge with any union data inside the IfBlock_Then_Item, using the provided ApprovalBlock
+func (t *IfBlock_Then_Item) MergeApprovalBlock(v ApprovalBlock) error {
+	v.Kind = "approval"
+	b, err := json.Marshal(v)
+	if err != nil {
+		return err
+	}
+
+	merged, err := runtime.JSONMerge(t.union, b)
+	t.union = merged
+	return err
+}
+
+// AsParallelBlock returns the union data inside the IfBlock_Then_Item as a ParallelBlock
+func (t IfBlock_Then_Item) AsParallelBlock() (ParallelBlock, error) {
+	var body ParallelBlock
+	err := json.Unmarshal(t.union, &body)
+	return body, err
+}
+
+// FromParallelBlock overwrites any union data inside the IfBlock_Then_Item as the provided ParallelBlock
+func (t *IfBlock_Then_Item) FromParallelBlock(v ParallelBlock) error {
+	v.Kind = "parallel"
+	b, err := json.Marshal(v)
+	t.union = b
+	return err
+}
+
+// MergeParallelBlock performs a merge with any union data inside the IfBlock_Then_Item, using the provided ParallelBlock
+func (t *IfBlock_Then_Item) MergeParallelBlock(v ParallelBlock) error {
+	v.Kind = "parallel"
+	b, err := json.Marshal(v)
+	if err != nil {
+		return err
+	}
+
+	merged, err := runtime.JSONMerge(t.union, b)
+	t.union = merged
+	return err
+}
+
+func (t IfBlock_Then_Item) Discriminator() (string, error) {
+	var discriminator struct {
+		Discriminator string `json:"kind"`
+	}
+	err := json.Unmarshal(t.union, &discriminator)
+	return discriminator.Discriminator, err
+}
+
+func (t IfBlock_Then_Item) ValueByDiscriminator() (interface{}, error) {
+	discriminator, err := t.Discriminator()
+	if err != nil {
+		return nil, err
+	}
+	switch discriminator {
+	case "agent":
+		return t.AsAgentStep()
+	case "approval":
+		return t.AsApprovalBlock()
+	case "connection":
+		return t.AsConnectionStep()
+	case "edit_fields":
+		return t.AsEditFieldsStep()
+	case "for_each":
+		return t.AsForEachBlock()
+	case "if":
+		return t.AsIfBlock()
+	case "merge":
+		return t.AsMergeStep()
+	case "parallel":
+		return t.AsParallelBlock()
+	default:
+		return nil, errors.New("unknown discriminator value: " + discriminator)
+	}
+}
+
+func (t IfBlock_Then_Item) MarshalJSON() ([]byte, error) {
+	b, err := t.union.MarshalJSON()
+	return b, err
+}
+
+func (t *IfBlock_Then_Item) UnmarshalJSON(b []byte) error {
+	err := t.union.UnmarshalJSON(b)
+	return err
+}
+
+// AsAgentStep returns the union data inside the ParallelBlock_Lanes_Item as a AgentStep
+func (t ParallelBlock_Lanes_Item) AsAgentStep() (AgentStep, error) {
+	var body AgentStep
+	err := json.Unmarshal(t.union, &body)
+	return body, err
+}
+
+// FromAgentStep overwrites any union data inside the ParallelBlock_Lanes_Item as the provided AgentStep
+func (t *ParallelBlock_Lanes_Item) FromAgentStep(v AgentStep) error {
+	v.Kind = "agent"
+	b, err := json.Marshal(v)
+	t.union = b
+	return err
+}
+
+// MergeAgentStep performs a merge with any union data inside the ParallelBlock_Lanes_Item, using the provided AgentStep
+func (t *ParallelBlock_Lanes_Item) MergeAgentStep(v AgentStep) error {
+	v.Kind = "agent"
+	b, err := json.Marshal(v)
+	if err != nil {
+		return err
+	}
+
+	merged, err := runtime.JSONMerge(t.union, b)
+	t.union = merged
+	return err
+}
+
+// AsConnectionStep returns the union data inside the ParallelBlock_Lanes_Item as a ConnectionStep
+func (t ParallelBlock_Lanes_Item) AsConnectionStep() (ConnectionStep, error) {
+	var body ConnectionStep
+	err := json.Unmarshal(t.union, &body)
+	return body, err
+}
+
+// FromConnectionStep overwrites any union data inside the ParallelBlock_Lanes_Item as the provided ConnectionStep
+func (t *ParallelBlock_Lanes_Item) FromConnectionStep(v ConnectionStep) error {
+	v.Kind = "connection"
+	b, err := json.Marshal(v)
+	t.union = b
+	return err
+}
+
+// MergeConnectionStep performs a merge with any union data inside the ParallelBlock_Lanes_Item, using the provided ConnectionStep
+func (t *ParallelBlock_Lanes_Item) MergeConnectionStep(v ConnectionStep) error {
+	v.Kind = "connection"
+	b, err := json.Marshal(v)
+	if err != nil {
+		return err
+	}
+
+	merged, err := runtime.JSONMerge(t.union, b)
+	t.union = merged
+	return err
+}
+
+// AsEditFieldsStep returns the union data inside the ParallelBlock_Lanes_Item as a EditFieldsStep
+func (t ParallelBlock_Lanes_Item) AsEditFieldsStep() (EditFieldsStep, error) {
+	var body EditFieldsStep
+	err := json.Unmarshal(t.union, &body)
+	return body, err
+}
+
+// FromEditFieldsStep overwrites any union data inside the ParallelBlock_Lanes_Item as the provided EditFieldsStep
+func (t *ParallelBlock_Lanes_Item) FromEditFieldsStep(v EditFieldsStep) error {
+	v.Kind = "edit_fields"
+	b, err := json.Marshal(v)
+	t.union = b
+	return err
+}
+
+// MergeEditFieldsStep performs a merge with any union data inside the ParallelBlock_Lanes_Item, using the provided EditFieldsStep
+func (t *ParallelBlock_Lanes_Item) MergeEditFieldsStep(v EditFieldsStep) error {
+	v.Kind = "edit_fields"
+	b, err := json.Marshal(v)
+	if err != nil {
+		return err
+	}
+
+	merged, err := runtime.JSONMerge(t.union, b)
+	t.union = merged
+	return err
+}
+
+// AsMergeStep returns the union data inside the ParallelBlock_Lanes_Item as a MergeStep
+func (t ParallelBlock_Lanes_Item) AsMergeStep() (MergeStep, error) {
+	var body MergeStep
+	err := json.Unmarshal(t.union, &body)
+	return body, err
+}
+
+// FromMergeStep overwrites any union data inside the ParallelBlock_Lanes_Item as the provided MergeStep
+func (t *ParallelBlock_Lanes_Item) FromMergeStep(v MergeStep) error {
+	v.Kind = "merge"
+	b, err := json.Marshal(v)
+	t.union = b
+	return err
+}
+
+// MergeMergeStep performs a merge with any union data inside the ParallelBlock_Lanes_Item, using the provided MergeStep
+func (t *ParallelBlock_Lanes_Item) MergeMergeStep(v MergeStep) error {
+	v.Kind = "merge"
+	b, err := json.Marshal(v)
+	if err != nil {
+		return err
+	}
+
+	merged, err := runtime.JSONMerge(t.union, b)
+	t.union = merged
+	return err
+}
+
+// AsIfBlock returns the union data inside the ParallelBlock_Lanes_Item as a IfBlock
+func (t ParallelBlock_Lanes_Item) AsIfBlock() (IfBlock, error) {
+	var body IfBlock
+	err := json.Unmarshal(t.union, &body)
+	return body, err
+}
+
+// FromIfBlock overwrites any union data inside the ParallelBlock_Lanes_Item as the provided IfBlock
+func (t *ParallelBlock_Lanes_Item) FromIfBlock(v IfBlock) error {
+	v.Kind = "if"
+	b, err := json.Marshal(v)
+	t.union = b
+	return err
+}
+
+// MergeIfBlock performs a merge with any union data inside the ParallelBlock_Lanes_Item, using the provided IfBlock
+func (t *ParallelBlock_Lanes_Item) MergeIfBlock(v IfBlock) error {
+	v.Kind = "if"
+	b, err := json.Marshal(v)
+	if err != nil {
+		return err
+	}
+
+	merged, err := runtime.JSONMerge(t.union, b)
+	t.union = merged
+	return err
+}
+
+// AsForEachBlock returns the union data inside the ParallelBlock_Lanes_Item as a ForEachBlock
+func (t ParallelBlock_Lanes_Item) AsForEachBlock() (ForEachBlock, error) {
+	var body ForEachBlock
+	err := json.Unmarshal(t.union, &body)
+	return body, err
+}
+
+// FromForEachBlock overwrites any union data inside the ParallelBlock_Lanes_Item as the provided ForEachBlock
+func (t *ParallelBlock_Lanes_Item) FromForEachBlock(v ForEachBlock) error {
+	v.Kind = "for_each"
+	b, err := json.Marshal(v)
+	t.union = b
+	return err
+}
+
+// MergeForEachBlock performs a merge with any union data inside the ParallelBlock_Lanes_Item, using the provided ForEachBlock
+func (t *ParallelBlock_Lanes_Item) MergeForEachBlock(v ForEachBlock) error {
+	v.Kind = "for_each"
+	b, err := json.Marshal(v)
+	if err != nil {
+		return err
+	}
+
+	merged, err := runtime.JSONMerge(t.union, b)
+	t.union = merged
+	return err
+}
+
+// AsApprovalBlock returns the union data inside the ParallelBlock_Lanes_Item as a ApprovalBlock
+func (t ParallelBlock_Lanes_Item) AsApprovalBlock() (ApprovalBlock, error) {
+	var body ApprovalBlock
+	err := json.Unmarshal(t.union, &body)
+	return body, err
+}
+
+// FromApprovalBlock overwrites any union data inside the ParallelBlock_Lanes_Item as the provided ApprovalBlock
+func (t *ParallelBlock_Lanes_Item) FromApprovalBlock(v ApprovalBlock) error {
+	v.Kind = "approval"
+	b, err := json.Marshal(v)
+	t.union = b
+	return err
+}
+
+// MergeApprovalBlock performs a merge with any union data inside the ParallelBlock_Lanes_Item, using the provided ApprovalBlock
+func (t *ParallelBlock_Lanes_Item) MergeApprovalBlock(v ApprovalBlock) error {
+	v.Kind = "approval"
+	b, err := json.Marshal(v)
+	if err != nil {
+		return err
+	}
+
+	merged, err := runtime.JSONMerge(t.union, b)
+	t.union = merged
+	return err
+}
+
+// AsParallelBlock returns the union data inside the ParallelBlock_Lanes_Item as a ParallelBlock
+func (t ParallelBlock_Lanes_Item) AsParallelBlock() (ParallelBlock, error) {
+	var body ParallelBlock
+	err := json.Unmarshal(t.union, &body)
+	return body, err
+}
+
+// FromParallelBlock overwrites any union data inside the ParallelBlock_Lanes_Item as the provided ParallelBlock
+func (t *ParallelBlock_Lanes_Item) FromParallelBlock(v ParallelBlock) error {
+	v.Kind = "parallel"
+	b, err := json.Marshal(v)
+	t.union = b
+	return err
+}
+
+// MergeParallelBlock performs a merge with any union data inside the ParallelBlock_Lanes_Item, using the provided ParallelBlock
+func (t *ParallelBlock_Lanes_Item) MergeParallelBlock(v ParallelBlock) error {
+	v.Kind = "parallel"
+	b, err := json.Marshal(v)
+	if err != nil {
+		return err
+	}
+
+	merged, err := runtime.JSONMerge(t.union, b)
+	t.union = merged
+	return err
+}
+
+func (t ParallelBlock_Lanes_Item) Discriminator() (string, error) {
+	var discriminator struct {
+		Discriminator string `json:"kind"`
+	}
+	err := json.Unmarshal(t.union, &discriminator)
+	return discriminator.Discriminator, err
+}
+
+func (t ParallelBlock_Lanes_Item) ValueByDiscriminator() (interface{}, error) {
+	discriminator, err := t.Discriminator()
+	if err != nil {
+		return nil, err
+	}
+	switch discriminator {
+	case "agent":
+		return t.AsAgentStep()
+	case "approval":
+		return t.AsApprovalBlock()
+	case "connection":
+		return t.AsConnectionStep()
+	case "edit_fields":
+		return t.AsEditFieldsStep()
+	case "for_each":
+		return t.AsForEachBlock()
+	case "if":
+		return t.AsIfBlock()
+	case "merge":
+		return t.AsMergeStep()
+	case "parallel":
+		return t.AsParallelBlock()
+	default:
+		return nil, errors.New("unknown discriminator value: " + discriminator)
+	}
+}
+
+func (t ParallelBlock_Lanes_Item) MarshalJSON() ([]byte, error) {
+	b, err := t.union.MarshalJSON()
+	return b, err
+}
+
+func (t *ParallelBlock_Lanes_Item) UnmarshalJSON(b []byte) error {
+	err := t.union.UnmarshalJSON(b)
+	return err
+}
+
+// AsAgentStep returns the union data inside the WorkflowDefinition_Steps_Item as a AgentStep
+func (t WorkflowDefinition_Steps_Item) AsAgentStep() (AgentStep, error) {
+	var body AgentStep
+	err := json.Unmarshal(t.union, &body)
+	return body, err
+}
+
+// FromAgentStep overwrites any union data inside the WorkflowDefinition_Steps_Item as the provided AgentStep
+func (t *WorkflowDefinition_Steps_Item) FromAgentStep(v AgentStep) error {
+	v.Kind = "agent"
+	b, err := json.Marshal(v)
+	t.union = b
+	return err
+}
+
+// MergeAgentStep performs a merge with any union data inside the WorkflowDefinition_Steps_Item, using the provided AgentStep
+func (t *WorkflowDefinition_Steps_Item) MergeAgentStep(v AgentStep) error {
+	v.Kind = "agent"
+	b, err := json.Marshal(v)
+	if err != nil {
+		return err
+	}
+
+	merged, err := runtime.JSONMerge(t.union, b)
+	t.union = merged
+	return err
+}
+
+// AsConnectionStep returns the union data inside the WorkflowDefinition_Steps_Item as a ConnectionStep
+func (t WorkflowDefinition_Steps_Item) AsConnectionStep() (ConnectionStep, error) {
+	var body ConnectionStep
+	err := json.Unmarshal(t.union, &body)
+	return body, err
+}
+
+// FromConnectionStep overwrites any union data inside the WorkflowDefinition_Steps_Item as the provided ConnectionStep
+func (t *WorkflowDefinition_Steps_Item) FromConnectionStep(v ConnectionStep) error {
+	v.Kind = "connection"
+	b, err := json.Marshal(v)
+	t.union = b
+	return err
+}
+
+// MergeConnectionStep performs a merge with any union data inside the WorkflowDefinition_Steps_Item, using the provided ConnectionStep
+func (t *WorkflowDefinition_Steps_Item) MergeConnectionStep(v ConnectionStep) error {
+	v.Kind = "connection"
+	b, err := json.Marshal(v)
+	if err != nil {
+		return err
+	}
+
+	merged, err := runtime.JSONMerge(t.union, b)
+	t.union = merged
+	return err
+}
+
+// AsEditFieldsStep returns the union data inside the WorkflowDefinition_Steps_Item as a EditFieldsStep
+func (t WorkflowDefinition_Steps_Item) AsEditFieldsStep() (EditFieldsStep, error) {
+	var body EditFieldsStep
+	err := json.Unmarshal(t.union, &body)
+	return body, err
+}
+
+// FromEditFieldsStep overwrites any union data inside the WorkflowDefinition_Steps_Item as the provided EditFieldsStep
+func (t *WorkflowDefinition_Steps_Item) FromEditFieldsStep(v EditFieldsStep) error {
+	v.Kind = "edit_fields"
+	b, err := json.Marshal(v)
+	t.union = b
+	return err
+}
+
+// MergeEditFieldsStep performs a merge with any union data inside the WorkflowDefinition_Steps_Item, using the provided EditFieldsStep
+func (t *WorkflowDefinition_Steps_Item) MergeEditFieldsStep(v EditFieldsStep) error {
+	v.Kind = "edit_fields"
+	b, err := json.Marshal(v)
+	if err != nil {
+		return err
+	}
+
+	merged, err := runtime.JSONMerge(t.union, b)
+	t.union = merged
+	return err
+}
+
+// AsMergeStep returns the union data inside the WorkflowDefinition_Steps_Item as a MergeStep
+func (t WorkflowDefinition_Steps_Item) AsMergeStep() (MergeStep, error) {
+	var body MergeStep
+	err := json.Unmarshal(t.union, &body)
+	return body, err
+}
+
+// FromMergeStep overwrites any union data inside the WorkflowDefinition_Steps_Item as the provided MergeStep
+func (t *WorkflowDefinition_Steps_Item) FromMergeStep(v MergeStep) error {
+	v.Kind = "merge"
+	b, err := json.Marshal(v)
+	t.union = b
+	return err
+}
+
+// MergeMergeStep performs a merge with any union data inside the WorkflowDefinition_Steps_Item, using the provided MergeStep
+func (t *WorkflowDefinition_Steps_Item) MergeMergeStep(v MergeStep) error {
+	v.Kind = "merge"
+	b, err := json.Marshal(v)
+	if err != nil {
+		return err
+	}
+
+	merged, err := runtime.JSONMerge(t.union, b)
+	t.union = merged
+	return err
+}
+
+// AsIfBlock returns the union data inside the WorkflowDefinition_Steps_Item as a IfBlock
+func (t WorkflowDefinition_Steps_Item) AsIfBlock() (IfBlock, error) {
+	var body IfBlock
+	err := json.Unmarshal(t.union, &body)
+	return body, err
+}
+
+// FromIfBlock overwrites any union data inside the WorkflowDefinition_Steps_Item as the provided IfBlock
+func (t *WorkflowDefinition_Steps_Item) FromIfBlock(v IfBlock) error {
+	v.Kind = "if"
+	b, err := json.Marshal(v)
+	t.union = b
+	return err
+}
+
+// MergeIfBlock performs a merge with any union data inside the WorkflowDefinition_Steps_Item, using the provided IfBlock
+func (t *WorkflowDefinition_Steps_Item) MergeIfBlock(v IfBlock) error {
+	v.Kind = "if"
+	b, err := json.Marshal(v)
+	if err != nil {
+		return err
+	}
+
+	merged, err := runtime.JSONMerge(t.union, b)
+	t.union = merged
+	return err
+}
+
+// AsForEachBlock returns the union data inside the WorkflowDefinition_Steps_Item as a ForEachBlock
+func (t WorkflowDefinition_Steps_Item) AsForEachBlock() (ForEachBlock, error) {
+	var body ForEachBlock
+	err := json.Unmarshal(t.union, &body)
+	return body, err
+}
+
+// FromForEachBlock overwrites any union data inside the WorkflowDefinition_Steps_Item as the provided ForEachBlock
+func (t *WorkflowDefinition_Steps_Item) FromForEachBlock(v ForEachBlock) error {
+	v.Kind = "for_each"
+	b, err := json.Marshal(v)
+	t.union = b
+	return err
+}
+
+// MergeForEachBlock performs a merge with any union data inside the WorkflowDefinition_Steps_Item, using the provided ForEachBlock
+func (t *WorkflowDefinition_Steps_Item) MergeForEachBlock(v ForEachBlock) error {
+	v.Kind = "for_each"
+	b, err := json.Marshal(v)
+	if err != nil {
+		return err
+	}
+
+	merged, err := runtime.JSONMerge(t.union, b)
+	t.union = merged
+	return err
+}
+
+// AsApprovalBlock returns the union data inside the WorkflowDefinition_Steps_Item as a ApprovalBlock
+func (t WorkflowDefinition_Steps_Item) AsApprovalBlock() (ApprovalBlock, error) {
+	var body ApprovalBlock
+	err := json.Unmarshal(t.union, &body)
+	return body, err
+}
+
+// FromApprovalBlock overwrites any union data inside the WorkflowDefinition_Steps_Item as the provided ApprovalBlock
+func (t *WorkflowDefinition_Steps_Item) FromApprovalBlock(v ApprovalBlock) error {
+	v.Kind = "approval"
+	b, err := json.Marshal(v)
+	t.union = b
+	return err
+}
+
+// MergeApprovalBlock performs a merge with any union data inside the WorkflowDefinition_Steps_Item, using the provided ApprovalBlock
+func (t *WorkflowDefinition_Steps_Item) MergeApprovalBlock(v ApprovalBlock) error {
+	v.Kind = "approval"
+	b, err := json.Marshal(v)
+	if err != nil {
+		return err
+	}
+
+	merged, err := runtime.JSONMerge(t.union, b)
+	t.union = merged
+	return err
+}
+
+// AsParallelBlock returns the union data inside the WorkflowDefinition_Steps_Item as a ParallelBlock
+func (t WorkflowDefinition_Steps_Item) AsParallelBlock() (ParallelBlock, error) {
+	var body ParallelBlock
+	err := json.Unmarshal(t.union, &body)
+	return body, err
+}
+
+// FromParallelBlock overwrites any union data inside the WorkflowDefinition_Steps_Item as the provided ParallelBlock
+func (t *WorkflowDefinition_Steps_Item) FromParallelBlock(v ParallelBlock) error {
+	v.Kind = "parallel"
+	b, err := json.Marshal(v)
+	t.union = b
+	return err
+}
+
+// MergeParallelBlock performs a merge with any union data inside the WorkflowDefinition_Steps_Item, using the provided ParallelBlock
+func (t *WorkflowDefinition_Steps_Item) MergeParallelBlock(v ParallelBlock) error {
+	v.Kind = "parallel"
+	b, err := json.Marshal(v)
+	if err != nil {
+		return err
+	}
+
+	merged, err := runtime.JSONMerge(t.union, b)
+	t.union = merged
+	return err
+}
+
+func (t WorkflowDefinition_Steps_Item) Discriminator() (string, error) {
+	var discriminator struct {
+		Discriminator string `json:"kind"`
+	}
+	err := json.Unmarshal(t.union, &discriminator)
+	return discriminator.Discriminator, err
+}
+
+func (t WorkflowDefinition_Steps_Item) ValueByDiscriminator() (interface{}, error) {
+	discriminator, err := t.Discriminator()
+	if err != nil {
+		return nil, err
+	}
+	switch discriminator {
+	case "agent":
+		return t.AsAgentStep()
+	case "approval":
+		return t.AsApprovalBlock()
+	case "connection":
+		return t.AsConnectionStep()
+	case "edit_fields":
+		return t.AsEditFieldsStep()
+	case "for_each":
+		return t.AsForEachBlock()
+	case "if":
+		return t.AsIfBlock()
+	case "merge":
+		return t.AsMergeStep()
+	case "parallel":
+		return t.AsParallelBlock()
+	default:
+		return nil, errors.New("unknown discriminator value: " + discriminator)
+	}
+}
+
+func (t WorkflowDefinition_Steps_Item) MarshalJSON() ([]byte, error) {
+	b, err := t.union.MarshalJSON()
+	return b, err
+}
+
+func (t *WorkflowDefinition_Steps_Item) UnmarshalJSON(b []byte) error {
+	err := t.union.UnmarshalJSON(b)
+	return err
+}
+
+// AsAgentStep returns the union data inside the WorkflowDefinitionRequest_Steps_Item as a AgentStep
+func (t WorkflowDefinitionRequest_Steps_Item) AsAgentStep() (AgentStep, error) {
+	var body AgentStep
+	err := json.Unmarshal(t.union, &body)
+	return body, err
+}
+
+// FromAgentStep overwrites any union data inside the WorkflowDefinitionRequest_Steps_Item as the provided AgentStep
+func (t *WorkflowDefinitionRequest_Steps_Item) FromAgentStep(v AgentStep) error {
+	v.Kind = "agent"
+	b, err := json.Marshal(v)
+	t.union = b
+	return err
+}
+
+// MergeAgentStep performs a merge with any union data inside the WorkflowDefinitionRequest_Steps_Item, using the provided AgentStep
+func (t *WorkflowDefinitionRequest_Steps_Item) MergeAgentStep(v AgentStep) error {
+	v.Kind = "agent"
+	b, err := json.Marshal(v)
+	if err != nil {
+		return err
+	}
+
+	merged, err := runtime.JSONMerge(t.union, b)
+	t.union = merged
+	return err
+}
+
+// AsConnectionStep returns the union data inside the WorkflowDefinitionRequest_Steps_Item as a ConnectionStep
+func (t WorkflowDefinitionRequest_Steps_Item) AsConnectionStep() (ConnectionStep, error) {
+	var body ConnectionStep
+	err := json.Unmarshal(t.union, &body)
+	return body, err
+}
+
+// FromConnectionStep overwrites any union data inside the WorkflowDefinitionRequest_Steps_Item as the provided ConnectionStep
+func (t *WorkflowDefinitionRequest_Steps_Item) FromConnectionStep(v ConnectionStep) error {
+	v.Kind = "connection"
+	b, err := json.Marshal(v)
+	t.union = b
+	return err
+}
+
+// MergeConnectionStep performs a merge with any union data inside the WorkflowDefinitionRequest_Steps_Item, using the provided ConnectionStep
+func (t *WorkflowDefinitionRequest_Steps_Item) MergeConnectionStep(v ConnectionStep) error {
+	v.Kind = "connection"
+	b, err := json.Marshal(v)
+	if err != nil {
+		return err
+	}
+
+	merged, err := runtime.JSONMerge(t.union, b)
+	t.union = merged
+	return err
+}
+
+// AsEditFieldsStep returns the union data inside the WorkflowDefinitionRequest_Steps_Item as a EditFieldsStep
+func (t WorkflowDefinitionRequest_Steps_Item) AsEditFieldsStep() (EditFieldsStep, error) {
+	var body EditFieldsStep
+	err := json.Unmarshal(t.union, &body)
+	return body, err
+}
+
+// FromEditFieldsStep overwrites any union data inside the WorkflowDefinitionRequest_Steps_Item as the provided EditFieldsStep
+func (t *WorkflowDefinitionRequest_Steps_Item) FromEditFieldsStep(v EditFieldsStep) error {
+	v.Kind = "edit_fields"
+	b, err := json.Marshal(v)
+	t.union = b
+	return err
+}
+
+// MergeEditFieldsStep performs a merge with any union data inside the WorkflowDefinitionRequest_Steps_Item, using the provided EditFieldsStep
+func (t *WorkflowDefinitionRequest_Steps_Item) MergeEditFieldsStep(v EditFieldsStep) error {
+	v.Kind = "edit_fields"
+	b, err := json.Marshal(v)
+	if err != nil {
+		return err
+	}
+
+	merged, err := runtime.JSONMerge(t.union, b)
+	t.union = merged
+	return err
+}
+
+// AsMergeStep returns the union data inside the WorkflowDefinitionRequest_Steps_Item as a MergeStep
+func (t WorkflowDefinitionRequest_Steps_Item) AsMergeStep() (MergeStep, error) {
+	var body MergeStep
+	err := json.Unmarshal(t.union, &body)
+	return body, err
+}
+
+// FromMergeStep overwrites any union data inside the WorkflowDefinitionRequest_Steps_Item as the provided MergeStep
+func (t *WorkflowDefinitionRequest_Steps_Item) FromMergeStep(v MergeStep) error {
+	v.Kind = "merge"
+	b, err := json.Marshal(v)
+	t.union = b
+	return err
+}
+
+// MergeMergeStep performs a merge with any union data inside the WorkflowDefinitionRequest_Steps_Item, using the provided MergeStep
+func (t *WorkflowDefinitionRequest_Steps_Item) MergeMergeStep(v MergeStep) error {
+	v.Kind = "merge"
+	b, err := json.Marshal(v)
+	if err != nil {
+		return err
+	}
+
+	merged, err := runtime.JSONMerge(t.union, b)
+	t.union = merged
+	return err
+}
+
+// AsIfBlock returns the union data inside the WorkflowDefinitionRequest_Steps_Item as a IfBlock
+func (t WorkflowDefinitionRequest_Steps_Item) AsIfBlock() (IfBlock, error) {
+	var body IfBlock
+	err := json.Unmarshal(t.union, &body)
+	return body, err
+}
+
+// FromIfBlock overwrites any union data inside the WorkflowDefinitionRequest_Steps_Item as the provided IfBlock
+func (t *WorkflowDefinitionRequest_Steps_Item) FromIfBlock(v IfBlock) error {
+	v.Kind = "if"
+	b, err := json.Marshal(v)
+	t.union = b
+	return err
+}
+
+// MergeIfBlock performs a merge with any union data inside the WorkflowDefinitionRequest_Steps_Item, using the provided IfBlock
+func (t *WorkflowDefinitionRequest_Steps_Item) MergeIfBlock(v IfBlock) error {
+	v.Kind = "if"
+	b, err := json.Marshal(v)
+	if err != nil {
+		return err
+	}
+
+	merged, err := runtime.JSONMerge(t.union, b)
+	t.union = merged
+	return err
+}
+
+// AsForEachBlock returns the union data inside the WorkflowDefinitionRequest_Steps_Item as a ForEachBlock
+func (t WorkflowDefinitionRequest_Steps_Item) AsForEachBlock() (ForEachBlock, error) {
+	var body ForEachBlock
+	err := json.Unmarshal(t.union, &body)
+	return body, err
+}
+
+// FromForEachBlock overwrites any union data inside the WorkflowDefinitionRequest_Steps_Item as the provided ForEachBlock
+func (t *WorkflowDefinitionRequest_Steps_Item) FromForEachBlock(v ForEachBlock) error {
+	v.Kind = "for_each"
+	b, err := json.Marshal(v)
+	t.union = b
+	return err
+}
+
+// MergeForEachBlock performs a merge with any union data inside the WorkflowDefinitionRequest_Steps_Item, using the provided ForEachBlock
+func (t *WorkflowDefinitionRequest_Steps_Item) MergeForEachBlock(v ForEachBlock) error {
+	v.Kind = "for_each"
+	b, err := json.Marshal(v)
+	if err != nil {
+		return err
+	}
+
+	merged, err := runtime.JSONMerge(t.union, b)
+	t.union = merged
+	return err
+}
+
+// AsApprovalBlock returns the union data inside the WorkflowDefinitionRequest_Steps_Item as a ApprovalBlock
+func (t WorkflowDefinitionRequest_Steps_Item) AsApprovalBlock() (ApprovalBlock, error) {
+	var body ApprovalBlock
+	err := json.Unmarshal(t.union, &body)
+	return body, err
+}
+
+// FromApprovalBlock overwrites any union data inside the WorkflowDefinitionRequest_Steps_Item as the provided ApprovalBlock
+func (t *WorkflowDefinitionRequest_Steps_Item) FromApprovalBlock(v ApprovalBlock) error {
+	v.Kind = "approval"
+	b, err := json.Marshal(v)
+	t.union = b
+	return err
+}
+
+// MergeApprovalBlock performs a merge with any union data inside the WorkflowDefinitionRequest_Steps_Item, using the provided ApprovalBlock
+func (t *WorkflowDefinitionRequest_Steps_Item) MergeApprovalBlock(v ApprovalBlock) error {
+	v.Kind = "approval"
+	b, err := json.Marshal(v)
+	if err != nil {
+		return err
+	}
+
+	merged, err := runtime.JSONMerge(t.union, b)
+	t.union = merged
+	return err
+}
+
+// AsParallelBlock returns the union data inside the WorkflowDefinitionRequest_Steps_Item as a ParallelBlock
+func (t WorkflowDefinitionRequest_Steps_Item) AsParallelBlock() (ParallelBlock, error) {
+	var body ParallelBlock
+	err := json.Unmarshal(t.union, &body)
+	return body, err
+}
+
+// FromParallelBlock overwrites any union data inside the WorkflowDefinitionRequest_Steps_Item as the provided ParallelBlock
+func (t *WorkflowDefinitionRequest_Steps_Item) FromParallelBlock(v ParallelBlock) error {
+	v.Kind = "parallel"
+	b, err := json.Marshal(v)
+	t.union = b
+	return err
+}
+
+// MergeParallelBlock performs a merge with any union data inside the WorkflowDefinitionRequest_Steps_Item, using the provided ParallelBlock
+func (t *WorkflowDefinitionRequest_Steps_Item) MergeParallelBlock(v ParallelBlock) error {
+	v.Kind = "parallel"
+	b, err := json.Marshal(v)
+	if err != nil {
+		return err
+	}
+
+	merged, err := runtime.JSONMerge(t.union, b)
+	t.union = merged
+	return err
+}
+
+func (t WorkflowDefinitionRequest_Steps_Item) Discriminator() (string, error) {
+	var discriminator struct {
+		Discriminator string `json:"kind"`
+	}
+	err := json.Unmarshal(t.union, &discriminator)
+	return discriminator.Discriminator, err
+}
+
+func (t WorkflowDefinitionRequest_Steps_Item) ValueByDiscriminator() (interface{}, error) {
+	discriminator, err := t.Discriminator()
+	if err != nil {
+		return nil, err
+	}
+	switch discriminator {
+	case "agent":
+		return t.AsAgentStep()
+	case "approval":
+		return t.AsApprovalBlock()
+	case "connection":
+		return t.AsConnectionStep()
+	case "edit_fields":
+		return t.AsEditFieldsStep()
+	case "for_each":
+		return t.AsForEachBlock()
+	case "if":
+		return t.AsIfBlock()
+	case "merge":
+		return t.AsMergeStep()
+	case "parallel":
+		return t.AsParallelBlock()
+	default:
+		return nil, errors.New("unknown discriminator value: " + discriminator)
+	}
+}
+
+func (t WorkflowDefinitionRequest_Steps_Item) MarshalJSON() ([]byte, error) {
+	b, err := t.union.MarshalJSON()
+	return b, err
+}
+
+func (t *WorkflowDefinitionRequest_Steps_Item) UnmarshalJSON(b []byte) error {
+	err := t.union.UnmarshalJSON(b)
+	return err
 }
 
 // RequestEditorFn  is the function signature for the RequestEditor callback function
@@ -2773,6 +5306,55 @@ type ClientInterface interface {
 
 	// UsersCurrentUserRetrieve request
 	UsersCurrentUserRetrieve(ctx context.Context, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// WorkflowsList request
+	WorkflowsList(ctx context.Context, params *WorkflowsListParams, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// WorkflowsCreateWithBody request with any body
+	WorkflowsCreateWithBody(ctx context.Context, params *WorkflowsCreateParams, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	WorkflowsCreate(ctx context.Context, params *WorkflowsCreateParams, body WorkflowsCreateJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// WorkflowsRunsRetrieve request
+	WorkflowsRunsRetrieve(ctx context.Context, runId openapi_types.UUID, params *WorkflowsRunsRetrieveParams, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// WorkflowsDestroy request
+	WorkflowsDestroy(ctx context.Context, workflowId openapi_types.UUID, params *WorkflowsDestroyParams, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// WorkflowsRetrieve request
+	WorkflowsRetrieve(ctx context.Context, workflowId openapi_types.UUID, params *WorkflowsRetrieveParams, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// WorkflowsPartialUpdateWithBody request with any body
+	WorkflowsPartialUpdateWithBody(ctx context.Context, workflowId openapi_types.UUID, params *WorkflowsPartialUpdateParams, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	WorkflowsPartialUpdate(ctx context.Context, workflowId openapi_types.UUID, params *WorkflowsPartialUpdateParams, body WorkflowsPartialUpdateJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// WorkflowsRunsList request
+	WorkflowsRunsList(ctx context.Context, workflowId openapi_types.UUID, params *WorkflowsRunsListParams, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// WorkflowsRunsCreateWithBody request with any body
+	WorkflowsRunsCreateWithBody(ctx context.Context, workflowId openapi_types.UUID, params *WorkflowsRunsCreateParams, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	WorkflowsRunsCreate(ctx context.Context, workflowId openapi_types.UUID, params *WorkflowsRunsCreateParams, body WorkflowsRunsCreateJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// WorkflowsRunsBatchCreateWithBody request with any body
+	WorkflowsRunsBatchCreateWithBody(ctx context.Context, workflowId openapi_types.UUID, params *WorkflowsRunsBatchCreateParams, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	WorkflowsRunsBatchCreate(ctx context.Context, workflowId openapi_types.UUID, params *WorkflowsRunsBatchCreateParams, body WorkflowsRunsBatchCreateJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// WorkflowsVersionsList request
+	WorkflowsVersionsList(ctx context.Context, workflowId openapi_types.UUID, params *WorkflowsVersionsListParams, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// WorkflowsVersionsCreateWithBody request with any body
+	WorkflowsVersionsCreateWithBody(ctx context.Context, workflowId openapi_types.UUID, params *WorkflowsVersionsCreateParams, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	WorkflowsVersionsCreate(ctx context.Context, workflowId openapi_types.UUID, params *WorkflowsVersionsCreateParams, body WorkflowsVersionsCreateJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// WorkflowsVersionsRetrieve request
+	WorkflowsVersionsRetrieve(ctx context.Context, workflowId openapi_types.UUID, versionId openapi_types.UUID, params *WorkflowsVersionsRetrieveParams, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// WorkflowsVersionsSetCurrentCreate request
+	WorkflowsVersionsSetCurrentCreate(ctx context.Context, workflowId openapi_types.UUID, versionId openapi_types.UUID, params *WorkflowsVersionsSetCurrentCreateParams, reqEditors ...RequestEditorFn) (*http.Response, error)
 }
 
 func (c *Client) AgentsList(ctx context.Context, params *AgentsListParams, reqEditors ...RequestEditorFn) (*http.Response, error) {
@@ -3941,6 +6523,222 @@ func (c *Client) TablesPreviewRetrieve(ctx context.Context, tableName string, pa
 
 func (c *Client) UsersCurrentUserRetrieve(ctx context.Context, reqEditors ...RequestEditorFn) (*http.Response, error) {
 	req, err := NewUsersCurrentUserRetrieveRequest(c.Server)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) WorkflowsList(ctx context.Context, params *WorkflowsListParams, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewWorkflowsListRequest(c.Server, params)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) WorkflowsCreateWithBody(ctx context.Context, params *WorkflowsCreateParams, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewWorkflowsCreateRequestWithBody(c.Server, params, contentType, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) WorkflowsCreate(ctx context.Context, params *WorkflowsCreateParams, body WorkflowsCreateJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewWorkflowsCreateRequest(c.Server, params, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) WorkflowsRunsRetrieve(ctx context.Context, runId openapi_types.UUID, params *WorkflowsRunsRetrieveParams, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewWorkflowsRunsRetrieveRequest(c.Server, runId, params)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) WorkflowsDestroy(ctx context.Context, workflowId openapi_types.UUID, params *WorkflowsDestroyParams, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewWorkflowsDestroyRequest(c.Server, workflowId, params)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) WorkflowsRetrieve(ctx context.Context, workflowId openapi_types.UUID, params *WorkflowsRetrieveParams, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewWorkflowsRetrieveRequest(c.Server, workflowId, params)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) WorkflowsPartialUpdateWithBody(ctx context.Context, workflowId openapi_types.UUID, params *WorkflowsPartialUpdateParams, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewWorkflowsPartialUpdateRequestWithBody(c.Server, workflowId, params, contentType, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) WorkflowsPartialUpdate(ctx context.Context, workflowId openapi_types.UUID, params *WorkflowsPartialUpdateParams, body WorkflowsPartialUpdateJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewWorkflowsPartialUpdateRequest(c.Server, workflowId, params, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) WorkflowsRunsList(ctx context.Context, workflowId openapi_types.UUID, params *WorkflowsRunsListParams, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewWorkflowsRunsListRequest(c.Server, workflowId, params)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) WorkflowsRunsCreateWithBody(ctx context.Context, workflowId openapi_types.UUID, params *WorkflowsRunsCreateParams, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewWorkflowsRunsCreateRequestWithBody(c.Server, workflowId, params, contentType, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) WorkflowsRunsCreate(ctx context.Context, workflowId openapi_types.UUID, params *WorkflowsRunsCreateParams, body WorkflowsRunsCreateJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewWorkflowsRunsCreateRequest(c.Server, workflowId, params, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) WorkflowsRunsBatchCreateWithBody(ctx context.Context, workflowId openapi_types.UUID, params *WorkflowsRunsBatchCreateParams, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewWorkflowsRunsBatchCreateRequestWithBody(c.Server, workflowId, params, contentType, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) WorkflowsRunsBatchCreate(ctx context.Context, workflowId openapi_types.UUID, params *WorkflowsRunsBatchCreateParams, body WorkflowsRunsBatchCreateJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewWorkflowsRunsBatchCreateRequest(c.Server, workflowId, params, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) WorkflowsVersionsList(ctx context.Context, workflowId openapi_types.UUID, params *WorkflowsVersionsListParams, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewWorkflowsVersionsListRequest(c.Server, workflowId, params)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) WorkflowsVersionsCreateWithBody(ctx context.Context, workflowId openapi_types.UUID, params *WorkflowsVersionsCreateParams, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewWorkflowsVersionsCreateRequestWithBody(c.Server, workflowId, params, contentType, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) WorkflowsVersionsCreate(ctx context.Context, workflowId openapi_types.UUID, params *WorkflowsVersionsCreateParams, body WorkflowsVersionsCreateJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewWorkflowsVersionsCreateRequest(c.Server, workflowId, params, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) WorkflowsVersionsRetrieve(ctx context.Context, workflowId openapi_types.UUID, versionId openapi_types.UUID, params *WorkflowsVersionsRetrieveParams, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewWorkflowsVersionsRetrieveRequest(c.Server, workflowId, versionId, params)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) WorkflowsVersionsSetCurrentCreate(ctx context.Context, workflowId openapi_types.UUID, versionId openapi_types.UUID, params *WorkflowsVersionsSetCurrentCreateParams, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewWorkflowsVersionsSetCurrentCreateRequest(c.Server, workflowId, versionId, params)
 	if err != nil {
 		return nil, err
 	}
@@ -8870,6 +11668,943 @@ func NewUsersCurrentUserRetrieveRequest(server string) (*http.Request, error) {
 	return req, nil
 }
 
+// NewWorkflowsListRequest generates requests for WorkflowsList
+func NewWorkflowsListRequest(server string, params *WorkflowsListParams) (*http.Request, error) {
+	var err error
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/v1/workflows/")
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	if params != nil {
+		queryValues := queryURL.Query()
+
+		if params.AgentId != nil {
+
+			if queryFrag, err := runtime.StyleParamWithOptions("form", true, "agent_id", *params.AgentId, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationQuery, Type: "string", Format: "uuid"}); err != nil {
+				return nil, err
+			} else if parsed, err := url.ParseQuery(queryFrag); err != nil {
+				return nil, err
+			} else {
+				for k, v := range parsed {
+					for _, v2 := range v {
+						queryValues.Add(k, v2)
+					}
+				}
+			}
+
+		}
+
+		if params.Page != nil {
+
+			if queryFrag, err := runtime.StyleParamWithOptions("form", true, "page", *params.Page, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationQuery, Type: "integer", Format: ""}); err != nil {
+				return nil, err
+			} else if parsed, err := url.ParseQuery(queryFrag); err != nil {
+				return nil, err
+			} else {
+				for k, v := range parsed {
+					for _, v2 := range v {
+						queryValues.Add(k, v2)
+					}
+				}
+			}
+
+		}
+
+		if params.PageSize != nil {
+
+			if queryFrag, err := runtime.StyleParamWithOptions("form", true, "page_size", *params.PageSize, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationQuery, Type: "integer", Format: ""}); err != nil {
+				return nil, err
+			} else if parsed, err := url.ParseQuery(queryFrag); err != nil {
+				return nil, err
+			} else {
+				for k, v := range parsed {
+					for _, v2 := range v {
+						queryValues.Add(k, v2)
+					}
+				}
+			}
+
+		}
+
+		if params.Search != nil {
+
+			if queryFrag, err := runtime.StyleParamWithOptions("form", true, "search", *params.Search, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationQuery, Type: "string", Format: ""}); err != nil {
+				return nil, err
+			} else if parsed, err := url.ParseQuery(queryFrag); err != nil {
+				return nil, err
+			} else {
+				for k, v := range parsed {
+					for _, v2 := range v {
+						queryValues.Add(k, v2)
+					}
+				}
+			}
+
+		}
+
+		if params.OrganizationId != nil {
+
+			if queryFrag, err := runtime.StyleParamWithOptions("form", true, "organization_id", *params.OrganizationId, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationQuery, Type: "string", Format: "uuid"}); err != nil {
+				return nil, err
+			} else if parsed, err := url.ParseQuery(queryFrag); err != nil {
+				return nil, err
+			} else {
+				for k, v := range parsed {
+					for _, v2 := range v {
+						queryValues.Add(k, v2)
+					}
+				}
+			}
+
+		}
+
+		queryURL.RawQuery = queryValues.Encode()
+	}
+
+	req, err := http.NewRequest("GET", queryURL.String(), nil)
+	if err != nil {
+		return nil, err
+	}
+
+	return req, nil
+}
+
+// NewWorkflowsCreateRequest calls the generic WorkflowsCreate builder with application/json body
+func NewWorkflowsCreateRequest(server string, params *WorkflowsCreateParams, body WorkflowsCreateJSONRequestBody) (*http.Request, error) {
+	var bodyReader io.Reader
+	buf, err := json.Marshal(body)
+	if err != nil {
+		return nil, err
+	}
+	bodyReader = bytes.NewReader(buf)
+	return NewWorkflowsCreateRequestWithBody(server, params, "application/json", bodyReader)
+}
+
+// NewWorkflowsCreateRequestWithBody generates requests for WorkflowsCreate with any type of body
+func NewWorkflowsCreateRequestWithBody(server string, params *WorkflowsCreateParams, contentType string, body io.Reader) (*http.Request, error) {
+	var err error
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/v1/workflows/")
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	if params != nil {
+		queryValues := queryURL.Query()
+
+		if params.OrganizationId != nil {
+
+			if queryFrag, err := runtime.StyleParamWithOptions("form", true, "organization_id", *params.OrganizationId, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationQuery, Type: "string", Format: "uuid"}); err != nil {
+				return nil, err
+			} else if parsed, err := url.ParseQuery(queryFrag); err != nil {
+				return nil, err
+			} else {
+				for k, v := range parsed {
+					for _, v2 := range v {
+						queryValues.Add(k, v2)
+					}
+				}
+			}
+
+		}
+
+		queryURL.RawQuery = queryValues.Encode()
+	}
+
+	req, err := http.NewRequest("POST", queryURL.String(), body)
+	if err != nil {
+		return nil, err
+	}
+
+	req.Header.Add("Content-Type", contentType)
+
+	return req, nil
+}
+
+// NewWorkflowsRunsRetrieveRequest generates requests for WorkflowsRunsRetrieve
+func NewWorkflowsRunsRetrieveRequest(server string, runId openapi_types.UUID, params *WorkflowsRunsRetrieveParams) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithOptions("simple", false, "run_id", runId, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationPath, Type: "string", Format: "uuid"})
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/v1/workflows/runs/%s/", pathParam0)
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	if params != nil {
+		queryValues := queryURL.Query()
+
+		if params.OrganizationId != nil {
+
+			if queryFrag, err := runtime.StyleParamWithOptions("form", true, "organization_id", *params.OrganizationId, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationQuery, Type: "string", Format: "uuid"}); err != nil {
+				return nil, err
+			} else if parsed, err := url.ParseQuery(queryFrag); err != nil {
+				return nil, err
+			} else {
+				for k, v := range parsed {
+					for _, v2 := range v {
+						queryValues.Add(k, v2)
+					}
+				}
+			}
+
+		}
+
+		queryURL.RawQuery = queryValues.Encode()
+	}
+
+	req, err := http.NewRequest("GET", queryURL.String(), nil)
+	if err != nil {
+		return nil, err
+	}
+
+	return req, nil
+}
+
+// NewWorkflowsDestroyRequest generates requests for WorkflowsDestroy
+func NewWorkflowsDestroyRequest(server string, workflowId openapi_types.UUID, params *WorkflowsDestroyParams) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithOptions("simple", false, "workflow_id", workflowId, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationPath, Type: "string", Format: "uuid"})
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/v1/workflows/%s/", pathParam0)
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	if params != nil {
+		queryValues := queryURL.Query()
+
+		if params.OrganizationId != nil {
+
+			if queryFrag, err := runtime.StyleParamWithOptions("form", true, "organization_id", *params.OrganizationId, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationQuery, Type: "string", Format: "uuid"}); err != nil {
+				return nil, err
+			} else if parsed, err := url.ParseQuery(queryFrag); err != nil {
+				return nil, err
+			} else {
+				for k, v := range parsed {
+					for _, v2 := range v {
+						queryValues.Add(k, v2)
+					}
+				}
+			}
+
+		}
+
+		queryURL.RawQuery = queryValues.Encode()
+	}
+
+	req, err := http.NewRequest("DELETE", queryURL.String(), nil)
+	if err != nil {
+		return nil, err
+	}
+
+	return req, nil
+}
+
+// NewWorkflowsRetrieveRequest generates requests for WorkflowsRetrieve
+func NewWorkflowsRetrieveRequest(server string, workflowId openapi_types.UUID, params *WorkflowsRetrieveParams) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithOptions("simple", false, "workflow_id", workflowId, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationPath, Type: "string", Format: "uuid"})
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/v1/workflows/%s/", pathParam0)
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	if params != nil {
+		queryValues := queryURL.Query()
+
+		if params.OrganizationId != nil {
+
+			if queryFrag, err := runtime.StyleParamWithOptions("form", true, "organization_id", *params.OrganizationId, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationQuery, Type: "string", Format: "uuid"}); err != nil {
+				return nil, err
+			} else if parsed, err := url.ParseQuery(queryFrag); err != nil {
+				return nil, err
+			} else {
+				for k, v := range parsed {
+					for _, v2 := range v {
+						queryValues.Add(k, v2)
+					}
+				}
+			}
+
+		}
+
+		queryURL.RawQuery = queryValues.Encode()
+	}
+
+	req, err := http.NewRequest("GET", queryURL.String(), nil)
+	if err != nil {
+		return nil, err
+	}
+
+	return req, nil
+}
+
+// NewWorkflowsPartialUpdateRequest calls the generic WorkflowsPartialUpdate builder with application/json body
+func NewWorkflowsPartialUpdateRequest(server string, workflowId openapi_types.UUID, params *WorkflowsPartialUpdateParams, body WorkflowsPartialUpdateJSONRequestBody) (*http.Request, error) {
+	var bodyReader io.Reader
+	buf, err := json.Marshal(body)
+	if err != nil {
+		return nil, err
+	}
+	bodyReader = bytes.NewReader(buf)
+	return NewWorkflowsPartialUpdateRequestWithBody(server, workflowId, params, "application/json", bodyReader)
+}
+
+// NewWorkflowsPartialUpdateRequestWithBody generates requests for WorkflowsPartialUpdate with any type of body
+func NewWorkflowsPartialUpdateRequestWithBody(server string, workflowId openapi_types.UUID, params *WorkflowsPartialUpdateParams, contentType string, body io.Reader) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithOptions("simple", false, "workflow_id", workflowId, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationPath, Type: "string", Format: "uuid"})
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/v1/workflows/%s/", pathParam0)
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	if params != nil {
+		queryValues := queryURL.Query()
+
+		if params.OrganizationId != nil {
+
+			if queryFrag, err := runtime.StyleParamWithOptions("form", true, "organization_id", *params.OrganizationId, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationQuery, Type: "string", Format: "uuid"}); err != nil {
+				return nil, err
+			} else if parsed, err := url.ParseQuery(queryFrag); err != nil {
+				return nil, err
+			} else {
+				for k, v := range parsed {
+					for _, v2 := range v {
+						queryValues.Add(k, v2)
+					}
+				}
+			}
+
+		}
+
+		queryURL.RawQuery = queryValues.Encode()
+	}
+
+	req, err := http.NewRequest("PATCH", queryURL.String(), body)
+	if err != nil {
+		return nil, err
+	}
+
+	req.Header.Add("Content-Type", contentType)
+
+	return req, nil
+}
+
+// NewWorkflowsRunsListRequest generates requests for WorkflowsRunsList
+func NewWorkflowsRunsListRequest(server string, workflowId openapi_types.UUID, params *WorkflowsRunsListParams) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithOptions("simple", false, "workflow_id", workflowId, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationPath, Type: "string", Format: "uuid"})
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/v1/workflows/%s/runs/", pathParam0)
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	if params != nil {
+		queryValues := queryURL.Query()
+
+		if params.Limit != nil {
+
+			if queryFrag, err := runtime.StyleParamWithOptions("form", true, "limit", *params.Limit, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationQuery, Type: "integer", Format: ""}); err != nil {
+				return nil, err
+			} else if parsed, err := url.ParseQuery(queryFrag); err != nil {
+				return nil, err
+			} else {
+				for k, v := range parsed {
+					for _, v2 := range v {
+						queryValues.Add(k, v2)
+					}
+				}
+			}
+
+		}
+
+		if params.Page != nil {
+
+			if queryFrag, err := runtime.StyleParamWithOptions("form", true, "page", *params.Page, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationQuery, Type: "integer", Format: ""}); err != nil {
+				return nil, err
+			} else if parsed, err := url.ParseQuery(queryFrag); err != nil {
+				return nil, err
+			} else {
+				for k, v := range parsed {
+					for _, v2 := range v {
+						queryValues.Add(k, v2)
+					}
+				}
+			}
+
+		}
+
+		if params.PageSize != nil {
+
+			if queryFrag, err := runtime.StyleParamWithOptions("form", true, "page_size", *params.PageSize, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationQuery, Type: "integer", Format: ""}); err != nil {
+				return nil, err
+			} else if parsed, err := url.ParseQuery(queryFrag); err != nil {
+				return nil, err
+			} else {
+				for k, v := range parsed {
+					for _, v2 := range v {
+						queryValues.Add(k, v2)
+					}
+				}
+			}
+
+		}
+
+		if params.OrganizationId != nil {
+
+			if queryFrag, err := runtime.StyleParamWithOptions("form", true, "organization_id", *params.OrganizationId, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationQuery, Type: "string", Format: "uuid"}); err != nil {
+				return nil, err
+			} else if parsed, err := url.ParseQuery(queryFrag); err != nil {
+				return nil, err
+			} else {
+				for k, v := range parsed {
+					for _, v2 := range v {
+						queryValues.Add(k, v2)
+					}
+				}
+			}
+
+		}
+
+		queryURL.RawQuery = queryValues.Encode()
+	}
+
+	req, err := http.NewRequest("GET", queryURL.String(), nil)
+	if err != nil {
+		return nil, err
+	}
+
+	return req, nil
+}
+
+// NewWorkflowsRunsCreateRequest calls the generic WorkflowsRunsCreate builder with application/json body
+func NewWorkflowsRunsCreateRequest(server string, workflowId openapi_types.UUID, params *WorkflowsRunsCreateParams, body WorkflowsRunsCreateJSONRequestBody) (*http.Request, error) {
+	var bodyReader io.Reader
+	buf, err := json.Marshal(body)
+	if err != nil {
+		return nil, err
+	}
+	bodyReader = bytes.NewReader(buf)
+	return NewWorkflowsRunsCreateRequestWithBody(server, workflowId, params, "application/json", bodyReader)
+}
+
+// NewWorkflowsRunsCreateRequestWithBody generates requests for WorkflowsRunsCreate with any type of body
+func NewWorkflowsRunsCreateRequestWithBody(server string, workflowId openapi_types.UUID, params *WorkflowsRunsCreateParams, contentType string, body io.Reader) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithOptions("simple", false, "workflow_id", workflowId, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationPath, Type: "string", Format: "uuid"})
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/v1/workflows/%s/runs/", pathParam0)
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	if params != nil {
+		queryValues := queryURL.Query()
+
+		if params.OrganizationId != nil {
+
+			if queryFrag, err := runtime.StyleParamWithOptions("form", true, "organization_id", *params.OrganizationId, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationQuery, Type: "string", Format: "uuid"}); err != nil {
+				return nil, err
+			} else if parsed, err := url.ParseQuery(queryFrag); err != nil {
+				return nil, err
+			} else {
+				for k, v := range parsed {
+					for _, v2 := range v {
+						queryValues.Add(k, v2)
+					}
+				}
+			}
+
+		}
+
+		queryURL.RawQuery = queryValues.Encode()
+	}
+
+	req, err := http.NewRequest("POST", queryURL.String(), body)
+	if err != nil {
+		return nil, err
+	}
+
+	req.Header.Add("Content-Type", contentType)
+
+	return req, nil
+}
+
+// NewWorkflowsRunsBatchCreateRequest calls the generic WorkflowsRunsBatchCreate builder with application/json body
+func NewWorkflowsRunsBatchCreateRequest(server string, workflowId openapi_types.UUID, params *WorkflowsRunsBatchCreateParams, body WorkflowsRunsBatchCreateJSONRequestBody) (*http.Request, error) {
+	var bodyReader io.Reader
+	buf, err := json.Marshal(body)
+	if err != nil {
+		return nil, err
+	}
+	bodyReader = bytes.NewReader(buf)
+	return NewWorkflowsRunsBatchCreateRequestWithBody(server, workflowId, params, "application/json", bodyReader)
+}
+
+// NewWorkflowsRunsBatchCreateRequestWithBody generates requests for WorkflowsRunsBatchCreate with any type of body
+func NewWorkflowsRunsBatchCreateRequestWithBody(server string, workflowId openapi_types.UUID, params *WorkflowsRunsBatchCreateParams, contentType string, body io.Reader) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithOptions("simple", false, "workflow_id", workflowId, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationPath, Type: "string", Format: "uuid"})
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/v1/workflows/%s/runs/batch/", pathParam0)
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	if params != nil {
+		queryValues := queryURL.Query()
+
+		if params.OrganizationId != nil {
+
+			if queryFrag, err := runtime.StyleParamWithOptions("form", true, "organization_id", *params.OrganizationId, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationQuery, Type: "string", Format: "uuid"}); err != nil {
+				return nil, err
+			} else if parsed, err := url.ParseQuery(queryFrag); err != nil {
+				return nil, err
+			} else {
+				for k, v := range parsed {
+					for _, v2 := range v {
+						queryValues.Add(k, v2)
+					}
+				}
+			}
+
+		}
+
+		queryURL.RawQuery = queryValues.Encode()
+	}
+
+	req, err := http.NewRequest("POST", queryURL.String(), body)
+	if err != nil {
+		return nil, err
+	}
+
+	req.Header.Add("Content-Type", contentType)
+
+	return req, nil
+}
+
+// NewWorkflowsVersionsListRequest generates requests for WorkflowsVersionsList
+func NewWorkflowsVersionsListRequest(server string, workflowId openapi_types.UUID, params *WorkflowsVersionsListParams) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithOptions("simple", false, "workflow_id", workflowId, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationPath, Type: "string", Format: "uuid"})
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/v1/workflows/%s/versions/", pathParam0)
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	if params != nil {
+		queryValues := queryURL.Query()
+
+		if params.Page != nil {
+
+			if queryFrag, err := runtime.StyleParamWithOptions("form", true, "page", *params.Page, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationQuery, Type: "integer", Format: ""}); err != nil {
+				return nil, err
+			} else if parsed, err := url.ParseQuery(queryFrag); err != nil {
+				return nil, err
+			} else {
+				for k, v := range parsed {
+					for _, v2 := range v {
+						queryValues.Add(k, v2)
+					}
+				}
+			}
+
+		}
+
+		if params.PageSize != nil {
+
+			if queryFrag, err := runtime.StyleParamWithOptions("form", true, "page_size", *params.PageSize, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationQuery, Type: "integer", Format: ""}); err != nil {
+				return nil, err
+			} else if parsed, err := url.ParseQuery(queryFrag); err != nil {
+				return nil, err
+			} else {
+				for k, v := range parsed {
+					for _, v2 := range v {
+						queryValues.Add(k, v2)
+					}
+				}
+			}
+
+		}
+
+		if params.OrganizationId != nil {
+
+			if queryFrag, err := runtime.StyleParamWithOptions("form", true, "organization_id", *params.OrganizationId, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationQuery, Type: "string", Format: "uuid"}); err != nil {
+				return nil, err
+			} else if parsed, err := url.ParseQuery(queryFrag); err != nil {
+				return nil, err
+			} else {
+				for k, v := range parsed {
+					for _, v2 := range v {
+						queryValues.Add(k, v2)
+					}
+				}
+			}
+
+		}
+
+		queryURL.RawQuery = queryValues.Encode()
+	}
+
+	req, err := http.NewRequest("GET", queryURL.String(), nil)
+	if err != nil {
+		return nil, err
+	}
+
+	return req, nil
+}
+
+// NewWorkflowsVersionsCreateRequest calls the generic WorkflowsVersionsCreate builder with application/json body
+func NewWorkflowsVersionsCreateRequest(server string, workflowId openapi_types.UUID, params *WorkflowsVersionsCreateParams, body WorkflowsVersionsCreateJSONRequestBody) (*http.Request, error) {
+	var bodyReader io.Reader
+	buf, err := json.Marshal(body)
+	if err != nil {
+		return nil, err
+	}
+	bodyReader = bytes.NewReader(buf)
+	return NewWorkflowsVersionsCreateRequestWithBody(server, workflowId, params, "application/json", bodyReader)
+}
+
+// NewWorkflowsVersionsCreateRequestWithBody generates requests for WorkflowsVersionsCreate with any type of body
+func NewWorkflowsVersionsCreateRequestWithBody(server string, workflowId openapi_types.UUID, params *WorkflowsVersionsCreateParams, contentType string, body io.Reader) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithOptions("simple", false, "workflow_id", workflowId, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationPath, Type: "string", Format: "uuid"})
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/v1/workflows/%s/versions/", pathParam0)
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	if params != nil {
+		queryValues := queryURL.Query()
+
+		if params.OrganizationId != nil {
+
+			if queryFrag, err := runtime.StyleParamWithOptions("form", true, "organization_id", *params.OrganizationId, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationQuery, Type: "string", Format: "uuid"}); err != nil {
+				return nil, err
+			} else if parsed, err := url.ParseQuery(queryFrag); err != nil {
+				return nil, err
+			} else {
+				for k, v := range parsed {
+					for _, v2 := range v {
+						queryValues.Add(k, v2)
+					}
+				}
+			}
+
+		}
+
+		queryURL.RawQuery = queryValues.Encode()
+	}
+
+	req, err := http.NewRequest("POST", queryURL.String(), body)
+	if err != nil {
+		return nil, err
+	}
+
+	req.Header.Add("Content-Type", contentType)
+
+	return req, nil
+}
+
+// NewWorkflowsVersionsRetrieveRequest generates requests for WorkflowsVersionsRetrieve
+func NewWorkflowsVersionsRetrieveRequest(server string, workflowId openapi_types.UUID, versionId openapi_types.UUID, params *WorkflowsVersionsRetrieveParams) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithOptions("simple", false, "workflow_id", workflowId, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationPath, Type: "string", Format: "uuid"})
+	if err != nil {
+		return nil, err
+	}
+
+	var pathParam1 string
+
+	pathParam1, err = runtime.StyleParamWithOptions("simple", false, "version_id", versionId, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationPath, Type: "string", Format: "uuid"})
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/v1/workflows/%s/versions/%s/", pathParam0, pathParam1)
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	if params != nil {
+		queryValues := queryURL.Query()
+
+		if params.OrganizationId != nil {
+
+			if queryFrag, err := runtime.StyleParamWithOptions("form", true, "organization_id", *params.OrganizationId, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationQuery, Type: "string", Format: "uuid"}); err != nil {
+				return nil, err
+			} else if parsed, err := url.ParseQuery(queryFrag); err != nil {
+				return nil, err
+			} else {
+				for k, v := range parsed {
+					for _, v2 := range v {
+						queryValues.Add(k, v2)
+					}
+				}
+			}
+
+		}
+
+		queryURL.RawQuery = queryValues.Encode()
+	}
+
+	req, err := http.NewRequest("GET", queryURL.String(), nil)
+	if err != nil {
+		return nil, err
+	}
+
+	return req, nil
+}
+
+// NewWorkflowsVersionsSetCurrentCreateRequest generates requests for WorkflowsVersionsSetCurrentCreate
+func NewWorkflowsVersionsSetCurrentCreateRequest(server string, workflowId openapi_types.UUID, versionId openapi_types.UUID, params *WorkflowsVersionsSetCurrentCreateParams) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithOptions("simple", false, "workflow_id", workflowId, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationPath, Type: "string", Format: "uuid"})
+	if err != nil {
+		return nil, err
+	}
+
+	var pathParam1 string
+
+	pathParam1, err = runtime.StyleParamWithOptions("simple", false, "version_id", versionId, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationPath, Type: "string", Format: "uuid"})
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/v1/workflows/%s/versions/%s/set-current/", pathParam0, pathParam1)
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	if params != nil {
+		queryValues := queryURL.Query()
+
+		if params.OrganizationId != nil {
+
+			if queryFrag, err := runtime.StyleParamWithOptions("form", true, "organization_id", *params.OrganizationId, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationQuery, Type: "string", Format: "uuid"}); err != nil {
+				return nil, err
+			} else if parsed, err := url.ParseQuery(queryFrag); err != nil {
+				return nil, err
+			} else {
+				for k, v := range parsed {
+					for _, v2 := range v {
+						queryValues.Add(k, v2)
+					}
+				}
+			}
+
+		}
+
+		queryURL.RawQuery = queryValues.Encode()
+	}
+
+	req, err := http.NewRequest("POST", queryURL.String(), nil)
+	if err != nil {
+		return nil, err
+	}
+
+	return req, nil
+}
+
 func (c *Client) applyEditors(ctx context.Context, req *http.Request, additionalEditors []RequestEditorFn) error {
 	for _, r := range c.RequestEditors {
 		if err := r(ctx, req); err != nil {
@@ -9179,6 +12914,55 @@ type ClientWithResponsesInterface interface {
 
 	// UsersCurrentUserRetrieveWithResponse request
 	UsersCurrentUserRetrieveWithResponse(ctx context.Context, reqEditors ...RequestEditorFn) (*UsersCurrentUserRetrieveResponse, error)
+
+	// WorkflowsListWithResponse request
+	WorkflowsListWithResponse(ctx context.Context, params *WorkflowsListParams, reqEditors ...RequestEditorFn) (*WorkflowsListResponse, error)
+
+	// WorkflowsCreateWithBodyWithResponse request with any body
+	WorkflowsCreateWithBodyWithResponse(ctx context.Context, params *WorkflowsCreateParams, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*WorkflowsCreateResponse, error)
+
+	WorkflowsCreateWithResponse(ctx context.Context, params *WorkflowsCreateParams, body WorkflowsCreateJSONRequestBody, reqEditors ...RequestEditorFn) (*WorkflowsCreateResponse, error)
+
+	// WorkflowsRunsRetrieveWithResponse request
+	WorkflowsRunsRetrieveWithResponse(ctx context.Context, runId openapi_types.UUID, params *WorkflowsRunsRetrieveParams, reqEditors ...RequestEditorFn) (*WorkflowsRunsRetrieveResponse, error)
+
+	// WorkflowsDestroyWithResponse request
+	WorkflowsDestroyWithResponse(ctx context.Context, workflowId openapi_types.UUID, params *WorkflowsDestroyParams, reqEditors ...RequestEditorFn) (*WorkflowsDestroyResponse, error)
+
+	// WorkflowsRetrieveWithResponse request
+	WorkflowsRetrieveWithResponse(ctx context.Context, workflowId openapi_types.UUID, params *WorkflowsRetrieveParams, reqEditors ...RequestEditorFn) (*WorkflowsRetrieveResponse, error)
+
+	// WorkflowsPartialUpdateWithBodyWithResponse request with any body
+	WorkflowsPartialUpdateWithBodyWithResponse(ctx context.Context, workflowId openapi_types.UUID, params *WorkflowsPartialUpdateParams, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*WorkflowsPartialUpdateResponse, error)
+
+	WorkflowsPartialUpdateWithResponse(ctx context.Context, workflowId openapi_types.UUID, params *WorkflowsPartialUpdateParams, body WorkflowsPartialUpdateJSONRequestBody, reqEditors ...RequestEditorFn) (*WorkflowsPartialUpdateResponse, error)
+
+	// WorkflowsRunsListWithResponse request
+	WorkflowsRunsListWithResponse(ctx context.Context, workflowId openapi_types.UUID, params *WorkflowsRunsListParams, reqEditors ...RequestEditorFn) (*WorkflowsRunsListResponse, error)
+
+	// WorkflowsRunsCreateWithBodyWithResponse request with any body
+	WorkflowsRunsCreateWithBodyWithResponse(ctx context.Context, workflowId openapi_types.UUID, params *WorkflowsRunsCreateParams, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*WorkflowsRunsCreateResponse, error)
+
+	WorkflowsRunsCreateWithResponse(ctx context.Context, workflowId openapi_types.UUID, params *WorkflowsRunsCreateParams, body WorkflowsRunsCreateJSONRequestBody, reqEditors ...RequestEditorFn) (*WorkflowsRunsCreateResponse, error)
+
+	// WorkflowsRunsBatchCreateWithBodyWithResponse request with any body
+	WorkflowsRunsBatchCreateWithBodyWithResponse(ctx context.Context, workflowId openapi_types.UUID, params *WorkflowsRunsBatchCreateParams, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*WorkflowsRunsBatchCreateResponse, error)
+
+	WorkflowsRunsBatchCreateWithResponse(ctx context.Context, workflowId openapi_types.UUID, params *WorkflowsRunsBatchCreateParams, body WorkflowsRunsBatchCreateJSONRequestBody, reqEditors ...RequestEditorFn) (*WorkflowsRunsBatchCreateResponse, error)
+
+	// WorkflowsVersionsListWithResponse request
+	WorkflowsVersionsListWithResponse(ctx context.Context, workflowId openapi_types.UUID, params *WorkflowsVersionsListParams, reqEditors ...RequestEditorFn) (*WorkflowsVersionsListResponse, error)
+
+	// WorkflowsVersionsCreateWithBodyWithResponse request with any body
+	WorkflowsVersionsCreateWithBodyWithResponse(ctx context.Context, workflowId openapi_types.UUID, params *WorkflowsVersionsCreateParams, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*WorkflowsVersionsCreateResponse, error)
+
+	WorkflowsVersionsCreateWithResponse(ctx context.Context, workflowId openapi_types.UUID, params *WorkflowsVersionsCreateParams, body WorkflowsVersionsCreateJSONRequestBody, reqEditors ...RequestEditorFn) (*WorkflowsVersionsCreateResponse, error)
+
+	// WorkflowsVersionsRetrieveWithResponse request
+	WorkflowsVersionsRetrieveWithResponse(ctx context.Context, workflowId openapi_types.UUID, versionId openapi_types.UUID, params *WorkflowsVersionsRetrieveParams, reqEditors ...RequestEditorFn) (*WorkflowsVersionsRetrieveResponse, error)
+
+	// WorkflowsVersionsSetCurrentCreateWithResponse request
+	WorkflowsVersionsSetCurrentCreateWithResponse(ctx context.Context, workflowId openapi_types.UUID, versionId openapi_types.UUID, params *WorkflowsVersionsSetCurrentCreateParams, reqEditors ...RequestEditorFn) (*WorkflowsVersionsSetCurrentCreateResponse, error)
 }
 
 type AgentsListResponse struct {
@@ -11082,6 +14866,376 @@ func (r UsersCurrentUserRetrieveResponse) StatusCode() int {
 	return 0
 }
 
+type WorkflowsListResponse struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	JSON200      *PaginatedWorkflowList
+}
+
+// Status returns HTTPResponse.Status
+func (r WorkflowsListResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r WorkflowsListResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+type WorkflowsCreateResponse struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	JSON201      *WorkflowDetail
+	JSON400      *struct {
+		union json.RawMessage
+	}
+}
+type WorkflowsCreate4000 map[string]WorkflowsCreate_400_0_AdditionalProperties
+type WorkflowsCreate40000 = []string
+type WorkflowsCreate40001 = string
+type WorkflowsCreate_400_0_AdditionalProperties struct {
+	union json.RawMessage
+}
+type WorkflowsCreate4001 struct {
+	Detail string `json:"detail"`
+	Errors []struct {
+		Message string  `json:"message"`
+		StepId  *string `json:"step_id"`
+	} `json:"errors"`
+}
+
+// Status returns HTTPResponse.Status
+func (r WorkflowsCreateResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r WorkflowsCreateResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+type WorkflowsRunsRetrieveResponse struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	JSON200      *WorkflowRunDetail
+	JSON404      *ErrorDetailResponse
+}
+
+// Status returns HTTPResponse.Status
+func (r WorkflowsRunsRetrieveResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r WorkflowsRunsRetrieveResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+type WorkflowsDestroyResponse struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	JSON404      *ErrorDetailResponse
+}
+
+// Status returns HTTPResponse.Status
+func (r WorkflowsDestroyResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r WorkflowsDestroyResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+type WorkflowsRetrieveResponse struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	JSON200      *WorkflowDetail
+	JSON404      *ErrorDetailResponse
+}
+
+// Status returns HTTPResponse.Status
+func (r WorkflowsRetrieveResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r WorkflowsRetrieveResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+type WorkflowsPartialUpdateResponse struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	JSON200      *WorkflowDetail
+	JSON400      *struct {
+		union json.RawMessage
+	}
+	JSON404 *ErrorDetailResponse
+}
+type WorkflowsPartialUpdate4000 map[string]WorkflowsPartialUpdate_400_0_AdditionalProperties
+type WorkflowsPartialUpdate40000 = []string
+type WorkflowsPartialUpdate40001 = string
+type WorkflowsPartialUpdate_400_0_AdditionalProperties struct {
+	union json.RawMessage
+}
+type WorkflowsPartialUpdate4001 struct {
+	Detail string `json:"detail"`
+	Errors []struct {
+		Message string  `json:"message"`
+		StepId  *string `json:"step_id"`
+	} `json:"errors"`
+}
+
+// Status returns HTTPResponse.Status
+func (r WorkflowsPartialUpdateResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r WorkflowsPartialUpdateResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+type WorkflowsRunsListResponse struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	JSON200      *PaginatedWorkflowRunList
+}
+
+// Status returns HTTPResponse.Status
+func (r WorkflowsRunsListResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r WorkflowsRunsListResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+type WorkflowsRunsCreateResponse struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	JSON201      *WorkflowRunDetail
+	JSON400      *struct {
+		union json.RawMessage
+	}
+	JSON403 *ErrorDetailResponse
+	JSON404 *ErrorDetailResponse
+}
+type WorkflowsRunsCreate4000 = []string
+type WorkflowsRunsCreate4001 map[string]WorkflowsRunsCreate_400_1_AdditionalProperties
+type WorkflowsRunsCreate40010 = []string
+type WorkflowsRunsCreate40011 = string
+type WorkflowsRunsCreate_400_1_AdditionalProperties struct {
+	union json.RawMessage
+}
+type WorkflowsRunsCreate4002 struct {
+	Error string `json:"error"`
+}
+
+// Status returns HTTPResponse.Status
+func (r WorkflowsRunsCreateResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r WorkflowsRunsCreateResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+type WorkflowsRunsBatchCreateResponse struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	JSON201      *WorkflowRunBatch
+	JSON400      *struct {
+		union json.RawMessage
+	}
+	JSON403 *ErrorDetailResponse
+	JSON404 *ErrorDetailResponse
+}
+type WorkflowsRunsBatchCreate4000 = []string
+type WorkflowsRunsBatchCreate4001 map[string]WorkflowsRunsBatchCreate_400_1_AdditionalProperties
+type WorkflowsRunsBatchCreate40010 = []string
+type WorkflowsRunsBatchCreate40011 = string
+type WorkflowsRunsBatchCreate_400_1_AdditionalProperties struct {
+	union json.RawMessage
+}
+type WorkflowsRunsBatchCreate4002 struct {
+	Error string `json:"error"`
+}
+
+// Status returns HTTPResponse.Status
+func (r WorkflowsRunsBatchCreateResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r WorkflowsRunsBatchCreateResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+type WorkflowsVersionsListResponse struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	JSON200      *PaginatedWorkflowVersionList
+}
+
+// Status returns HTTPResponse.Status
+func (r WorkflowsVersionsListResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r WorkflowsVersionsListResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+type WorkflowsVersionsCreateResponse struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	JSON201      *WorkflowVersionDetail
+	JSON400      *struct {
+		union json.RawMessage
+	}
+	JSON404 *ErrorDetailResponse
+}
+type WorkflowsVersionsCreate4000 map[string]WorkflowsVersionsCreate_400_0_AdditionalProperties
+type WorkflowsVersionsCreate40000 = []string
+type WorkflowsVersionsCreate40001 = string
+type WorkflowsVersionsCreate_400_0_AdditionalProperties struct {
+	union json.RawMessage
+}
+type WorkflowsVersionsCreate4001 struct {
+	Detail string `json:"detail"`
+	Errors []struct {
+		Message string  `json:"message"`
+		StepId  *string `json:"step_id"`
+	} `json:"errors"`
+}
+
+// Status returns HTTPResponse.Status
+func (r WorkflowsVersionsCreateResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r WorkflowsVersionsCreateResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+type WorkflowsVersionsRetrieveResponse struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	JSON200      *WorkflowVersionDetail
+	JSON404      *ErrorDetailResponse
+}
+
+// Status returns HTTPResponse.Status
+func (r WorkflowsVersionsRetrieveResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r WorkflowsVersionsRetrieveResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+type WorkflowsVersionsSetCurrentCreateResponse struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	JSON200      *WorkflowVersionDetail
+	JSON404      *ErrorDetailResponse
+}
+
+// Status returns HTTPResponse.Status
+func (r WorkflowsVersionsSetCurrentCreateResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r WorkflowsVersionsSetCurrentCreateResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
 // AgentsListWithResponse request returning *AgentsListResponse
 func (c *ClientWithResponses) AgentsListWithResponse(ctx context.Context, params *AgentsListParams, reqEditors ...RequestEditorFn) (*AgentsListResponse, error) {
 	rsp, err := c.AgentsList(ctx, params, reqEditors...)
@@ -11935,6 +16089,163 @@ func (c *ClientWithResponses) UsersCurrentUserRetrieveWithResponse(ctx context.C
 		return nil, err
 	}
 	return ParseUsersCurrentUserRetrieveResponse(rsp)
+}
+
+// WorkflowsListWithResponse request returning *WorkflowsListResponse
+func (c *ClientWithResponses) WorkflowsListWithResponse(ctx context.Context, params *WorkflowsListParams, reqEditors ...RequestEditorFn) (*WorkflowsListResponse, error) {
+	rsp, err := c.WorkflowsList(ctx, params, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseWorkflowsListResponse(rsp)
+}
+
+// WorkflowsCreateWithBodyWithResponse request with arbitrary body returning *WorkflowsCreateResponse
+func (c *ClientWithResponses) WorkflowsCreateWithBodyWithResponse(ctx context.Context, params *WorkflowsCreateParams, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*WorkflowsCreateResponse, error) {
+	rsp, err := c.WorkflowsCreateWithBody(ctx, params, contentType, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseWorkflowsCreateResponse(rsp)
+}
+
+func (c *ClientWithResponses) WorkflowsCreateWithResponse(ctx context.Context, params *WorkflowsCreateParams, body WorkflowsCreateJSONRequestBody, reqEditors ...RequestEditorFn) (*WorkflowsCreateResponse, error) {
+	rsp, err := c.WorkflowsCreate(ctx, params, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseWorkflowsCreateResponse(rsp)
+}
+
+// WorkflowsRunsRetrieveWithResponse request returning *WorkflowsRunsRetrieveResponse
+func (c *ClientWithResponses) WorkflowsRunsRetrieveWithResponse(ctx context.Context, runId openapi_types.UUID, params *WorkflowsRunsRetrieveParams, reqEditors ...RequestEditorFn) (*WorkflowsRunsRetrieveResponse, error) {
+	rsp, err := c.WorkflowsRunsRetrieve(ctx, runId, params, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseWorkflowsRunsRetrieveResponse(rsp)
+}
+
+// WorkflowsDestroyWithResponse request returning *WorkflowsDestroyResponse
+func (c *ClientWithResponses) WorkflowsDestroyWithResponse(ctx context.Context, workflowId openapi_types.UUID, params *WorkflowsDestroyParams, reqEditors ...RequestEditorFn) (*WorkflowsDestroyResponse, error) {
+	rsp, err := c.WorkflowsDestroy(ctx, workflowId, params, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseWorkflowsDestroyResponse(rsp)
+}
+
+// WorkflowsRetrieveWithResponse request returning *WorkflowsRetrieveResponse
+func (c *ClientWithResponses) WorkflowsRetrieveWithResponse(ctx context.Context, workflowId openapi_types.UUID, params *WorkflowsRetrieveParams, reqEditors ...RequestEditorFn) (*WorkflowsRetrieveResponse, error) {
+	rsp, err := c.WorkflowsRetrieve(ctx, workflowId, params, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseWorkflowsRetrieveResponse(rsp)
+}
+
+// WorkflowsPartialUpdateWithBodyWithResponse request with arbitrary body returning *WorkflowsPartialUpdateResponse
+func (c *ClientWithResponses) WorkflowsPartialUpdateWithBodyWithResponse(ctx context.Context, workflowId openapi_types.UUID, params *WorkflowsPartialUpdateParams, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*WorkflowsPartialUpdateResponse, error) {
+	rsp, err := c.WorkflowsPartialUpdateWithBody(ctx, workflowId, params, contentType, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseWorkflowsPartialUpdateResponse(rsp)
+}
+
+func (c *ClientWithResponses) WorkflowsPartialUpdateWithResponse(ctx context.Context, workflowId openapi_types.UUID, params *WorkflowsPartialUpdateParams, body WorkflowsPartialUpdateJSONRequestBody, reqEditors ...RequestEditorFn) (*WorkflowsPartialUpdateResponse, error) {
+	rsp, err := c.WorkflowsPartialUpdate(ctx, workflowId, params, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseWorkflowsPartialUpdateResponse(rsp)
+}
+
+// WorkflowsRunsListWithResponse request returning *WorkflowsRunsListResponse
+func (c *ClientWithResponses) WorkflowsRunsListWithResponse(ctx context.Context, workflowId openapi_types.UUID, params *WorkflowsRunsListParams, reqEditors ...RequestEditorFn) (*WorkflowsRunsListResponse, error) {
+	rsp, err := c.WorkflowsRunsList(ctx, workflowId, params, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseWorkflowsRunsListResponse(rsp)
+}
+
+// WorkflowsRunsCreateWithBodyWithResponse request with arbitrary body returning *WorkflowsRunsCreateResponse
+func (c *ClientWithResponses) WorkflowsRunsCreateWithBodyWithResponse(ctx context.Context, workflowId openapi_types.UUID, params *WorkflowsRunsCreateParams, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*WorkflowsRunsCreateResponse, error) {
+	rsp, err := c.WorkflowsRunsCreateWithBody(ctx, workflowId, params, contentType, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseWorkflowsRunsCreateResponse(rsp)
+}
+
+func (c *ClientWithResponses) WorkflowsRunsCreateWithResponse(ctx context.Context, workflowId openapi_types.UUID, params *WorkflowsRunsCreateParams, body WorkflowsRunsCreateJSONRequestBody, reqEditors ...RequestEditorFn) (*WorkflowsRunsCreateResponse, error) {
+	rsp, err := c.WorkflowsRunsCreate(ctx, workflowId, params, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseWorkflowsRunsCreateResponse(rsp)
+}
+
+// WorkflowsRunsBatchCreateWithBodyWithResponse request with arbitrary body returning *WorkflowsRunsBatchCreateResponse
+func (c *ClientWithResponses) WorkflowsRunsBatchCreateWithBodyWithResponse(ctx context.Context, workflowId openapi_types.UUID, params *WorkflowsRunsBatchCreateParams, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*WorkflowsRunsBatchCreateResponse, error) {
+	rsp, err := c.WorkflowsRunsBatchCreateWithBody(ctx, workflowId, params, contentType, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseWorkflowsRunsBatchCreateResponse(rsp)
+}
+
+func (c *ClientWithResponses) WorkflowsRunsBatchCreateWithResponse(ctx context.Context, workflowId openapi_types.UUID, params *WorkflowsRunsBatchCreateParams, body WorkflowsRunsBatchCreateJSONRequestBody, reqEditors ...RequestEditorFn) (*WorkflowsRunsBatchCreateResponse, error) {
+	rsp, err := c.WorkflowsRunsBatchCreate(ctx, workflowId, params, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseWorkflowsRunsBatchCreateResponse(rsp)
+}
+
+// WorkflowsVersionsListWithResponse request returning *WorkflowsVersionsListResponse
+func (c *ClientWithResponses) WorkflowsVersionsListWithResponse(ctx context.Context, workflowId openapi_types.UUID, params *WorkflowsVersionsListParams, reqEditors ...RequestEditorFn) (*WorkflowsVersionsListResponse, error) {
+	rsp, err := c.WorkflowsVersionsList(ctx, workflowId, params, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseWorkflowsVersionsListResponse(rsp)
+}
+
+// WorkflowsVersionsCreateWithBodyWithResponse request with arbitrary body returning *WorkflowsVersionsCreateResponse
+func (c *ClientWithResponses) WorkflowsVersionsCreateWithBodyWithResponse(ctx context.Context, workflowId openapi_types.UUID, params *WorkflowsVersionsCreateParams, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*WorkflowsVersionsCreateResponse, error) {
+	rsp, err := c.WorkflowsVersionsCreateWithBody(ctx, workflowId, params, contentType, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseWorkflowsVersionsCreateResponse(rsp)
+}
+
+func (c *ClientWithResponses) WorkflowsVersionsCreateWithResponse(ctx context.Context, workflowId openapi_types.UUID, params *WorkflowsVersionsCreateParams, body WorkflowsVersionsCreateJSONRequestBody, reqEditors ...RequestEditorFn) (*WorkflowsVersionsCreateResponse, error) {
+	rsp, err := c.WorkflowsVersionsCreate(ctx, workflowId, params, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseWorkflowsVersionsCreateResponse(rsp)
+}
+
+// WorkflowsVersionsRetrieveWithResponse request returning *WorkflowsVersionsRetrieveResponse
+func (c *ClientWithResponses) WorkflowsVersionsRetrieveWithResponse(ctx context.Context, workflowId openapi_types.UUID, versionId openapi_types.UUID, params *WorkflowsVersionsRetrieveParams, reqEditors ...RequestEditorFn) (*WorkflowsVersionsRetrieveResponse, error) {
+	rsp, err := c.WorkflowsVersionsRetrieve(ctx, workflowId, versionId, params, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseWorkflowsVersionsRetrieveResponse(rsp)
+}
+
+// WorkflowsVersionsSetCurrentCreateWithResponse request returning *WorkflowsVersionsSetCurrentCreateResponse
+func (c *ClientWithResponses) WorkflowsVersionsSetCurrentCreateWithResponse(ctx context.Context, workflowId openapi_types.UUID, versionId openapi_types.UUID, params *WorkflowsVersionsSetCurrentCreateParams, reqEditors ...RequestEditorFn) (*WorkflowsVersionsSetCurrentCreateResponse, error) {
+	rsp, err := c.WorkflowsVersionsSetCurrentCreate(ctx, workflowId, versionId, params, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseWorkflowsVersionsSetCurrentCreateResponse(rsp)
 }
 
 // ParseAgentsListResponse parses an HTTP response from a AgentsListWithResponse call
@@ -14655,6 +18966,459 @@ func ParseUsersCurrentUserRetrieveResponse(rsp *http.Response) (*UsersCurrentUse
 			return nil, err
 		}
 		response.JSON200 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseWorkflowsListResponse parses an HTTP response from a WorkflowsListWithResponse call
+func ParseWorkflowsListResponse(rsp *http.Response) (*WorkflowsListResponse, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &WorkflowsListResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest PaginatedWorkflowList
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseWorkflowsCreateResponse parses an HTTP response from a WorkflowsCreateWithResponse call
+func ParseWorkflowsCreateResponse(rsp *http.Response) (*WorkflowsCreateResponse, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &WorkflowsCreateResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 201:
+		var dest WorkflowDetail
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON201 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 400:
+		var dest struct {
+			union json.RawMessage
+		}
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON400 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseWorkflowsRunsRetrieveResponse parses an HTTP response from a WorkflowsRunsRetrieveWithResponse call
+func ParseWorkflowsRunsRetrieveResponse(rsp *http.Response) (*WorkflowsRunsRetrieveResponse, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &WorkflowsRunsRetrieveResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest WorkflowRunDetail
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 404:
+		var dest ErrorDetailResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON404 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseWorkflowsDestroyResponse parses an HTTP response from a WorkflowsDestroyWithResponse call
+func ParseWorkflowsDestroyResponse(rsp *http.Response) (*WorkflowsDestroyResponse, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &WorkflowsDestroyResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 404:
+		var dest ErrorDetailResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON404 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseWorkflowsRetrieveResponse parses an HTTP response from a WorkflowsRetrieveWithResponse call
+func ParseWorkflowsRetrieveResponse(rsp *http.Response) (*WorkflowsRetrieveResponse, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &WorkflowsRetrieveResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest WorkflowDetail
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 404:
+		var dest ErrorDetailResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON404 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseWorkflowsPartialUpdateResponse parses an HTTP response from a WorkflowsPartialUpdateWithResponse call
+func ParseWorkflowsPartialUpdateResponse(rsp *http.Response) (*WorkflowsPartialUpdateResponse, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &WorkflowsPartialUpdateResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest WorkflowDetail
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 400:
+		var dest struct {
+			union json.RawMessage
+		}
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON400 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 404:
+		var dest ErrorDetailResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON404 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseWorkflowsRunsListResponse parses an HTTP response from a WorkflowsRunsListWithResponse call
+func ParseWorkflowsRunsListResponse(rsp *http.Response) (*WorkflowsRunsListResponse, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &WorkflowsRunsListResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest PaginatedWorkflowRunList
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseWorkflowsRunsCreateResponse parses an HTTP response from a WorkflowsRunsCreateWithResponse call
+func ParseWorkflowsRunsCreateResponse(rsp *http.Response) (*WorkflowsRunsCreateResponse, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &WorkflowsRunsCreateResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 201:
+		var dest WorkflowRunDetail
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON201 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 400:
+		var dest struct {
+			union json.RawMessage
+		}
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON400 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 403:
+		var dest ErrorDetailResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON403 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 404:
+		var dest ErrorDetailResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON404 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseWorkflowsRunsBatchCreateResponse parses an HTTP response from a WorkflowsRunsBatchCreateWithResponse call
+func ParseWorkflowsRunsBatchCreateResponse(rsp *http.Response) (*WorkflowsRunsBatchCreateResponse, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &WorkflowsRunsBatchCreateResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 201:
+		var dest WorkflowRunBatch
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON201 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 400:
+		var dest struct {
+			union json.RawMessage
+		}
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON400 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 403:
+		var dest ErrorDetailResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON403 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 404:
+		var dest ErrorDetailResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON404 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseWorkflowsVersionsListResponse parses an HTTP response from a WorkflowsVersionsListWithResponse call
+func ParseWorkflowsVersionsListResponse(rsp *http.Response) (*WorkflowsVersionsListResponse, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &WorkflowsVersionsListResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest PaginatedWorkflowVersionList
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseWorkflowsVersionsCreateResponse parses an HTTP response from a WorkflowsVersionsCreateWithResponse call
+func ParseWorkflowsVersionsCreateResponse(rsp *http.Response) (*WorkflowsVersionsCreateResponse, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &WorkflowsVersionsCreateResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 201:
+		var dest WorkflowVersionDetail
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON201 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 400:
+		var dest struct {
+			union json.RawMessage
+		}
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON400 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 404:
+		var dest ErrorDetailResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON404 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseWorkflowsVersionsRetrieveResponse parses an HTTP response from a WorkflowsVersionsRetrieveWithResponse call
+func ParseWorkflowsVersionsRetrieveResponse(rsp *http.Response) (*WorkflowsVersionsRetrieveResponse, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &WorkflowsVersionsRetrieveResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest WorkflowVersionDetail
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 404:
+		var dest ErrorDetailResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON404 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseWorkflowsVersionsSetCurrentCreateResponse parses an HTTP response from a WorkflowsVersionsSetCurrentCreateWithResponse call
+func ParseWorkflowsVersionsSetCurrentCreateResponse(rsp *http.Response) (*WorkflowsVersionsSetCurrentCreateResponse, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &WorkflowsVersionsSetCurrentCreateResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest WorkflowVersionDetail
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 404:
+		var dest ErrorDetailResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON404 = &dest
 
 	}
 

@@ -1057,6 +1057,199 @@ if err != nil {
 }
 ```
 
+### Workflows
+
+#### `workflows_list`
+
+List workflows
+
+```go
+result, err := client.Workflows.List(
+    1,
+    1,
+    "search",
+)
+if err != nil {
+    log.Fatal(err)
+}
+```
+
+#### `workflows_create`
+
+Create a workflow
+
+```go
+result, err := client.Workflows.Create(
+    "name",
+    map[string]any{"inputs": []map[string]any{{"key": "customer_id"}}, "steps": []map[string]any{{"kind": "agent", "id": "check_risk", "base_agent_id": "agent_id", "agent_version_id": "version_id", "input_mapping": map[string]any{"customer": "{initial.customer_id}"}}}, "result": "check_risk"},
+    "versionName",
+    "description",
+)
+if err != nil {
+    log.Fatal(err)
+}
+```
+
+#### `workflows_retrieve`
+
+Get a workflow
+
+```go
+result, err := client.Workflows.Retrieve(
+    "workflowId",
+)
+if err != nil {
+    log.Fatal(err)
+}
+```
+
+#### `workflows_partial_update`
+
+Rename a workflow
+
+```go
+result, err := client.Workflows.Update(
+    "workflowId",
+    "name",
+)
+if err != nil {
+    log.Fatal(err)
+}
+```
+
+#### `workflows_destroy`
+
+Delete a workflow
+
+```go
+err := client.Workflows.Delete(
+    "workflowId",
+)
+if err != nil {
+    log.Fatal(err)
+}
+```
+
+#### `workflows_versions_list`
+
+List workflow versions
+
+```go
+result, err := client.Workflows.ListVersions(
+    "workflowId",
+    1,
+    1,
+)
+if err != nil {
+    log.Fatal(err)
+}
+```
+
+#### `workflows_versions_create`
+
+Save a workflow version
+
+```go
+result, err := client.Workflows.CreateVersion(
+    "workflowId",
+    map[string]any{"inputs": []map[string]any{{"key": "customer_id"}}, "steps": []map[string]any{{"kind": "agent", "id": "check_risk", "base_agent_id": "agent_id", "agent_version_id": "version_id", "input_mapping": map[string]any{"customer": "{initial.customer_id}"}}}, "result": "check_risk"},
+    "versionName",
+    "description",
+)
+if err != nil {
+    log.Fatal(err)
+}
+```
+
+#### `workflows_versions_retrieve`
+
+Get a workflow version
+
+```go
+result, err := client.Workflows.RetrieveVersion(
+    "workflowId",
+    "versionId",
+)
+if err != nil {
+    log.Fatal(err)
+}
+```
+
+#### `workflows_versions_set_current_create`
+
+Set the current workflow version
+
+```go
+result, err := client.Workflows.SetCurrentVersion(
+    "workflowId",
+    "versionId",
+)
+if err != nil {
+    log.Fatal(err)
+}
+```
+
+#### `workflows_runs_list`
+
+List workflow runs
+
+```go
+result, err := client.Workflows.ListRuns(
+    "workflowId",
+    1,
+    1,
+    1,
+)
+if err != nil {
+    log.Fatal(err)
+}
+```
+
+#### `workflows_runs_create`
+
+Run a workflow
+
+```go
+result, err := client.Workflows.Run(
+    "workflowId",
+    map[string]any{"customer_id": "c_1"},
+    "versionId",
+    map[string]any{},
+    true,
+)
+if err != nil {
+    log.Fatal(err)
+}
+```
+
+#### `workflows_runs_batch_create`
+
+Run a workflow in batch
+
+```go
+result, err := client.Workflows.RunBatch(
+    "workflowId",
+    []map[string]any{{"customer_id": "c_1"}},
+    "versionId",
+)
+if err != nil {
+    log.Fatal(err)
+}
+```
+
+#### `workflows_runs_retrieve`
+
+Get a workflow run
+
+```go
+result, err := client.Workflows.RetrieveRun(
+    "runId",
+)
+if err != nil {
+    log.Fatal(err)
+}
+```
+
 ## Use Cases
 
 These workflows assume `ROE_API_KEY` and `ROE_ORGANIZATION_ID` are set.

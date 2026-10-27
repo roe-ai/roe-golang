@@ -7,6 +7,7 @@ type generatedAPIs struct {
 	Discovery   *DiscoveryAPI
 	SkillSets   *SkillSetsAPI
 	Tables      *TablesAPI
+	Workflows   *WorkflowsAPI
 }
 
 func newGeneratedAPIs(cfg Config, httpClient *httpClient) *generatedAPIs {
@@ -16,5 +17,6 @@ func newGeneratedAPIs(cfg Config, httpClient *httpClient) *generatedAPIs {
 		Discovery:   newDiscoveryAPI(cfg, httpClient),
 		SkillSets:   newSkillSetsAPI(cfg, httpClient),
 		Tables:      newTablesAPI(cfg, httpClient),
+		Workflows:   newWorkflowsAPI(cfg, httpClient),
 	}
 }
