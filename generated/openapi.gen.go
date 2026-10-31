@@ -103,6 +103,7 @@ func (e ConnectionAuthenticationCheckStatusEnum) Valid() bool {
 
 // Defines values for ConnectorTypeEnum.
 const (
+	Alloy          ConnectorTypeEnum = "alloy"
 	CheckoutCom    ConnectorTypeEnum = "checkout_com"
 	CustomApi      ConnectorTypeEnum = "custom_api"
 	CustomMcp      ConnectorTypeEnum = "custom_mcp"
@@ -133,6 +134,8 @@ const (
 // Valid indicates whether the value is a known member of the ConnectorTypeEnum enum.
 func (e ConnectorTypeEnum) Valid() bool {
 	switch e {
+	case Alloy:
+		return true
 	case CheckoutCom:
 		return true
 	case CustomApi:
@@ -1106,6 +1109,7 @@ type ConnectorMetadata struct {
 // * `metabase` - METABASE
 // * `slack` - SLACK
 // * `smtp` - SMTP
+// * `alloy` - ALLOY
 type ConnectorTypeEnum string
 
 // CreateConnectionRequest Serializer for creating connections.
@@ -1139,6 +1143,7 @@ type CreateConnectionRequest struct {
 	// * `metabase` - METABASE
 	// * `slack` - SLACK
 	// * `smtp` - SMTP
+	// * `alloy` - ALLOY
 	ConnectorType  ConnectorTypeEnum   `json:"connector_type"`
 	Description    *string             `json:"description,omitempty"`
 	DynamicInputs  *map[string]string  `json:"dynamic_inputs,omitempty"`
@@ -2033,6 +2038,7 @@ type TestConnectionCredentialsRequest struct {
 	// * `metabase` - METABASE
 	// * `slack` - SLACK
 	// * `smtp` - SMTP
+	// * `alloy` - ALLOY
 	ConnectorType ConnectorTypeEnum  `json:"connector_type"`
 	DynamicInputs *map[string]string `json:"dynamic_inputs,omitempty"`
 }
