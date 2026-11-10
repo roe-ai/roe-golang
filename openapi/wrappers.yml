@@ -733,7 +733,7 @@ apis:
         omit_when_empty: false
     - kind: body
       method_name: Update
-      docstring: Update mutable connection fields.
+      docstring: Update mutable connection fields. Changing settings agents already use needs confirm_in_use.
       method: PATCH
       path: /v1/connections/{id}/
       return_type: generated.Connection
@@ -778,7 +778,7 @@ apis:
         omit_when_empty: true
     - kind: body
       method_name: Replace
-      docstring: Replace a connection.
+      docstring: Replace a connection. Changing settings agents already use needs confirm_in_use.
       method: PUT
       path: /v1/connections/{id}/
       return_type: generated.Connection
@@ -823,7 +823,7 @@ apis:
         omit_when_empty: true
     - kind: body
       method_name: Delete
-      docstring: Delete a connection.
+      docstring: Delete a connection. Refused while agents or webhooks use it.
       method: DELETE
       path: /v1/connections/{id}/
       inject_organization_id: true
