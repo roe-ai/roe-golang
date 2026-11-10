@@ -209,6 +209,27 @@ func (e GateKind) Valid() bool {
 	}
 }
 
+// Defines values for LifecycleEnum.
+const (
+	Active       LifecycleEnum = "active"
+	Archived     LifecycleEnum = "archived"
+	Disconnected LifecycleEnum = "disconnected"
+)
+
+// Valid indicates whether the value is a known member of the LifecycleEnum enum.
+func (e LifecycleEnum) Valid() bool {
+	switch e {
+	case Active:
+		return true
+	case Archived:
+		return true
+	case Disconnected:
+		return true
+	default:
+		return false
+	}
+}
+
 // Defines values for ModeEnum.
 const (
 	Append  ModeEnum = "append"
@@ -981,8 +1002,13 @@ type Connection struct {
 	DynamicInputTestDisabledReason *string             `json:"dynamic_input_test_disabled_reason,omitempty"`
 	DynamicInputs                  *map[string]string  `json:"dynamic_inputs,omitempty"`
 	Id                             *openapi_types.UUID `json:"id,omitempty"`
-	Name                           string              `json:"name"`
-	Organization                   openapi_types.UUID  `json:"organization"`
+
+	// Lifecycle * `active` - Active
+	// * `archived` - Archived
+	// * `disconnected` - Disconnected
+	Lifecycle    *LifecycleEnum     `json:"lifecycle,omitempty"`
+	Name         string             `json:"name"`
+	Organization openapi_types.UUID `json:"organization"`
 
 	// Status * `active` - Active
 	// * `error` - Error
@@ -1033,8 +1059,13 @@ type ConnectionList struct {
 	DynamicInputTestDisabledReason *string             `json:"dynamic_input_test_disabled_reason,omitempty"`
 	DynamicInputs                  *map[string]string  `json:"dynamic_inputs,omitempty"`
 	Id                             *openapi_types.UUID `json:"id,omitempty"`
-	Name                           string              `json:"name"`
-	Organization                   openapi_types.UUID  `json:"organization"`
+
+	// Lifecycle * `active` - Active
+	// * `archived` - Archived
+	// * `disconnected` - Disconnected
+	Lifecycle    *LifecycleEnum     `json:"lifecycle,omitempty"`
+	Name         string             `json:"name"`
+	Organization openapi_types.UUID `json:"organization"`
 
 	// Status * `active` - Active
 	// * `error` - Error
@@ -1052,6 +1083,17 @@ type ConnectionStep struct {
 	Kind         string             `json:"kind"`
 	Operation    string             `json:"operation"`
 	SetupId      *string            `json:"setup_id,omitempty"`
+}
+
+// ConnectionUpdateConflictResponse Body of a 409 from update/replace; which fields are set depends on the cause.
+type ConnectionUpdateConflictResponse struct {
+	Error string `json:"error"`
+
+	// ExistingConnection Set when an identical connection already exists.
+	ExistingConnection *DuplicateConnectionExisting `json:"existing_connection,omitempty"`
+
+	// InUse True when agents or webhooks use the settings being changed; resend with confirm_in_use to save anyway.
+	InUse *bool `json:"in_use,omitempty"`
 }
 
 // ConnectorBrowserSession defines model for ConnectorBrowserSession.
@@ -1397,8 +1439,16 @@ type JobInput struct {
 	Value string `json:"value"`
 }
 
+// LifecycleEnum * `active` - Active
+// * `archived` - Archived
+// * `disconnected` - Disconnected
+type LifecycleEnum string
+
 // ListAgentJob defines model for ListAgentJob.
 type ListAgentJob struct {
+	// AgentVersionId ID of the agent version the job ran on
+	AgentVersionId *openapi_types.UUID `json:"agent_version_id,omitempty"`
+
 	// AgentVersionName Get the agent version name, handling null agent and annotation.
 	AgentVersionName *string `json:"agent_version_name,omitempty"`
 
@@ -1574,11 +1624,19 @@ type PatchedBaseAgentUpdateRequest struct {
 // and (c) leak Pydantic field/value details through DRF's generic 400
 // handler. The serializer only does shape checks.
 type PatchedUpdateConnectionRequest struct {
-	AuthConfig    *map[string]interface{} `json:"auth_config,omitempty"`
-	Config        *map[string]interface{} `json:"config,omitempty"`
-	Description   *string                 `json:"description,omitempty"`
-	DynamicInputs *map[string]string      `json:"dynamic_inputs,omitempty"`
-	Name          *string                 `json:"name,omitempty"`
+	AuthConfig *map[string]interface{} `json:"auth_config,omitempty"`
+	Config     *map[string]interface{} `json:"config,omitempty"`
+
+	// ConfirmInUse Save a config change that alters calls for agents or webhooks that already use the connection.
+	ConfirmInUse  *bool              `json:"confirm_in_use,omitempty"`
+	Description   *string            `json:"description,omitempty"`
+	DynamicInputs *map[string]string `json:"dynamic_inputs,omitempty"`
+
+	// Lifecycle * `active` - Active
+	// * `archived` - Archived
+	// * `disconnected` - Disconnected
+	Lifecycle *LifecycleEnum `json:"lifecycle,omitempty"`
+	Name      *string        `json:"name,omitempty"`
 }
 
 // PatchedUpdatePolicyRequest Serializer for updating policy metadata (name, description)
@@ -2056,11 +2114,19 @@ type TestConnectionCredentialsRequest struct {
 // and (c) leak Pydantic field/value details through DRF's generic 400
 // handler. The serializer only does shape checks.
 type UpdateConnectionRequest struct {
-	AuthConfig    *map[string]interface{} `json:"auth_config,omitempty"`
-	Config        *map[string]interface{} `json:"config,omitempty"`
-	Description   *string                 `json:"description,omitempty"`
-	DynamicInputs *map[string]string      `json:"dynamic_inputs,omitempty"`
-	Name          *string                 `json:"name,omitempty"`
+	AuthConfig *map[string]interface{} `json:"auth_config,omitempty"`
+	Config     *map[string]interface{} `json:"config,omitempty"`
+
+	// ConfirmInUse Save a config change that alters calls for agents or webhooks that already use the connection.
+	ConfirmInUse  *bool              `json:"confirm_in_use,omitempty"`
+	Description   *string            `json:"description,omitempty"`
+	DynamicInputs *map[string]string `json:"dynamic_inputs,omitempty"`
+
+	// Lifecycle * `active` - Active
+	// * `archived` - Archived
+	// * `disconnected` - Disconnected
+	Lifecycle *LifecycleEnum `json:"lifecycle,omitempty"`
+	Name      *string        `json:"name,omitempty"`
 }
 
 // UpdatePolicy Serializer for updating policy metadata (name, description)
@@ -2597,6 +2663,9 @@ type AgentsVersionsUpdateParams struct {
 type ConnectionsListParams struct {
 	// ConnectorType Filter by connector type (e.g., 'snowflake', 'postgres')
 	ConnectorType *string `form:"connector_type,omitempty" json:"connector_type,omitempty"`
+
+	// Lifecycle Filter by lifecycle: active, archived or disconnected. Pickers ask for 'active' so archived and disconnected connections can't be chosen again.
+	Lifecycle *string `form:"lifecycle,omitempty" json:"lifecycle,omitempty"`
 
 	// Ordering Which field to use when ordering the results.
 	Ordering *string `form:"ordering,omitempty" json:"ordering,omitempty"`
@@ -9368,6 +9437,22 @@ func NewConnectionsListRequest(server string, params *ConnectionsListParams) (*h
 
 		}
 
+		if params.Lifecycle != nil {
+
+			if queryFrag, err := runtime.StyleParamWithOptions("form", true, "lifecycle", *params.Lifecycle, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationQuery, Type: "string", Format: ""}); err != nil {
+				return nil, err
+			} else if parsed, err := url.ParseQuery(queryFrag); err != nil {
+				return nil, err
+			} else {
+				for k, v := range parsed {
+					for _, v2 := range v {
+						queryValues.Add(k, v2)
+					}
+				}
+			}
+
+		}
+
 		if params.Ordering != nil {
 
 			if queryFrag, err := runtime.StyleParamWithOptions("form", true, "ordering", *params.Ordering, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationQuery, Type: "string", Format: ""}); err != nil {
@@ -14022,7 +14107,7 @@ type ConnectionsPartialUpdateResponse struct {
 		union json.RawMessage
 	}
 	JSON404 *ErrorDetailResponse
-	JSON409 *DuplicateConnectionResponse
+	JSON409 *ConnectionUpdateConflictResponse
 }
 type ConnectionsPartialUpdate4000 = []string
 type ConnectionsPartialUpdate4001 map[string]ConnectionsPartialUpdate_400_1_AdditionalProperties
@@ -14059,7 +14144,7 @@ type ConnectionsUpdateResponse struct {
 		union json.RawMessage
 	}
 	JSON404 *ErrorDetailResponse
-	JSON409 *DuplicateConnectionResponse
+	JSON409 *ConnectionUpdateConflictResponse
 }
 type ConnectionsUpdate4000 = []string
 type ConnectionsUpdate4001 map[string]ConnectionsUpdate_400_1_AdditionalProperties
@@ -17865,7 +17950,7 @@ func ParseConnectionsPartialUpdateResponse(rsp *http.Response) (*ConnectionsPart
 		response.JSON404 = &dest
 
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 409:
-		var dest DuplicateConnectionResponse
+		var dest ConnectionUpdateConflictResponse
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
 			return nil, err
 		}
@@ -17914,7 +17999,7 @@ func ParseConnectionsUpdateResponse(rsp *http.Response) (*ConnectionsUpdateRespo
 		response.JSON404 = &dest
 
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 409:
-		var dest DuplicateConnectionResponse
+		var dest ConnectionUpdateConflictResponse
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
 			return nil, err
 		}

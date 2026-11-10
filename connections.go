@@ -115,12 +115,12 @@ func (a *ConnectionsAPI) RetrieveWithContext(ctx context.Context, connectionID s
 	return resp, nil
 }
 
-// Update Update mutable connection fields.
+// Update Update mutable connection fields. Changing settings agents already use needs confirm_in_use.
 func (a *ConnectionsAPI) Update(connectionID string, name string, description string, config map[string]any, authConfig map[string]any, dynamicInputs map[string]string) (generated.Connection, error) {
 	return a.UpdateWithContext(context.Background(), connectionID, name, description, config, authConfig, dynamicInputs)
 }
 
-// UpdateWithContext Update mutable connection fields.
+// UpdateWithContext Update mutable connection fields. Changing settings agents already use needs confirm_in_use.
 func (a *ConnectionsAPI) UpdateWithContext(ctx context.Context, connectionID string, name string, description string, config map[string]any, authConfig map[string]any, dynamicInputs map[string]string) (generated.Connection, error) {
 	query := map[string]string{}
 	query["organization_id"] = a.cfg.OrganizationID
@@ -147,12 +147,12 @@ func (a *ConnectionsAPI) UpdateWithContext(ctx context.Context, connectionID str
 	return resp, nil
 }
 
-// Replace Replace a connection.
+// Replace Replace a connection. Changing settings agents already use needs confirm_in_use.
 func (a *ConnectionsAPI) Replace(connectionID string, name string, description string, config map[string]any, authConfig map[string]any, dynamicInputs map[string]string) (generated.Connection, error) {
 	return a.ReplaceWithContext(context.Background(), connectionID, name, description, config, authConfig, dynamicInputs)
 }
 
-// ReplaceWithContext Replace a connection.
+// ReplaceWithContext Replace a connection. Changing settings agents already use needs confirm_in_use.
 func (a *ConnectionsAPI) ReplaceWithContext(ctx context.Context, connectionID string, name string, description string, config map[string]any, authConfig map[string]any, dynamicInputs map[string]string) (generated.Connection, error) {
 	query := map[string]string{}
 	query["organization_id"] = a.cfg.OrganizationID
@@ -175,12 +175,12 @@ func (a *ConnectionsAPI) ReplaceWithContext(ctx context.Context, connectionID st
 	return resp, nil
 }
 
-// Delete Delete a connection.
+// Delete Delete a connection. Refused while agents or webhooks use it.
 func (a *ConnectionsAPI) Delete(connectionID string) error {
 	return a.DeleteWithContext(context.Background(), connectionID)
 }
 
-// DeleteWithContext Delete a connection.
+// DeleteWithContext Delete a connection. Refused while agents or webhooks use it.
 func (a *ConnectionsAPI) DeleteWithContext(ctx context.Context, connectionID string) error {
 	query := map[string]string{}
 	query["organization_id"] = a.cfg.OrganizationID
