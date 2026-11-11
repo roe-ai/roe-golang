@@ -120,6 +120,7 @@ const (
 	Sharepoint     ConnectorTypeEnum = "sharepoint"
 	Shield         ConnectorTypeEnum = "shield"
 	ShieldApi      ConnectorTypeEnum = "shield_api"
+	ShieldEngage   ConnectorTypeEnum = "shield_engage"
 	Sift           ConnectorTypeEnum = "sift"
 	SiftApi        ConnectorTypeEnum = "sift_api"
 	Slack          ConnectorTypeEnum = "slack"
@@ -167,6 +168,8 @@ func (e ConnectorTypeEnum) Valid() bool {
 	case Shield:
 		return true
 	case ShieldApi:
+		return true
+	case ShieldEngage:
 		return true
 	case Sift:
 		return true
@@ -1137,6 +1140,7 @@ type ConnectorMetadata struct {
 // * `web_application` - WEB_APPLICATION
 // * `shield` - SHIELD
 // * `shield_api` - SHIELD_API
+// * `shield_engage` - SHIELD_ENGAGE
 // * `sift` - SIFT
 // * `sift_api` - SIFT_API
 // * `custom_api` - CUSTOM_API
@@ -1171,6 +1175,7 @@ type CreateConnectionRequest struct {
 	// * `web_application` - WEB_APPLICATION
 	// * `shield` - SHIELD
 	// * `shield_api` - SHIELD_API
+	// * `shield_engage` - SHIELD_ENGAGE
 	// * `sift` - SIFT
 	// * `sift_api` - SIFT_API
 	// * `custom_api` - CUSTOM_API
@@ -2082,6 +2087,7 @@ type TestConnectionCredentialsRequest struct {
 	// * `web_application` - WEB_APPLICATION
 	// * `shield` - SHIELD
 	// * `shield_api` - SHIELD_API
+	// * `shield_engage` - SHIELD_ENGAGE
 	// * `sift` - SIFT
 	// * `sift_api` - SIFT_API
 	// * `custom_api` - CUSTOM_API
