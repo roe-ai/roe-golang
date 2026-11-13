@@ -232,6 +232,10 @@ func (b *JobBatch) WaitContext(ctx context.Context, interval time.Duration, time
 			} else {
 				received := map[string]AgentJobResult{}
 				for _, res := range resultsBatch {
+					if cached, ok := b.statuses[res.ID]; ok && res.Status == nil {
+						// The results endpoint may omit status; use the one just polled.
+						res.Status = &cached.Status
+					}
 					converted, err := convertBatchResult(res)
 					if err != nil {
 						return nil, err
@@ -360,6 +364,10 @@ func convertBatchResult(res AgentJobResultBatch) (AgentJobResult, error) {
 	case nil:
 		// No result data - outputs remains empty
 	default:
+		if isFailed {
+			// Failed jobs may carry an error code here instead of outputs.
+			break
+		}
 		// Try to unmarshal as array of AgentDatum
 		var direct []AgentDatum
 		bytes, err := json.Marshal(res.Result)

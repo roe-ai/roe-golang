@@ -136,7 +136,6 @@ func TestAgentsAPIUpdateAndReplaceUseExpectedTransport(t *testing.T) {
 			name:   "replace",
 			method: http.MethodPut,
 			body: map[string]any{
-				"name":              "",
 				"cache_failed_jobs": true,
 			},
 			callClient: func(client *RoeClient) (BaseAgent, error) {
@@ -195,10 +194,7 @@ func TestAgentVersionsAPIUpdateAndReplaceUseExpectedTransport(t *testing.T) {
 		{
 			name:   "replace",
 			method: http.MethodPut,
-			body: map[string]any{
-				"version_name": "",
-				"description":  "",
-			},
+			body:   map[string]any{},
 			callClient: func(client *RoeClient) error {
 				return client.Agents.Versions.Replace("agent-id", "version-id", "", "")
 			},
@@ -512,5 +508,52 @@ func assertJSONBody(t *testing.T, r *http.Request, want map[string]any) {
 	}
 	if !reflect.DeepEqual(got, want) {
 		t.Fatalf("unexpected body: got %#v, want %#v", got, want)
+	}
+}
+
+func TestAgentVersionsListPaginatedDecodesPlainList(t *testing.T) {
+	server := newTestServer(t, http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		w.Header().Set("Content-Type", "application/json")
+		_, _ = w.Write([]byte(`[{"id":"v1"},{"id":"v2"}]`))
+	}))
+	defer server.Close()
+
+	client, err := NewClientWithConfig(Config{APIKey: "k", OrganizationID: "org", BaseURL: server.URL, Timeout: time.Second})
+	if err != nil {
+		t.Fatalf("new client: %v", err)
+	}
+	defer client.Close()
+
+	resp, err := client.Agents.Versions.ListPaginated("agent-id", &ListVersionsParams{Page: 1})
+	if err != nil {
+		t.Fatalf("list paginated: %v", err)
+	}
+	if resp.Count != 2 || len(resp.Results) != 2 {
+		t.Fatalf("expected 2 versions, got %+v", resp)
+	}
+}
+
+func TestAgentCreatesSendEmptyDefinitionsAndConfigForNil(t *testing.T) {
+	server := newTestServer(t, http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		if r.Method == http.MethodPost {
+			var body map[string]any
+			_ = json.NewDecoder(r.Body).Decode(&body)
+			if !reflect.DeepEqual(body["input_definitions"], []any{}) || !reflect.DeepEqual(body["engine_config"], map[string]any{}) {
+				t.Errorf("%s: got input_definitions=%#v engine_config=%#v", r.URL.Path, body["input_definitions"], body["engine_config"])
+			}
+		}
+		w.Header().Set("Content-Type", "application/json")
+		_, _ = w.Write([]byte(`{"id":"id-1"}`))
+	}))
+	defer server.Close()
+
+	client := newAgentsTestClient(t, server.URL)
+	defer client.Close()
+
+	if _, err := client.Agents.Create("agent", "engine", nil, nil, "", ""); err != nil {
+		t.Fatalf("create agent: %v", err)
+	}
+	if _, err := client.Agents.Versions.Create("agent-id", nil, nil, "", ""); err != nil {
+		t.Fatalf("create version: %v", err)
 	}
 }
