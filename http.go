@@ -430,6 +430,19 @@ func (c *httpClient) postJSONWithContext(ctx context.Context, path string, paylo
 // postJSONHeadersWithContext is postJSONWithContext plus per-request extra
 // headers (e.g. X-Skip-Cache on agent run requests).
 func (c *httpClient) postJSONHeadersWithContext(ctx context.Context, path string, payload any, query map[string]string, out any, extraHeaders http.Header) error {
+	return c.sendJSONWithContext(ctx, http.MethodPost, path, payload, query, out, extraHeaders)
+}
+
+func (c *httpClient) putJSONWithContext(ctx context.Context, path string, payload any, query map[string]string, out any) error {
+	return c.sendJSONWithContext(ctx, http.MethodPut, path, payload, query, out, nil)
+}
+
+func (c *httpClient) patchJSONWithContext(ctx context.Context, path string, payload any, query map[string]string, out any) error {
+	return c.sendJSONWithContext(ctx, http.MethodPatch, path, payload, query, out, nil)
+}
+
+// sendJSONWithContext sends payload as a JSON body and decodes the response into out.
+func (c *httpClient) sendJSONWithContext(ctx context.Context, method, path string, payload any, query map[string]string, out any, extraHeaders http.Header) error {
 	buf := &bytes.Buffer{}
 	if payload != nil {
 		if err := json.NewEncoder(buf).Encode(payload); err != nil {
@@ -440,7 +453,7 @@ func (c *httpClient) postJSONHeadersWithContext(ctx context.Context, path string
 	headers.Set("Content-Type", "application/json")
 	mergeHeaderValues(headers, extraHeaders)
 
-	data, err := c.doRequest(ctx, http.MethodPost, path, headers, buf, query)
+	data, err := c.doRequest(ctx, method, path, headers, buf, query)
 	if err != nil {
 		return err
 	}
@@ -457,46 +470,6 @@ func mergeHeaderValues(dst, src http.Header) {
 			dst.Add(k, v)
 		}
 	}
-}
-
-func (c *httpClient) putJSONWithContext(ctx context.Context, path string, payload any, query map[string]string, out any) error {
-	buf := &bytes.Buffer{}
-	if payload != nil {
-		if err := json.NewEncoder(buf).Encode(payload); err != nil {
-			return fmt.Errorf("encode json: %w", err)
-		}
-	}
-	headers := http.Header{}
-	headers.Set("Content-Type", "application/json")
-
-	data, err := c.doRequest(ctx, http.MethodPut, path, headers, buf, query)
-	if err != nil {
-		return err
-	}
-	if out == nil {
-		return nil
-	}
-	return json.Unmarshal(data, out)
-}
-
-func (c *httpClient) patchJSONWithContext(ctx context.Context, path string, payload any, query map[string]string, out any) error {
-	buf := &bytes.Buffer{}
-	if payload != nil {
-		if err := json.NewEncoder(buf).Encode(payload); err != nil {
-			return fmt.Errorf("encode json: %w", err)
-		}
-	}
-	headers := http.Header{}
-	headers.Set("Content-Type", "application/json")
-
-	data, err := c.doRequest(ctx, http.MethodPatch, path, headers, buf, query)
-	if err != nil {
-		return err
-	}
-	if out == nil {
-		return nil
-	}
-	return json.Unmarshal(data, out)
 }
 
 type preparedFile struct {
