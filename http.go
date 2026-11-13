@@ -19,6 +19,7 @@ import (
 	"net/textproto"
 	"net/url"
 	"os"
+	"reflect"
 	"strings"
 	"time"
 )
@@ -116,6 +117,11 @@ func (c *httpClient) buildURL(path string, query map[string]string) (string, err
 	return u.String(), nil
 }
 
+// skipRetryHeader marks a request that gets exactly one attempt because
+// retrying it could repeat a side effect (e.g. a billed agent run). doRequest
+// strips it before sending.
+const skipRetryHeader = "X-Roe-Skip-Retry"
+
 func (c *httpClient) doRequest(ctx context.Context, method, path string, headers http.Header, body io.Reader, query map[string]string) ([]byte, error) {
 	if ctx == nil {
 		ctx = context.Background()
@@ -139,7 +145,9 @@ func (c *httpClient) doRequest(ctx context.Context, method, path string, headers
 	}
 
 	var lastErr error
-	maxAttempts := c.cfg.MaxRetries + 1
+	maxAttempts := max(c.cfg.MaxRetries, 0) + 1
+	noRetry := headers.Get(skipRetryHeader) != ""
+	headers.Del(skipRetryHeader)
 
 	for attempt := 0; attempt < maxAttempts; attempt++ {
 		if err := ctx.Err(); err != nil {
@@ -166,7 +174,7 @@ func (c *httpClient) doRequest(ctx context.Context, method, path string, headers
 		duration := time.Since(start)
 
 		if err != nil {
-			if !c.shouldRetry(nil, err, attempt) {
+			if noRetry || !c.shouldRetry(nil, err, attempt) {
 				return nil, err
 			}
 			lastErr = err
@@ -193,7 +201,7 @@ func (c *httpClient) doRequest(ctx context.Context, method, path string, headers
 		apiErr := apiErrorFromResponse(resp.StatusCode, respBody, resp.Header, c.cfg.RequestIDHeader)
 		lastErr = apiErr
 
-		if c.shouldRetry(resp, nil, attempt) {
+		if !noRetry && c.shouldRetry(resp, nil, attempt) {
 			c.logf("retrying after status %d (attempt %d/%d)", resp.StatusCode, attempt+1, maxAttempts)
 			if err := c.sleepWithContext(ctx, c.retryDelay(resp, attempt)); err != nil {
 				return nil, err
@@ -561,8 +569,18 @@ func (c *httpClient) postDynamicInputsHeadersWithContext(ctx context.Context, pa
 			}
 		case fmt.Stringer:
 			form.Set(key, v.String())
+		case nil:
+			// Skipped, as roe-python skips None.
 		default:
-			form.Set(key, fmt.Sprintf("%v", v))
+			if k := reflect.ValueOf(v).Kind(); k == reflect.Slice || k == reflect.Map {
+				b, err := json.Marshal(v)
+				if err != nil {
+					return fmt.Errorf("marshal input %s: %w", key, err)
+				}
+				form.Set(key, string(b))
+			} else {
+				form.Set(key, fmt.Sprintf("%v", v))
+			}
 		}
 	}
 
@@ -636,6 +654,7 @@ func (c *httpClient) postDynamicInputsHeadersWithContext(ctx context.Context, pa
 			return err
 		}
 		fileReader.Close()
+		openedReaders = openedReaders[:0] // closed; don't close it again on a later error
 	}
 
 	if err := writer.Close(); err != nil {
@@ -663,6 +682,10 @@ func (c *httpClient) prepareMultipartFile(file FileUpload) (io.ReadCloser, strin
 
 	filename := file.filename()
 	mimeType := file.mimeType()
+	if file.MimeType != "" || mimeType != "application/octet-stream" {
+		// Explicit or extension-based type; only sniff content when neither is known.
+		return rc, filename, mimeType, nil
+	}
 
 	rcWithMime, detected, err := detectMimeType(rc, filename, mimeType)
 	if err != nil {
@@ -694,7 +717,10 @@ func detectMimeType(rc io.ReadCloser, filename, fallback string) (io.ReadCloser,
 	}
 
 	detected := http.DetectContentType(buf)
-	combined := io.NopCloser(io.MultiReader(bytes.NewReader(buf), rc))
+	combined := struct {
+		io.Reader
+		io.Closer
+	}{io.MultiReader(bytes.NewReader(buf), rc), rc}
 	if detected != "" {
 		return combined, detected, nil
 	}

@@ -2,6 +2,7 @@ package roe
 
 import (
 	"io"
+	"mime"
 	"net/http"
 	"os"
 	"strings"
@@ -126,5 +127,112 @@ func TestPostDynamicInputsWithURLInput(t *testing.T) {
 	}, nil, &out, nil)
 	if err != nil {
 		t.Fatalf("request failed: %v", err)
+	}
+}
+
+func TestPostDynamicInputsEncodesSlicesAndMapsAsJSON(t *testing.T) {
+	want := map[string]string{
+		"list": `["a","b"]`,
+		"obj":  `{"k":1}`,
+		"flag": "true",
+		"n":    "3",
+	}
+	server := newTestServer(t, http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		if err := r.ParseForm(); err != nil {
+			t.Errorf("parse form: %v", err)
+		}
+		if len(r.PostForm) != len(want) {
+			t.Errorf("unexpected form fields: %v", r.PostForm)
+		}
+		for k, v := range want {
+			if got := r.PostForm.Get(k); got != v {
+				t.Errorf("%s = %q, want %q", k, got, v)
+			}
+		}
+		w.Header().Set("Content-Type", "application/json")
+		_, _ = w.Write([]byte(`{}`))
+	}))
+	defer server.Close()
+
+	cfg := Config{APIKey: "k", OrganizationID: "org", BaseURL: server.URL, Timeout: time.Second}
+	client := newHTTPClient(cfg, newAuth(cfg))
+	defer client.close()
+
+	inputs := map[string]any{"list": []string{"a", "b"}, "obj": map[string]any{"k": 1}, "flag": true, "n": 3, "none": nil}
+	if err := client.postDynamicInputs("/upload", inputs, nil, nil, nil); err != nil {
+		t.Fatalf("request failed: %v", err)
+	}
+	if err := client.postDynamicInputs("/upload", map[string]any{"bad": []any{make(chan int)}}, nil, nil, nil); err == nil {
+		t.Fatalf("expected marshal error")
+	}
+}
+
+func TestPrepareMultipartFileKeepsKnownMimeType(t *testing.T) {
+	cases := []struct {
+		file FileUpload
+		want string
+	}{
+		{FileUpload{Reader: strings.NewReader("a,b\n1,2\n"), Filename: "data.csv"}, mime.TypeByExtension(".csv")},
+		{FileUpload{Reader: strings.NewReader("{}"), MimeType: "application/json"}, "application/json"},
+	}
+	for _, tc := range cases {
+		rc, _, got, err := (&httpClient{}).prepareMultipartFile(tc.file)
+		if err != nil {
+			t.Fatalf("prepareMultipartFile: %v", err)
+		}
+		rc.Close()
+		if got != tc.want {
+			t.Fatalf("mime type = %q, want %q", got, tc.want)
+		}
+	}
+}
+
+type closeTracker struct {
+	io.Reader
+	closed bool
+}
+
+func (c *closeTracker) Close() error {
+	c.closed = true
+	return nil
+}
+
+func TestPrepareMultipartFileClosesSniffedReader(t *testing.T) {
+	src := &closeTracker{Reader: strings.NewReader("hello")}
+	rc, _, _, err := (&httpClient{}).prepareMultipartFile(FileUpload{Reader: src})
+	if err != nil {
+		t.Fatalf("prepareMultipartFile: %v", err)
+	}
+	rc.Close()
+	if !src.closed {
+		t.Fatalf("expected the caller's reader to be closed")
+	}
+}
+
+type closeCounter struct {
+	io.Reader
+	closes int
+}
+
+func (c *closeCounter) Close() error {
+	c.closes++
+	return nil
+}
+
+func TestMultipartUploadClosesEachReaderOnceWhenALaterFileFails(t *testing.T) {
+	// Map order decides which file goes first, so repeat until the good
+	// reader has been copied before the missing path fails.
+	for i := 0; i < 20; i++ {
+		src := &closeCounter{Reader: strings.NewReader("hello")}
+		err := (&httpClient{}).postDynamicInputs("/upload", map[string]any{
+			"good":    FileUpload{Reader: src, Filename: "a.txt"},
+			"missing": FileUpload{Path: "/nonexistent/roe-upload.txt"},
+		}, nil, nil, nil)
+		if err == nil {
+			t.Fatalf("expected an error for the missing file")
+		}
+		if src.closes > 1 {
+			t.Fatalf("caller's reader closed %d times, want at most 1", src.closes)
+		}
 	}
 }

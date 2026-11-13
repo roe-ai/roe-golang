@@ -31,11 +31,11 @@ func resolveRunOptions(opts []RunOptions) RunOptions {
 }
 
 func (o RunOptions) extraHeaders() http.Header {
-	if !o.SkipCache {
-		return nil
-	}
 	h := http.Header{}
-	h.Set("X-Skip-Cache", "true")
+	h.Set(skipRetryHeader, "true")
+	if o.SkipCache {
+		h.Set("X-Skip-Cache", "true")
+	}
 	return h
 }
 
