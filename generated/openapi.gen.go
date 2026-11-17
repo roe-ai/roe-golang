@@ -23,6 +23,27 @@ const (
 	ApiKeyAuthScopes = "apiKeyAuth.Scopes"
 )
 
+// Defines values for AuthMethodsEnum.
+const (
+	AuthMethodsEnumBrowserSignIn   AuthMethodsEnum = "browser_sign_in"
+	AuthMethodsEnumManual          AuthMethodsEnum = "manual"
+	AuthMethodsEnumProviderConsent AuthMethodsEnum = "provider_consent"
+)
+
+// Valid indicates whether the value is a known member of the AuthMethodsEnum enum.
+func (e AuthMethodsEnum) Valid() bool {
+	switch e {
+	case AuthMethodsEnumBrowserSignIn:
+		return true
+	case AuthMethodsEnumManual:
+		return true
+	case AuthMethodsEnumProviderConsent:
+		return true
+	default:
+		return false
+	}
+}
+
 // Defines values for ColorEnum.
 const (
 	Blue   ColorEnum = "blue"
@@ -196,16 +217,46 @@ func (e ConnectorTypeEnum) Valid() bool {
 
 // Defines values for GateKind.
 const (
-	Feedback GateKind = "feedback"
-	Manual   GateKind = "manual"
+	GateKindFeedback GateKind = "feedback"
+	GateKindManual   GateKind = "manual"
 )
 
 // Valid indicates whether the value is a known member of the GateKind enum.
 func (e GateKind) Valid() bool {
 	switch e {
-	case Feedback:
+	case GateKindFeedback:
 		return true
-	case Manual:
+	case GateKindManual:
+		return true
+	default:
+		return false
+	}
+}
+
+// Defines values for HealthEnum.
+const (
+	HealthEnumConnected      HealthEnum = "connected"
+	HealthEnumConnecting     HealthEnum = "connecting"
+	HealthEnumExpired        HealthEnum = "expired"
+	HealthEnumFailed         HealthEnum = "failed"
+	HealthEnumNeedsAttention HealthEnum = "needs_attention"
+	HealthEnumUnknown        HealthEnum = "unknown"
+)
+
+// Valid indicates whether the value is a known member of the HealthEnum enum.
+func (e HealthEnum) Valid() bool {
+	switch e {
+	case HealthEnumConnected:
+		return true
+	case HealthEnumConnecting:
+		return true
+	case HealthEnumExpired:
+		return true
+	case HealthEnumFailed:
+		return true
+	case HealthEnumNeedsAttention:
+		return true
+	case HealthEnumUnknown:
 		return true
 	default:
 		return false
@@ -391,22 +442,22 @@ func (e StepRunDeliveryEnum) Valid() bool {
 
 // Defines values for StepRunStatusEnum.
 const (
-	Cancelled StepRunStatusEnum = "cancelled"
-	Failed    StepRunStatusEnum = "failed"
-	Skipped   StepRunStatusEnum = "skipped"
-	Succeeded StepRunStatusEnum = "succeeded"
+	StepRunStatusEnumCancelled StepRunStatusEnum = "cancelled"
+	StepRunStatusEnumFailed    StepRunStatusEnum = "failed"
+	StepRunStatusEnumSkipped   StepRunStatusEnum = "skipped"
+	StepRunStatusEnumSucceeded StepRunStatusEnum = "succeeded"
 )
 
 // Valid indicates whether the value is a known member of the StepRunStatusEnum enum.
 func (e StepRunStatusEnum) Valid() bool {
 	switch e {
-	case Cancelled:
+	case StepRunStatusEnumCancelled:
 		return true
-	case Failed:
+	case StepRunStatusEnumFailed:
 		return true
-	case Skipped:
+	case StepRunStatusEnumSkipped:
 		return true
-	case Succeeded:
+	case StepRunStatusEnumSucceeded:
 		return true
 	default:
 		return false
@@ -780,6 +831,9 @@ type AgentJobWebhookResendResponse struct {
 type AgentRunAsyncManyRequest struct {
 	// Inputs List of agent execution requests to process
 	Inputs []AgentExecutionRequest `json:"inputs"`
+
+	// MaxConcurrentJobs Optional cap on how many of these jobs run at once. The rest wait as pending and start as running jobs finish. Unset = no cap beyond the organization's concurrent job limit. An input that matches a job already in progress reuses that job, which keeps the cap it was started with.
+	MaxConcurrentJobs *int `json:"max_concurrent_jobs,omitempty"`
 }
 
 // AgentStep defines model for AgentStep.
@@ -899,6 +953,11 @@ type ApprovalBlock_Steps_Item struct {
 	union json.RawMessage
 }
 
+// AuthMethodsEnum * `browser_sign_in` - browser_sign_in
+// * `provider_consent` - provider_consent
+// * `manual` - manual
+type AuthMethodsEnum string
+
 // BaseAgent Serializer for BaseAgent (agent config)
 type BaseAgent struct {
 	// CacheFailedJobs Whether to cache failed jobs for this agent.
@@ -992,6 +1051,7 @@ type Condition struct {
 // - config: Non-sensitive config from DB
 // - auth_config: Manual credentials, or safe metadata for managed Zendesk OAuth
 type Connection struct {
+	AccountLabel            *string                 `json:"account_label,omitempty"`
 	AuthConfig              *map[string]interface{} `json:"auth_config,omitempty"`
 	BrowserSessionExpiresAt *time.Time              `json:"browser_session_expires_at,omitempty"`
 	Config                  interface{}             `json:"config,omitempty"`
@@ -1001,10 +1061,13 @@ type Connection struct {
 	ConnectorType                  string              `json:"connector_type"`
 	CreatedAt                      *time.Time          `json:"created_at,omitempty"`
 	CredentialsConfigured          *bool               `json:"credentials_configured,omitempty"`
+	CredentialsExpireAt            *time.Time          `json:"credentials_expire_at,omitempty"`
 	Description                    *string             `json:"description,omitempty"`
 	DynamicInputTestDisabledReason *string             `json:"dynamic_input_test_disabled_reason,omitempty"`
 	DynamicInputs                  *map[string]string  `json:"dynamic_inputs,omitempty"`
+	Health                         *HealthEnum         `json:"health,omitempty"`
 	Id                             *openapi_types.UUID `json:"id,omitempty"`
+	LastVerifiedAt                 *time.Time          `json:"last_verified_at,omitempty"`
 
 	// Lifecycle * `active` - Active
 	// * `archived` - Archived
@@ -1051,17 +1114,21 @@ type ConnectionDeleteErrorResponse struct {
 // ConnectionList Lightweight serializer for listing connections.
 // Returns metadata without fetching credentials from Secrets Manager.
 type ConnectionList struct {
-	Config interface{} `json:"config,omitempty"`
+	AccountLabel *string     `json:"account_label,omitempty"`
+	Config       interface{} `json:"config,omitempty"`
 
 	// ConnectorDisplayName Get the display name for the connector type.
 	ConnectorDisplayName           *string             `json:"connector_display_name,omitempty"`
 	ConnectorType                  string              `json:"connector_type"`
 	CreatedAt                      *time.Time          `json:"created_at,omitempty"`
 	CredentialsConfigured          *bool               `json:"credentials_configured,omitempty"`
+	CredentialsExpireAt            *time.Time          `json:"credentials_expire_at,omitempty"`
 	Description                    *string             `json:"description,omitempty"`
 	DynamicInputTestDisabledReason *string             `json:"dynamic_input_test_disabled_reason,omitempty"`
 	DynamicInputs                  *map[string]string  `json:"dynamic_inputs,omitempty"`
+	Health                         *HealthEnum         `json:"health,omitempty"`
 	Id                             *openapi_types.UUID `json:"id,omitempty"`
+	LastVerifiedAt                 *time.Time          `json:"last_verified_at,omitempty"`
 
 	// Lifecycle * `active` - Active
 	// * `archived` - Archived
@@ -1069,6 +1136,9 @@ type ConnectionList struct {
 	Lifecycle    *LifecycleEnum     `json:"lifecycle,omitempty"`
 	Name         string             `json:"name"`
 	Organization openapi_types.UUID `json:"organization"`
+
+	// SetupCount How many setups agents can attach from this connection.
+	SetupCount *int `json:"setup_count,omitempty"`
 
 	// Status * `active` - Active
 	// * `error` - Error
@@ -1115,6 +1185,8 @@ type ConnectorListResponse struct {
 
 // ConnectorMetadata Serializer for connector metadata.
 type ConnectorMetadata struct {
+	// AuthMethods How people give this connector credentials, default first.
+	AuthMethods            []AuthMethodsEnum        `json:"auth_methods"`
 	AuthSchema             interface{}              `json:"auth_schema"`
 	BrowserSession         *ConnectorBrowserSession `json:"browser_session"`
 	Category               string                   `json:"category"`
@@ -1127,6 +1199,9 @@ type ConnectorMetadata struct {
 	Icon                   string                   `json:"icon"`
 	Id                     string                   `json:"id"`
 	SupportsDelivery       bool                     `json:"supports_delivery"`
+
+	// TestProvesCredentials Whether a passing connection test proves the credentials work, rather than only that the service answered.
+	TestProvesCredentials bool `json:"test_proves_credentials"`
 }
 
 // ConnectorTypeEnum * `snowflake` - SNOWFLAKE
@@ -1396,6 +1471,14 @@ type GenerateSkillSetVersionResponse struct {
 	// WorkflowId Temporal workflow ID for tracking the process
 	WorkflowId *string `json:"workflow_id,omitempty"`
 }
+
+// HealthEnum * `connecting` - Connecting
+// * `expired` - Expired
+// * `needs_attention` - Needs attention
+// * `failed` - Failed
+// * `connected` - Connected
+// * `unknown` - Unknown
+type HealthEnum string
 
 // IfBlock defines model for IfBlock.
 type IfBlock struct {
@@ -2213,7 +2296,7 @@ type WorkflowCreateRequest struct {
 type WorkflowDefinition struct {
 	FormatVersion *int                            `json:"format_version,omitempty"`
 	Inputs        *[]InputField                   `json:"inputs,omitempty"`
-	Result        string                          `json:"result"`
+	Result        *string                         `json:"result,omitempty"`
 	Steps         []WorkflowDefinition_Steps_Item `json:"steps"`
 }
 
@@ -2226,7 +2309,7 @@ type WorkflowDefinition_Steps_Item struct {
 type WorkflowDefinitionRequest struct {
 	FormatVersion *int                                   `json:"format_version,omitempty"`
 	Inputs        *[]InputField                          `json:"inputs,omitempty"`
-	Result        string                                 `json:"result"`
+	Result        *string                                `json:"result,omitempty"`
 	Steps         []WorkflowDefinitionRequest_Steps_Item `json:"steps"`
 }
 
