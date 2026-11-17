@@ -5,6 +5,25 @@ All notable changes to the Roe Go SDK will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.3.13] - 2026-11-16
+
+Built from roe-main release `1-1-6`.
+
+### Added
+
+- `generated.AgentRunAsyncManyRequest` now includes an optional `MaxConcurrentJobs` field, so a batch can cap how many of its jobs run at once. The rest wait as pending and start as running jobs finish.
+- `generated.Connection` and `generated.ConnectionList` now include `Health` (typed as the new `generated.HealthEnum`), `LastVerifiedAt`, `CredentialsExpireAt`, and `AccountLabel`. `generated.ConnectionList` also includes `SetupCount`, the number of setups agents can attach from the connection.
+- `generated.ConnectorMetadata` now includes `AuthMethods` (a list of the new `generated.AuthMethodsEnum`, default method first) and `TestProvesCredentials`, which says whether a passing connection test proves the credentials work.
+
+### Changed
+
+- **Breaking.** `Result` on `generated.WorkflowDefinition` and `generated.WorkflowDefinitionRequest` is now `*string` (was `string`), because a workflow definition no longer has to name a result. Check for `nil` before reading it, and pass a pointer when setting it.
+- The `generated.GateKind` and `generated.StepRunStatusEnum` constants now carry their type name: `GateKindFeedback`, `GateKindManual`, `StepRunStatusEnumCancelled`, `StepRunStatusEnumFailed`, `StepRunStatusEnumSkipped`, and `StepRunStatusEnumSucceeded`.
+
+### Deprecated
+
+- `generated.Feedback`, `generated.Manual`, `generated.Cancelled`, `generated.Failed`, `generated.Skipped`, and `generated.Succeeded` still compile but are deprecated. Use the prefixed names above.
+
 ## [1.3.12] - 2026-11-11
 
 Built from roe-main release `1-1-5`.
