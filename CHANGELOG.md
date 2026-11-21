@@ -5,6 +5,17 @@ All notable changes to the Roe Go SDK will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.3.14] - 2026-11-21
+
+Built from roe-main release `1-1-7`.
+
+### Added
+
+- `generated.AgentStep` now includes the optional `PolicyVersionId` field, and `generated.ConnectionStep` now includes the optional `ContinueOnFailure` field.
+- `generated.ConnectorMetadata` now includes the required fields `RequiresSetup` and `SignInConfigFields`, so connector metadata responses expose whether setup is required and which sign-in config fields are needed.
+- `generated.StepRun` now includes the required fields `Id` and `Retryable`, so step run responses expose a step-run identifier and whether a failed step can be retried independently.
+- `generated.WorkflowVersionCreateRequest` now supports the optional `BaseVersionId` field when creating a workflow version.
+
 ## [1.3.13] - 2026-11-16
 
 Built from roe-main release `1-1-6`.
