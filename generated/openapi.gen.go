@@ -838,11 +838,12 @@ type AgentRunAsyncManyRequest struct {
 
 // AgentStep defines model for AgentStep.
 type AgentStep struct {
-	AgentVersionId string             `json:"agent_version_id"`
-	BaseAgentId    string             `json:"base_agent_id"`
-	Id             string             `json:"id"`
-	InputMapping   *map[string]string `json:"input_mapping,omitempty"`
-	Kind           string             `json:"kind"`
+	AgentVersionId  string             `json:"agent_version_id"`
+	BaseAgentId     string             `json:"base_agent_id"`
+	Id              string             `json:"id"`
+	InputMapping    *map[string]string `json:"input_mapping,omitempty"`
+	Kind            string             `json:"kind"`
+	PolicyVersionId *string            `json:"policy_version_id,omitempty"`
 }
 
 // AgentTag Serializer for AgentTag model
@@ -1150,12 +1151,13 @@ type ConnectionList struct {
 // ConnectionStep Calls one operation of a saved connection, such as an API lookup or a
 // Slack message. Credentials stay with the connection.
 type ConnectionStep struct {
-	ConnectionId string             `json:"connection_id"`
-	Id           string             `json:"id"`
-	InputMapping *map[string]string `json:"input_mapping,omitempty"`
-	Kind         string             `json:"kind"`
-	Operation    string             `json:"operation"`
-	SetupId      *string            `json:"setup_id,omitempty"`
+	ConnectionId      string             `json:"connection_id"`
+	ContinueOnFailure *bool              `json:"continue_on_failure,omitempty"`
+	Id                string             `json:"id"`
+	InputMapping      *map[string]string `json:"input_mapping,omitempty"`
+	Kind              string             `json:"kind"`
+	Operation         string             `json:"operation"`
+	SetupId           *string            `json:"setup_id,omitempty"`
 }
 
 // ConnectionUpdateConflictResponse Body of a 409 from update/replace; which fields are set depends on the cause.
@@ -1198,7 +1200,13 @@ type ConnectorMetadata struct {
 	DynamicInputTestFields []string                 `json:"dynamic_input_test_fields"`
 	Icon                   string                   `json:"icon"`
 	Id                     string                   `json:"id"`
-	SupportsDelivery       bool                     `json:"supports_delivery"`
+
+	// RequiresSetup Whether this connector's context sources must use a setup.
+	RequiresSetup bool `json:"requires_setup"`
+
+	// SignInConfigFields Config fields a connection must fill in before it can save a browser sign-in of a whole site; empty when the connector has none.
+	SignInConfigFields []string `json:"sign_in_config_fields"`
+	SupportsDelivery   bool     `json:"supports_delivery"`
 
 	// TestProvesCredentials Whether a passing connection test proves the credentials work, rather than only that the service answered.
 	TestProvesCredentials bool `json:"test_proves_credentials"`
@@ -1953,9 +1961,13 @@ type StepRun struct {
 	Error         *string              `json:"error,omitempty"`
 	ExecutionPath interface{}          `json:"execution_path"`
 	FinishedAt    *time.Time           `json:"finished_at,omitempty"`
+	Id            *openapi_types.UUID  `json:"id,omitempty"`
 	Input         interface{}          `json:"input,omitempty"`
 	Output        interface{}          `json:"output,omitempty"`
-	StartedAt     *time.Time           `json:"started_at,omitempty"`
+
+	// Retryable Whether this failed send can be retried on its own, without running the run's other steps again.
+	Retryable *bool      `json:"retryable,omitempty"`
+	StartedAt *time.Time `json:"started_at,omitempty"`
 
 	// Status * `succeeded` - succeeded
 	// * `failed` - failed
@@ -2418,14 +2430,16 @@ type WorkflowVersion struct {
 
 // WorkflowVersionCreateRequest defines model for WorkflowVersionCreateRequest.
 type WorkflowVersionCreateRequest struct {
-	Definition  WorkflowDefinitionRequest `json:"definition"`
-	Description *string                   `json:"description,omitempty"`
-	VersionName *string                   `json:"version_name,omitempty"`
+	// BaseVersionId The version this definition was made from. When given, the save is refused if another version has become current since, so an older definition doesn't replace newer changes.
+	BaseVersionId *openapi_types.UUID       `json:"base_version_id,omitempty"`
+	Definition    WorkflowDefinitionRequest `json:"definition"`
+	Description   *string                   `json:"description,omitempty"`
+	VersionName   *string                   `json:"version_name,omitempty"`
 }
 
 // WorkflowVersionDetail defines model for WorkflowVersionDetail.
 type WorkflowVersionDetail struct {
-	// ConversionReasons Why a read-only version couldn't be converted to the block format.
+	// ConversionReasons Why a read-only version couldn't be converted to the block format; for another version, why any of its post actions can't become a final step.
 	ConversionReasons *[]string  `json:"conversion_reasons,omitempty"`
 	CreatedAt         *time.Time `json:"created_at,omitempty"`
 
